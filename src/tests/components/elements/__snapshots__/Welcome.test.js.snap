@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render the welcome screen 1`] = `
+<div>
+  <p>
+    Welcome to an electronic verson of The Adventure Zone: Bureau of Balance board game by Keith Baker and Jennifer Ellis at Twogether Studios.
+  </p>
+  <p>
+    Designed solely for remote-play, this electronic version requires a seperate way to communicate with your group (
+    <a
+      href="https://discord.com/"
+      rel="noreferrer"
+      target="_blank"
+    >
+      Discord
+    </a>
+     is a popular option).
+  </p>
+  <p>
+    If you enjoy the electronic version, you'll love the boardgame even more! Use the link below to go the Twogether Studios homepage!
+  </p>
+  <div>
+    <Link
+      to="/gameSetup"
+    >
+      Play TAZ Bureau of Balance
+    </Link>
+  </div>
+  <div>
+    <a
+      href="https://www.twogetherstudios.com/products/the-adventure-zone-bureau-of-balance-game-us-canada"
+      rel="noreferrer"
+      target="_blank"
+    >
+      Buy the boardgame!
+    </a>
+  </div>
+</div>
+`;
