@@ -1,0 +1,106 @@
+import { onValue, push, ref, remove, update } from "firebase/database";
+import { db } from "../firebase/firebase";
+
+export const setUID = (uid) => ({
+    type: 'SET_UID',
+    uid
+})
+
+export const setGameIDArray = (gameIDArray, initialGameObjectsArray) => ({
+    type: 'SET_GAME_ID_ARRAY',
+    gameIDArray,
+    initialGameObjectsArray
+})
+
+
+export const setJoiningState = (gameID, joiningGame) => ({
+    type: 'SET_JOINING_STATE',
+    gameID,
+    joiningGame
+})
+
+export const setSetupJoiningGame = (joiningGame) => ({
+    type: 'SET_JOINING_GAME',
+    joiningGame
+})
+
+export const setGameKey = (key) => ({
+    type: 'SET_GAME_KEY',
+    key
+})
+
+export const setHost = (host) => ({
+    type: 'SET_HOST',
+    host
+})
+
+export const startRegisterGameID = (gameID, host, key) => {
+    update(ref(db, 'activeGames/' + key), { gameID, host, key })
+        // .then(() => {
+
+        //     // setHost(host)
+        //     // setGameKey(ref.key)
+        //     // console.log('key is now: ', ref.key)
+        // })
+        .catch((error) => {
+            console.log('Error when sending game code to server:', error)
+        })
+}
+
+export const startRemoveGameCode = (key) => {
+    remove(ref(db, 'activeGames/' + key), {})
+        .catch((error) => {
+            console.log('Error when cleaning game array in cloud:', error)
+        })
+}
+
+
+
+
+
+
+
+// const setHost = (host) => ({
+//     type: 'SET_HOST',
+//     host
+// })
+
+
+// const updateParty = (party) => ({
+//     type: 'UPDATE_PARTY',
+//     party
+// })
+
+// This listener updates the setupState to match the chosen game options
+// during game setup, based on the game code entered
+// export const startJoinedGameSetupListener = (shortGameID) => {
+//     onValue(ref(db, 'activeGames/' + shortGameID), (snapshot) => {
+//         return (setHost(snapshot.val().host),
+//             updateParty(snapshot.val().party))
+//     })
+//         // .then(() => {
+
+//         // })
+//         .catch((error) => {
+//             console.log('Error when sending game code to server:', error)
+//         })
+// }
+
+
+
+// export const confirmedValidGameCode = (shortGameID) => {
+//     return setJoinCode(shortGameID)
+// }
+
+
+
+// export const startEnteredJoinCode = ({ shortGameID, host }) => {
+//     update(ref(db, 'activeGames/' + shortGameID), { shortGameID, host })
+//         .then(() => {
+//             console.log('successfully sent shortGameID to Firebase')
+//             // setJoinCode(shortGameID)
+//         })
+//         .catch((error) => {
+//             console.log('Error when sending game code to server:', error)
+//         })
+// }
