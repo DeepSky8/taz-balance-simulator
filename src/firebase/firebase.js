@@ -3,6 +3,7 @@ import { getDatabase } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
 import * as firebaseui from 'firebaseui'
 import 'firebaseui/dist/firebaseui.css'
+import FirebaseAuth from 'react-firebaseui/FirebaseAuth';
 
 
 const firebaseConfig = {
@@ -21,6 +22,6 @@ const auth = getAuth();
 
 
 // Initialize the FirebaseUI Widget using Firebase.
-var ui = new firebaseui.auth.AuthUI(auth);
+// var ui = new firebaseui.auth.AuthUI(auth);
 
-export { auth, ui, db }
+export { auth, db }

@@ -29,23 +29,57 @@ export const setGameKey = (key) => ({
     key
 })
 
+export const setActiveGameKeys = (keys) => ({
+    type: 'SET_ACTIVE_GAME_KEYS',
+    keys
+})
+
 export const setHost = (host) => ({
     type: 'SET_HOST',
     host
 })
 
-export const startRegisterGameID = (gameID, host, key) => {
-    update(ref(db, 'activeGames/' + key), { gameID, host, key })
-        // .then(() => {
+export const startUpdateCloudState = (state) => {
+    update(ref(db, 'user/' + state.uid), { ...state })
+}
 
-        //     // setHost(host)
-        //     // setGameKey(ref.key)
-        //     // console.log('key is now: ', ref.key)
-        // })
+export const setLocalState = (
+    {
+        gameID,
+        joiningGame,
+        host,
+        gameKeys,
+        gameIDArray,
+        currentGames,
+        characterList,
+        currentCharacter,
+        partyMembers,
+
+    }) => ({
+        type: 'SET_LOCAL_STATE',
+        gameID,
+        joiningGame,
+        host,
+        gameKeys,
+        gameIDArray,
+        currentGames,
+        characterList,
+        currentCharacter,
+        partyMembers
+    })
+
+export const startRegisterGameID = (gameID, host, key) => {
+    const updates = {};
+    updates['activeGames/' + key] = { gameID, host, key };
+    updates['/users/' + host] = { gameID, joiningGame: false, host };
+    update(ref(db), updates)
+        // update(ref(db, 'activeGames/' + key), { gameID, host, key })
         .catch((error) => {
             console.log('Error when sending game code to server:', error)
         })
 }
+
+// const removeGame
 
 export const startRemoveGameCode = (key) => {
     remove(ref(db, 'activeGames/' + key), {})
@@ -58,13 +92,27 @@ export const startRemoveGameCode = (key) => {
 
 
 
-
-
-// const setHost = (host) => ({
-//     type: 'SET_HOST',
-//     host
-// })
-
+// currentGames: [{
+//     key: null,
+//     villain: null,
+//     relic: null,
+//     location: null,
+//     surprises: [{}],
+//     progress: {
+//         villain: '',
+//         relic: '',
+//         location: ''
+//     },
+//     teamHealth: ''
+// }],
+//     characterList: [{
+//         charName: '',
+//         charRace: '',
+//         charTool: '',
+//         charAttribute: '',
+//         charNotes: '',
+//         charKostco: [{}]
+//     }]
 
 // const updateParty = (party) => ({
 //     type: 'UPDATE_PARTY',

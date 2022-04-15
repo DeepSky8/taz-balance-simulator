@@ -1,17 +1,58 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { auth, db } from "../../firebase/firebase";
-import { child, off, onValue, push, ref } from "firebase/database";
+import { child, get, off, onValue, push, ref, set, update } from "firebase/database";
 import { defaultGameSetup, setupReducer } from '../../reducers/setupReducer';
-import { setGameIDArray, setGameKey, setHost, setUID, startRegisterGameID, startRemoveGameCode } from "../../actions/setupActions";
+import {
+    setActiveGameKeys,
+    setGameIDArray,
+    setGameKey,
+    setHost,
+    setLocalState,
+    setUID,
+    startUpdateCloudState,
+    startRegisterGameID,
+    startRemoveGameCode
+} from "../../actions/setupActions";
 import JoiningHosting from "./JoiningHosting";
 import VillainSelect from "./VillainSelect";
 import { Outlet } from "react-router-dom";
-
-
+import userEvent from "@testing-library/user-event";
 
 export const GameSetup = () => {
-
     const [setupState, dispatchSetupState] = useReducer(setupReducer, defaultGameSetup)
+
+    useEffect(() => {
+        // set(ref(db, 'users/' + '1OSZ2h38hvW7NJQ8jbMFsHhUMxJ3'), {
+        //     gameID: 1111,
+        //     joiningGame: true,
+        //     host: "Peter",
+        //     key: null,
+        //     gameKeys: [],
+        //     gameIDArray: [],
+        //     villain: "steve",
+        //     relic: "accursed tree",
+        //     location: "woodland realm"
+        // })
+        // get(ref(db, 'users/' + auth.currentUser.uid))
+        //     .then((snapshot) => {
+        //         console.log({ ...snapshot.val() })
+        //         setLocalState({ ...snapshot.val() })
+        //     })
+        onValue(ref(db, 'users/' + auth.currentUser.uid), (snapshot) => {
+            setLocalState({ ...snapshot.val() })
+            console.log('local state updated to be: ', setupState)
+        })
+
+
+        return () => {
+            off(ref(db, 'users'))
+            if (auth.currentUser.isAnonymous) {
+                auth.currentUser.delete()
+            }
+        }
+    }, [])
+
+
 
 
     // Listen to the logged-in user (including Anonymous)
@@ -26,16 +67,20 @@ export const GameSetup = () => {
     useEffect(() => {
         onValue(ref(db, 'activeGames'), (snapshot) => {
             const updatedArray = [];
-            const initialGameObjectsArray = [];
+            const matchingKeys = [];
             snapshot.forEach((childSnapShot) => {
                 updatedArray.push(childSnapShot.val().gameID)
-                initialGameObjectsArray.push(childSnapShot.val())
+                if (childSnapShot.val().host === auth.currentUser.uid) {
+                    matchingKeys.push(childSnapShot.val().key)
+                }
             })
-            dispatchSetupState(setGameIDArray(updatedArray, initialGameObjectsArray))
+            dispatchSetupState(setActiveGameKeys(matchingKeys))
+            dispatchSetupState(setGameIDArray(updatedArray))
+
             // snapshot.forEach((childSnapShot) => {
-            //     if (childSnapShot.val().gameID === setupState.gameID) {
-            //         console.log('updated array matched on a game ID, updating local key ', childSnapShot.val().key)
-            //         dispatchSetupState(setGameKey(childSnapShot.val().key))
+            //     if (childSnapShot.val().host === setupState.uid) {
+
+            //         dispatchSetupState(setActiveGameKeys(childSnapShot.val().key))
             //     }
             // })
         })
@@ -43,24 +88,46 @@ export const GameSetup = () => {
         return () => {
             // Add code here to remove the gameID from the active game list when 
             // this JSX is closed. 
+
+            // const activeKeysRegistered = [];
+            // setupState.gameObjectsArray.forEach((gameObject) => {
+            //     if (gameObject.host === setupState.uid) {
+            //         activeKeysRegistered.push(gameObject.key)
+            //     }
+            // })
+            // const deleteRecords = {};
+            // activeKeysRegistered.forEach((key) => {
+            //     deleteRecords['/' + key] = {}
+            // })
+
+            // update(ref(db, 'activeGames'), deleteRecords)
             off(ref(db, 'activeGames'))
+            setupState.gameKeys.forEach((key) => {
+                dispatchSetupState(startRemoveGameCode(key))
+            })
+
+
+
         }
     }, [])
 
     // When gameID is updated, either start a listener or register the gameID to share
     useEffect(() => {
+
+
+
         const uniqueGameID = !setupState.gameIDArray.includes(setupState.gameID)
         if (setupState.joiningGame) {
 
             // If joining game, start listener to sync the rest of the game state
 
         } else if (!setupState.joiningGame && uniqueGameID) {
-            // If hosting and unique game ID is stored locally, 
+            // If hosting, and unique game ID is stored locally, 
             // create a key in the activeGames,
             // then register gameID at that key
             const newGameKey = push(ref(db, 'activeGames')).key
             startRegisterGameID(setupState.gameID, setupState.uid, newGameKey)
-            dispatchSetupState(setGameKey(newGameKey))
+            // dispatchSetupState(setGameKey(newGameKey))
         }
 
     }, [setupState.gameID])

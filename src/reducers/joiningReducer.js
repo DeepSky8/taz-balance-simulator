@@ -3,7 +3,6 @@ export const defaultJoiningReducer = {
     joiningGame: true,
     joinHostText: 'Joining game (click to host instead)',
     gameID: '',
-    gameIDArray: [],
     gameCodeError: '',
 }
 
@@ -29,8 +28,6 @@ export const joiningReducer = (state, action) => {
             }
         case 'SET_GAME_ID':
             return { ...state, gameID: action.gameID }
-        case 'SET_GAME_ID_ARRAY':
-            return { ...state, gameIDArray: action.gameIDArray }
         case 'SET_GAME_CODE_ERROR':
             return { ...state, gameCodeError: errorText }
         case 'CLEAR_GAME_CODE_ERROR':

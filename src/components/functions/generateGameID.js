@@ -9,7 +9,7 @@ const checkID = (gameIDArray) => {
     if (index === -1) {
         return testGameID
     } else {
-        checkID()
+        checkID(gameIDArray)
     }
 }
 

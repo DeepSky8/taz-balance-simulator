@@ -8,11 +8,6 @@ export const setGameID = (gameID) => ({
     gameID
 })
 
-export const setGameIDArray = (gameIDArray) => ({
-    type: 'SET_GAME_ID_ARRAY',
-    gameIDArray
-})
-
 export const setGameCodeError = () => ({
     type: 'SET_GAME_CODE_ERROR'
  })

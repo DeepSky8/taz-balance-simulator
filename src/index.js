@@ -25,21 +25,54 @@ const renderApp = () => {
 
 onAuthStateChanged(auth, (user) => {
 
-  if (user) {
-console.log('Auth State Changed with result of User')
-    renderApp();
-
-  } else {
-    console.log('auth state changed with result of non user')
+  if (user === null) {
+    console.log('signing in anonymously')
     signInAnonymously(auth)
+      .then(() => { renderApp() })
       .catch((error) => {
-        console.log(
-          'Error when signing in anonymously from index.js:',
-          auth.currentUser,
-          error
-        )
+        console.log('error was: ', error)
       })
+  } else {
+    console.log('signing in as auth user is anonymous', user.isAnonymous, user.email)
+    renderApp();
   }
+
+
+  // switch (user) {
+  //   case user === null:
+  //     console.log('case of null')
+  //     signInAnonymously(auth).then(() => { renderApp() });
+  //     break
+  //   case user.isAnonymous === false:
+  //     console.log('case of false');
+  //     renderApp();
+  //     break
+  //   case user.isAnonymous === true:
+  //     console.log('case of true')
+  //     renderApp();
+  //     break
+  //   default:
+  //     console.log('case of default')
+  //     renderApp();
+  // }
+
+
+  // if (!user.isAnonymous) {
+  //   console.log('Auth State Changed with result of User')
+  //   renderApp();
+  //   console.log('user is: ', user)
+
+  // } else {
+  //   console.log('auth state changed with result of anonymous')
+  //   signInAnonymously(auth)
+  //     .catch((error) => {
+  //       console.log(
+  //         'Error when signing in anonymously from index.js:',
+  //         auth.currentUser,
+  //         error
+  //       )
+  //     })
+  // }
 
 })
 

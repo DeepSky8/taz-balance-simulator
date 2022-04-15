@@ -14,7 +14,6 @@ const LoginLink = () => (
 )
 
 const onLogoutClick = () => {
-    console.log('clicked')
     signOut(auth)
         .then(history.push('/'))
         .catch((error) => {

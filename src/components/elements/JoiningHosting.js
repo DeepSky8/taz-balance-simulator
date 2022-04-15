@@ -13,20 +13,15 @@ import {
     clearGameCodeError,
     setGameCodeError,
     setGameID,
-    setGameIDArray,
     toggleJoiningGame
 } from '../../actions/joiningActions';
 
 const JoiningHosting = ({ setupState, dispatchSetupState }) => {
     const [joinHost, dispatchJoinHost] = useReducer(joiningReducer, defaultJoiningReducer)
 
-    // Receive game code array from GameSetup, store on joiningReducer
-    useEffect(() => {
-        dispatchJoinHost(setGameIDArray(setupState.gameIDArray))
-    }, [setupState.gameIDArray])
-
-    // Used to register a validated game ID and whether 
-    // joining or hosting a game with GameSetup element
+    // Used to send joining/hosting status and a 
+    // validated game ID to GameSetup element 
+    // when fired by following useEffect
     const dispatchJoiningState = () => {
         dispatchJoinHost(
             clearGameCodeError()
@@ -45,7 +40,7 @@ const JoiningHosting = ({ setupState, dispatchSetupState }) => {
         const validGameCode =
             joinHost.gameID.toString().match(/^\d{4}$/) !== null;
         const gameCodeRegistered =
-            joinHost.gameIDArray.includes(parseInt(joinHost.gameID));
+            setupState.gameIDArray.includes(parseInt(joinHost.gameID));
 
         if (validGameCode) {
 
@@ -63,36 +58,43 @@ const JoiningHosting = ({ setupState, dispatchSetupState }) => {
     useEffect(() => {
         if (joinHost.joiningGame) {
             // If the toggle is clicked to join a game
+            // clear game error locally
             dispatchJoinHost(clearGameCodeError())
 
-            // Remove gameID with current key from game code array
+            // Remove gameID with current key from cloud game code array
+            // then clear GameState copy of game key
             if (setupState.key) {
-                startRemoveGameCode(setupState.key)
+                dispatchSetupState(startRemoveGameCode(setupState.key))
                 dispatchSetupState(setGameKey(undefined))
             }
         } else {
             // If the toggle is clicked to host a game
+            // clear game code error
             dispatchJoinHost(clearGameCodeError())
 
             // Generate a short game ID, check it against the current active
             // game IDs, and once it is unique store it locally to be shared with
-            // other players joining your game. In addition register it
-            // in the cloud for validation.
-            dispatchJoinHost(setGameID(generateGameID()))
+            // other players joining your game. 
+            // A (previous) seperate useEffect (monitoring the local gameID status)
+            // dispatches the gameID to GameState and then to the cloud.
+            dispatchJoinHost(setGameID(generateGameID(setupState.gameIDArray)))
         }
     }, [joinHost.joiningGame])
 
 
 
     const joiningHostingToggle = () => {
+        // Fire several effects automatically when clicking the 
+        // joining/hosting toggle button
         dispatchJoinHost(toggleJoiningGame())
     }
 
-    // When text is entered into the joinCode input box,
-    // clear errors, then if it matches the parameters, 
-    // update the gameID state
+    // When text (restricted to text digits by regex) 
+    // is entered into the joinCode input box,
+    // clear errors, then if it matches the regex parameters, 
+    // update the gameID state with the text digit entry
     const onJoinCodeChange = (e) => {
-        setGameCodeError(undefined)
+        dispatchJoinHost(setGameCodeError(undefined))
         const joinCode = e.target.value.toString()
         if (joinCode.match(/^\d{0,4}$/) !== null) {
             dispatchJoinHost(setGameID(joinCode))
