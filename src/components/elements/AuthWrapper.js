@@ -13,6 +13,8 @@ const LoginLink = () => (
     </div>
 )
 
+// test
+
 const onLogoutClick = () => {
     signOut(auth)
         .then(history.push('/'))
