@@ -15,6 +15,8 @@ import {
     setGameID,
     toggleJoiningGame
 } from '../../actions/joiningActions';
+import { signInAnonymously } from "firebase/auth";
+import { auth } from "../../firebase/firebase";
 
 const JoiningHosting = ({ setupState, dispatchSetupState }) => {
     const [joinHost, dispatchJoinHost] = useReducer(joiningReducer, defaultJoiningReducer)

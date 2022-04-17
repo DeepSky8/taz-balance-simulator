@@ -1,8 +1,9 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { auth } from "../../firebase/firebase";
 import { signOut } from "firebase/auth";
 import { history } from "../../routers/AppRouter";
+
 
 
 const LoginLink = () => (
@@ -12,8 +13,6 @@ const LoginLink = () => (
         </Link>
     </div>
 )
-
-// test
 
 const onLogoutClick = () => {
     signOut(auth)
@@ -29,16 +28,37 @@ const LogoutLink = () => (
     </div>
 )
 
-export const AuthWrapper = ({ children }) => {
+// const linkSwitch = () => {
+//     if (auth.currentUser.isAnonymous === false) {
+//         return <LogoutLink />
+//     } else {
+//         return <LoginLink />
+//     }
+// }
+
+export const AuthWrapper = (props) => {
+console.log('props.uidState from AuthWrapper', props.uidState)
+console.log('props from AuthWrapper', props)
+    // if (auth.currentUser === null) {
+    //     const credential = signInAnonymously(auth)
+    //     console.log('credential created on joiningHosting: ', credential)
+    // }
     return (
         <div>
-            {auth.currentUser.isAnonymous ?
-                <LoginLink />
+            {props.uidState !== '' ?
+                <LogoutLink />
                 :
-                <LogoutLink />}
-            {children}
+                <LoginLink />
+            }
+            <Outlet />
+            {props.children}
         </div>
     )
 }
 
 export { AuthWrapper as default }
+
+
+
+// <LoginLink />
+// <LogoutLink />

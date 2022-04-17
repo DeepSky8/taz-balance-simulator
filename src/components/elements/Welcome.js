@@ -1,8 +1,17 @@
+import { signInAnonymously } from "firebase/auth";
 import React from "react";
 import { Link } from "react-router-dom";
+import { auth } from "../../firebase/firebase";
 
-export const Welcome = () => (
-    <div>
+export const Welcome = () => {
+
+    // const authenticateUser = () => {
+    //     if (!auth.currentUser) {
+    //         signInAnonymously(auth)
+    //     }
+    // }
+
+    return (<div>
         <p>
             Welcome to an electronic verson of The Adventure Zone:
             Bureau of Balance board game by Keith Baker and Jennifer Ellis
@@ -23,7 +32,7 @@ export const Welcome = () => (
             If you enjoy the electronic version, you'll love the boardgame even more! Use the link below to go the Twogether Studios homepage!
         </p>
         <div>
-            <Link to="/gameSetup">Play TAZ Bureau of Balance</Link>
+            <Link to="/gameSetup">Play TAZ Bureau of Balance digitally</Link>
         </div>
         <div>
             <a
@@ -35,7 +44,9 @@ export const Welcome = () => (
             </a>
 
         </div>
-    </div>
-)
+    </div>)
+}
 
 export { Welcome as default }
+
+// onClick={authenticateUser} 

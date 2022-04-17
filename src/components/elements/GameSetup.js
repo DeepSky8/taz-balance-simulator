@@ -15,51 +15,52 @@ import {
 } from "../../actions/setupActions";
 import JoiningHosting from "./JoiningHosting";
 import VillainSelect from "./VillainSelect";
-import { Outlet } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 
-export const GameSetup = () => {
+export const GameSetup = (props) => {
     const [setupState, dispatchSetupState] = useReducer(setupReducer, defaultGameSetup)
 
-    useEffect(() => {
-        // set(ref(db, 'users/' + '1OSZ2h38hvW7NJQ8jbMFsHhUMxJ3'), {
-        //     gameID: 1111,
-        //     joiningGame: true,
-        //     host: "Peter",
-        //     key: null,
-        //     gameKeys: [],
-        //     gameIDArray: [],
-        //     villain: "steve",
-        //     relic: "accursed tree",
-        //     location: "woodland realm"
-        // })
-        // get(ref(db, 'users/' + auth.currentUser.uid))
-        //     .then((snapshot) => {
-        //         console.log({ ...snapshot.val() })
-        //         setLocalState({ ...snapshot.val() })
-        //     })
-        onValue(ref(db, 'users/' + auth.currentUser.uid), (snapshot) => {
-            setLocalState({ ...snapshot.val() })
-            console.log('local state updated to be: ', setupState)
-        })
 
 
-        return () => {
-            off(ref(db, 'users'))
-            if (auth.currentUser.isAnonymous) {
-                auth.currentUser.delete()
-            }
-        }
-    }, [])
+    // useEffect(() => {
+    //     // set(ref(db, 'users/' + '1OSZ2h38hvW7NJQ8jbMFsHhUMxJ3'), {
+    //     //     gameID: 1111,
+    //     //     joiningGame: true,
+    //     //     host: "Peter",
+    //     //     key: null,
+    //     //     gameKeys: [],
+    //     //     gameIDArray: [],
+    //     //     villain: "steve",
+    //     //     relic: "accursed tree",
+    //     //     location: "woodland realm"
+    //     // })
+    //     // get(ref(db, 'users/' + auth.currentUser.uid))
+    //     //     .then((snapshot) => {
+    //     //         console.log({ ...snapshot.val() })
+    //     //         setLocalState({ ...snapshot.val() })
+    //     //     })
+    //     onValue(ref(db, 'users/' + auth.currentUser.uid), (snapshot) => {
+    //         setLocalState({ ...snapshot.val() })
+    //         console.log('local state updated to be: ', setupState)
+    //     })
+
+
+    //     return () => {
+    //         off(ref(db, 'users'))
+    //         if (auth.currentUser.isAnonymous) {
+    //             auth.currentUser.delete()
+    //         }
+    //     }
+    // }, [])
 
 
 
 
     // Listen to the logged-in user (including Anonymous)
     // and update the GameSetup state on changes
-    useEffect(() => {
-        dispatchSetupState(setUID(auth.currentUser.uid))
-    }, [auth.currentUser.uid])
+    // useEffect(() => {
+    //     dispatchSetupState(setUID(auth.currentUser.uid))
+    // }, [auth.currentUser.uid])
 
     // Listen to list of current game codes in Firebase
     // Set a new list of current game codes on GameSetup state
@@ -70,9 +71,9 @@ export const GameSetup = () => {
             const matchingKeys = [];
             snapshot.forEach((childSnapShot) => {
                 updatedArray.push(childSnapShot.val().gameID)
-                if (childSnapShot.val().host === auth.currentUser.uid) {
-                    matchingKeys.push(childSnapShot.val().key)
-                }
+                // if (childSnapShot.val().host === auth.currentUser.uid) {
+                //     matchingKeys.push(childSnapShot.val().key)
+                // }
             })
             dispatchSetupState(setActiveGameKeys(matchingKeys))
             dispatchSetupState(setGameIDArray(updatedArray))
@@ -125,8 +126,8 @@ export const GameSetup = () => {
             // If hosting, and unique game ID is stored locally, 
             // create a key in the activeGames,
             // then register gameID at that key
-            const newGameKey = push(ref(db, 'activeGames')).key
-            startRegisterGameID(setupState.gameID, setupState.uid, newGameKey)
+            // const newGameKey = push(ref(db, 'activeGames')).key
+            startRegisterGameID(setupState.gameID, setupState.uid)
             // dispatchSetupState(setGameKey(newGameKey))
         }
 
@@ -157,7 +158,7 @@ export const GameSetup = () => {
                 dispatchSetupState={dispatchSetupState}
             />
 
-            <Outlet />
+            {props.children}
         </div>
     )
 

@@ -1,10 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import { onAuthStateChanged, signInAnonymously } from 'firebase/auth';
 import reportWebVitals from './reportWebVitals';
 import AppRouter from './routers/AppRouter';
-import { auth } from './firebase/firebase';
+
 
 
 const jsx = (
@@ -21,36 +20,43 @@ const renderApp = () => {
   }
 }
 
+renderApp();
 
 
-onAuthStateChanged(auth, (user) => {
-
-  if (user === null) {
-    console.log('signing in anonymously')
-    signInAnonymously(auth)
-      .then(() => { renderApp() })
-      .catch((error) => {
-        console.log('error was: ', error)
-      })
-  } else {
-    console.log('signing in as auth user is anonymous', user.isAnonymous, user.email)
-    renderApp();
-  }
 
 
-  // switch (user) {
-  //   case user === null:
-  //     console.log('case of null')
+  // if (user !== null) {
+  //   console.log('signing in as auth user isAnonymous: ', user.isAnonymous, user.email)
+  //   // history.push('/gameSetup')
+  //   renderApp();
+  // } else {
+  //   console.log('signing in anonymously')
+  //   signInAnonymously(auth)
+  //     .then(() => { renderApp() })
+  //     .catch((error) => {
+  //       console.log('error was: ', error)
+  //     })
+  // }
+
+
+  // switch (user.isAnonymous) {
+  //   case null:
+  //     console.log('isAnonymouse is null')
   //     signInAnonymously(auth).then(() => { renderApp() });
   //     break
-  //   case user.isAnonymous === false:
-  //     console.log('case of false');
+  //   case false:
+  //     console.log('isAnonymouse is false');
   //     renderApp();
   //     break
-  //   case user.isAnonymous === true:
-  //     console.log('case of true')
+  //   case true:
+  //     console.log('isAnonymouse is true')
   //     renderApp();
   //     break
+  //   case user === null:
+  //     console.log('case of user is null')
+  //     signInAnonymously(auth).then(() => { renderApp() });
+  //     break
+
   //   default:
   //     console.log('case of default')
   //     renderApp();
@@ -74,7 +80,7 @@ onAuthStateChanged(auth, (user) => {
   //     })
   // }
 
-})
+
 
 // ReactDOM.render(
 //   jsx,

@@ -68,9 +68,9 @@ export const setLocalState = (
         partyMembers
     })
 
-export const startRegisterGameID = (gameID, host, key) => {
+export const startRegisterGameID = (gameID, host) => {
     const updates = {};
-    updates['activeGames/' + key] = { gameID, host, key };
+    updates['activeGames/' + host] = { gameID, host };
     updates['/users/' + host] = { gameID, joiningGame: false, host };
     update(ref(db), updates)
         // update(ref(db, 'activeGames/' + key), { gameID, host, key })
