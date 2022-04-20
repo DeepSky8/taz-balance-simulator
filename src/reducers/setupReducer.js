@@ -1,12 +1,6 @@
 
 const defaultGameSetup = {
-    // Connection data
-    gameID: null,
-    joiningGame: true,
-    host: null,
-    gameKeys: [],
-    gameIDArray: [],
-    partyMembers: [],
+    anonymousUID: null,
     currentCharacter: null,
     currentGames: [{
         key: null,
@@ -30,33 +24,39 @@ const defaultGameSetup = {
         charNotes: '',
         charKostco: [{}]
     }],
-
-    // Challenge Deck data
-
-
-    // UID
+    gameID: null,    
+    gameIDArray: [],
+    gameKeys: [],
+    host: null,
+    isAnonymous: null,
+    joiningGame: true,
+    lastActivity: 0,
+    partyMembers: [],
     uid: null,
 
 }
 
 const setupReducer = (state, action) => {
     switch (action.type) {
-        case 'SET_LOCAL_STATE':
-            return {
-                ...state,
-                gameID: action.gameID,
-                joiningGame: action.joiningGame,
-                host: action.host,
-                gameKeys: action.gameKeys,
-                gameIDArray: action.gameIDArray,
-                villain: action.villain,
-                relic: action.relic,
-                location: action.location,
-                currentGames: action.currentGames,
-                characterList: action.characterList,
-                currentCharacter: action.currentCharacter,
-                partyMembers: action.partyMembers
-            }
+        case 'SET_STATE':
+            return {...state, ...action.updatedState}
+        // case 'SET_LOCAL_STATE':
+        //     return {
+        //         ...state,
+        //         gameID: action.gameID,
+        //         isAnonymous: action.isAnonymous,
+        //         joiningGame: action.joiningGame,
+        //         host: action.host,
+        //         gameKeys: action.gameKeys,
+        //         gameIDArray: action.gameIDArray,
+        //         villain: action.villain,
+        //         relic: action.relic,
+        //         location: action.location,
+        //         currentGames: action.currentGames,
+        //         characterList: action.characterList,
+        //         currentCharacter: action.currentCharacter,
+        //         partyMembers: action.partyMembers
+        //     }
         case 'SET_JOINING_STATE':
             return {
                 ...state,
@@ -68,12 +68,12 @@ const setupReducer = (state, action) => {
                 ...state,
                 gameID: action.gameID
             }
-        case 'SET_GAME_KEY':
-            return {
-                ...state,
-                key: action.key,
+        // case 'SET_GAME_KEY':
+        //     return {
+        //         ...state,
+        //         key: action.key,
 
-            }
+        //     }
         case 'SET_ACTIVE_GAME_KEYS':
             return {
                 ...state,
@@ -103,6 +103,11 @@ const setupReducer = (state, action) => {
             return {
                 ...state,
                 uid: action.uid
+            }
+        case 'SET_IS_ANONYMOUS':
+            return {
+                ...state,
+                isAnonymous: action.isAnonymous
             }
         // case 'ADD_PARTY_MEMBER':
         //     const state.partyList

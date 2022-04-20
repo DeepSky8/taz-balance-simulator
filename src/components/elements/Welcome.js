@@ -32,9 +32,6 @@ export const Welcome = () => {
             If you enjoy the electronic version, you'll love the boardgame even more! Use the link below to go the Twogether Studios homepage!
         </p>
         <div>
-            <Link to="/gameSetup">Play TAZ Bureau of Balance digitally</Link>
-        </div>
-        <div>
             <a
                 href="https://www.twogetherstudios.com/products/the-adventure-zone-bureau-of-balance-game-us-canada"
                 target="_blank"
@@ -42,7 +39,9 @@ export const Welcome = () => {
             >
                 Buy the boardgame!
             </a>
-
+            <div>
+            <Link to="/chooseMode">Play TAZ Bureau of Balance digitally</Link>
+        </div>
         </div>
     </div>)
 }

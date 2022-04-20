@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import AppRouter from './routers/AppRouter';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './firebase/firebase';
+import { signInAnonymously } from 'firebase/auth';
 
 
 
@@ -20,65 +23,75 @@ const renderApp = () => {
   }
 }
 
-renderApp();
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    renderApp()
+  } else {
+    console.log('signing in anonymously')
+    signInAnonymously(auth)
+      // .then(() => { renderApp() })
+      .catch((error) => {
+        console.log('error was: ', error)
+      })
+  }
+})
 
 
 
-
-  // if (user !== null) {
-  //   console.log('signing in as auth user isAnonymous: ', user.isAnonymous, user.email)
-  //   // history.push('/gameSetup')
-  //   renderApp();
-  // } else {
-  //   console.log('signing in anonymously')
-  //   signInAnonymously(auth)
-  //     .then(() => { renderApp() })
-  //     .catch((error) => {
-  //       console.log('error was: ', error)
-  //     })
-  // }
-
-
-  // switch (user.isAnonymous) {
-  //   case null:
-  //     console.log('isAnonymouse is null')
-  //     signInAnonymously(auth).then(() => { renderApp() });
-  //     break
-  //   case false:
-  //     console.log('isAnonymouse is false');
-  //     renderApp();
-  //     break
-  //   case true:
-  //     console.log('isAnonymouse is true')
-  //     renderApp();
-  //     break
-  //   case user === null:
-  //     console.log('case of user is null')
-  //     signInAnonymously(auth).then(() => { renderApp() });
-  //     break
-
-  //   default:
-  //     console.log('case of default')
-  //     renderApp();
-  // }
+// if (user !== null) {
+//   console.log('signing in as auth user isAnonymous: ', user.isAnonymous, user.email)
+//   // history.push('/gameSetup')
+//   renderApp();
+// } else {
+//   console.log('signing in anonymously')
+//   signInAnonymously(auth)
+//     .then(() => { renderApp() })
+//     .catch((error) => {
+//       console.log('error was: ', error)
+//     })
+// }
 
 
-  // if (!user.isAnonymous) {
-  //   console.log('Auth State Changed with result of User')
-  //   renderApp();
-  //   console.log('user is: ', user)
+// switch (user.isAnonymous) {
+//   case null:
+//     console.log('isAnonymouse is null')
+//     signInAnonymously(auth).then(() => { renderApp() });
+//     break
+//   case false:
+//     console.log('isAnonymouse is false');
+//     renderApp();
+//     break
+//   case true:
+//     console.log('isAnonymouse is true')
+//     renderApp();
+//     break
+//   case user === null:
+//     console.log('case of user is null')
+//     signInAnonymously(auth).then(() => { renderApp() });
+//     break
 
-  // } else {
-  //   console.log('auth state changed with result of anonymous')
-  //   signInAnonymously(auth)
-  //     .catch((error) => {
-  //       console.log(
-  //         'Error when signing in anonymously from index.js:',
-  //         auth.currentUser,
-  //         error
-  //       )
-  //     })
-  // }
+//   default:
+//     console.log('case of default')
+//     renderApp();
+// }
+
+
+// if (!user.isAnonymous) {
+//   console.log('Auth State Changed with result of User')
+//   renderApp();
+//   console.log('user is: ', user)
+
+// } else {
+//   console.log('auth state changed with result of anonymous')
+//   signInAnonymously(auth)
+//     .catch((error) => {
+//       console.log(
+//         'Error when signing in anonymously from index.js:',
+//         auth.currentUser,
+//         error
+//       )
+//     })
+// }
 
 
 

@@ -5,9 +5,6 @@ import * as firebaseui from 'firebaseui'
 import 'firebaseui/dist/firebaseui.css'
 import { auth, db } from './firebase';
 
-// Hold a reference to the anonymous current user.
-var initialUser = auth.currentUser;
-
 var uiConfig = {
     autoUpgradeAnonymousUsers: true,
 
@@ -36,12 +33,12 @@ var uiConfig = {
 
     callbacks: {
         signInSuccessWithAuthResult: function (authResult) {
-            console.log('successful signin:', authResult)
+            // console.log('successful signin:', authResult)
 
             // Process result. This will not trigger on merge conflicts.
             // On success redirect to signInSuccessUrl.
-            window.location.assign('/gameSetup')
-            return initialUser.delete();
+            // window.location.assign('/gameSetup')
+            return true
         }
         // .then(() => {
         //     return true
@@ -54,67 +51,72 @@ var uiConfig = {
             // Temp variable to hold the anonymous user data if needed.
             var data = null;
             // Hold a reference to the anonymous current user.
-            var anonymousUser = auth.currentUser;
-
+            var anonymousUID = auth.currentUser.uid;
+            var authenticatedCred = error.credential;
 
             // For merge conflicts, the error.code will be
             // 'firebaseui/anonymous-upgrade-merge-conflict'.
             if (error.code !== 'firebaseui/anonymous-upgrade-merge-conflict') {
-                console('some other merge error:', error.code)
+
                 return Promise.resolve();
-            } else {
-                var cred = error.credential;
-                const activeKeysRegistered = [];
-                get(ref(db, 'activeGames'))
-                    .then((snapshot) => {
-                        snapshot.forEach((childSnapShot) => {
-                            if (childSnapShot.val().host === anonymousUser.uid) {
-                                activeKeysRegistered.push(childSnapShot.val().key)
-                            }
-                        })
-                    })
-
-
-
-                // console.log('expected merge error when upgrading:', error.code)
-                // console.log('full error: ', error)
-                // console.log('Anonymouse User data', anonymousUser)
-                // The credential the user tried to sign in with.
-
-                // console.log('cred contents: ', cred)
-                // If using Firebase Realtime Database. The anonymous user data has to be
-                // copied to the non-anonymous user.
-                // var app = firebase.app();
-                // Save anonymous user data first.
-                // const currentUserData = get(db, 'users')
-                if (activeKeysRegistered.length === 0) {
-                    console.log('No current user data, attempted to just sign in')
-                    return signInWithCredential(auth, cred)
-                        .then(() => {
-                            window.location.assign('/gameSetup')
-                        })
-                } else {
-                    console.log('Current User Data exists, attempting to sign in')
-                    // console.log('current user data: ', currentUserData)
-                    // return currentUserData
-
-                    return signInWithCredential(auth, cred)
-                        .then((user) => {
-                            const updates = {};
-                            activeKeysRegistered.forEach((key) => {
-                                updates['/' + key] = { host: user.uid }
-                            })
-                            return update(ref(db, 'activeGames'), updates)
-                        })
-                        .then(() => {
-                            return anonymousUser.delete();
-                        })
-                        .then(() => {
-                            data = null;
-                            window.location.assign("/gameSetup")
-                        })
-                }
             }
+
+
+
+
+            return signInWithCredential(auth, authenticatedCred)
+                .then((user) => {
+                    update(ref(db, 'users/' + auth.currentUser.uid), { anonymousUID })
+                })
+                // .then(() => {
+                //     return anonymousUser.delete();
+                // })
+                .then(() => {
+                    data = null;
+                    anonymousUID = null;
+                    authenticatedCred = null;
+                    window.location.assign("/gameSetup")
+                })
+
+
+
+
+            // get(ref(db, 'activeGames'))
+            //     .then((snapshot) => {
+            //         snapshot.forEach((childSnapShot) => {
+            //             if (childSnapShot.val().host === anonymousUser.uid) {
+            //                 activeKeysRegistered.push(childSnapShot.val().key)
+            //             }
+            //         })
+            //     })
+
+
+
+            // console.log('expected merge error when upgrading:', error.code)
+            // console.log('full error: ', error)
+            // console.log('Anonymouse User data', anonymousUser)
+            // The credential the user tried to sign in with.
+
+            // console.log('cred contents: ', cred)
+            // If using Firebase Realtime Database. The anonymous user data has to be
+            // copied to the non-anonymous user.
+            // var app = firebase.app();
+            // Save anonymous user data first.
+            // const currentUserData = get(db, 'users')
+            // if (activeKeysRegistered.length === 0) {
+            //     console.log('No current user data, attempted to just sign in')
+            //     return signInWithCredential(auth, cred)
+            //         .then(() => {
+            //             window.location.assign('/gameSetup')
+            //         })
+            // } else {
+            //     console.log('Current User Data exists, attempting to sign in')
+            // console.log('current user data: ', currentUserData)
+            // return currentUserData
+
+
+
+
 
 
 

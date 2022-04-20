@@ -1,11 +1,12 @@
 
 export const defaultJoiningReducer = {
     joiningGame: true,
-    joinHostText: 'Joining game (click to host instead)',
+    joinHostText: 'Joining game (enter game code from host)',
     gameID: '',
     gameCodeError: '',
 }
 
+const joinOnly = 'Joining game (enter game code from host)'
 const joinText = 'Joining game (click to host instead)';
 const hostText = 'Hosting game (click to join instead)';
 const errorText = 'Game code not found'
@@ -26,6 +27,10 @@ export const joiningReducer = (state, action) => {
                         hostText
                     )
             }
+        case 'JOINING_ONLY':
+            return { ...state, joinHostText: joinOnly, joiningGame: true }
+        case 'JOINING_OR_HOSTING':
+            return { ...state, joinHostText: state.joiningGame ? joinText : hostText }
         case 'SET_GAME_ID':
             return { ...state, gameID: action.gameID }
         case 'SET_GAME_CODE_ERROR':

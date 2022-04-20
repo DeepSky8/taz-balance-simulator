@@ -17,7 +17,8 @@ const FirebaseSignIn = () => {
 
     return (
         <div>
-            Firebase UI Sign In Page
+            Hosting a game and saving your character require an account.
+            Please sign in to proceed, or click the back button to return to the game.
             <Link to="/gameSetup">Back</Link>
 
             <FirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />

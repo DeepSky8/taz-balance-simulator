@@ -1,8 +1,10 @@
-import React from "react";
-import { Link, Outlet } from "react-router-dom";
-import { auth } from "../../firebase/firebase";
-import { signOut } from "firebase/auth";
+import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { auth, db } from "../../firebase/firebase";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { history } from "../../routers/AppRouter";
+import { setIsAnonymous, setState, setUID } from "../../actions/setupActions";
+import { get, off, onValue, ref, remove, update } from "firebase/database";
 
 
 
@@ -28,37 +30,52 @@ const LogoutLink = () => (
     </div>
 )
 
-// const linkSwitch = () => {
-//     if (auth.currentUser.isAnonymous === false) {
-//         return <LogoutLink />
-//     } else {
-//         return <LoginLink />
-//     }
-// }
+export const AuthWrapper = ({ setupState, dispatchSetupState }) => {
 
-export const AuthWrapper = (props) => {
-console.log('props.uidState from AuthWrapper', props.uidState)
-console.log('props from AuthWrapper', props)
-    // if (auth.currentUser === null) {
-    //     const credential = signInAnonymously(auth)
-    //     console.log('credential created on joiningHosting: ', credential)
-    // }
+    useEffect(() => {
+        dispatchSetupState(setUID(auth.currentUser.uid))
+        dispatchSetupState(setIsAnonymous(auth.currentUser.isAnonymous))
+    }, [auth.currentUser])
+
+    useEffect(() => {
+        const authUID = auth.currentUser.uid
+        onValue(ref(db, 'users/' + authUID), (snapshot) => {
+            
+            if (snapshot.exists()) {
+                const anonymousUID = snapshot.val().anonymousUID
+                if (anonymousUID) {
+                    get(ref(db, 'users/' + anonymousUID))
+                        .then((snapshot) => {
+                            update(ref(db, 'users/' + authUID), { ...snapshot.val(), anonymousUID: null })
+                        })
+                        .then(() => {
+                            remove(ref(db, 'users/' + anonymousUID))
+                        })
+                }
+                dispatchSetupState(setState(snapshot.val()))
+            }
+        })
+
+
+        return () => {
+            off(ref(db, 'users/' + authUID))
+        }
+    }, [])
+
+    // onAuthStateChanged(auth, (user) => { 
+
+    // })
+
     return (
         <div>
-            {props.uidState !== '' ?
+            {auth.currentUser.isAnonymous === false
+                ?
                 <LogoutLink />
                 :
                 <LoginLink />
             }
-            <Outlet />
-            {props.children}
         </div>
     )
 }
 
 export { AuthWrapper as default }
-
-
-
-// <LoginLink />
-// <LogoutLink />

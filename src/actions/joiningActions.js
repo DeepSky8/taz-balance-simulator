@@ -10,8 +10,16 @@ export const setGameID = (gameID) => ({
 
 export const setGameCodeError = () => ({
     type: 'SET_GAME_CODE_ERROR'
- })
+})
 
- export const clearGameCodeError = () => ({
+export const clearGameCodeError = () => ({
     type: 'CLEAR_GAME_CODE_ERROR'
- })
+})
+
+export const joiningOnly = () => ({
+    type: 'JOINING_ONLY'
+})
+
+export const joiningOrHosting = () => ({
+    type: 'JOINING_OR_HOSTING'
+})

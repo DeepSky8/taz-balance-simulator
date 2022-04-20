@@ -1,9 +1,14 @@
-import { onValue, push, ref, remove, update } from "firebase/database";
+import { get, onValue, push, ref, remove, update } from "firebase/database";
 import { db } from "../firebase/firebase";
 
 export const setUID = (uid) => ({
     type: 'SET_UID',
     uid
+})
+
+export const setIsAnonymous = (isAnonymous) => ({
+    type: 'SET_IS_ANONYMOUS',
+    isAnonymous
 })
 
 export const setGameIDArray = (gameIDArray, initialGameObjectsArray) => ({
@@ -24,15 +29,15 @@ export const setSetupJoiningGame = (joiningGame) => ({
     joiningGame
 })
 
-export const setGameKey = (key) => ({
-    type: 'SET_GAME_KEY',
-    key
-})
+// export const setGameKey = (key) => ({
+//     type: 'SET_GAME_KEY',
+//     key
+// })
 
-export const setActiveGameKeys = (keys) => ({
-    type: 'SET_ACTIVE_GAME_KEYS',
-    keys
-})
+// export const setActiveGameKeys = (keys) => ({
+//     type: 'SET_ACTIVE_GAME_KEYS',
+//     keys
+// })
 
 export const setHost = (host) => ({
     type: 'SET_HOST',
@@ -40,57 +45,70 @@ export const setHost = (host) => ({
 })
 
 export const startUpdateCloudState = (state) => {
-    update(ref(db, 'user/' + state.uid), { ...state })
+    update(ref(db, 'user/' + state.uid), { lastActivity: Date.now(), ...state })
 }
 
-export const setLocalState = (
-    {
-        gameID,
-        joiningGame,
-        host,
-        gameKeys,
-        gameIDArray,
-        currentGames,
-        characterList,
-        currentCharacter,
-        partyMembers,
-
-    }) => ({
-        type: 'SET_LOCAL_STATE',
-        gameID,
-        joiningGame,
-        host,
-        gameKeys,
-        gameIDArray,
-        currentGames,
-        characterList,
-        currentCharacter,
-        partyMembers
-    })
-
-export const startRegisterGameID = (gameID, host) => {
+export const startRegisterGameID = (host, gameID, state ) => {
     const updates = {};
     updates['activeGames/' + host] = { gameID, host };
-    updates['/users/' + host] = { gameID, joiningGame: false, host };
+    updates['/users/' + host] = {
+        ...state,
+        gameID,
+        host,
+        lastActivity: Date.now(),
+        uid: host
+    };
     update(ref(db), updates)
-        // update(ref(db, 'activeGames/' + key), { gameID, host, key })
+
         .catch((error) => {
             console.log('Error when sending game code to server:', error)
         })
 }
 
-// const removeGame
-
-export const startRemoveGameCode = (key) => {
-    remove(ref(db, 'activeGames/' + key), {})
+// Clears the cloud record location under activeGames that matches the UID
+// then sets the gameID under the user UID to null
+export const startRemoveGameCode = (host) => {
+    remove(ref(db, 'activeGames/' + host))
+        .then(() => {
+            update(ref(db, 'users/' + host), { gameID: null })
+        })
         .catch((error) => {
             console.log('Error when cleaning game array in cloud:', error)
         })
 }
 
+export const setState = (updatedState) => ({
+    type: 'SET_STATE',
+    updatedState
+})
 
 
+// export const setLocalState = (
+//     {
+//         gameID,
+//         isAnonymous,
+//         joiningGame,
+//         host,
+//         gameKeys,
+//         gameIDArray,
+//         currentGames,
+//         characterList,
+//         currentCharacter,
+//         partyMembers,
 
+//     }) => ({
+//         type: 'SET_LOCAL_STATE',
+//         gameID,
+//         isAnonymous,
+//         joiningGame,
+//         host,
+//         gameKeys,
+//         gameIDArray,
+//         currentGames,
+//         characterList,
+//         currentCharacter,
+//         partyMembers
+//     })
 
 // currentGames: [{
 //     key: null,

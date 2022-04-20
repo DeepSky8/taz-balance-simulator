@@ -7,20 +7,24 @@ import {
     setGameIDArray,
     setGameKey,
     setHost,
+    setIsAnonymous,
     setLocalState,
     setUID,
     startUpdateCloudState,
     startRegisterGameID,
     startRemoveGameCode
 } from "../../actions/setupActions";
-import JoiningHosting from "./JoiningHosting";
+// import JoiningHosting from "./JoiningHosting";
 import VillainSelect from "./VillainSelect";
-import userEvent from "@testing-library/user-event";
+import { signInAnonymously } from "firebase/auth";
 
-export const GameSetup = (props) => {
-    const [setupState, dispatchSetupState] = useReducer(setupReducer, defaultGameSetup)
+export const GameSetup = ({ setupState, dispatchSetupState, children }) => {
+    // const [setupState, dispatchSetupState] = useReducer(setupReducer, defaultGameSetup)
 
-
+    // useEffect(() => {
+    // dispatchSetupState(setUID(auth.currentUser.uid))
+    // dispatchSetupState(setIsAnonymous(auth.currentUser.isAnonymous))
+    // }, [setupState])
 
     // useEffect(() => {
     //     // set(ref(db, 'users/' + '1OSZ2h38hvW7NJQ8jbMFsHhUMxJ3'), {
@@ -59,8 +63,10 @@ export const GameSetup = (props) => {
     // Listen to the logged-in user (including Anonymous)
     // and update the GameSetup state on changes
     // useEffect(() => {
-    //     dispatchSetupState(setUID(auth.currentUser.uid))
-    // }, [auth.currentUser.uid])
+    //     console.log('props.getUid on GameSetup changed, props are now: ', props)
+    //     dispatchSetupState(setUID(props.getUid))
+    //     dispatchSetupState(setIsAnonymous(props.isAnonymous))
+    // }, [props.getUid])
 
     // Listen to list of current game codes in Firebase
     // Set a new list of current game codes on GameSetup state
@@ -68,14 +74,14 @@ export const GameSetup = (props) => {
     useEffect(() => {
         onValue(ref(db, 'activeGames'), (snapshot) => {
             const updatedArray = [];
-            const matchingKeys = [];
+            // const matchingKeys = [];
             snapshot.forEach((childSnapShot) => {
                 updatedArray.push(childSnapShot.val().gameID)
                 // if (childSnapShot.val().host === auth.currentUser.uid) {
                 //     matchingKeys.push(childSnapShot.val().key)
                 // }
             })
-            dispatchSetupState(setActiveGameKeys(matchingKeys))
+            // dispatchSetupState(setActiveGameKeys(matchingKeys))
             dispatchSetupState(setGameIDArray(updatedArray))
 
             // snapshot.forEach((childSnapShot) => {
@@ -103,32 +109,21 @@ export const GameSetup = (props) => {
 
             // update(ref(db, 'activeGames'), deleteRecords)
             off(ref(db, 'activeGames'))
-            setupState.gameKeys.forEach((key) => {
-                dispatchSetupState(startRemoveGameCode(key))
-            })
-
-
-
+            startRemoveGameCode(auth.currentUser.uid)
         }
     }, [])
 
     // When gameID is updated, either start a listener or register the gameID to share
     useEffect(() => {
-
-
-
         const uniqueGameID = !setupState.gameIDArray.includes(setupState.gameID)
         if (setupState.joiningGame) {
 
             // If joining game, start listener to sync the rest of the game state
 
         } else if (!setupState.joiningGame && uniqueGameID) {
+
             // If hosting, and unique game ID is stored locally, 
-            // create a key in the activeGames,
-            // then register gameID at that key
-            // const newGameKey = push(ref(db, 'activeGames')).key
-            startRegisterGameID(setupState.gameID, setupState.uid)
-            // dispatchSetupState(setGameKey(newGameKey))
+            startRegisterGameID(auth.currentUser.uid, setupState.gameID, setupState)
         }
 
     }, [setupState.gameID])
@@ -153,12 +148,9 @@ export const GameSetup = (props) => {
     return (
         <div>
             <p>Game Setup page</p>
-            <JoiningHosting
-                setupState={setupState}
-                dispatchSetupState={dispatchSetupState}
-            />
 
-            {props.children}
+
+            {children}
         </div>
     )
 
