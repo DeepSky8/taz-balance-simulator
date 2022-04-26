@@ -65,7 +65,7 @@ var uiConfig = {
 
 
             return signInWithCredential(auth, authenticatedCred)
-                .then((user) => {
+                .then(() => {
                     update(ref(db, 'users/' + auth.currentUser.uid), { anonymousUID })
                 })
                 // .then(() => {

@@ -15,7 +15,6 @@ import {
     startRemoveGameCode
 } from "../../actions/setupActions";
 // import JoiningHosting from "./JoiningHosting";
-import VillainSelect from "./VillainSelect";
 import { signInAnonymously } from "firebase/auth";
 
 export const GameSetup = ({ setupState, dispatchSetupState, children }) => {

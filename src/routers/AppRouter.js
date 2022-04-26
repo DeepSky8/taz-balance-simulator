@@ -3,35 +3,19 @@ import { Routes, Route } from 'react-router-dom';
 import { FirebaseAppProvider, DatabaseProvider, AuthProvider, useFirebaseApp } from 'reactfire';
 import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
 import { createBrowserHistory } from "history";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth, db } from "../firebase/firebase";
-// import {
-//     setActiveGameKeys,
-//     setGameIDArray,
-//     setGameKey,
-//     setHost,
-//     setIsAnonymous,
-//     setLocalState,
-//     setUID,
-//     startUpdateCloudState,
-//     startRegisterGameID,
-//     startRemoveGameCode
-// } from "..";
-import JoiningHosting from "../components/elements/JoiningHosting";
-import Welcome from "../components/elements/Welcome";
-import GameSetup from "../components/elements/GameSetup";
-import AuthWrapper from "../components/elements/AuthWrapper";
-import NotFoundPage from "../components/elements/NotFoundPage";
-import FirebaseSignIn from '../components/elements/FirebaseSignIn';
-import Tos from "../components/elements/Tos";
-import PrivacyPolicy from "../components/elements/PrivacyPolicy";
-// import JoiningHosting from "../components/elements/JoiningHosting";
-import VillainSelect from "../components/elements/VillainSelect";
-import ActiveGame from "../components/elements/ActiveGame"
-import { FirebaseAuth } from "react-firebaseui";
 import { defaultGameSetup, setupReducer } from "../reducers/setupReducer";
-import { uiConfig } from "../firebase/uiConfig";
+
+import ActiveGame from "../components/elements/ActiveGame"
+import AuthWrapper from "../components/elements/AuthWrapper";
+import ChallengeSelect from "../components/elements/ChallengeSelect";
 import ChooseMode from "../components/elements/ChooseMode";
+import FirebaseSignIn from '../components/elements/FirebaseSignIn';
+import GameSetup from "../components/elements/GameSetup";
+import JoiningHosting from "../components/elements/JoiningHosting";
+import NotFoundPage from "../components/elements/NotFoundPage";
+import PrivacyPolicy from "../components/elements/PrivacyPolicy";
+import Tos from "../components/elements/Tos";
+import Welcome from "../components/elements/Welcome";
 
 
 export const history = createBrowserHistory();
@@ -62,7 +46,10 @@ const AppRouter = () => {
                                 setupState={setupState}
                                 dispatchSetupState={dispatchSetupState}
                             />
-                            <VillainSelect />
+                            <ChallengeSelect
+                                setupState={setupState}
+                                dispatchSetupState={dispatchSetupState}
+                            />
                         </GameSetup>
 
                     } />

@@ -113,7 +113,6 @@ const setupReducer = (state, action) => {
         //     const state.partyList
         //     return {...state, }
         default:
-            console.log('unmatched, returning default state')
             return state
     }
 }
