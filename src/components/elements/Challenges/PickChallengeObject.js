@@ -1,10 +1,15 @@
 import React from "react";
 
-const PickChallengeObject = ({ selectChallenge, challengeName, challengeFlavor }) => (
+const PickChallengeObject = ({ selectChallenge, joining, challengeName, challengeFlavor }) => (
     <div>
-        <p>
-            <button onClick={selectChallenge}>Battle {challengeName}</button>
-        </p>
+        <div>
+            {
+                joining ?
+                    <h4>{challengeName}</h4>
+                    :
+                    <button onClick={selectChallenge}>{challengeName}</button>
+            }
+        </div>
         <p>{challengeFlavor}</p>
     </div>
 )

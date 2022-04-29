@@ -18,16 +18,36 @@ export const setGameIDArray = (gameIDArray, initialGameObjectsArray) => ({
 })
 
 
-export const setJoiningState = (gameID, joiningGame) => ({
+const setJoiningState = (gameID, joiningGame) => ({
     type: 'SET_JOINING_STATE',
     gameID,
     joiningGame
 })
 
-export const setSetupJoiningGame = (joiningGame) => ({
+export const startSetJoiningState = (gameID, joiningGame, authUID) => {
+    update(ref(db, 'users/' + authUID), { gameID, joiningGame })
+        // .then(() => {
+        //     return setJoiningState(gameID, joiningGame)
+        // })
+        .catch((error) => {
+            console.log('Did not set JoiningState, error: ', error)
+        })
+}
+
+const setSetupJoiningGame = (joiningGame) => ({
     type: 'SET_JOINING_GAME',
     joiningGame
 })
+
+export const startSetJoiningGame = (joiningGame, authUID) => {
+    update(ref(db, 'users/' + authUID), { joiningGame })
+        // .then(() => {
+        //     return setSetupJoiningGame(joiningGame)
+        // })
+        .catch((error) => {
+            console.log('Did not set JoiningState, error: ', error)
+        })
+}
 
 // export const setGameKey = (key) => ({
 //     type: 'SET_GAME_KEY',
@@ -44,14 +64,14 @@ export const setHost = (host) => ({
     host
 })
 
-export const startUpdateCloudState = (state) => {
+const startUpdateCloudState = (state) => {
     update(ref(db, 'user/' + state.uid), { lastActivity: Date.now(), ...state })
 }
 
-export const startRegisterGameID = (host, gameID, state ) => {
+export const startRegisterGameID = (host, gameID, state) => {
     const updates = {};
     updates['activeGames/' + host] = { gameID, host };
-    updates['/users/' + host] = {
+    updates['users/' + host] = {
         ...state,
         gameID,
         host,
@@ -67,10 +87,10 @@ export const startRegisterGameID = (host, gameID, state ) => {
 
 // Clears the cloud record location under activeGames that matches the UID
 // then sets the gameID under the user UID to null
-export const startRemoveGameCode = (host) => {
-    remove(ref(db, 'activeGames/' + host))
+export const startRemoveGameCode = (uid) => {
+    remove(ref(db, 'activeGames/' + uid))
         .then(() => {
-            update(ref(db, 'users/' + host), { gameID: null })
+            update(ref(db, 'users/' + uid), { gameID: null, host: null })
         })
         .catch((error) => {
             console.log('Error when cleaning game array in cloud:', error)
@@ -81,6 +101,10 @@ export const setState = (updatedState) => ({
     type: 'SET_STATE',
     updatedState
 })
+
+
+
+
 
 
 // export const setLocalState = (

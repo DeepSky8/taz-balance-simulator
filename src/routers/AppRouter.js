@@ -3,6 +3,17 @@ import { Routes, Route } from 'react-router-dom';
 import { FirebaseAppProvider, DatabaseProvider, AuthProvider, useFirebaseApp } from 'reactfire';
 import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
 import { createBrowserHistory } from "history";
+import {
+    child,
+    get,
+    off,
+    onValue,
+    push,
+    ref,
+    remove,
+    set,
+    update
+} from "firebase/database";
 import { defaultGameSetup, setupReducer } from "../reducers/setupReducer";
 
 import ActiveGame from "../components/elements/ActiveGame"
@@ -16,14 +27,54 @@ import NotFoundPage from "../components/elements/NotFoundPage";
 import PrivacyPolicy from "../components/elements/PrivacyPolicy";
 import Tos from "../components/elements/Tos";
 import Welcome from "../components/elements/Welcome";
-
+import { auth, db } from "../firebase/firebase";
+import { startUpdateCloudState } from "../actions/setupActions";
+import { setState } from "../actions/setupActions";
 
 export const history = createBrowserHistory();
 
 
 const AppRouter = () => {
-
+    const [gameArray, setGameArray] = useState([])
+    const [gameObjectsArray, setGameObjectsArray] = useState([])
     const [setupState, dispatchSetupState] = useReducer(setupReducer, defaultGameSetup)
+
+
+    // This listener updates the local state to mirror the user account in the cloud
+    useEffect(() => {
+        const authUID = auth.currentUser.uid
+        onValue(ref(db, 'users/' + authUID), (snapshot) => {
+            // If there is a user account in the cloud
+            if (snapshot.exists()) {
+
+                const anonymousUID = snapshot.val().anonymousUID
+                // If the user account has an associated anonymous user account
+                // get the data from that account and copy it into the signed-in account
+                // then remove the anonymous account record
+                // then remove the anonymous account association from the user account            
+                if (anonymousUID) {
+                    get(ref(db, 'users/' + anonymousUID), (snapshot) => {
+                        update(ref(db, 'users/' + authUID), { ...snapshot.val() })
+                    })
+                        .then(() => {
+                            remove(ref(db, 'users/' + anonymousUID))
+                        })
+                }
+                update(ref(db, 'users/' + authUID), { anonymousUID: null })
+                // Send the cloud data to local SetupState
+                dispatchSetupState(setState(snapshot.val()))
+            }
+        })
+
+        // When this element is closed, remove the listener on the user account
+        return (() => {
+            off(ref(db, 'users/' + authUID))
+        })
+    }, [])
+
+    useEffect(() => {
+        console.log('setupState changed: ', setupState)
+    }, [setupState])
 
     return (
 
@@ -37,14 +88,15 @@ const AppRouter = () => {
                         <GameSetup
                             setupState={setupState}
                             dispatchSetupState={dispatchSetupState}
+                            gameArray={gameArray}
+                            setGameArray={setGameArray}
+                            gameObjectsArray={gameObjectsArray}
+                            setGameObjectsArray={setGameObjectsArray}
                         >
-                            <AuthWrapper
-                                setupState={setupState}
-                                dispatchSetupState={dispatchSetupState}
-                            />
+                            <AuthWrapper />
                             <JoiningHosting
                                 setupState={setupState}
-                                dispatchSetupState={dispatchSetupState}
+                                gameArray={gameArray}
                             />
                             <ChallengeSelect
                                 setupState={setupState}

@@ -18,17 +18,17 @@ const relicObjectsArray = [
     {
         challengeName: 'The Idol',
         challengeCode: 'r1',
-        challengeFlavor: 'Temporary description'
+        challengeFlavor: "The Idol can alter reality and twist time and space. It doesn't belong in this world."
     },
     {
         challengeName: 'The Hoard',
         challengeCode: 'r2',
-        challengeFlavor: 'Temporary description'
+        challengeFlavor: "This treasure hoard is legendary, and many greedy adventurers hope to claim it. You'll have to deal with these deadly rivals as well as curses and traps laid on the hoard itself."
     },
     {
         challengeName: 'The Staff',
         challengeCode: 'r3',
-        challengeFlavor: 'Temporary description'
+        challengeFlavor: 'The Staff grants The Villain power over the elements, allowing them to control the weather and conjure fire and ice. It probably has a cool name, like "The Staff of Endless Winter."'
     }
 ]
 

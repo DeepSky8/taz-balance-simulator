@@ -1,5 +1,5 @@
 import Card from '../mission-elements/m-card'
-import {cardPicker} from '../functions/deckRandomizers';
+import {cardPicker} from '../../../functions/deckRandomizers';
 
 const caveCards = [
 

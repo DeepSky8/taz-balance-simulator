@@ -3,11 +3,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import AppRouter from './routers/AppRouter';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, signInAnonymously } from 'firebase/auth';
 import { auth } from './firebase/firebase';
-import { signInAnonymously } from 'firebase/auth';
-
-
 
 const jsx = (
   <React.StrictMode>

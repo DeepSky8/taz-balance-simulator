@@ -30,7 +30,14 @@ export const joiningReducer = (state, action) => {
         case 'JOINING_ONLY':
             return { ...state, joinHostText: joinOnly, joiningGame: true }
         case 'JOINING_OR_HOSTING':
-            return { ...state, joinHostText: state.joiningGame ? joinText : hostText }
+            return {
+                ...state,
+                joinHostText:
+                    state.joiningGame ?
+                        joinText
+                        :
+                        hostText
+            }
         case 'SET_GAME_ID':
             return { ...state, gameID: action.gameID }
         case 'SET_GAME_CODE_ERROR':

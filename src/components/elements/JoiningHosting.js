@@ -2,7 +2,10 @@ import React, { useEffect, useReducer } from "react";
 import generateGameID from '../functions/generateGameID';
 import {
     setJoiningState,
-    startRemoveGameCode
+    setSetupJoiningGame,
+    startRemoveGameCode,
+    startSetJoiningGame,
+    startSetJoiningState
 } from "../../actions/setupActions";
 import {
     defaultJoiningReducer,
@@ -16,21 +19,20 @@ import {
     setGameID,
     toggleJoiningGame
 } from '../../actions/joiningActions';
-import { history } from "../../routers/AppRouter";
 import { auth } from "../../firebase/firebase";
 
-const JoiningHosting = ({ setupState, dispatchSetupState }) => {
+const JoiningHosting = ({ setupState, gameArray }) => {
+    const authUID = auth.currentUser.uid
     const [joinHost, dispatchJoinHost] = useReducer(joiningReducer, defaultJoiningReducer)
 
     // Monitor whether the player is signed in or not
     // If not signed in, they will only be able to join a game
     // If signed in they can toggle between joining and hosting a game
     useEffect(() => {
-        if (setupState.isAnonymous) {
-            console.log('setup state on Joining Hosting: ', setupState.isAnonymous)
-            dispatchJoinHost(joiningOnly())
-        } else {
+        if (setupState.isAnonymous === false) {
             dispatchJoinHost(joiningOrHosting())
+        } else {
+            dispatchJoinHost(joiningOnly())
         }
     }, [setupState.isAnonymous])
 
@@ -41,11 +43,10 @@ const JoiningHosting = ({ setupState, dispatchSetupState }) => {
         dispatchJoinHost(
             clearGameCodeError()
         )
-        dispatchSetupState(
-            setJoiningState(
-                parseInt(joinHost.gameID),
-                joinHost.joiningGame
-            )
+        startSetJoiningState(
+            parseInt(joinHost.gameID),
+            joinHost.joiningGame,
+            auth.currentUser.uid
         )
     }
 
@@ -55,7 +56,7 @@ const JoiningHosting = ({ setupState, dispatchSetupState }) => {
         const validGameCode =
             joinHost.gameID.toString().match(/^\d{4}$/) !== null;
         const gameCodeRegistered =
-            setupState.gameIDArray.includes(parseInt(joinHost.gameID));
+            gameArray.includes(parseInt(joinHost.gameID));
 
         if (validGameCode) {
             // If joining and the game code exists in the cloud OR if hosting
@@ -73,6 +74,7 @@ const JoiningHosting = ({ setupState, dispatchSetupState }) => {
     // whether the player is joining or hosting a game.
     // Generate a random gameID if hosting.
     useEffect(() => {
+
         // If the toggle is clicked clear game code error
         dispatchJoinHost(clearGameCodeError())
 
@@ -80,8 +82,9 @@ const JoiningHosting = ({ setupState, dispatchSetupState }) => {
             // Clears the cloud record location under activeGames 
             // that matches the UID
             // then sets the gameID under the user UID to null
-            startRemoveGameCode(auth.currentUser.uid)
-
+            startRemoveGameCode(authUID)
+            // dispatchJoiningState()
+            startSetJoiningGame(joinHost.joiningGame, authUID)
         } else {
             // Generate a short game ID, check it against the current active
             // game IDs, and once it is unique store it locally to be shared with
@@ -113,36 +116,37 @@ const JoiningHosting = ({ setupState, dispatchSetupState }) => {
     // If you are joining a game, this JSX allows you to enter a game code
     // provided by your host
     const EnterGameID = (
-        <div>
-            <input
-                value={joinHost.gameID}
-                type='text'
-                placeholder='1234'
-                onChange={(e) => {
-                    onJoinCodeChange(e)
-                }}
-            />
-        </div>
+        <input
+            value={joinHost.gameID}
+            type='text'
+            placeholder='1234'
+            onChange={(e) => {
+                onJoinCodeChange(e)
+            }}
+        />
     )
 
     //If you are hosting a game, this JSX displays the game code to share
     const DisplayGameID = (
-        <div>
-            <input value={joinHost.gameID} readOnly={true} />
-        </div>
+        <input value={joinHost.gameID} readOnly={true} />
     )
 
     return (
         <div>
-            <button onClick={joiningOptions}>{joinHost.joinHostText}</button>
-            {setupState.isAnonymous ?
-                EnterGameID
-                :
-                joinHost.joiningGame ?
+            <div>
+                <button
+                    onClick={joiningOptions}>
+                    {joinHost.joinHostText}
+                </button>
+                {setupState.isAnonymous ?
                     EnterGameID
                     :
-                    DisplayGameID
-            }
+                    joinHost.joiningGame ?
+                        EnterGameID
+                        :
+                        DisplayGameID
+                }
+            </div>
             {joinHost.joiningGame && joinHost.gameCodeError}
         </div>
 

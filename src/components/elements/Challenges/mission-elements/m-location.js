@@ -13,22 +13,22 @@ const locationObjectsArray = [
     {
         challengeName: 'The Cave',
         challengeCode: 'l0',
-        challengeFlavor: `The Villain can use the Ring to conjure illusions and nightmares, forcing you to face your inner fears. It probably has a cool name, like "The Mind's Eye`
+        challengeFlavor: `The Cave is a maze of tunnels stretching deep below the surface. It's filled with traps, haunted ruins, and foul monsters. It might have a fancy name like "The Caves of Despair."`
     },
     {
         challengeName: 'The Temple',
         challengeCode: 'l1',
-        challengeFlavor: 'Temporary description'
+        challengeFlavor: `A foul presence has corrupted this grand temple, and sinister forces lurk in the gilded shadows. It might have a name like "The Temple of Absolute, Certain Death" but it's probably not that BaseAudioContext.`
     },
     {
         challengeName: 'The Tomb',
         challengeCode: 'l2',
-        challengeFlavor: 'Temporary description'
+        challengeFlavor: 'Deadly traps and vengeful ghosts guard the ancient treasures interred in this Tomb.'
     },
     {
         challengeName: 'The Train',
         challengeCode: 'l3',
-        challengeFlavor: 'Temporary description'
+        challengeFlavor: 'The Villain has stolen the Relic, and you have to catch them before the train reaches the end of the line.'
     }
 ]
 

@@ -1,7 +1,16 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { auth, db } from "../../firebase/firebase";
-import { child, get, off, onValue, push, ref, set, update } from "firebase/database";
-import { defaultGameSetup, setupReducer } from '../../reducers/setupReducer';
+import {
+    child,
+    get,
+    off,
+    onValue,
+    push,
+    ref,
+    remove,
+    set,
+    update
+} from "firebase/database";
 import {
     setActiveGameKeys,
     setGameIDArray,
@@ -9,21 +18,15 @@ import {
     setHost,
     setIsAnonymous,
     setLocalState,
+    setState,
     setUID,
     startUpdateCloudState,
     startRegisterGameID,
-    startRemoveGameCode
+    startRemoveGameCode,
+
 } from "../../actions/setupActions";
-// import JoiningHosting from "./JoiningHosting";
-import { signInAnonymously } from "firebase/auth";
 
-export const GameSetup = ({ setupState, dispatchSetupState, children }) => {
-    // const [setupState, dispatchSetupState] = useReducer(setupReducer, defaultGameSetup)
-
-    // useEffect(() => {
-    // dispatchSetupState(setUID(auth.currentUser.uid))
-    // dispatchSetupState(setIsAnonymous(auth.currentUser.isAnonymous))
-    // }, [setupState])
+export const GameSetup = ({ setupState, gameArray, setGameArray, gameObjectsArray, setGameObjectsArray, children }) => {
 
     // useEffect(() => {
     //     // set(ref(db, 'users/' + '1OSZ2h38hvW7NJQ8jbMFsHhUMxJ3'), {
@@ -59,65 +62,47 @@ export const GameSetup = ({ setupState, dispatchSetupState, children }) => {
 
 
 
-    // Listen to the logged-in user (including Anonymous)
-    // and update the GameSetup state on changes
-    // useEffect(() => {
-    //     console.log('props.getUid on GameSetup changed, props are now: ', props)
-    //     dispatchSetupState(setUID(props.getUid))
-    //     dispatchSetupState(setIsAnonymous(props.isAnonymous))
-    // }, [props.getUid])
-
-    // Listen to list of current game codes in Firebase
-    // Set a new list of current game codes on GameSetup state
-    // when the listener perceives a change
     useEffect(() => {
+        const authUID = auth.currentUser.uid
+        // Listen to list of current game codes in Firebase
         onValue(ref(db, 'activeGames'), (snapshot) => {
             const updatedArray = [];
-            // const matchingKeys = [];
+            const updatedObjects = [];
             snapshot.forEach((childSnapShot) => {
                 updatedArray.push(childSnapShot.val().gameID)
-                // if (childSnapShot.val().host === auth.currentUser.uid) {
-                //     matchingKeys.push(childSnapShot.val().key)
-                // }
+                updatedObjects.push(childSnapShot.val())
             })
-            // dispatchSetupState(setActiveGameKeys(matchingKeys))
-            dispatchSetupState(setGameIDArray(updatedArray))
-
-            // snapshot.forEach((childSnapShot) => {
-            //     if (childSnapShot.val().host === setupState.uid) {
-
-            //         dispatchSetupState(setActiveGameKeys(childSnapShot.val().key))
-            //     }
-            // })
+            // Set a new list of current game codes on GameSetup state
+            // when the listener perceives a change
+            setGameArray(updatedArray)
+            setGameObjectsArray(updatedObjects)
         })
 
         return () => {
-            // Add code here to remove the gameID from the active game list when 
-            // this JSX is closed. 
-
-            // const activeKeysRegistered = [];
-            // setupState.gameObjectsArray.forEach((gameObject) => {
-            //     if (gameObject.host === setupState.uid) {
-            //         activeKeysRegistered.push(gameObject.key)
-            //     }
-            // })
-            // const deleteRecords = {};
-            // activeKeysRegistered.forEach((key) => {
-            //     deleteRecords['/' + key] = {}
-            // })
-
-            // update(ref(db, 'activeGames'), deleteRecords)
+            // When this element closes, remove the game code 
+            // associated with this user ID from the cloud
+            startRemoveGameCode(authUID)
+            // Remove the listener on Active Games in the cloud
             off(ref(db, 'activeGames'))
-            startRemoveGameCode(auth.currentUser.uid)
         }
     }, [])
 
-    // When gameID is updated, either start a listener or register the gameID to share
+    // When gameID is updated, either start a listener 
+    // or register the gameID to share
     useEffect(() => {
-        const uniqueGameID = !setupState.gameIDArray.includes(setupState.gameID)
+        const gameID = setupState.gameID
+        const uniqueGameID = !gameArray.includes(gameID)
         if (setupState.joiningGame) {
 
-            // If joining game, start listener to sync the rest of the game state
+            // const gameObject = gameObjectsArray.find(object => object.gameID === gameID)
+
+            // if (gameObject) {
+            //     const location = 'users/' + gameObject.host + '/currentGames' + gameID
+            //     onValue(ref(db, location), (snapshot) => {
+
+            //     })
+            // }
+
 
         } else if (!setupState.joiningGame && uniqueGameID) {
 
@@ -128,27 +113,9 @@ export const GameSetup = ({ setupState, dispatchSetupState, children }) => {
     }, [setupState.gameID])
 
 
-
-
-    // useEffect(() => {
-    //     if (setupState.shortGameID === shortGameID) {
-    //         // Once the setupState shortGameID matches local shortGameID
-    //         // (meaning that the player has entered a shortGameID for a valid game)
-    //         // start a listener to sync the rest of the game information
-    //         startJoinedGameSetupListener(shortGameID, setupState.uid)
-    //     }
-    //     // When this JSX unmounts, turn off the current game setup listener
-    //     return () => {
-    //         off(ref(db, 'activeGames/' + shortGameID))
-    //     }
-    // }, [setupState.shortGameID])
-
-
     return (
         <div>
             <p>Game Setup page</p>
-
-
             {children}
         </div>
     )
