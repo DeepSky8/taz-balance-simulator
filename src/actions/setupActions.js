@@ -102,7 +102,10 @@ export const setState = (updatedState) => ({
     updatedState
 })
 
-
+export const updateJoinedActiveGame = (currentActiveGame) => ({ 
+    type: 'UPDATE_ACTIVE_GAME',
+    currentActiveGame
+})
 
 
 

@@ -111,6 +111,11 @@ const setupReducer = (state, action) => {
         // case 'ADD_PARTY_MEMBER':
         //     const state.partyList
         //     return {...state, }
+        case 'UPDATE_ACTIVE_GAME':
+            return {
+                ...state,
+                currentActiveGame: action.currentActiveGame
+            }
         default:
             return state
     }

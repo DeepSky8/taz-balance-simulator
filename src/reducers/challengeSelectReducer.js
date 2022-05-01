@@ -4,18 +4,18 @@ const defaultChallengeState = {
     locationDisplayed: false,
     selectedVillainObject: {
         challengeName: 'View Villains',
-        challengeCode: '',
-        challengeFlavor: ''
+        challengeCode: null,
+        challengeFlavor: null
     },
     selectedRelicObject: {
         challengeName: 'View Relics',
-        challengeCode: '',
-        challengeFlavor: ''
+        challengeCode: null,
+        challengeFlavor: null
     },
     selectedLocationObject: {
         challengeName: 'View Locations',
-        challengeCode: '',
-        challengeFlavor: ''
+        challengeCode: null,
+        challengeFlavor: null
     },
 }
 
@@ -36,7 +36,7 @@ const challengeSelectReducer = (state, action) => {
                 locationDisplayed: false,
                 selectedVillainObject: {
                     challengeName:
-                        state.selectedVillainObject.challengeCode !== '' ?
+                        state.selectedVillainObject.challengeCode ?
                             state.selectedVillainObject.challengeName
                             :
                             flippedVillain ?
@@ -48,7 +48,7 @@ const challengeSelectReducer = (state, action) => {
                 },
                 selectedRelicObject: {
                     challengeName:
-                        state.selectedRelicObject.challengeCode !== '' ?
+                        state.selectedRelicObject.challengeCode ?
                             state.selectedRelicObject.challengeName
                             :
                             view + relics,
@@ -57,7 +57,7 @@ const challengeSelectReducer = (state, action) => {
                 },
                 selectedLocationObject: {
                     challengeName:
-                        state.selectedLocationObject.challengeCode !== '' ?
+                        state.selectedLocationObject.challengeCode ?
                             state.selectedLocationObject.challengeName
                             :
                             view + locations,
@@ -74,7 +74,7 @@ const challengeSelectReducer = (state, action) => {
                 locationDisplayed: false,
                 selectedVillainObject: {
                     challengeName:
-                        state.selectedVillainObject.challengeCode !== '' ?
+                        state.selectedVillainObject.challengeCode ?
                             state.selectedVillainObject.challengeName
                             :
                             view + villains,
@@ -83,7 +83,7 @@ const challengeSelectReducer = (state, action) => {
                 },
                 selectedRelicObject: {
                     challengeName:
-                        state.selectedRelicObject.challengeCode !== '' ?
+                        state.selectedRelicObject.challengeCode ?
                             state.selectedRelicObject.challengeName
                             :
                             flippedRelic ?
@@ -95,7 +95,7 @@ const challengeSelectReducer = (state, action) => {
                 },
                 selectedLocationObject: {
                     challengeName:
-                        state.selectedLocationObject.challengeCode !== '' ?
+                        state.selectedLocationObject.challengeCode ?
                             state.selectedLocationObject.challengeName
                             :
                             view + locations,
@@ -112,7 +112,7 @@ const challengeSelectReducer = (state, action) => {
                 locationDisplayed: flippedLocation,
                 selectedVillainObject: {
                     challengeName:
-                        state.selectedVillainObject.challengeCode !== '' ?
+                        state.selectedVillainObject.challengeCode ?
                             state.selectedVillainObject.challengeName
                             :
                             view + villains,
@@ -121,7 +121,7 @@ const challengeSelectReducer = (state, action) => {
                 },
                 selectedRelicObject: {
                     challengeName:
-                        state.selectedRelicObject.challengeCode !== '' ?
+                        state.selectedRelicObject.challengeCode ?
                             state.selectedRelicObject.challengeName
                             :
                             view + relics,
@@ -130,7 +130,7 @@ const challengeSelectReducer = (state, action) => {
                 },
                 selectedLocationObject: {
                     challengeName:
-                        state.selectedLocationObject.challengeCode !== '' ?
+                        state.selectedLocationObject.challengeCode ?
                             state.selectedLocationObject.challengeName
                             :
                             flippedLocation ?

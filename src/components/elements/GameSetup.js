@@ -23,6 +23,7 @@ import {
     startUpdateCloudState,
     startRegisterGameID,
     startRemoveGameCode,
+    updateJoinedActiveGame,
 
 } from "../../actions/setupActions";
 
@@ -87,30 +88,7 @@ export const GameSetup = ({ setupState, gameArray, setGameArray, gameObjectsArra
         }
     }, [])
 
-    // When gameID is updated, either start a listener 
-    // or register the gameID to share
-    useEffect(() => {
-        const gameID = setupState.gameID
-        const uniqueGameID = !gameArray.includes(gameID)
-        if (setupState.joiningGame) {
 
-            // const gameObject = gameObjectsArray.find(object => object.gameID === gameID)
-
-            // if (gameObject) {
-            //     const location = 'users/' + gameObject.host + '/currentGames' + gameID
-            //     onValue(ref(db, location), (snapshot) => {
-
-            //     })
-            // }
-
-
-        } else if (!setupState.joiningGame && uniqueGameID) {
-
-            // If hosting, and unique game ID is stored locally, 
-            startRegisterGameID(auth.currentUser.uid, setupState.gameID, setupState)
-        }
-
-    }, [setupState.gameID])
 
 
     return (

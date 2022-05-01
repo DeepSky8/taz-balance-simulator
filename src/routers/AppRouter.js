@@ -28,7 +28,7 @@ import PrivacyPolicy from "../components/elements/PrivacyPolicy";
 import Tos from "../components/elements/Tos";
 import Welcome from "../components/elements/Welcome";
 import { auth, db } from "../firebase/firebase";
-import { startUpdateCloudState } from "../actions/setupActions";
+import { startRegisterGameID, startUpdateCloudState, updateJoinedActiveGame } from "../actions/setupActions";
 import { setState } from "../actions/setupActions";
 
 export const history = createBrowserHistory();
@@ -71,6 +71,42 @@ const AppRouter = () => {
             off(ref(db, 'users/' + authUID))
         })
     }, [])
+
+
+
+    // When gameID is updated, either start a listener 
+    // or register the gameID to share
+    useEffect(() => {
+        const gameID = setupState.gameID
+        const uniqueGameID = !gameArray.includes(gameID)
+        const gameObject = gameObjectsArray.find(object => object.gameID === gameID)
+        if (setupState.joiningGame && gameObject) {
+            const location = 'users/' + gameObject.host + '/currentActiveGame'
+            onValue(ref(db, location), (snapshot) => {
+                if (snapshot.exists()) {
+                    updateJoinedActiveGame(snapshot.val())
+                }
+            })
+
+
+        } else if (!setupState.joiningGame && uniqueGameID) {
+
+            // If hosting, and unique game ID is stored locally, 
+            startRegisterGameID(setupState.uid, setupState.gameID, setupState)
+        }
+
+        return () => {
+            if (gameObject) {
+                off(ref(db, 'users/' + gameObject.host + '/currentActiveGame'))
+            }
+        }
+
+    }, [setupState.gameID])
+
+
+
+
+
 
     useEffect(() => {
         console.log('setupState changed: ', setupState)

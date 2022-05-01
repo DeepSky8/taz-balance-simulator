@@ -13,8 +13,9 @@ import ChallengeOptionsList from "./ChallengeOptionsList";
 import { villainObjectsArray } from "./Challenges/mission-elements/m-villain";
 import { relicObjectsArray } from "./Challenges/mission-elements/m-relic";
 import { locationObjectsArray } from "./Challenges/mission-elements/m-location";
+import challengeTransformer from "../../reducers/challengeTransformer";
 
-const ChallengeSelect = ({ setupState, dispatchSetupState }) => {
+const ChallengeSelect = ({ setupState }) => {
     const [challengeState, dispatchChallengeState] = useReducer(challengeSelectReducer, defaultChallengeState)
     const [challengesUpdated, updateChallenge] = useState(0)
     const dispatchedChallengeCode = () => {
@@ -73,6 +74,27 @@ const ChallengeSelect = ({ setupState, dispatchSetupState }) => {
             uid
         )
     }, [challengesUpdated])
+
+    useEffect(() => {
+        if (setupState.joiningGame && gameID) {
+            dispatchChallengeState(
+                setVillainObject(
+                    challengeTransformer(
+                        villainObjectsArray, setupState.villainCode)))
+            dispatchChallengeState(
+                setRelicObject(
+                    challengeTransformer(
+                        relicObjectsArray, setupState.relicCode)))
+            dispatchChallengeState(
+                setLocationObject(
+                    challengeTransformer(
+                        locationObjectsArray, setupState.locationCode)))
+        }
+    }, [
+        setupState.villainCode,
+        setupState.relicCode,
+        setupState.locationCode
+    ])
 
     return (
         <div>
