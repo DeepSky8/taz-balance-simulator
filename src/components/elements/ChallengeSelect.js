@@ -1,8 +1,11 @@
 import React, { useEffect, useReducer, useState } from "react";
 import {
     setVillainObject,
+    setReceivedVillainObject,
     setRelicObject,
+    setReceivedRelicObject,
     setLocationObject,
+    setReceivedLocationObject,
     toggleLocation,
     toggleRelic,
     toggleVillain,
@@ -17,10 +20,7 @@ import challengeTransformer from "../../reducers/challengeTransformer";
 
 const ChallengeSelect = ({ setupState }) => {
     const [challengeState, dispatchChallengeState] = useReducer(challengeSelectReducer, defaultChallengeState)
-    const [challengesUpdated, updateChallenge] = useState(0)
-    const dispatchedChallengeCode = () => {
-        updateChallenge(challengesUpdated + 1)
-    }
+
     const uid = setupState.uid
     const gameID = setupState.gameID
 
@@ -34,13 +34,24 @@ const ChallengeSelect = ({ setupState }) => {
         dispatchChallengeState(toggleLocation())
     }
 
+    const sendChallengeUpdates = () => {
+        startSetChallenges(
+            {
+                villainCode: challengeState.selectedVillainObject.challengeCode,
+                relicCode: challengeState.selectedRelicObject.challengeCode,
+                locationCode: challengeState.selectedLocationObject.challengeCode
+            },
+            uid
+        )
+    }
+
     const villainDispatch = (challengeObject) => {
         if (!setupState.joiningGame) {
 
             // const challengeObject =
             //     challengeTransformer(villainObjectsArray, challengeCode)
             dispatchChallengeState(setVillainObject(challengeObject))
-            dispatchedChallengeCode()
+            sendChallengeUpdates()
         }
     }
 
@@ -50,7 +61,7 @@ const ChallengeSelect = ({ setupState }) => {
             // const challengeObject =
             //     challengeTransformer(relicObjectsArray, challengeCode)
             dispatchChallengeState(setRelicObject(challengeObject))
-            dispatchedChallengeCode()
+            sendChallengeUpdates()
         }
     }
 
@@ -60,41 +71,31 @@ const ChallengeSelect = ({ setupState }) => {
             // const challengeObject =
             //     challengeTransformer(locationObjectsArray, challengeCode)
             dispatchChallengeState(setLocationObject(challengeObject))
-            dispatchedChallengeCode()
+            sendChallengeUpdates()
         }
     }
 
     useEffect(() => {
-        startSetChallenges(
-            {
-                villainCode: challengeState.selectedVillainObject.challengeCode,
-                relicCode: challengeState.selectedRelicObject.challengeCode,
-                locationCode: challengeState.selectedLocationObject.challengeCode
-            },
-            uid
+        console.log(
+            'useEffect setupState challenge codes fired',
+            setupState.currentActiveGame.challengesObject
         )
-    }, [challengesUpdated])
-
-    useEffect(() => {
         if (setupState.joiningGame && gameID) {
+            console.log('setupState.joining game is ', setupState.joiningGame, 'gameID is ', gameID)
             dispatchChallengeState(
-                setVillainObject(
+                setReceivedVillainObject(
                     challengeTransformer(
-                        villainObjectsArray, setupState.villainCode)))
+                        villainObjectsArray, setupState.currentActiveGame.challengesObject.villainCode)))
             dispatchChallengeState(
-                setRelicObject(
+                setReceivedRelicObject(
                     challengeTransformer(
-                        relicObjectsArray, setupState.relicCode)))
+                        relicObjectsArray, setupState.currentActiveGame.challengesObject.relicCode)))
             dispatchChallengeState(
-                setLocationObject(
+                setReceivedLocationObject(
                     challengeTransformer(
-                        locationObjectsArray, setupState.locationCode)))
+                        locationObjectsArray, setupState.currentActiveGame.challengesObject.locationCode)))
         }
-    }, [
-        setupState.villainCode,
-        setupState.relicCode,
-        setupState.locationCode
-    ])
+    }, [setupState.currentActiveGame.challengesObject])
 
     return (
         <div>

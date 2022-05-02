@@ -80,10 +80,13 @@ const AppRouter = () => {
         const gameID = setupState.gameID
         const uniqueGameID = !gameArray.includes(gameID)
         const gameObject = gameObjectsArray.find(object => object.gameID === gameID)
+
         if (setupState.joiningGame && gameObject) {
             const location = 'users/' + gameObject.host + '/currentActiveGame'
             onValue(ref(db, location), (snapshot) => {
+                console.log('onValue AppRouter fired')
                 if (snapshot.exists()) {
+                    console.log('snapshot exists, is ', snapshot.val())
                     updateJoinedActiveGame(snapshot.val())
                 }
             })

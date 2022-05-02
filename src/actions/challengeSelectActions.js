@@ -34,11 +34,25 @@ export const startSetChallenges = (
    uid
 ) => {
    const updates = {}
-   updates['users/' + uid + '/currentActiveGame'] = challengeCodes;
+   updates['users/' + uid + '/currentActiveGame/challengesObject'] = challengeCodes;
    // updates['users/' + uid + '/currentGames/' + gameID] = challengeCodes;
    update(ref(db), updates)
 }
 
+export const setReceivedVillainObject = (receivedVillainObject) => ({
+   type: 'RECEIVE_VILLAIN',
+   receivedVillainObject
+})
+
+export const setReceivedRelicObject = (receivedRelicObject) => ({
+   type: 'RECEIVE_RELIC',
+   receivedRelicObject
+})
+
+export const setReceivedLocationObject = (receivedLocationObject) => ({
+   type: 'RECEIVE_LOCATION',
+   receivedLocationObject
+})
 
 
 // const challengeCodeParser = (challengeCode) => {

@@ -35,6 +35,7 @@ const challengeSelectReducer = (state, action) => {
                 relicDisplayed: false,
                 locationDisplayed: false,
                 selectedVillainObject: {
+                    ...state.selectedVillainObject,
                     challengeName:
                         state.selectedVillainObject.challengeCode ?
                             state.selectedVillainObject.challengeName
@@ -43,26 +44,28 @@ const challengeSelectReducer = (state, action) => {
                                 hide + villains
                                 :
                                 view + villains,
-                    challengeCode: state.selectedVillainObject.challengeCode,
-                    challengeFlavor: state.selectedVillainObject.challengeFlavor
+                    // challengeCode: state.selectedVillainObject.challengeCode,
+                    // challengeFlavor: state.selectedVillainObject.challengeFlavor
                 },
                 selectedRelicObject: {
+                    ...state.selectedRelicObject,
                     challengeName:
                         state.selectedRelicObject.challengeCode ?
                             state.selectedRelicObject.challengeName
                             :
                             view + relics,
-                    challengeCode: state.selectedRelicObject.challengeCode,
-                    challengeFlavor: state.selectedRelicObject.challengeFlavor
+                    // challengeCode: state.selectedRelicObject.challengeCode,
+                    // challengeFlavor: state.selectedRelicObject.challengeFlavor
                 },
                 selectedLocationObject: {
+                    ...state.selectedLocationObject,
                     challengeName:
                         state.selectedLocationObject.challengeCode ?
                             state.selectedLocationObject.challengeName
                             :
                             view + locations,
-                    challengeCode: state.selectedLocationObject.challengeCode,
-                    challengeFlavor: state.selectedLocationObject.challengeFlavor
+                    // challengeCode: state.selectedLocationObject.challengeCode,
+                    // challengeFlavor: state.selectedLocationObject.challengeFlavor
                 }
             }
         case 'TOGGLE_RELIC':
@@ -73,15 +76,17 @@ const challengeSelectReducer = (state, action) => {
                 relicDisplayed: flippedRelic,
                 locationDisplayed: false,
                 selectedVillainObject: {
+                    ...state.selectedVillainObject,
                     challengeName:
                         state.selectedVillainObject.challengeCode ?
                             state.selectedVillainObject.challengeName
                             :
                             view + villains,
-                    challengeCode: state.selectedVillainObject.challengeCode,
-                    challengeFlavor: state.selectedVillainObject.challengeFlavor
+                    // challengeCode: state.selectedVillainObject.challengeCode,
+                    // challengeFlavor: state.selectedVillainObject.challengeFlavor
                 },
                 selectedRelicObject: {
+                    ...state.selectedRelicObject,
                     challengeName:
                         state.selectedRelicObject.challengeCode ?
                             state.selectedRelicObject.challengeName
@@ -90,17 +95,18 @@ const challengeSelectReducer = (state, action) => {
                                 hide + relics
                                 :
                                 view + relics,
-                    challengeCode: state.selectedRelicObject.challengeCode,
-                    challengeFlavor: state.selectedRelicObject.challengeFlavor
+                    // challengeCode: state.selectedRelicObject.challengeCode,
+                    // challengeFlavor: state.selectedRelicObject.challengeFlavor
                 },
                 selectedLocationObject: {
+                    ...state.selectedLocationObject,
                     challengeName:
                         state.selectedLocationObject.challengeCode ?
                             state.selectedLocationObject.challengeName
                             :
                             view + locations,
-                    challengeCode: state.selectedLocationObject.challengeCode,
-                    challengeFlavor: state.selectedLocationObject.challengeFlavor
+                    // challengeCode: state.selectedLocationObject.challengeCode,
+                    // challengeFlavor: state.selectedLocationObject.challengeFlavor
                 }
             }
         case 'TOGGLE_LOCATION':
@@ -111,24 +117,27 @@ const challengeSelectReducer = (state, action) => {
                 relicDisplayed: false,
                 locationDisplayed: flippedLocation,
                 selectedVillainObject: {
+                    ...state.selectedVillainObject,
                     challengeName:
                         state.selectedVillainObject.challengeCode ?
                             state.selectedVillainObject.challengeName
                             :
                             view + villains,
-                    challengeCode: state.selectedVillainObject.challengeCode,
-                    challengeFlavor: state.selectedVillainObject.challengeFlavor
+                    // challengeCode: state.selectedVillainObject.challengeCode,
+                    // challengeFlavor: state.selectedVillainObject.challengeFlavor
                 },
                 selectedRelicObject: {
+                    ...state.selectedRelicObject,
                     challengeName:
                         state.selectedRelicObject.challengeCode ?
                             state.selectedRelicObject.challengeName
                             :
                             view + relics,
-                    challengeCode: state.selectedLocationObject.challengeCode,
-                    challengeFlavor: state.selectedLocationObject.challengeFlavor
+                    // challengeCode: state.selectedLocationObject.challengeCode,
+                    // challengeFlavor: state.selectedLocationObject.challengeFlavor
                 },
                 selectedLocationObject: {
+                    ...state.selectedLocationObject,
                     challengeName:
                         state.selectedLocationObject.challengeCode ?
                             state.selectedLocationObject.challengeName
@@ -137,8 +146,8 @@ const challengeSelectReducer = (state, action) => {
                                 hide + locations
                                 :
                                 view + locations,
-                    challengeCode: state.selectedLocationObject.challengeCode,
-                    challengeFlavor: state.selectedLocationObject.challengeFlavor
+                    // challengeCode: state.selectedLocationObject.challengeCode,
+                    // challengeFlavor: state.selectedLocationObject.challengeFlavor
                 }
             }
         case 'SET_VILLAIN':
@@ -164,6 +173,21 @@ const challengeSelectReducer = (state, action) => {
                 villainDisplayed: false,
                 relicDisplayed: false,
                 locationDisplayed: false,
+            }
+        case 'RECEIVE_VILLAIN':
+            return {
+                ...state,
+                selectedVillainObject: action.receivedVillainObject
+            }
+        case 'RECEIVE_RELIC':
+            return {
+                ...state,
+                selectedRelicObject: action.receivedRelicObject
+            }
+        case 'RECEIVE_LOCATION':
+            return {
+                ...state,
+                selectedLocationObject: action.receivedLocationObject
             }
         default:
             return state

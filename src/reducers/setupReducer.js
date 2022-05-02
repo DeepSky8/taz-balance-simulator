@@ -2,11 +2,13 @@
 const defaultGameSetup = {
     anonymousUID: null,
     currentCharacter: null,
-    currentActiveGame:{
+    currentActiveGame: {
         key: null,
-        villainCode: null,
-        relicCode: null,
-        locationCode: null,
+        challengesObject: {
+            villainCode: null,
+            relicCode: null,
+            locationCode: null
+        },
         surprises: [{}],
         progress: {
             villain: null,
@@ -28,7 +30,7 @@ const defaultGameSetup = {
     gameIDArray: [],
     gameKeys: [],
     host: null,
-    isAnonymous: null,
+    isAnonymous: true,
     joiningGame: true,
     lastActivity: 0,
     partyMembers: [],
@@ -86,7 +88,13 @@ const setupReducer = (state, action) => {
         case 'SET_VILLAIN':
             return {
                 ...state,
-                villain: action.villain
+                currentActiveGame: {
+                    ...state.currentActiveGame,
+                    challengesObject: {
+                        ...state.currentActiveGame.challengesObject,
+                        villainCode: action.villainCode
+                    }
+                }
             };
         case 'SET_RELIC':
             return {
