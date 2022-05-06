@@ -1,10 +1,10 @@
 import { initializeApp } from 'firebase/app';
 import { getDatabase } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
-import { FirebaseAppProvider, DatabaseProvider, AuthProvider, useFirebaseApp } from 'reactfire';
+// import { FirebaseAppProvider, DatabaseProvider, AuthProvider, useFirebaseApp } from 'reactfire';
 import * as firebaseui from 'firebaseui'
 import 'firebaseui/dist/firebaseui.css'
-import FirebaseAuth from 'react-firebaseui/FirebaseAuth';
+// import FirebaseAuth from 'react-firebaseui/FirebaseAuth';
 
 
 const firebaseConfig = {

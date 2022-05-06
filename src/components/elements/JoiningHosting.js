@@ -1,13 +1,6 @@
 import React, { useEffect, useReducer } from "react";
 import generateGameID from '../functions/generateGameID';
 import {
-    setJoiningState,
-    setSetupJoiningGame,
-    startRemoveGameCode,
-    startSetJoiningGame,
-    startSetJoiningState
-} from "../../actions/setupActions";
-import {
     defaultJoiningReducer,
     joiningReducer
 } from "../../reducers/joiningReducer";
@@ -15,58 +8,69 @@ import {
     clearGameCodeError,
     joiningOnly,
     joiningOrHosting,
+    startRegisterGameID,
+    startRemoveGameCode,
+    startSaveGameID,
+    startSetJoiningGame,
     setGameCodeError,
     setGameID,
-    toggleJoiningGame
+    toggleJoiningGame,
+    clearGameID,
 } from '../../actions/joiningActions';
 import { auth } from "../../firebase/firebase";
 
-const JoiningHosting = ({ setupState, gameArray }) => {
-    const authUID = auth.currentUser.uid
+const JoiningHosting = ({ userState, gameArray }) => {
+
     const [joinHost, dispatchJoinHost] = useReducer(joiningReducer, defaultJoiningReducer)
 
     // Monitor whether the player is signed in or not
     // If not signed in, they will only be able to join a game
     // If signed in they can toggle between joining and hosting a game
     useEffect(() => {
-        if (setupState.isAnonymous === false) {
+        if (userState.isAnonymous === false) {
             dispatchJoinHost(joiningOrHosting())
         } else {
             dispatchJoinHost(joiningOnly())
         }
-    }, [setupState.isAnonymous])
+    }, [userState.isAnonymous])
 
-    // Used to send joining/hosting status and a 
-    // validated game ID to GameSetup element 
-    // when fired by following useEffect
-    const dispatchJoiningState = () => {
-        dispatchJoinHost(
-            clearGameCodeError()
-        )
-        startSetJoiningState(
-            parseInt(joinHost.gameID),
-            joinHost.joiningGame,
-            auth.currentUser.uid
-        )
-    }
+    useEffect(() => {
+        if (userState.gameID === null) {
+            dispatchJoinHost(clearGameID())
+        }
+    }, [userState.gameID])
 
     // Validate game ID; display error if invalid
-    // Dispatch to GameState with previous function ^^ if valid game ID
+    // Dispatch to cloud if valid game ID
     useEffect(() => {
+        const gameID = parseInt(joinHost.gameID)
+        const fourDigits = (joinHost.gameID.toString().length === 4);
         const validGameCode =
             joinHost.gameID.toString().match(/^\d{4}$/) !== null;
         const gameCodeRegistered =
-            gameArray.includes(parseInt(joinHost.gameID));
+            gameArray.includes(gameID);
+
+        if (fourDigits &&
+            (!validGameCode ||
+                joinHost.joiningGame && !gameCodeRegistered)) {
+            dispatchJoinHost(setGameCodeError())
+        } else {
+            dispatchJoinHost(clearGameCodeError())
+        }
 
         if (validGameCode) {
-            // If joining and the game code exists in the cloud OR if hosting
-            // send the game information to setupState
-            // otherwise set the error on the screen
-            joinHost.joiningGame && gameCodeRegistered || !joinHost.joiningGame ?
-                dispatchJoiningState()
-                :
-                dispatchJoinHost(setGameCodeError())
+            if (joinHost.joiningGame && gameCodeRegistered) {
+                // If joining, set the uid, last activity date, host, and gameID
+                // on user's profile in cloud
+                startSaveGameID(auth.currentUser.uid, gameID)
+            } else if (!joinHost.joiningGame && !gameCodeRegistered) {
+                // If hosting, create an activeGames entry with gameID
+                // then set the uid, last activity date, host, and gameID
+                // on user's profile in cloud
+                startRegisterGameID(auth.currentUser.uid, parseInt(gameID))
+            }
         }
+
     }, [joinHost.gameID])
 
 
@@ -77,21 +81,22 @@ const JoiningHosting = ({ setupState, gameArray }) => {
 
         // If the toggle is clicked clear game code error
         dispatchJoinHost(clearGameCodeError())
+        // then pass the current joining state to the cloud
+        startSetJoiningGame(auth.currentUser.uid, joinHost.joiningGame)
+
 
         if (joinHost.joiningGame) {
             // Clears the cloud record location under activeGames 
             // that matches the UID
-            // then sets the gameID under the user UID to null
-            startRemoveGameCode(authUID)
-            // dispatchJoiningState()
-            startSetJoiningGame(joinHost.joiningGame, authUID)
+            // then sets the gameID and host under the user UID to null
+            startRemoveGameCode(auth.currentUser.uid, userState.gameID)
         } else {
             // Generate a short game ID, check it against the current active
             // game IDs, and once it is unique store it locally to be shared with
             // other players joining your game. 
             // A (previous) seperate useEffect (monitoring the local gameID status)
-            // dispatches the gameID to GameState and then to the cloud.
-            dispatchJoinHost(setGameID(generateGameID(setupState.gameIDArray)))
+            // dispatches the gameID to the cloud.
+            dispatchJoinHost(setGameID(generateGameID(gameArray)))
         }
     }, [joinHost.joiningGame])
 
@@ -108,7 +113,7 @@ const JoiningHosting = ({ setupState, gameArray }) => {
     }
 
     const joiningOptions = () => {
-        if (!setupState.isAnonymous) {
+        if (userState.isAnonymous === false) {
             dispatchJoinHost(toggleJoiningGame())
         }
     }
@@ -138,7 +143,7 @@ const JoiningHosting = ({ setupState, gameArray }) => {
                     onClick={joiningOptions}>
                     {joinHost.joinHostText}
                 </button>
-                {setupState.isAnonymous ?
+                {joinHost.isAnonymous ?
                     EnterGameID
                     :
                     joinHost.joiningGame ?
@@ -155,6 +160,3 @@ const JoiningHosting = ({ setupState, gameArray }) => {
 }
 
 export { JoiningHosting as default }
-
-
-

@@ -14,27 +14,50 @@ export const toggleLocation = () => ({
    type: 'TOGGLE_LOCATION'
 })
 
-export const setVillainObject = (selectedVillainObject) => ({
+const setVillainObject = (selectedVillainObject) => ({
    type: 'SET_VILLAIN',
    selectedVillainObject
 })
 
-export const setRelicObject = (selectedRelicObject) => ({
+const setRelicObject = (selectedRelicObject) => ({
    type: 'SET_RELIC',
    selectedRelicObject
 })
 
-export const setLocationObject = (selectedLocationObject) => ({
+const setLocationObject = (selectedLocationObject) => ({
    type: 'SET_LOCATION',
    selectedLocationObject
 })
 
-export const startSetChallenges = (
-   challengeCodes,
-   uid
+export const startSetVillain = (
+   gameID,
+   villainCode
 ) => {
+   
    const updates = {}
-   updates['users/' + uid + '/currentActiveGame/challengesObject'] = challengeCodes;
+   updates['activeGames/' + gameID + '/challengesObject/villainCode'] = villainCode;
+   // updates['users/' + uid + '/currentGames/' + gameID] = challengeCodes;
+   update(ref(db), updates)
+}
+
+export const startSetRelic = (
+   gameID,
+   relicCode
+) => {
+   
+   const updates = {}
+   updates['activeGames/' + gameID + '/challengesObject/relicCode'] = relicCode;
+   // updates['users/' + uid + '/currentGames/' + gameID] = challengeCodes;
+   update(ref(db), updates)
+}
+
+export const startSetLocation = (
+   gameID,
+   locationCode
+) => {
+   
+   const updates = {}
+   updates['activeGames/' + gameID + '/challengesObject/locationCode'] = locationCode;
    // updates['users/' + uid + '/currentGames/' + gameID] = challengeCodes;
    update(ref(db), updates)
 }

@@ -5,6 +5,7 @@ import reportWebVitals from './reportWebVitals';
 import AppRouter from './routers/AppRouter';
 import { onAuthStateChanged, signInAnonymously } from 'firebase/auth';
 import { auth } from './firebase/firebase';
+import { registerUser } from './actions/userActions';
 
 const jsx = (
   <React.StrictMode>
@@ -22,6 +23,7 @@ const renderApp = () => {
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
+    registerUser(user.uid, user.isAnonymous, {}=true)
     renderApp()
   } else {
     console.log('signing in anonymously')

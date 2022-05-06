@@ -150,44 +150,51 @@ const challengeSelectReducer = (state, action) => {
                     // challengeFlavor: state.selectedLocationObject.challengeFlavor
                 }
             }
-        case 'SET_VILLAIN':
-            return {
-                ...state,
-                selectedVillainObject: action.selectedVillainObject,
-                villainDisplayed: false,
-                relicDisplayed: false,
-                locationDisplayed: false,
-            }
-        case 'SET_RELIC':
-            return {
-                ...state,
-                selectedRelicObject: action.selectedRelicObject,
-                villainDisplayed: false,
-                relicDisplayed: false,
-                locationDisplayed: false,
-            }
-        case 'SET_LOCATION':
-            return {
-                ...state,
-                selectedLocationObject: action.selectedLocationObject,
-                villainDisplayed: false,
-                relicDisplayed: false,
-                locationDisplayed: false,
-            }
         case 'RECEIVE_VILLAIN':
+            console.log('received villain, action object is: ', action.receivedVillainObject)
             return {
                 ...state,
-                selectedVillainObject: action.receivedVillainObject
+                villainDisplayed: false,
+                relicDisplayed: false,
+                locationDisplayed: false,
+                selectedVillainObject: {
+                    ...action.receivedVillainObject,
+                    challengeName:
+                        action.receivedVillainObject.challengeCode === null ?
+                            view + villains
+                            :
+                            action.receivedVillainObject.challengeName,
+                }
             }
         case 'RECEIVE_RELIC':
             return {
                 ...state,
-                selectedRelicObject: action.receivedRelicObject
+                villainDisplayed: false,
+                relicDisplayed: false,
+                locationDisplayed: false,
+                selectedRelicObject: {
+                    ...action.receivedRelicObject,
+                    challengeName:
+                        action.receivedRelicObject.challengeCode === null ?
+                            view + relics
+                            :
+                            action.receivedRelicObject.challengeName,
+                }
             }
         case 'RECEIVE_LOCATION':
             return {
                 ...state,
-                selectedLocationObject: action.receivedLocationObject
+                villainDisplayed: false,
+                relicDisplayed: false,
+                locationDisplayed: false,
+                selectedLocationObject: {
+                    ...action.receivedLocationObject,
+                    challengeName:
+                        action.receivedLocationObject.challengeCode ?
+                            action.receivedLocationObject.challengeName
+                            :
+                            view + locations,
+                }
             }
         default:
             return state
@@ -195,3 +202,29 @@ const challengeSelectReducer = (state, action) => {
 }
 
 export { defaultChallengeState, challengeSelectReducer }
+
+
+        // case 'SET_VILLAIN':
+        //     return {
+        //         ...state,
+        //         selectedVillainObject: action.selectedVillainObject,
+        //         villainDisplayed: false,
+        //         relicDisplayed: false,
+        //         locationDisplayed: false,
+        //     }
+        // case 'SET_RELIC':
+        //     return {
+        //         ...state,
+        //         selectedRelicObject: action.selectedRelicObject,
+        //         villainDisplayed: false,
+        //         relicDisplayed: false,
+        //         locationDisplayed: false,
+        //     }
+        // case 'SET_LOCATION':
+        //     return {
+        //         ...state,
+        //         selectedLocationObject: action.selectedLocationObject,
+        //         villainDisplayed: false,
+        //         relicDisplayed: false,
+        //         locationDisplayed: false,
+        //     }

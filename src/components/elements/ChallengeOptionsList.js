@@ -13,7 +13,7 @@ const ChallengeOptionsList = (
         {challengeObjectArray.map((challenge) => {
             return <PickChallengeObject
                 key={challenge.challengeCode}
-                selectChallenge={() => { challengeDispatch(challenge) }}
+                selectChallenge={() => { challengeDispatch(challenge.challengeCode) }}
                 joining={joining}
                 {...challenge}
             />

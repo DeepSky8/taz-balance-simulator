@@ -40,6 +40,8 @@ export const joiningReducer = (state, action) => {
             }
         case 'SET_GAME_ID':
             return { ...state, gameID: action.gameID }
+        case 'CLEAR_GAME_ID':
+            return { ...state, gameID: '' }
         case 'SET_GAME_CODE_ERROR':
             return { ...state, gameCodeError: errorText }
         case 'CLEAR_GAME_CODE_ERROR':
