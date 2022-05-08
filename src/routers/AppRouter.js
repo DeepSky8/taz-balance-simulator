@@ -96,15 +96,9 @@ const AppRouter = () => {
                     <Route path='chooseMode' element={<ChooseMode />} />
                     <Route path='gameSetup' element={
                         <GameSetup
-                            // setupState={setupState}
-                            // dispatchSetupState={dispatchSetupState}
-                            // gameArray={gameArray}
                             setGameArray={setGameArray}
                             userState={userState}
-                            gameState={gameState}
                             dispatchGameState={dispatchGameState}
-                        // gameObjectsArray={gameObjectsArray}
-                        // setGameObjectsArray={setGameObjectsArray}
                         >
                             <AuthWrapper />
                             <JoiningHosting

@@ -1,6 +1,5 @@
 import React from "react";
-import challengeTransformer from "../../reducers/challengeTransformer";
-import PickChallengeObject from './Challenges/PickChallengeObject';
+import PickChallengeObject from './PickChallengeObject';
 
 const ChallengeOptionsList = (
     {

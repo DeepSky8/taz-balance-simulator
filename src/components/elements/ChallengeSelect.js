@@ -1,10 +1,7 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer} from "react";
 import {
-    setVillainObject,
     setReceivedVillainObject,
-    setRelicObject,
     setReceivedRelicObject,
-    setLocationObject,
     setReceivedLocationObject,
     toggleLocation,
     toggleRelic,
@@ -14,13 +11,11 @@ import {
     startSetVillain
 } from "../../actions/challengeSelectActions";
 import { challengeSelectReducer, defaultChallengeState } from "../../reducers/challengeSelectReducer";
-import ChallengeOptionsList from "./ChallengeOptionsList";
+import ChallengeOptionsList from "./Challenges/ChallengeOptionsList";
 import { villainObjectsArray } from "./Challenges/mission-elements/m-villain";
 import { relicObjectsArray } from "./Challenges/mission-elements/m-relic";
 import { locationObjectsArray } from "./Challenges/mission-elements/m-location";
-import challengeTransformer from "../../reducers/challengeTransformer";
-import { off, onValue, ref } from "firebase/database";
-import { db } from "../../firebase/firebase";
+import challengeTransformer from "../functions/challengeTransformer";
 
 const ChallengeSelect = ({ gameState, userState }) => {
     const [challengeState, dispatchChallengeState] = useReducer(challengeSelectReducer, defaultChallengeState)
@@ -35,62 +30,29 @@ const ChallengeSelect = ({ gameState, userState }) => {
         dispatchChallengeState(toggleLocation())
     }
 
-    // const sendChallengeUpdates = () => {
-    //     startSetChallenges(
-    //         uid,
-    //         challengeState.selectedVillainObject.challengeCode,
-    //         challengeState.selectedRelicObject.challengeCode,
-    //         challengeState.selectedLocationObject.challengeCode
-    //     )
-    // }
-
     const villainDispatch = (challengeCode) => {
         console.log('villainDispatch clicked, challenge code is: ', challengeCode)
         if (!userState.joiningGame) {
-
-            // const challengeObject =
-            //     challengeTransformer(villainObjectsArray, challengeCode)
-            // dispatchChallengeState(setVillainObject(challengeObject))
-            // sendChallengeUpdates()
             startSetVillain(userState.gameID, challengeCode)
         }
     }
 
     const relicDispatch = (challengeCode) => {
         if (!userState.joiningGame) {
-
-            // const challengeObject =
-            //     challengeTransformer(relicObjectsArray, challengeCode)
-            // dispatchChallengeState(setRelicObject(challengeObject))
-            // sendChallengeUpdates()
             startSetRelic(userState.gameID, challengeCode)
         }
     }
 
     const locationDispatch = (challengeCode) => {
         if (!userState.joiningGame) {
-
-            // const challengeObject =
-            //     challengeTransformer(locationObjectsArray, challengeCode)
-            // dispatchChallengeState(setLocationObject(challengeObject))
-            // sendChallengeUpdates()
             startSetLocation(userState.gameID, challengeCode)
         }
     }
 
-    // useEffect(() => { }, [challengeState.selectedVillainObject])
-
-
-    // This useEffect monitors the setupState challengesObject
-    // When setupState is updated (via listener) with challenge codes
+    // This useEffect monitors the gameState and the gameID on the user
+    // When updated (via listener) with challenge codes
     // this useEffect updates challengeState to display
     useEffect(() => {
-        // console.log(
-        //     'useEffect setupState challenge codes fired',
-        //     setupState.currentActiveGame.challengesObject
-        // )
-
-        // console.log('setupState.joining game is ', setupState.joiningGame, 'gameID is ', gameID)
         dispatchChallengeState(
             setReceivedVillainObject(
                 challengeTransformer(
