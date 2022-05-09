@@ -14,15 +14,7 @@ const defaultGameState = {
         location: null
     },
     teamHealth: null,
-    characterList: [{
-        charID: '',
-        charName: '',
-        charRace: '',
-        charTool: '',
-        charAttribute: '',
-        charNotes: '',
-        charKostco: [{}]
-    }]
+    characterList: []
 }
 
 const gameReducer = (state, action) => {

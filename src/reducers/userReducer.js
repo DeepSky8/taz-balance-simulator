@@ -2,15 +2,7 @@
 const defaultUserProfile = {
     anonymousUID: null,
     currentCharacter: null,
-    characterList: [{
-        charID: '',
-        charName: '',
-        charRace: '',
-        charTool: '',
-        charAttribute: '',
-        charNotes: '',
-        charKostco: [{}]
-    }],
+    characterList: [],
     gameID: null,
     host: null,
     isAnonymous: true,

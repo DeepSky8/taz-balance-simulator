@@ -1,18 +1,11 @@
-import React, { useContext, useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { Routes, Route } from 'react-router-dom';
-import { FirebaseAppProvider, DatabaseProvider, AuthProvider, useFirebaseApp } from 'reactfire';
 import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import {
-    child,
-    get,
     off,
     onValue,
-    push,
     ref,
-    remove,
-    set,
-    update
 } from "firebase/database";
 import { defaultUserProfile, userReducer } from "../reducers/userReducer";
 
@@ -30,6 +23,8 @@ import Welcome from "../components/elements/Welcome";
 import { auth, db } from "../firebase/firebase";
 import { updateUserState } from "../actions/userActions";
 import { defaultGameState, gameReducer } from "../reducers/gameReducer";
+import PartyMembers from "../components/elements/Party/PartyMembers";
+import CharacterSelect from "../components/elements/Party/CharacterSelect";
 
 export const history = createBrowserHistory();
 
@@ -108,6 +103,15 @@ const AppRouter = () => {
                             <ChallengeSelect
                                 userState={userState}
                                 gameState={gameState}
+                            />
+                            <CharacterSelect
+                                userState={userState}
+                                gameState={gameState}
+                            />
+                            <PartyMembers
+                                userState={userState}
+                                gameState={gameState}
+
                             />
                         </GameSetup>
 
