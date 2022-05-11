@@ -16,6 +16,7 @@ import {
     setGameID,
     toggleJoiningGame,
     clearGameID,
+    setJoiningState,
 } from '../../actions/joiningActions';
 import { auth } from "../../firebase/firebase";
 
@@ -38,6 +39,11 @@ const JoiningHosting = ({ userState, gameArray }) => {
         if (userState.gameID === null) {
             dispatchJoinHost(clearGameID())
         }
+        // if (!joinHost.gameID && userState.gameID) {
+        //     dispatchJoinHost(
+        //         setJoiningState(userState.gameID)
+        //     )
+        // }
     }, [userState.gameID])
 
     // Validate game ID; display error if invalid

@@ -10,7 +10,7 @@ export const setGameID = (gameID) => ({
     gameID
 })
 
-export const clearGameID = () => ({ 
+export const clearGameID = () => ({
     type: 'CLEAR_GAME_ID'
 })
 
@@ -28,6 +28,11 @@ export const joiningOnly = () => ({
 
 export const joiningOrHosting = () => ({
     type: 'JOINING_OR_HOSTING'
+})
+
+export const setJoiningState = (gameID) => ({
+    type: 'SET_JOINING_STATE',
+    gameID
 })
 
 export const startSetJoiningGame = (uid, joiningGame) => {

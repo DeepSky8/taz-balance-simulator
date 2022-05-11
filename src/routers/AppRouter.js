@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer, useState } from "react";
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Outlet } from 'react-router-dom';
 import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import {
@@ -8,7 +8,8 @@ import {
     ref,
 } from "firebase/database";
 import { defaultUserProfile, userReducer } from "../reducers/userReducer";
-
+import { defaultGameState, gameReducer } from "../reducers/gameReducer";
+import { defaultNewCharState, newCharReducer } from "../reducers/newCharReducer";
 import ActiveGame from "../components/elements/ActiveGame"
 import AuthWrapper from "../components/elements/AuthWrapper";
 import ChallengeSelect from "../components/elements/ChallengeSelect";
@@ -22,9 +23,13 @@ import Tos from "../components/elements/Tos";
 import Welcome from "../components/elements/Welcome";
 import { auth, db } from "../firebase/firebase";
 import { updateUserState } from "../actions/userActions";
-import { defaultGameState, gameReducer } from "../reducers/gameReducer";
+
 import PartyMembers from "../components/elements/Party/PartyMembers";
 import CharacterSelect from "../components/elements/Party/CharacterSelect";
+import CreateNewCharacter from "../components/elements/CreateNewCharacter";
+import Bard from "../components/classes/Bard";
+import Cleric from "../components/classes/Cleric";
+import Test from "../components/classes/Test";
 
 export const history = createBrowserHistory();
 
@@ -34,7 +39,7 @@ const AppRouter = () => {
     // const [gameObjectsArray, setGameObjectsArray] = useState([])
     const [gameState, dispatchGameState] = useReducer(gameReducer, defaultGameState)
     const [userState, dispatchUserState] = useReducer(userReducer, defaultUserProfile)
-
+    const [newCharState, dispatchNewCharState] = useReducer(newCharReducer, defaultNewCharState)
 
     // This listener updates the local state to 
     // mirror the user account in the cloud
@@ -73,13 +78,17 @@ const AppRouter = () => {
 
 
 
-    useEffect(() => {
-        console.log('userState changed: ', userState)
-    }, [userState])
+    // useEffect(() => {
+    //     console.log('userState changed: ', userState)
+    // }, [userState])
 
-    useEffect(() => {
-        console.log('gameState changed: ', gameState)
-    }, [gameState])
+    // useEffect(() => {
+    //     console.log('gameState changed: ', gameState)
+    // }, [gameState])
+
+        useEffect(() => {
+        console.log('new character state changed: ', newCharState)
+    }, [newCharState])
 
     return (
 
@@ -95,7 +104,7 @@ const AppRouter = () => {
                             userState={userState}
                             dispatchGameState={dispatchGameState}
                         >
-                            <AuthWrapper />
+                            <AuthWrapper gameID={userState.gameID} />
                             <JoiningHosting
                                 userState={userState}
                                 gameArray={gameArray}
@@ -116,6 +125,33 @@ const AppRouter = () => {
                         </GameSetup>
 
                     } />
+                    <Route path="/createNewCharacter/*"
+                        element={
+                            <div>
+                                <AuthWrapper gameID={userState.gameID} />
+                                <CreateNewCharacter
+                                    newCharState={newCharState}
+                                    dispatchNewCharState={dispatchNewCharState}
+                                />
+
+                            </div>
+                        }
+
+                    >
+                        <Route path='createBard'
+                            element={<Bard
+                                newCharState={newCharState}
+                                dispatchNewCharState={dispatchNewCharState}
+                            />}
+                        />
+                        <Route path='createCleric'
+                            element={<Cleric
+                                newCharState={newCharState}
+                                dispatchNewCharState={dispatchNewCharState}
+                            />}
+                        />
+                    </Route>
+
 
 
                     <Route path='gameInProcess' element={
@@ -160,3 +196,4 @@ export default AppRouter;
 //     </DatabaseProvider>
 // </AuthProvider>
 // </FirebaseAppProvider>
+

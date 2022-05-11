@@ -133,7 +133,6 @@ const challengeSelectReducer = (state, action) => {
                 }
             }
         case 'RECEIVE_VILLAIN':
-            console.log('received villain, action object is: ', action.receivedVillainObject)
             return {
                 ...state,
                 villainDisplayed: false,

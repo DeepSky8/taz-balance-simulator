@@ -4,20 +4,33 @@ import { toggleCharDisplay } from "../../../actions/charActions";
 import { CharactersList } from "./CharactersList";
 
 const CharacterSelect = ({ userState, gameState }) => {
-    const [characterState, setCharacterState] = useReducer(charReducer, defaultCharState)
+    const [characterState, dispatchCharState] = useReducer(charReducer, defaultCharState)
 
+    const charDispatch = (key) => {
+
+    }
+
+    const charCreate = () => { 
+        
+    }
 
     return (
         <div>
-            <button onClick={() => { toggleCharDisplay() }}>
+            <button onClick={() => { dispatchCharState(toggleCharDisplay()) }}>
                 {userState.currentCharacter ?
-                    userState.currentCharacter.charName
+                    userState.currentCharacter.charName + " (click to change)"
                     :
                     'Please select a character'}
             </button>
 
             {characterState.displayChars &&
-                <CharactersList />
+                <div>
+                    <CharactersList
+                        userState={userState}
+                        charDispatch={charDispatch}
+                    />
+                </div>
+
 
             }
         </div>

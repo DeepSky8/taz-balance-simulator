@@ -31,7 +31,6 @@ const ChallengeSelect = ({ gameState, userState }) => {
     }
 
     const villainDispatch = (challengeCode) => {
-        console.log('villainDispatch clicked, challenge code is: ', challengeCode)
         if (!userState.joiningGame) {
             startSetVillain(userState.gameID, challengeCode)
         }

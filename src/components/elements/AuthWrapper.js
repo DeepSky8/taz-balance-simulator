@@ -5,11 +5,11 @@ import { signOut } from "firebase/auth";
 import { history } from "../../routers/AppRouter";
 
 const LoginLink = () => (
-    <div>
-        <Link to="/signIn">
-            Login
-        </Link>
-    </div>
+
+    <Link to="/signIn">
+        Login
+    </Link>
+
 )
 
 const onLogoutClick = () => {
@@ -21,15 +21,16 @@ const onLogoutClick = () => {
 }
 
 const LogoutLink = () => (
-    <div>
-        <button onClick={onLogoutClick}>Logout</button>
-    </div>
+
+    <button onClick={onLogoutClick}>Logout</button>
+
 )
 
-export const AuthWrapper = () => {
+export const AuthWrapper = ({ gameID }) => {
 
     return (
         <div>
+            {gameID && 'Game ID: ' + gameID}
             {auth.currentUser.isAnonymous === false
                 ?
                 <LogoutLink />
