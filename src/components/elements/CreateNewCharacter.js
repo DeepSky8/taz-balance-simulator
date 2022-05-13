@@ -1,11 +1,26 @@
 import React, { useEffect } from "react";
-import { Link, NavLink, Outlet } from "react-router-dom";
-import { startSaveNewCharacter } from "../../actions/charActions";
+import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
+import { hideAlerts, showAlerts, startSaveNewCharacter } from "../../actions/newCharActions";
+import { auth } from "../../firebase/firebase";
 
 const CreateNewCharacter = ({ newCharState, dispatchNewCharState }) => {
+    let navigate = useNavigate()
+
+
 
     const saveCharacter = () => {
-        startSaveNewCharacter()
+        if (newCharState.charName &&
+            newCharState.charClassCode &&
+            newCharState.charRaceCode &&
+            newCharState.charToolCode &&
+            newCharState.charAttributeCode) {
+            dispatchNewCharState(hideAlerts())
+            startSaveNewCharacter(auth.currentUser.uid, newCharState)
+            navigate('/gameSetup')
+        } else {
+            dispatchNewCharState(showAlerts())
+        }
+
     }
 
     return (
@@ -30,7 +45,13 @@ const CreateNewCharacter = ({ newCharState, dispatchNewCharState }) => {
 
 
             <p>
-                <button onClick={saveCharacter}>Save Character</button>
+                <button
+                    type="button"
+                    id="saveCharacter"
+                    onClick={() => { saveCharacter() }}
+                >
+                    Save Character
+                </button>
                 <Link to="/gameSetup">Cancel</Link>
             </p>
         </div>

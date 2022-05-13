@@ -1,9 +1,9 @@
+import { defaultNewCharState } from "./newCharReducer"
 
 
 const defaultCharState = {
     displayChars: false,
-    charName: null,
-    charClass: null
+    ...defaultNewCharState
 }
 
 
@@ -14,6 +14,16 @@ const charReducer = (state, action) => {
             return {
                 ...state,
                 displayChars: toggledCharDisplay
+            }
+        case 'SET_CHAR_STATE':
+            return {
+                ...state,
+                ...action.charObject,
+                displayChars: false
+            }
+        case 'SET_NO_CHAR':
+            return {
+                ...defaultCharState
             }
         default: return state
     }

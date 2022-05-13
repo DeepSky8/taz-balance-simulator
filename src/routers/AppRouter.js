@@ -10,6 +10,7 @@ import {
 import { defaultUserProfile, userReducer } from "../reducers/userReducer";
 import { defaultGameState, gameReducer } from "../reducers/gameReducer";
 import { defaultNewCharState, newCharReducer } from "../reducers/newCharReducer";
+import { defaultCharState, charReducer } from "../reducers/charReducer";
 import ActiveGame from "../components/elements/ActiveGame"
 import AuthWrapper from "../components/elements/AuthWrapper";
 import ChallengeSelect from "../components/elements/ChallengeSelect";
@@ -22,7 +23,7 @@ import PrivacyPolicy from "../components/elements/PrivacyPolicy";
 import Tos from "../components/elements/Tos";
 import Welcome from "../components/elements/Welcome";
 import { auth, db } from "../firebase/firebase";
-import { updateUserState } from "../actions/userActions";
+import { setCharacterListArray, updateUserState } from "../actions/userActions";
 
 import PartyMembers from "../components/elements/Party/PartyMembers";
 import CharacterSelect from "../components/elements/Party/CharacterSelect";
@@ -30,24 +31,27 @@ import CreateNewCharacter from "../components/elements/CreateNewCharacter";
 import Bard from "../components/classes/Bard";
 import Cleric from "../components/classes/Cleric";
 import Test from "../components/classes/Test";
+import { setCharState, setNoCurrentChar } from "../actions/charActions";
 
 export const history = createBrowserHistory();
 
 
 const AppRouter = () => {
     const [gameArray, setGameArray] = useState([])
+    const [charArray, setCharArray] = useState([])
     // const [gameObjectsArray, setGameObjectsArray] = useState([])
     const [gameState, dispatchGameState] = useReducer(gameReducer, defaultGameState)
     const [userState, dispatchUserState] = useReducer(userReducer, defaultUserProfile)
     const [newCharState, dispatchNewCharState] = useReducer(newCharReducer, defaultNewCharState)
+    const [charState, dispatchCharState] = useReducer(charReducer, defaultCharState)
 
     // This listener updates the local state to 
     // mirror the user account in the cloud
     useEffect(() => {
-        const authUID = auth.currentUser.uid
-        onValue(ref(db, 'users/' + authUID), (snapshot) => {
+        onValue(ref(db, 'users/' + auth.currentUser.uid), (snapshot) => {
             // If there is a user account in the cloud
             if (snapshot.exists()) {
+                dispatchUserState(updateUserState(snapshot.val()))
 
                 // const anonymousUID = snapshot.val().anonymousUID
                 // // If the user account has an associated anonymous user account
@@ -64,18 +68,47 @@ const AppRouter = () => {
                 // }
                 // update(ref(db, 'users/' + authUID), { anonymousUID: null })
                 // Send the cloud data to local SetupState
-                dispatchUserState(updateUserState(snapshot.val()))
+
             }
         })
 
         // When this element is closed, remove the listener on the user account
         return (() => {
-            off(ref(db, 'users/' + authUID))
+            off(ref(db, 'users/' + auth.currentUser.uid))
         })
     }, [])
 
+    // Listen to the cloud list of characters created by this user
+    // When the list changes, set the new list in local storage
+    useEffect(() => {
+        onValue(ref(db, 'characters/' + auth.currentUser.uid), (snapshot) => {
+            const characterArray = [];
+            snapshot.forEach(childSnapShot => {
+                characterArray.push(childSnapShot.val())
+            })
 
+            setCharArray(characterArray)
 
+        })
+
+        return (() => {
+            off(ref(db, 'characters/' + auth.currentUser.uid))
+        })
+
+    }, [])
+
+    useEffect(() => {
+        if (userState.currentCharacterID) {
+            let charObject = charArray.find(character =>
+                character.charID === userState.currentCharacterID)
+            console.log('charArray: ', charArray)
+            console.log('charObject', charObject)
+            console.log('currentCharacterID', userState.currentCharacterID)
+            dispatchCharState(setCharState(charObject))
+        } else {
+            dispatchCharState(setNoCurrentChar())
+        }
+    }, [userState.currentCharacterID, charArray])
 
 
     // useEffect(() => {
@@ -86,9 +119,17 @@ const AppRouter = () => {
     //     console.log('gameState changed: ', gameState)
     // }, [gameState])
 
-        useEffect(() => {
-        console.log('new character state changed: ', newCharState)
-    }, [newCharState])
+    // useEffect(() => {
+    //     console.log('new character state changed: ', newCharState)
+    // }, [newCharState])
+
+    // useEffect(() => {
+    //     console.log('character state changed: ', charState)
+    // }, [charState])
+
+    // useEffect(() => {
+    //     console.log('character array changed: ', charArray)
+    // }, [charArray])
 
     return (
 
@@ -104,31 +145,39 @@ const AppRouter = () => {
                             userState={userState}
                             dispatchGameState={dispatchGameState}
                         >
-                            <AuthWrapper gameID={userState.gameID} />
+                            <AuthWrapper />
                             <JoiningHosting
                                 userState={userState}
                                 gameArray={gameArray}
                             />
-                            <ChallengeSelect
-                                userState={userState}
-                                gameState={gameState}
-                            />
                             <CharacterSelect
                                 userState={userState}
                                 gameState={gameState}
+                                charState={charState}
+                                dispatchCharState={dispatchCharState}
+                                charArray={charArray}
                             />
                             <PartyMembers
                                 userState={userState}
                                 gameState={gameState}
 
                             />
+                            <ChallengeSelect
+                                userState={userState}
+                                gameState={gameState}
+                            />
+
                         </GameSetup>
 
                     } />
                     <Route path="/createNewCharacter/*"
                         element={
                             <div>
-                                <AuthWrapper gameID={userState.gameID} />
+                                <AuthWrapper />
+                                <JoiningHosting
+                                    userState={userState}
+                                    gameArray={gameArray}
+                                />
                                 <CreateNewCharacter
                                     newCharState={newCharState}
                                     dispatchNewCharState={dispatchNewCharState}

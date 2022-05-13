@@ -1,9 +1,8 @@
 
 const defaultUserProfile = {
     anonymousUID: null,
-    currentCharacter: null,
-    characterList: [],
-    gameID: null,
+    currentCharacterID: null,
+    gameID: '',
     host: null,
     isAnonymous: true,
     joiningGame: true,
@@ -36,17 +35,10 @@ const userReducer = (state, action) => {
                 gameIDupdate = null;
             }
             return { 
-                ...state, 
+                // ...state, 
                 ...action.updatedState,
                 gameID: gameIDupdate
             }
-
-        // case 'SET_JOINING_STATE':
-        //     return {
-        //         ...state,
-        //         joiningGame: action.joiningGame,
-        //         gameID: action.gameID,
-        //     }
         case 'SET_JOINING_GAME':
             return { 
                 ...state, 
@@ -57,12 +49,6 @@ const userReducer = (state, action) => {
                 ...state,
                 gameID: action.gameID
             }
-        // case 'SET_GAME_KEY':
-        //     return {
-        //         ...state,
-        //         key: action.key,
-
-        //     }
         case 'SET_ACTIVE_GAME_KEYS':
             return {
                 ...state,
@@ -73,27 +59,6 @@ const userReducer = (state, action) => {
                 ...state,
                 gameIDArray: action.gameIDArray
             }
-        // case 'SET_VILLAIN':
-        //     return {
-        //         ...state,
-        //         currentActiveGame: {
-        //             ...state.currentActiveGame,
-        //             challengesObject: {
-        //                 ...state.currentActiveGame.challengesObject,
-        //                 villainCode: action.villainCode
-        //             }
-        //         }
-        //     };
-        // case 'SET_RELIC':
-        //     return {
-        //         ...state,
-        //         relic: action.relic
-        //     };
-        // case 'SET_LOCATION':
-        //     return {
-        //         ...state,
-        //         location: action.location
-        //     };
         case 'SET_UID':
             return {
                 ...state,
@@ -104,22 +69,6 @@ const userReducer = (state, action) => {
                 ...state,
                 isAnonymous: action.isAnonymous
             }
-        // case 'ADD_PARTY_MEMBER':
-        //     const state.partyList
-        //     return {...state, }
-        // case 'UPDATE_SELECTED_CHALLENGES':
-        //     return {
-        //         ...state,
-        //         currentActiveGame: {
-        //             ...state.currentActiveGame,
-
-        //         }
-        //     }
-        // case 'UPDATE_ACTIVE_GAME':
-        //     return {
-        //         ...state,
-        //         currentActiveGame: action.currentActiveGame
-        //     }
         case 'REMOVE_CHALLENGE_CODES':
             return {
                 ...state,
@@ -131,10 +80,13 @@ const userReducer = (state, action) => {
                         relicCode: null,
                         locationCode: null
                     }
-
-
                 }
             }
+            case 'SET_CHARACTER_ARRAY':
+                return {
+                    ...state,
+                    characterList: action.characterList
+                }
         default:
             return state
     }
@@ -142,37 +94,3 @@ const userReducer = (state, action) => {
 
 export { defaultUserProfile, userReducer }
 
-   // case 'SET_LOCAL_STATE':
-        //     return {
-        //         ...state,
-        //         gameID: action.gameID,
-        //         isAnonymous: action.isAnonymous,
-        //         joiningGame: action.joiningGame,
-        //         host: action.host,
-        //         gameKeys: action.gameKeys,
-        //         gameIDArray: action.gameIDArray,
-        //         villain: action.villain,
-        //         relic: action.relic,
-        //         location: action.location,
-        //         currentGames: action.currentGames,
-        //         characterList: action.characterList,
-        //         currentCharacter: action.currentCharacter,
-        //         partyMembers: action.partyMembers
-        //     }
-
-        // currentActiveGame: {
-        
-        //     challengesObject: {
-        //         villainCode: null,
-        //         relicCode: null,
-        //         locationCode: null
-        //     },
-        //     surprises: [{}],
-        //     partyMembers: [],
-        //     progress: {
-        //         villain: null,
-        //         relic: null,
-        //         location: null
-        //     },
-        //     teamHealth: null
-        // },

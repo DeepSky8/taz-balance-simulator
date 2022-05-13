@@ -1,21 +1,18 @@
 import { Link } from "react-router-dom"
 import { CharacterObject } from "./CharacterObject"
 
-export const CharactersList = ({ userState, charDispatch }) => {
-
-
-    return (
+export const CharactersList = ({ charDispatch, charArray, viewEdit }) => (
         <div>
-            Character List element
-            {userState.characterList.map((character) => {
+            {charArray.map(character => {
                 return <CharacterObject
-                    key={character.charCode}
+                    key={character.charID}
                     charObject={character}
-                    selectChar={() => { charDispatch(character.charCode) }}
+                    selectChar={() => { charDispatch(character.charID) }}
+                    viewEdit={() => { viewEdit(character.charID) }}
                 />
             })}
             <div><Link to="/createNewCharacter">Create new character</Link></div>
-
         </div>
-    )
-}
+)
+
+

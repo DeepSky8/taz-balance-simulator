@@ -26,11 +26,11 @@ const LogoutLink = () => (
 
 )
 
-export const AuthWrapper = ({ gameID }) => {
+export const AuthWrapper = () => {
 
     return (
         <div>
-            {gameID && 'Game ID: ' + gameID}
+            
             {auth.currentUser.isAnonymous === false
                 ?
                 <LogoutLink />

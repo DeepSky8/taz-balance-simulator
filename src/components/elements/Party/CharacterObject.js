@@ -1,23 +1,10 @@
+import { charClasses } from "../../classes/default";
+import classTransformer from "../../functions/classTransformer";
 
-// defaultCharStats = {
-//     charID: '',
-//     charName: '',
-//     charClass: '',
-//     charRace: '',
-//     charTool: '',
-//     charAttribute: '',
-//     charNotes: '',
-//     charKostco: [{}]
-// }
-
-export const CharacterObject = ({ charObject, selectChar }) => (
+export const CharacterObject = ({ charObject, selectChar, viewEdit }) => (
     <div>
-        Character Object element
-        {charObject.charName && 
-            <h4>{charObject.charName} - {charObject.charClass}</h4>}
-        {charObject.charName && 
-            <button>View full character sheet</button>}
-        {charObject.charName && 
-            <button onClick={selectChar}>Select this character</button>}
+        {<h4>{charObject.charName} - {classTransformer(charClasses, charObject.charClassCode)}</h4>}
+        {<button onClick={viewEdit}>View/edit character</button>}
+        {<button onClick={selectChar}>Select this character</button>}
     </div>
 )

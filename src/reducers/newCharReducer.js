@@ -1,26 +1,45 @@
 
 const defaultNewCharState = {
-    charID: '',
+    showAlerts: false,
+    charID: undefined,
     charName: '',
-    charClassCode: '',
-    charRaceCode: '',
-    charToolCode: '',
-    charAttributeCode: '',
-    charSpecialCode: '',
+    charClassCode: undefined,
+    charRaceCode: undefined,
+    charToolCode: undefined,
+    charAttributeCode: undefined,
+    charSpecialCode: undefined,
     charNotes: '',
     charKostco: [{}],
+    questCount: 0,
     humanBardBand: '',
     robotBardCreator: '',
     robotBardVisual: '',
-    bardSuperGoal: ''
+    bardSuperGoal: '',
+    bardInstrument: '',
+    bardMusicSkill: ''
 }
 
 const newCharReducer = (state, action) => {
     switch (action.type) {
+        case 'SHOW_ALERTS':
+            return {
+                ...state,
+                showAlerts: true
+            }
+        case 'HIDE_ALERTS':
+            return {
+                ...state,
+                showAlerts: false
+            }
         case 'SET_CHAR_CLASS_CODE':
             return {
                 ...state,
                 charClassCode: action.charClassCode
+            }
+        case 'SET_CHAR_SPECIAL_CODE':
+            return {
+                ...state,
+                charSpecialCode: action.charSpecialCode
             }
         case 'SET_CHAR_RACE_CODE':
             return {
@@ -51,6 +70,26 @@ const newCharReducer = (state, action) => {
             return {
                 ...state,
                 bardSuperGoal: action.bardSuperGoal
+            }
+        case 'SET_CHAR_ATT_CODE':
+            return {
+                ...state,
+                charAttributeCode: action.charAttributeCode
+            }
+        case 'SET_BARD_INSTRUMENT':
+            return {
+                ...state,
+                bardInstrument: action.bardInstrument
+            }
+        case 'SET_BARD_MUSIC_SKILL':
+            return {
+                ...state,
+                bardMusicSkill: action.bardMusicSkill
+            }
+        case 'SET_CHAR_NAME':
+            return {
+                ...state,
+                charName: action.charName
             }
         case 'RESET_DEFAULTS':
             return {

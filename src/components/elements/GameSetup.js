@@ -51,8 +51,8 @@ export const GameSetup = ({
                 }
             })
         } else {
-            console.log('dispatching clearChallengesObject')
-            dispatchGameState(clearChallengesObject())
+            // console.log('dispatching clearChallengesObject')
+            // dispatchGameState(clearChallengesObject())
         }
 
         return () => {

@@ -1,6 +1,5 @@
 
 export const defaultJoiningReducer = {
-    joiningGame: true,
     joinHostText: 'Joining game (enter game code from host)',
     gameID: '',
     gameCodeError: '',
@@ -15,20 +14,21 @@ const errorText = 'Game code not found'
 export const joiningReducer = (state, action) => {
     switch (action.type) {
         case 'TOGGLE_JOINING_GAME':
-            const toggledJoiningGame = !state.joiningGame
             return {
                 ...state,
-                joiningGame: toggledJoiningGame,
-                gameID: (toggledJoiningGame ? '' : state.gameID),
+                gameID: (action.joiningGame ? '' : state.gameID),
                 joinHostText:
-                    (toggledJoiningGame ?
-                        joinText
+                    (action.isAnonymous ?
+                        joinOnly
                         :
-                        hostText
+                        action.joiningGame ?
+                            joinText
+                            :
+                            hostText
                     )
             }
         case 'JOINING_ONLY':
-            return { ...state, joinHostText: joinOnly, joiningGame: true }
+            return { ...state, joinHostText: joinOnly }
         case 'JOINING_OR_HOSTING':
             return {
                 ...state,
@@ -42,7 +42,6 @@ export const joiningReducer = (state, action) => {
             return { ...state, gameID: action.gameID }
         case 'SET_JOINING_STATE':
             return {
-                joiningGame: false,
                 gameID: action.gameID,
                 gameCodeError: '',
                 joinHostText: joinText

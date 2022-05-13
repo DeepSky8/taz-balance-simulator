@@ -1,11 +1,25 @@
 import React, { useEffect } from "react";
-import { resetDefaultNewChar, setBardSuperGoal, setCharClassCode, setCharRaceCode, setCharToolCode, setHumanBardBand, setRobotBardCreator, setRobotBardVisual } from "../../actions/newCharActions";
+import {
+    resetDefaultNewChar,
+    setBardInstrument,
+    setBardMusicSkill,
+    setBardSuperGoal,
+    setCharAttributeCode,
+    setCharClassCode,
+    setCharName,
+    setCharRaceCode,
+    setCharSpecialCode,
+    setCharToolCode,
+    setHumanBardBand,
+    setRobotBardCreator,
+    setRobotBardVisual
+} from "../../actions/newCharActions";
 import classTransformer from "../functions/classTransformer";
 import { charClasses, charClassCodes } from "./default";
 
 
 
-const bardBlurb = " bard, you always have an inspiring word or song."
+const bardBlurb = " bard, you always have an inspiring word or song"
 
 const asA = "As a "
 const asAn = "As an "
@@ -66,15 +80,24 @@ const bardToolStingers = [
     "What have you got in your pocketses? You have a trinket or tool for every occasion."
 ]
 
+const bardAttributeCodes = [
+    'ba0',
+    'ba1',
+    'ba2',
+    'ba3',
+    'ba4',
+    'ba5'
+]
+
 const bardAttributePrompt = "You generally assist your teammates using your "
 
 const bardAttributeTitles = [
-    "BEAUTIFUL VOICE",
-    "CLEVER LIMERICKS",
-    "AWESOME MUSIC",
-    "CULINARY GENIUS",
-    "BIG IDEAS",
-    "LORE"
+    "Beautiful Voice",
+    "Clever Limericks",
+    "Awesome Music",
+    "Culinary Genius",
+    "Big Ideas",
+    "Lore"
 ]
 
 const bardAttributeStingers = [
@@ -86,7 +109,7 @@ const bardAttributeStingers = [
     "You know a little something about everything. Nerd."
 ]
 
-const bardSpecialTitle = "INSPIRATION"
+const bardSpecialTitle = "Inspiration"
 
 const bardSpecialStinger = "Whenever you spend your action token, reclaim it at the end of the turn."
 
@@ -110,6 +133,7 @@ const Bard = ({ newCharState, dispatchNewCharState }) => {
         if (newCharState.charClassCode !== 'cc0') {
             dispatchNewCharState(resetDefaultNewChar())
             dispatchNewCharState(setCharClassCode('cc0'))
+            dispatchNewCharState(setCharSpecialCode('bs0'))
         }
     }, [])
 
@@ -120,6 +144,10 @@ const Bard = ({ newCharState, dispatchNewCharState }) => {
 
     const toggleToolSelections = () => {
         document.getElementById('tool-selector').classList.toggle('show')
+    }
+
+    const toggleAttributeSelections = () => {
+        document.getElementById('attribute-selector').classList.toggle('show')
     }
 
     // Close the race selector dropdown if the user clicks outside of it
@@ -137,7 +165,7 @@ const Bard = ({ newCharState, dispatchNewCharState }) => {
     }
 
     // When the user clicks on one of the available races
-    // send that race code to the new character reducer for storage
+    // send that code to the new character reducer for storage
     const onClickRace = (charRaceCode) => {
         dispatchNewCharState(
             setCharRaceCode(
@@ -147,7 +175,7 @@ const Bard = ({ newCharState, dispatchNewCharState }) => {
     }
 
     // When the user clicks on one of the available tools
-    // send that tole code to the new character reducer for storage
+    // send that code to the new character reducer for storage
     const onClickTool = (charToolCode) => {
         dispatchNewCharState(
             setCharToolCode(
@@ -156,37 +184,61 @@ const Bard = ({ newCharState, dispatchNewCharState }) => {
         )
     }
 
+    // When the user clicks on one of the available attributes
+    // send that code to the new character reducer for storage
+    const onClickAttribute = (charAttributeCode) => {
+        dispatchNewCharState(
+            setCharAttributeCode(
+                charAttributeCode
+            )
+        )
+    }
+
 
 
     return (
         <div>
-            <div className="dropdown">
-                {newCharState.charRaceCode === 'br1' ?
-                    asAn
-                    :
-                    asA
-                }
-                <button
-                    onClick={toggleRaceSelections}
-                    className="dropbtn"
-                >
-                    {classTransformer(bardRaceRegTitles, newCharState.charRaceCode)}
-                </button>
-                {bardBlurb}
-
-                <div id="race-selector" className="dropdown-content">
-                    {bardRaceCodes.map((code) => {
-                        return (
-                            <div
-                                key={code}
-                                onClick={() => { onClickRace(code) }}
-                            >
-                                {classTransformer(bardRaceRegTitles, code)}
-                            </div>)
-                    })}
+            <div className="raceSelection">
+                <div className='pleaseChooseAlert'>
+                    {newCharState.showAlerts &&
+                        !newCharState.charRaceCode &&
+                        'Please make a selection'}
                 </div>
-            </div>
+                <div className="dropdown">
+                    {newCharState.charRaceCode === 'br1' ?
+                        asAn
+                        :
+                        asA
+                    }
+                    <button
+                        onClick={toggleRaceSelections}
+                        className="dropbtn"
+                    >
+                        {classTransformer(bardRaceRegTitles, newCharState.charRaceCode)}
+                    </button>
+                    {bardBlurb}
 
+                    <div className="contentWrappe">
+                        <div id="race-selector" className="dropdown-content">
+                            <div className="questionHeader">{asA + '...' + bardBlurb}
+                                <div className="reminderText">{'(choose one)'}</div>
+
+                            </div>
+
+                            {bardRaceCodes.map((code) => {
+                                return (
+                                    <div
+                                        key={code}
+                                        onClick={() => { onClickRace(code) }}
+                                    >
+                                        {classTransformer(bardRaceRegTitles, code)}
+                                    </div>)
+                            })}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
 
             <div className="bardRaceStingers">
                 {newCharState.charRaceCode &&
@@ -241,8 +293,13 @@ const Bard = ({ newCharState, dispatchNewCharState }) => {
                 }
             </div>
 
-
             <div className="bardTools">
+                <div className='pleaseChooseAlert'>
+                    {newCharState.showAlerts &&
+                        !newCharState.charToolCode &&
+                        'Please make a selection'
+                    }
+                </div>
                 <div className="dropdown">
                     {bardToolPrompt}
                     <button
@@ -253,6 +310,7 @@ const Bard = ({ newCharState, dispatchNewCharState }) => {
                     </button>
 
                     <div id="tool-selector" className="dropdown-content">
+                        <div className="questionHeader">{bardToolPrompt + '...'}</div>
                         {bardToolCodes.map((code) => {
                             return (
                                 <div
@@ -264,9 +322,7 @@ const Bard = ({ newCharState, dispatchNewCharState }) => {
                         })}
                     </div>
                 </div>
-
             </div>
-
 
             <div className="bardToolStingers">
                 {newCharState.charToolCode &&
@@ -288,9 +344,105 @@ const Bard = ({ newCharState, dispatchNewCharState }) => {
                     ''}
             </div>
 
+            <div className="bardAttributes">
+                <div className='pleaseChooseAlert'>
+                    {newCharState.showAlerts &&
+                        !newCharState.charAttributeCode &&
+                        'Please make a selection'}
+                </div>
+                <div className="dropdown">
+                    {bardAttributePrompt}
+                    <button
+                        onClick={toggleAttributeSelections}
+                        className="dropbtn"
+                    >
+                        {classTransformer(
+                            bardAttributeTitles, newCharState.charAttributeCode
+                        )}
+                    </button>
 
+                    <div id="attribute-selector" className="dropdown-content">
+                        <div className="questionHeader">{bardAttributePrompt + '...'}</div>
+                        {bardAttributeCodes.map((code) => {
+                            return (
+                                <div
+                                    key={code}
+                                    onClick={() => { onClickAttribute(code) }}
+                                >
+                                    {classTransformer(bardAttributeTitles, code)}
+                                </div>)
+                        })}
+                    </div>
+                </div>
+            </div>
 
+            <div className="bardAttributeStingers">
+                {newCharState.charAttributeCode &&
+                    classTransformer(bardAttributeStingers, newCharState.charAttributeCode)}
 
+                <div>
+                    {newCharState.charAttributeCode === 'ba2' ?
+                        <input
+                            value={newCharState.bardInstrument}
+                            type="text"
+                            placeholder="What do you play?"
+                            maxLength={30}
+                            onChange={(e) => {
+                                dispatchNewCharState(
+                                    setBardInstrument(
+                                        e.target.value.toString())
+                                )
+                            }}
+                        />
+                        :
+                        ''}
+                    {newCharState.charAttributeCode === 'ba2' ?
+                        <input
+                            value={newCharState.bardMusicSkill}
+                            type="text"
+                            placeholder="Scale of 1-10"
+                            maxLength={30}
+                            onChange={(e) => {
+                                dispatchNewCharState(
+                                    setBardMusicSkill(
+                                        e.target.value.toString()
+                                    )
+                                )
+                            }}
+                        />
+                        :
+                        ''}
+                </div>
+            </div>
+
+            <div className="enterName">
+                <label>Character Name: </label>
+                <input
+                    value={newCharState.charName}
+                    type='text'
+                    placeholder='My character is named'
+                    maxLength={15}
+                    onChange={(e) => {
+                        dispatchNewCharState(
+                            setCharName(
+                                e.target.value.toString()
+                            )
+                        )
+                    }}
+                />
+            </div>
+
+            <div className="specialAbility">
+                <div>{bardSpecialTitle + ':'}</div>
+                <div>{bardSpecialStinger}</div>
+            </div>
+
+            <div className="stats">
+                <div>{'Strength against Challenges: ' + bardNumbers.strength}</div>
+                <div>{'Strength against Relic Challenges: ' + bardNumbers.specialStrength}</div>
+                <div>{'Assist BEFORE die roll: ' + bardNumbers.preAssist}</div>
+                <div>{'Assist AFTER die roll: ' + bardNumbers.postAssist}</div>
+            </div>
 
 
         </div>)

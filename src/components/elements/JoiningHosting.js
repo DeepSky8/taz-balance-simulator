@@ -24,27 +24,32 @@ const JoiningHosting = ({ userState, gameArray }) => {
 
     const [joinHost, dispatchJoinHost] = useReducer(joiningReducer, defaultJoiningReducer)
 
-    // Monitor whether the player is signed in or not
-    // If not signed in, they will only be able to join a game
-    // If signed in they can toggle between joining and hosting a game
-    useEffect(() => {
-        if (userState.isAnonymous === false) {
-            dispatchJoinHost(joiningOrHosting())
-        } else {
-            dispatchJoinHost(joiningOnly())
-        }
-    }, [userState.isAnonymous])
+    // // Monitor whether the player is signed in or not
+    // // If not signed in, they will only be able to join a game
+    // // If signed in they can toggle between joining and hosting a game
+    // useEffect(() => {
+    //     if (userState.isAnonymous === false) {
+    //         dispatchJoinHost(joiningOrHosting())
+    //     } else {
+    //         dispatchJoinHost(joiningOnly())
+    //     }
+    // }, [userState.isAnonymous])
 
     useEffect(() => {
         if (userState.gameID === null) {
             dispatchJoinHost(clearGameID())
+        } else {
+            dispatchJoinHost(
+                setGameID(
+                    userState.gameID))
         }
-        // if (!joinHost.gameID && userState.gameID) {
-        //     dispatchJoinHost(
-        //         setJoiningState(userState.gameID)
-        //     )
-        // }
     }, [userState.gameID])
+
+    useEffect(() => {
+        dispatchJoinHost(
+            toggleJoiningGame(
+                userState.joiningGame, auth.currentUser.isAnonymous))
+    }, [userState.joiningGame])
 
     // Validate game ID; display error if invalid
     // Dispatch to cloud if valid game ID
@@ -58,18 +63,20 @@ const JoiningHosting = ({ userState, gameArray }) => {
 
         if (fourDigits &&
             (!validGameCode ||
-                joinHost.joiningGame && !gameCodeRegistered)) {
+                userState.joiningGame && !gameCodeRegistered)) {
             dispatchJoinHost(setGameCodeError())
         } else {
             dispatchJoinHost(clearGameCodeError())
         }
 
         if (validGameCode) {
-            if (joinHost.joiningGame && gameCodeRegistered) {
+            if (userState.joiningGame &&
+                gameCodeRegistered &&
+                joinHost.gameID === '') {
                 // If joining, set the uid, last activity date, host, and gameID
                 // on user's profile in cloud
                 startSaveGameID(auth.currentUser.uid, gameID)
-            } else if (!joinHost.joiningGame && !gameCodeRegistered) {
+            } else if (!userState.joiningGame && !gameCodeRegistered) {
                 // If hosting, create an activeGames entry with gameID
                 // then set the uid, last activity date, host, and gameID
                 // on user's profile in cloud
@@ -87,16 +94,22 @@ const JoiningHosting = ({ userState, gameArray }) => {
 
         // If the toggle is clicked clear game code error
         dispatchJoinHost(clearGameCodeError())
-        // then pass the current joining state to the cloud
-        startSetJoiningGame(auth.currentUser.uid, joinHost.joiningGame)
 
+        // switch (joinHost.joiningGame) {
+        //     case true:
+        //         return startRemoveGameCode(auth.currentUser.uid, userState.gameID)
+        //     case false:
+        //         return dispatchJoinHost(setGameID(generateGameID(gameArray)))
+        //     default:
+        //         { }
+        // }
 
-        if (joinHost.joiningGame) {
+        if (userState.joiningGame === true) {
             // Clears the cloud record location under activeGames 
             // that matches the UID
             // then sets the gameID and host under the user UID to null
             startRemoveGameCode(auth.currentUser.uid, userState.gameID)
-        } else {
+        } else if (!userState.gameID) {
             // Generate a short game ID, check it against the current active
             // game IDs, and once it is unique store it locally to be shared with
             // other players joining your game. 
@@ -104,7 +117,7 @@ const JoiningHosting = ({ userState, gameArray }) => {
             // dispatches the gameID to the cloud.
             dispatchJoinHost(setGameID(generateGameID(gameArray)))
         }
-    }, [joinHost.joiningGame])
+    }, [userState.joiningGame])
 
     // When text (restricted to text digits by regex) 
     // is entered into the joinCode input box,
@@ -120,7 +133,7 @@ const JoiningHosting = ({ userState, gameArray }) => {
 
     const joiningOptions = () => {
         if (userState.isAnonymous === false) {
-            dispatchJoinHost(toggleJoiningGame())
+            startSetJoiningGame(auth.currentUser.uid, !userState.joiningGame)
         }
     }
 
@@ -149,16 +162,16 @@ const JoiningHosting = ({ userState, gameArray }) => {
                     onClick={joiningOptions}>
                     {joinHost.joinHostText}
                 </button>
-                {joinHost.isAnonymous ?
+                {userState.isAnonymous ?
                     EnterGameID
                     :
-                    joinHost.joiningGame ?
+                    userState.joiningGame ?
                         EnterGameID
                         :
                         DisplayGameID
                 }
             </div>
-            {joinHost.joiningGame && joinHost.gameCodeError}
+            {joinHost.gameCodeError}
         </div>
 
 

@@ -1,8 +1,10 @@
 import { ref, remove, update } from "firebase/database";
 import { db } from "../firebase/firebase";
 
-export const toggleJoiningGame = () => ({
+export const toggleJoiningGame = (joiningGame, isAnonymous) => ({
     type: 'TOGGLE_JOINING_GAME',
+    joiningGame,
+    isAnonymous
 })
 
 export const setGameID = (gameID) => ({
@@ -52,7 +54,7 @@ export const startSaveGameID = (uid, gameID) => {
     updates['users/' + uid + '/gameID'] = gameID;
     update(ref(db), updates)
         .catch((error) => {
-            console.log('Did not set JoiningState, error: ', error)
+            console.log('Did not start Save Game, error: ', error)
         })
 }
 

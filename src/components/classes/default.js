@@ -13,3 +13,11 @@ export const charClassCodes = [
     'cc3',
     'cc4',
 ]
+
+export const charSpecialCodes = [
+    'bs0',
+    'cs1',
+    'rs2',
+    'as3',
+    'is4'
+]

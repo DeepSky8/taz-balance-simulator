@@ -1,37 +1,37 @@
 import React, { useReducer } from "react";
 import { defaultCharState, charReducer } from "../../../reducers/charReducer";
-import { toggleCharDisplay } from "../../../actions/charActions";
+import { startSetCurrentCharacter, toggleCharDisplay } from "../../../actions/charActions";
 import { CharactersList } from "./CharactersList";
+import { auth } from "../../../firebase/firebase";
+import classTransformer from "../../functions/classTransformer";
+import { charClasses } from "../../classes/default";
 
-const CharacterSelect = ({ userState, gameState }) => {
-    const [characterState, dispatchCharState] = useReducer(charReducer, defaultCharState)
+const CharacterSelect = ({ userState, gameState, charState, dispatchCharState, charArray }) => {
 
-    const charDispatch = (key) => {
+    const charDispatch = (charID) => {
+        startSetCurrentCharacter(auth.currentUser.uid, charID)
+    }
+
+    const viewEdit = (charID) => {
 
     }
 
-    const charCreate = () => { 
-        
-    }
 
     return (
         <div>
             <button onClick={() => { dispatchCharState(toggleCharDisplay()) }}>
-                {userState.currentCharacter ?
-                    userState.currentCharacter.charName + " (click to change)"
+                {userState.currentCharacterID ?
+                    charState.charName + ": " + charState.questCount + " quests completed (click to pick new character)"
                     :
                     'Please select a character'}
             </button>
 
-            {characterState.displayChars &&
-                <div>
-                    <CharactersList
-                        userState={userState}
-                        charDispatch={charDispatch}
-                    />
-                </div>
-
-
+            {charState.displayChars &&
+                <CharactersList
+                    charDispatch={charDispatch}
+                    charArray={charArray}
+                    viewEdit={viewEdit}
+                />
             }
         </div>
 
