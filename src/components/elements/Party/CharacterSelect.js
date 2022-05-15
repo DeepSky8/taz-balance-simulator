@@ -5,15 +5,17 @@ import { CharactersList } from "./CharactersList";
 import { auth } from "../../../firebase/firebase";
 import classTransformer from "../../functions/classTransformer";
 import { charClasses } from "../../classes/default";
+import { useNavigate } from "react-router-dom";
 
 const CharacterSelect = ({ userState, gameState, charState, dispatchCharState, charArray }) => {
+    let navigate = useNavigate()
 
     const charDispatch = (charID) => {
         startSetCurrentCharacter(auth.currentUser.uid, charID)
     }
 
     const viewEdit = (charID) => {
-
+        navigate(`/viewEditCharacter/${charID}`)
     }
 
 

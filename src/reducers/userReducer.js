@@ -7,23 +7,22 @@ const defaultUserProfile = {
     isAnonymous: true,
     joiningGame: true,
     lastActivity: 0,
-    
-    savedGamesArray: [{
-        key: null,
-        villainCode: null,
-        relicCode: null,
-        locationCode: null,
-        surprises: [{}],
-        progress: {
-            villain: '',
-            relic: '',
-            location: ''
-        },
-        teamHealth: ''
-    }],
-    uid: null,
-
+    uid: null
 }
+
+// savedGamesArray: [{
+//     key: null,
+//     villainCode: null,
+//     relicCode: null,
+//     locationCode: null,
+//     surprises: [{}],
+//     progress: {
+//         villain: '',
+//         relic: '',
+//         location: ''
+//     },
+//     teamHealth: ''
+// }],
 
 const userReducer = (state, action) => {
     switch (action.type) {
@@ -32,10 +31,10 @@ const userReducer = (state, action) => {
             if(action.updatedState.gameID){
                 gameIDupdate = action.updatedState.gameID
             } else {
-                gameIDupdate = null;
+                gameIDupdate = '';
             }
             return { 
-                // ...state, 
+                ...state, 
                 ...action.updatedState,
                 gameID: gameIDupdate
             }

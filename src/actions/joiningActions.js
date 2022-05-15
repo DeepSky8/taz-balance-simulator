@@ -1,19 +1,10 @@
 import { ref, remove, update } from "firebase/database";
 import { db } from "../firebase/firebase";
 
-export const toggleJoiningGame = (joiningGame, isAnonymous) => ({
-    type: 'TOGGLE_JOINING_GAME',
-    joiningGame,
-    isAnonymous
-})
-
+// Local state actions
 export const setGameID = (gameID) => ({
     type: 'SET_GAME_ID',
     gameID
-})
-
-export const clearGameID = () => ({
-    type: 'CLEAR_GAME_ID'
 })
 
 export const setGameCodeError = () => ({
@@ -28,15 +19,36 @@ export const joiningOnly = () => ({
     type: 'JOINING_ONLY'
 })
 
-export const joiningOrHosting = () => ({
-    type: 'JOINING_OR_HOSTING'
+export const joiningGame = () => ({
+    type: 'JOINING_GAME'
 })
 
-export const setJoiningState = (gameID) => ({
+export const hostingGame = () => ({
+    type: 'HOSTING_GAME'
+})
+
+// not in use
+
+
+const setJoiningState = (gameID) => ({
     type: 'SET_JOINING_STATE',
     gameID
 })
 
+const clearGameID = () => ({
+    type: 'CLEAR_GAME_ID'
+})
+
+const toggleJoiningGame = (joiningGame, isAnonymous) => ({
+    type: 'TOGGLE_JOINING_GAME',
+    joiningGame,
+    isAnonymous
+})
+
+
+// Cloud state Actions
+
+// Sets the joining/hosting status in cloud
 export const startSetJoiningGame = (uid, joiningGame) => {
     const updates = {}
     updates['users/' + uid + '/joiningGame'] = joiningGame
@@ -46,11 +58,12 @@ export const startSetJoiningGame = (uid, joiningGame) => {
         })
 }
 
+// Saves the gameID on the user record provided, 
+// and updates the date marker for the user 
 export const startSaveGameID = (uid, gameID) => {
     const updates = {}
 
     updates['users/' + uid + '/lastActivity'] = Date.now()
-    updates['users/' + uid + '/uid'] = uid;
     updates['users/' + uid + '/gameID'] = gameID;
     update(ref(db), updates)
         .catch((error) => {
@@ -58,6 +71,10 @@ export const startSaveGameID = (uid, gameID) => {
         })
 }
 
+// If hosting, player must register the game ID
+// This involves saving the gameID in both activeGames section 
+// and the Users section, along with setting the host ID in both locations
+// Then calls the previous process to save the gameID to the user profile
 export const startRegisterGameID = (uid, gameID) => {
     const updates = {};
     updates['activeGames/' + gameID] = { host: uid, gameID };

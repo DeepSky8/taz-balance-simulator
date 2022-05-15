@@ -13,39 +13,43 @@ const errorText = 'Game code not found'
 
 export const joiningReducer = (state, action) => {
     switch (action.type) {
-        case 'TOGGLE_JOINING_GAME':
-            return {
-                ...state,
-                gameID: (action.joiningGame ? '' : state.gameID),
-                joinHostText:
-                    (action.isAnonymous ?
-                        joinOnly
-                        :
-                        action.joiningGame ?
-                            joinText
-                            :
-                            hostText
-                    )
-            }
+        // case 'TOGGLE_JOINING_GAME':
+        //     return {
+        //         ...state,
+        //         gameID: (action.joiningGame ? '' : state.gameID),
+        //         joinHostText:
+        //             (action.isAnonymous ?
+        //                 joinOnly
+        //                 :
+        //                 action.joiningGame ?
+        //                     joinText
+        //                     :
+        //                     hostText
+        //             )
+        //     }
         case 'JOINING_ONLY':
-            return { ...state, joinHostText: joinOnly }
-        case 'JOINING_OR_HOSTING':
             return {
                 ...state,
-                joinHostText:
-                    state.joiningGame ?
-                        joinText
-                        :
-                        hostText
+                joinHostText: joinOnly
+            }
+        case 'JOINING_GAME':
+            return {
+                ...state,
+                joinHostText: joinText
+            }
+        case 'HOSTING_GAME':
+            return {
+                ...state,
+                joinHostText: hostText
             }
         case 'SET_GAME_ID':
             return { ...state, gameID: action.gameID }
-        case 'SET_JOINING_STATE':
-            return {
-                gameID: action.gameID,
-                gameCodeError: '',
-                joinHostText: joinText
-            }
+        // case 'SET_JOINING_STATE':
+        //     return {
+        //         gameID: action.gameID,
+        //         gameCodeError: '',
+        //         joinHostText: joinText
+        //     }
         case 'CLEAR_GAME_ID':
             return { ...state, gameID: '' }
         case 'SET_GAME_CODE_ERROR':

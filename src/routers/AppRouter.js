@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer, useState } from "react";
-import { Routes, Route, Outlet } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import {
@@ -23,7 +23,7 @@ import PrivacyPolicy from "../components/elements/PrivacyPolicy";
 import Tos from "../components/elements/Tos";
 import Welcome from "../components/elements/Welcome";
 import { auth, db } from "../firebase/firebase";
-import { setCharacterListArray, updateUserState } from "../actions/userActions";
+import { updateUserState } from "../actions/userActions";
 
 import PartyMembers from "../components/elements/Party/PartyMembers";
 import CharacterSelect from "../components/elements/Party/CharacterSelect";
@@ -32,6 +32,8 @@ import Bard from "../components/classes/Bard";
 import Cleric from "../components/classes/Cleric";
 import Test from "../components/classes/Test";
 import { setCharState, setNoCurrentChar } from "../actions/charActions";
+import ViewEditCharacter from "../components/elements/Party/ViewEditCharacter";
+import { updateChallengesObject } from "../actions/gameActions";
 
 export const history = createBrowserHistory();
 
@@ -98,12 +100,48 @@ const AppRouter = () => {
     }, [])
 
     useEffect(() => {
+
+        // Listen to list of activeGame objects in Firebase
+        onValue(ref(db, 'activeGames'), (snapshot) => {
+            const updatedArray = [];
+            snapshot.forEach((childSnapShot) => {
+                updatedArray.push(childSnapShot.val().gameID)
+            })
+
+            // Set a new list of current game codes on GameSetup state
+            // when the listener perceives a change
+            setGameArray(updatedArray)
+        })
+
+        return () => {
+
+            // Remove the listener on Active Games in the cloud
+            off(ref(db, 'activeGames'))
+        }
+    }, [])
+
+    useEffect(() => {
+        const gameID = userState.gameID
+        if (gameID) {
+            onValue(ref(db, 'activeGames/' + gameID), (snapshot) => {
+                if (snapshot.exists()) {
+                    dispatchGameState(updateChallengesObject(snapshot.val()))
+                } else {
+                    off(ref(db, 'activeGames/' + gameID))
+                }
+            })
+        }
+
+        return () => {
+            off(ref(db, 'activeGames/' + gameID))
+        }
+
+    }, [userState.gameID])
+
+    useEffect(() => {
         if (userState.currentCharacterID) {
             let charObject = charArray.find(character =>
                 character.charID === userState.currentCharacterID)
-            console.log('charArray: ', charArray)
-            console.log('charObject', charObject)
-            console.log('currentCharacterID', userState.currentCharacterID)
             dispatchCharState(setCharState(charObject))
         } else {
             dispatchCharState(setNoCurrentChar())
@@ -111,9 +149,13 @@ const AppRouter = () => {
     }, [userState.currentCharacterID, charArray])
 
 
-    // useEffect(() => {
-    //     console.log('userState changed: ', userState)
-    // }, [userState])
+    useEffect(() => {
+        console.log('userState changed: ', userState)
+    }, [userState])
+
+    useEffect(() => {
+        console.log('gameArray changed: ', gameArray)
+    }, [gameArray])
 
     // useEffect(() => {
     //     console.log('gameState changed: ', gameState)
@@ -140,11 +182,7 @@ const AppRouter = () => {
                     <Route path="/" element={<Welcome />} />
                     <Route path='chooseMode' element={<ChooseMode />} />
                     <Route path='gameSetup' element={
-                        <GameSetup
-                            setGameArray={setGameArray}
-                            userState={userState}
-                            dispatchGameState={dispatchGameState}
-                        >
+                        <GameSetup>
                             <AuthWrapper />
                             <JoiningHosting
                                 userState={userState}
@@ -170,6 +208,8 @@ const AppRouter = () => {
                         </GameSetup>
 
                     } />
+
+                    <Route path='/viewEditCharacter/:characterID' element={<ViewEditCharacter />} />
                     <Route path="/createNewCharacter/*"
                         element={
                             <div>
@@ -203,7 +243,7 @@ const AppRouter = () => {
 
 
 
-                    <Route path='gameInProcess' element={
+                    <Route path='/gameInProcess' element={
                         <AuthWrapper
                             userState={userState}
                             dispatchSetupState={dispatchUserState}>
@@ -229,20 +269,7 @@ const AppRouter = () => {
             </div>
 
         </HistoryRouter>
-
-
-
-
     )
 }
 
 export default AppRouter;
-
-// <FirebaseAppProvider firebaseConfig={uiConfig}>
-// <AuthProvider sdk={auth}>
-//     <DatabaseProvider sdk={db}>
-
-//     </DatabaseProvider>
-// </AuthProvider>
-// </FirebaseAppProvider>
-
