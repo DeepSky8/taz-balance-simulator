@@ -43,12 +43,14 @@ export const removeActiveGameChallengeCodes = () => ({
     type: 'REMOVE_CHALLENGE_CODES'
 })
 
-export const setCharacterListArray = (characterList) => ({ 
+export const setCharacterListArray = (characterList) => ({
     type: 'SET_CHARACTER_ARRAY',
     characterList
 })
 
-
+export const resetUserProfile = () => ({
+    type: 'RESET_STATE'
+})
 
 // Cloud Functions
 

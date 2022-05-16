@@ -2,41 +2,38 @@ import React, { useEffect, useReducer, useState } from "react";
 import { Routes, Route } from 'react-router-dom';
 import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
 import { createBrowserHistory } from "history";
-import {
-    off,
-    onValue,
-    ref,
-} from "firebase/database";
+import { off, onValue, ref } from "firebase/database";
+import { auth, db } from "../firebase/firebase";
 import { defaultUserProfile, userReducer } from "../reducers/userReducer";
 import { defaultGameState, gameReducer } from "../reducers/gameReducer";
 import { defaultNewCharState, newCharReducer } from "../reducers/newCharReducer";
 import { defaultCharState, charReducer } from "../reducers/charReducer";
 import ActiveGame from "../components/elements/ActiveGame"
-import AuthWrapper from "../components/elements/AuthWrapper";
-import ChallengeSelect from "../components/elements/ChallengeSelect";
-import ChooseMode from "../components/elements/ChooseMode";
-import FirebaseSignIn from '../components/elements/FirebaseSignIn';
+import AuthWrapper from '../components/elements/general/AuthWrapper';
+import ChallengeSelect from "../components/elements/Challenges/ChallengeSelect";
+import ChooseMode from "../components/elements/general/ChooseMode";
+import FirebaseSignIn from '../components/elements/general/FirebaseSignIn';
 import GameSetup from "../components/elements/GameSetup";
-import JoiningHosting from "../components/elements/JoiningHosting";
-import NotFoundPage from "../components/elements/NotFoundPage";
-import PrivacyPolicy from "../components/elements/PrivacyPolicy";
-import Tos from "../components/elements/Tos";
-import Welcome from "../components/elements/Welcome";
-import { auth, db } from "../firebase/firebase";
-import { updateUserState } from "../actions/userActions";
+import JoiningHosting from "../components/elements/general/JoiningHosting";
+import NotFoundPage from "../components/elements/general/NotFoundPage";
+import PrivacyPolicy from "../components/elements/general/PrivacyPolicy";
+import Tos from "../components/elements/general/Tos";
+import Welcome from "../components/elements/general/Welcome";
+import { resetUserProfile, updateUserState } from "../actions/userActions";
 
-import PartyMembers from "../components/elements/Party/PartyMembers";
-import CharacterSelect from "../components/elements/Party/CharacterSelect";
-import CreateNewCharacter from "../components/elements/CreateNewCharacter";
+import PartyMembers from "../components/elements/characters/PartyMembers";
+import CharacterSelect from "../components/elements/characters/CharacterSelect";
+import CreateNewCharacter from "../components/elements/characters/CreateNewCharacter";
 import Bard from "../components/classes/Bard";
 import Cleric from "../components/classes/Cleric";
 import Test from "../components/classes/Test";
-import { setCharState, setNoCurrentChar } from "../actions/charActions";
-import ViewEditCharacter from "../components/elements/Party/ViewEditCharacter";
+import { resetCharacterState, setCharState, setNoCurrentChar } from "../actions/charActions";
+import ViewEditCharacter from "../components/elements/characters/ViewEditCharacter";
 import { updateChallengesObject } from "../actions/gameActions";
+import { startRemoveGameCode } from "../actions/joiningActions";
+
 
 export const history = createBrowserHistory();
-
 
 const AppRouter = () => {
     const [gameArray, setGameArray] = useState([])
@@ -50,7 +47,16 @@ const AppRouter = () => {
     // This listener updates the local state to 
     // mirror the user account in the cloud
     useEffect(() => {
+        console.log('current user anonymous? ', auth.currentUser.isAnonymous)
+        console.log('auth user UID ', auth.currentUser.uid)
+        console.log('user state UID ', userState.uid)
+        if (auth.currentUser.isAnonymous || auth.currentUser.uid !== userState.uid) {
+            dispatchUserState(resetUserProfile())
+            dispatchCharState(resetCharacterState())
+        }
         onValue(ref(db, 'users/' + auth.currentUser.uid), (snapshot) => {
+
+
             // If there is a user account in the cloud
             if (snapshot.exists()) {
                 dispatchUserState(updateUserState(snapshot.val()))
@@ -128,6 +134,7 @@ const AppRouter = () => {
                     dispatchGameState(updateChallengesObject(snapshot.val()))
                 } else {
                     off(ref(db, 'activeGames/' + gameID))
+                    startRemoveGameCode(auth.currentUser.uid, gameID)
                 }
             })
         }
@@ -153,9 +160,9 @@ const AppRouter = () => {
         console.log('userState changed: ', userState)
     }, [userState])
 
-    useEffect(() => {
-        console.log('gameArray changed: ', gameArray)
-    }, [gameArray])
+    // useEffect(() => {
+    //     console.log('gameArray changed: ', gameArray)
+    // }, [gameArray])
 
     // useEffect(() => {
     //     console.log('gameState changed: ', gameState)
@@ -190,7 +197,6 @@ const AppRouter = () => {
                             />
                             <CharacterSelect
                                 userState={userState}
-                                gameState={gameState}
                                 charState={charState}
                                 dispatchCharState={dispatchCharState}
                                 charArray={charArray}

@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { history } from "../../routers/AppRouter";
+import { history } from "../../../routers/AppRouter";
 
 const Tos = () => (
     <div>

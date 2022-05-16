@@ -28,20 +28,20 @@ const userReducer = (state, action) => {
     switch (action.type) {
         case 'UPDATE_STATE':
             let gameIDupdate;
-            if(action.updatedState.gameID){
+            if (action.updatedState.gameID) {
                 gameIDupdate = action.updatedState.gameID
             } else {
                 gameIDupdate = '';
             }
-            return { 
-                ...state, 
+            return {
+                ...defaultUserProfile,
                 ...action.updatedState,
                 gameID: gameIDupdate
             }
         case 'SET_JOINING_GAME':
-            return { 
-                ...state, 
-                joiningGame: action.joiningGame 
+            return {
+                ...state,
+                joiningGame: action.joiningGame
             }
         case 'SET_GAME_ID':
             return {
@@ -53,16 +53,16 @@ const userReducer = (state, action) => {
                 ...state,
                 gameKeys: state.gameKeys.concat(action.keys)
             }
-        case 'SET_GAME_ID_ARRAY':
-            return {
-                ...state,
-                gameIDArray: action.gameIDArray
-            }
-        case 'SET_UID':
-            return {
-                ...state,
-                uid: action.uid
-            }
+        // case 'SET_GAME_ID_ARRAY':
+        //     return {
+        //         ...state,
+        //         gameIDArray: action.gameIDArray
+        //     }
+        // case 'SET_UID':
+        //     return {
+        //         ...state,
+        //         uid: action.uid
+        //     }
         case 'SET_IS_ANONYMOUS':
             return {
                 ...state,
@@ -81,11 +81,13 @@ const userReducer = (state, action) => {
                     }
                 }
             }
-            case 'SET_CHARACTER_ARRAY':
-                return {
-                    ...state,
-                    characterList: action.characterList
-                }
+        case 'SET_CHARACTER_ARRAY':
+            return {
+                ...state,
+                characterList: action.characterList
+            }
+        case 'RESET_STATE':
+            return { ...defaultUserProfile }
         default:
             return state
     }

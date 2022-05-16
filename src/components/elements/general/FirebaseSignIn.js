@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { auth, ui } from '../../firebase/firebase';
-import { uiConfig } from '../../firebase/uiConfig';
+import { auth, ui } from '../../../firebase/firebase';
+import { uiConfig } from '../../../firebase/uiConfig';
 import FirebaseAuth from 'react-firebaseui/FirebaseAuth';
 
 

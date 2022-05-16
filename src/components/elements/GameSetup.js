@@ -1,15 +1,15 @@
-import React, { useEffect } from "react";
-import { auth, db } from "../../firebase/firebase";
-import {
-    off,
-    onValue,
-    ref,
-} from "firebase/database";
-import {
-    clearChallengesObject,
-    updateChallengesObject
-} from "../../actions/gameActions";
-import { startRemoveGameID } from "../../actions/userActions";
+import React from "react";
+// import { auth, db } from "../../firebase/firebase";
+// import {
+//     off,
+//     onValue,
+//     ref,
+// } from "firebase/database";
+// import {
+//     clearChallengesObject,
+//     updateChallengesObject
+// } from "../../actions/gameActions";
+// import { startRemoveGameID } from "../../actions/userActions";
 
 
 export const GameSetup = ({

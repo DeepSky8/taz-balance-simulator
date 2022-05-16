@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
-import { hideAlerts, showAlerts, startSaveNewCharacter } from "../../actions/newCharActions";
-import { auth } from "../../firebase/firebase";
+import { hideAlerts, showAlerts, startSaveNewCharacter } from "../../../actions/newCharActions";
+import { auth } from "../../../firebase/firebase";
 
 const CreateNewCharacter = ({ newCharState, dispatchNewCharState }) => {
     let navigate = useNavigate()

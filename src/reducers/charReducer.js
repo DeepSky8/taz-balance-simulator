@@ -25,6 +25,8 @@ const charReducer = (state, action) => {
             return {
                 ...defaultCharState
             }
+        case 'RESET_STATE':
+            return { ...defaultCharState }
         default: return state
     }
 }

@@ -25,12 +25,12 @@ const renderApp = () => {
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    registerUser(user.uid, user.isAnonymous, {}=true)
+
     renderApp()
   } else {
     console.log('signing in anonymously')
     signInAnonymously(auth)
-      // .then(() => { renderApp() })
+      .then((user) => { registerUser(user.uid, user.isAnonymous, {} = true) })
       .catch((error) => {
         console.log('error was: ', error)
       })

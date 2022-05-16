@@ -15,6 +15,10 @@ export const setNoCurrentChar = () => ({
     type: 'SET_NO_CHAR'
 })
 
+export const resetCharacterState = () => ({
+    type: 'RESET_STATE'
+})
+
 // Cloud Actions
 
 export const startSetCurrentCharacter = (uid, charID) => {

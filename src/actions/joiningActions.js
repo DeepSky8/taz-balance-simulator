@@ -27,31 +27,13 @@ export const hostingGame = () => ({
     type: 'HOSTING_GAME'
 })
 
-// not in use
-
-
-const setJoiningState = (gameID) => ({
-    type: 'SET_JOINING_STATE',
-    gameID
-})
-
-const clearGameID = () => ({
-    type: 'CLEAR_GAME_ID'
-})
-
-const toggleJoiningGame = (joiningGame, isAnonymous) => ({
-    type: 'TOGGLE_JOINING_GAME',
-    joiningGame,
-    isAnonymous
-})
-
-
 // Cloud state Actions
 
 // Sets the joining/hosting status in cloud
 export const startSetJoiningGame = (uid, joiningGame) => {
     const updates = {}
     updates['users/' + uid + '/joiningGame'] = joiningGame
+    updates['users/' + uid + '/uid'] = uid;
     update(ref(db), updates)
         .catch((error) => {
             console.log('Did not set JoiningState, error: ', error)
@@ -75,10 +57,11 @@ export const startSaveGameID = (uid, gameID) => {
 // This involves saving the gameID in both activeGames section 
 // and the Users section, along with setting the host ID in both locations
 // Then calls the previous process to save the gameID to the user profile
-export const startRegisterGameID = (uid, gameID) => {
+const startRegisterGameID = (uid, gameID) => {
     const updates = {};
     updates['activeGames/' + gameID] = { host: uid, gameID };
     updates['users/' + uid + '/host'] = uid;
+    updates['users/' + uid + '/uid'] = uid;
     update(ref(db), updates)
         .then(() => {
             startSaveGameID(uid, gameID)
@@ -103,3 +86,25 @@ export const startRemoveGameCode = (uid, gameID) => {
             console.log('Error when cleaning game array in cloud:', error)
         })
 }
+
+
+
+
+
+// not in use
+
+
+const setJoiningState = (gameID) => ({
+    type: 'SET_JOINING_STATE',
+    gameID
+})
+
+const clearGameID = () => ({
+    type: 'CLEAR_GAME_ID'
+})
+
+const toggleJoiningGame = (joiningGame, isAnonymous) => ({
+    type: 'TOGGLE_JOINING_GAME',
+    joiningGame,
+    isAnonymous
+})
