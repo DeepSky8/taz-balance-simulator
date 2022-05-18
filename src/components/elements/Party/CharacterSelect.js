@@ -1,36 +1,53 @@
-import React, { useReducer } from "react";
-import { defaultCharState, charReducer } from "../../../reducers/charReducer";
-import { startSetCurrentCharacter, toggleCharDisplay } from "../../../actions/charActions";
+import React from "react";
+import { startRemoveCharacter, startSetCurrentCharacter, toggleCharDisplay } from "../../../actions/charActions";
 import { CharactersList } from "./CharactersList";
 import { auth } from "../../../firebase/firebase";
 import classTransformer from "../../functions/classTransformer";
 import { charClasses } from "../../classes/default";
+import { useNavigate } from "react-router-dom";
 
 const CharacterSelect = ({ userState, gameState, charState, dispatchCharState, charArray }) => {
-
+    let navigate = useNavigate()
+    let className = classTransformer(charClasses, charState.charClassCode)
     const charDispatch = (charID) => {
         startSetCurrentCharacter(auth.currentUser.uid, charID)
     }
 
     const viewEdit = (charID) => {
-
+        navigate(`/characterSheet/${className}/${charID}`)
     }
 
+    const deleteChar = (charID) => {
+        startRemoveCharacter(auth.currentUser.uid, charID)
+        navigate('/gameSetup')
+    }
 
     return (
         <div>
-            <button onClick={() => { dispatchCharState(toggleCharDisplay()) }}>
-                {userState.currentCharacterID ?
-                    charState.charName + ": " + charState.questCount + " quests completed (click to pick new character)"
-                    :
-                    'Please select a character'}
-            </button>
+            {userState.currentCharacterID ?
+                charState.charName + ", " + charState.charTitle
+                :
+                ''
+            }
+            <div>
+                <button onClick={() => {
+                    charArray.length > 0 ? dispatchCharState(toggleCharDisplay())
+                        :
+                        navigate('/characterSheet/newCharacter')
+                }}>
+                    {charArray.length > 0 ?
+                        'View all characters'
+                        :
+                        'Create a character'}
+                </button>
+            </div>
 
             {charState.displayChars &&
                 <CharactersList
                     charDispatch={charDispatch}
                     charArray={charArray}
                     viewEdit={viewEdit}
+                    deleteChar={deleteChar}
                 />
             }
         </div>

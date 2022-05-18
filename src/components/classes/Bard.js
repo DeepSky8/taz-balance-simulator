@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import {
-    resetDefaultNewChar,
     setBardInstrument,
     setBardMusicSkill,
     setBardSuperGoal,
@@ -12,8 +11,9 @@ import {
     setCharToolCode,
     setHumanBardBand,
     setRobotBardCreator,
-    setRobotBardVisual
-} from "../../actions/newCharActions";
+    setRobotBardVisual,
+    setNoCurrentChar
+} from "../../actions/charActions";
 import classTransformer from "../functions/classTransformer";
 import { charClasses, charClassCodes } from "./default";
 
@@ -121,19 +121,19 @@ const bardNumbers = {
     specialTarget: 'relic'
 }
 
-const Bard = ({ newCharState, dispatchNewCharState }) => {
+const Bard = ({ charState, dispatchCharState }) => {
 
-    // If the page is being refreshed, 
-    // maintain the data stored in the new character state
+    // If the page is being refreshed or a character is being edited, 
+    // maintain the data stored in the character state
     // Otherwise treat this as a brand new character (possibly due to 
     // switching from a different character class sheet)
     // and set the character state back to blank
     // before automatically setting the current class code
     useEffect(() => {
-        if (newCharState.charClassCode !== 'cc0') {
-            dispatchNewCharState(resetDefaultNewChar())
-            dispatchNewCharState(setCharClassCode('cc0'))
-            dispatchNewCharState(setCharSpecialCode('bs0'))
+        if (charState.charClassCode !== 'cc0' && charState.changeClass) {
+            dispatchCharState(setNoCurrentChar())
+            dispatchCharState(setCharClassCode('cc0'))
+            dispatchCharState(setCharSpecialCode('bs0'))
         }
     }, [])
 
@@ -167,7 +167,7 @@ const Bard = ({ newCharState, dispatchNewCharState }) => {
     // When the user clicks on one of the available races
     // send that code to the new character reducer for storage
     const onClickRace = (charRaceCode) => {
-        dispatchNewCharState(
+        dispatchCharState(
             setCharRaceCode(
                 charRaceCode
             )
@@ -177,7 +177,7 @@ const Bard = ({ newCharState, dispatchNewCharState }) => {
     // When the user clicks on one of the available tools
     // send that code to the new character reducer for storage
     const onClickTool = (charToolCode) => {
-        dispatchNewCharState(
+        dispatchCharState(
             setCharToolCode(
                 charToolCode
             )
@@ -187,7 +187,7 @@ const Bard = ({ newCharState, dispatchNewCharState }) => {
     // When the user clicks on one of the available attributes
     // send that code to the new character reducer for storage
     const onClickAttribute = (charAttributeCode) => {
-        dispatchNewCharState(
+        dispatchCharState(
             setCharAttributeCode(
                 charAttributeCode
             )
@@ -198,14 +198,19 @@ const Bard = ({ newCharState, dispatchNewCharState }) => {
 
     return (
         <div>
+            <div className="nameDisplay">
+                {!charState.changeClass &&
+                    <h4>{charState.charName}, {charState.charTitle}</h4>
+                }
+            </div>
             <div className="raceSelection">
                 <div className='pleaseChooseAlert'>
-                    {newCharState.showAlerts &&
-                        !newCharState.charRaceCode &&
+                    {charState.showAlerts &&
+                        !charState.charRaceCode &&
                         'Please make a selection'}
                 </div>
                 <div className="dropdown">
-                    {newCharState.charRaceCode === 'br1' ?
+                    {charState.charRaceCode === 'br1' ?
                         asAn
                         :
                         asA
@@ -214,7 +219,7 @@ const Bard = ({ newCharState, dispatchNewCharState }) => {
                         onClick={toggleRaceSelections}
                         className="dropbtn"
                     >
-                        {classTransformer(bardRaceRegTitles, newCharState.charRaceCode)}
+                        {classTransformer(bardRaceRegTitles, charState.charRaceCode)}
                     </button>
                     {bardBlurb}
 
@@ -241,17 +246,17 @@ const Bard = ({ newCharState, dispatchNewCharState }) => {
             </div>
 
             <div className="bardRaceStingers">
-                {newCharState.charRaceCode &&
-                    classTransformer(bardRaceStingers, newCharState.charRaceCode)}
+                {charState.charRaceCode &&
+                    classTransformer(bardRaceStingers, charState.charRaceCode)}
 
-                {newCharState.charRaceCode === 'br0' ?
+                {charState.charRaceCode === 'br0' ?
                     <input
-                        value={newCharState.humanBardBand}
+                        value={charState.humanBardBand}
                         type='text'
                         placeholder='My band is named:'
                         maxLength={30}
                         onChange={(e) => {
-                            dispatchNewCharState(
+                            dispatchCharState(
                                 setHumanBardBand(
                                     e.target.value.toString()
                                 )
@@ -261,26 +266,26 @@ const Bard = ({ newCharState, dispatchNewCharState }) => {
                     :
                     ''
                 }
-                {newCharState.charRaceCode === 'br5' ?
+                {charState.charRaceCode === 'br5' ?
                     <div>
                         <input
-                            value={newCharState.robotBardCreator}
+                            value={charState.robotBardCreator}
                             type="text"
                             placeholder='Created by:'
                             maxLength={30}
                             onChange={(e) => {
-                                dispatchNewCharState(
+                                dispatchCharState(
                                     setRobotBardCreator(
                                         e.target.value.toString()))
                             }}
                         />
                         <input
-                            value={newCharState.robotBardVisual}
+                            value={charState.robotBardVisual}
                             type="text"
                             placeholder='I look like:'
                             maxLength={30}
                             onChange={(e) => {
-                                dispatchNewCharState(
+                                dispatchCharState(
                                     setRobotBardVisual(
                                         e.target.value.toString()
                                     )
@@ -295,8 +300,8 @@ const Bard = ({ newCharState, dispatchNewCharState }) => {
 
             <div className="bardTools">
                 <div className='pleaseChooseAlert'>
-                    {newCharState.showAlerts &&
-                        !newCharState.charToolCode &&
+                    {charState.showAlerts &&
+                        !charState.charToolCode &&
                         'Please make a selection'
                     }
                 </div>
@@ -306,7 +311,7 @@ const Bard = ({ newCharState, dispatchNewCharState }) => {
                         onClick={toggleToolSelections}
                         className="dropbtn"
                     >
-                        {classTransformer(bardToolTitles, newCharState.charToolCode)}
+                        {classTransformer(bardToolTitles, charState.charToolCode)}
                     </button>
 
                     <div id="tool-selector" className="dropdown-content">
@@ -325,17 +330,17 @@ const Bard = ({ newCharState, dispatchNewCharState }) => {
             </div>
 
             <div className="bardToolStingers">
-                {newCharState.charToolCode &&
-                    classTransformer(bardToolStingers, newCharState.charToolCode)}
+                {charState.charToolCode &&
+                    classTransformer(bardToolStingers, charState.charToolCode)}
 
-                {newCharState.charToolCode === 'bt4' ?
+                {charState.charToolCode === 'bt4' ?
                     <input
-                        value={newCharState.bardSuperGoal}
+                        value={charState.bardSuperGoal}
                         type="text"
                         placeholder="Your big goal"
                         maxLength={30}
                         onChange={(e) => {
-                            dispatchNewCharState(
+                            dispatchCharState(
                                 setBardSuperGoal(
                                     e.target.value.toString()))
                         }}
@@ -346,8 +351,8 @@ const Bard = ({ newCharState, dispatchNewCharState }) => {
 
             <div className="bardAttributes">
                 <div className='pleaseChooseAlert'>
-                    {newCharState.showAlerts &&
-                        !newCharState.charAttributeCode &&
+                    {charState.showAlerts &&
+                        !charState.charAttributeCode &&
                         'Please make a selection'}
                 </div>
                 <div className="dropdown">
@@ -357,7 +362,7 @@ const Bard = ({ newCharState, dispatchNewCharState }) => {
                         className="dropbtn"
                     >
                         {classTransformer(
-                            bardAttributeTitles, newCharState.charAttributeCode
+                            bardAttributeTitles, charState.charAttributeCode
                         )}
                     </button>
 
@@ -377,18 +382,18 @@ const Bard = ({ newCharState, dispatchNewCharState }) => {
             </div>
 
             <div className="bardAttributeStingers">
-                {newCharState.charAttributeCode &&
-                    classTransformer(bardAttributeStingers, newCharState.charAttributeCode)}
+                {charState.charAttributeCode &&
+                    classTransformer(bardAttributeStingers, charState.charAttributeCode)}
 
                 <div>
-                    {newCharState.charAttributeCode === 'ba2' ?
+                    {charState.charAttributeCode === 'ba2' ?
                         <input
-                            value={newCharState.bardInstrument}
+                            value={charState.bardInstrument}
                             type="text"
                             placeholder="What do you play?"
                             maxLength={30}
                             onChange={(e) => {
-                                dispatchNewCharState(
+                                dispatchCharState(
                                     setBardInstrument(
                                         e.target.value.toString())
                                 )
@@ -396,14 +401,14 @@ const Bard = ({ newCharState, dispatchNewCharState }) => {
                         />
                         :
                         ''}
-                    {newCharState.charAttributeCode === 'ba2' ?
+                    {charState.charAttributeCode === 'ba2' ?
                         <input
-                            value={newCharState.bardMusicSkill}
+                            value={charState.bardMusicSkill}
                             type="text"
                             placeholder="Scale of 1-10"
                             maxLength={30}
                             onChange={(e) => {
-                                dispatchNewCharState(
+                                dispatchCharState(
                                     setBardMusicSkill(
                                         e.target.value.toString()
                                     )
@@ -418,12 +423,12 @@ const Bard = ({ newCharState, dispatchNewCharState }) => {
             <div className="enterName">
                 <label>Character Name: </label>
                 <input
-                    value={newCharState.charName}
+                    value={charState.charName}
                     type='text'
                     placeholder='My character is named'
                     maxLength={15}
                     onChange={(e) => {
-                        dispatchNewCharState(
+                        dispatchCharState(
                             setCharName(
                                 e.target.value.toString()
                             )

@@ -3,13 +3,15 @@ import { Routes, Route, Outlet } from 'react-router-dom';
 import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import {
+    get,
     off,
     onValue,
     ref,
+    set,
 } from "firebase/database";
 import { defaultUserProfile, userReducer } from "../reducers/userReducer";
 import { defaultGameState, gameReducer } from "../reducers/gameReducer";
-import { defaultNewCharState, newCharReducer } from "../reducers/newCharReducer";
+// import { defaultNewCharState, newCharReducer } from "../reducers/newCharReducer";
 import { defaultCharState, charReducer } from "../reducers/charReducer";
 import ActiveGame from "../components/elements/ActiveGame"
 import AuthWrapper from "../components/elements/AuthWrapper";
@@ -27,11 +29,14 @@ import { setCharacterListArray, updateUserState } from "../actions/userActions";
 
 import PartyMembers from "../components/elements/Party/PartyMembers";
 import CharacterSelect from "../components/elements/Party/CharacterSelect";
-import CreateNewCharacter from "../components/elements/CreateNewCharacter";
+import CharacterSheet from "../components/elements/Party/CharacterSheet";
 import Bard from "../components/classes/Bard";
 import Cleric from "../components/classes/Cleric";
 import Test from "../components/classes/Test";
 import { setCharState, setNoCurrentChar } from "../actions/charActions";
+import ViewEditCharacter from "../components/elements/Party/ViewEditCharacter";
+import { getAuth } from "firebase/auth";
+import { RefreshHelper } from "../components/functions/RefreshHelper";
 
 export const history = createBrowserHistory();
 
@@ -39,11 +44,14 @@ export const history = createBrowserHistory();
 const AppRouter = () => {
     const [gameArray, setGameArray] = useState([])
     const [charArray, setCharArray] = useState([])
-    // const [gameObjectsArray, setGameObjectsArray] = useState([])
     const [gameState, dispatchGameState] = useReducer(gameReducer, defaultGameState)
     const [userState, dispatchUserState] = useReducer(userReducer, defaultUserProfile)
-    const [newCharState, dispatchNewCharState] = useReducer(newCharReducer, defaultNewCharState)
     const [charState, dispatchCharState] = useReducer(charReducer, defaultCharState)
+
+
+
+    //user.val().lastActivity < (Date.now() - 86400000) || user.val().lastActivity === null
+
 
     // This listener updates the local state to 
     // mirror the user account in the cloud
@@ -51,6 +59,7 @@ const AppRouter = () => {
         onValue(ref(db, 'users/' + auth.currentUser.uid), (snapshot) => {
             // If there is a user account in the cloud
             if (snapshot.exists()) {
+                // console.log('snapshot state from server: ', snapshot.val())
                 dispatchUserState(updateUserState(snapshot.val()))
 
                 // const anonymousUID = snapshot.val().anonymousUID
@@ -88,7 +97,6 @@ const AppRouter = () => {
             })
 
             setCharArray(characterArray)
-
         })
 
         return (() => {
@@ -101,9 +109,9 @@ const AppRouter = () => {
         if (userState.currentCharacterID) {
             let charObject = charArray.find(character =>
                 character.charID === userState.currentCharacterID)
-            console.log('charArray: ', charArray)
-            console.log('charObject', charObject)
-            console.log('currentCharacterID', userState.currentCharacterID)
+            // console.log('charArray: ', charArray)
+            // console.log('charObject', charObject)
+            // console.log('currentCharacterID', userState.currentCharacterID)
             dispatchCharState(setCharState(charObject))
         } else {
             dispatchCharState(setNoCurrentChar())
@@ -170,7 +178,7 @@ const AppRouter = () => {
                         </GameSetup>
 
                     } />
-                    <Route path="/createNewCharacter/*"
+                    <Route path="/characterSheet/*"
                         element={
                             <div>
                                 <AuthWrapper />
@@ -178,31 +186,38 @@ const AppRouter = () => {
                                     userState={userState}
                                     gameArray={gameArray}
                                 />
-                                <CreateNewCharacter
-                                    newCharState={newCharState}
-                                    dispatchNewCharState={dispatchNewCharState}
+                                <CharacterSheet
+                                    charArray={charArray}
+                                    charState={charState}
+                                    dispatchCharState={dispatchCharState}
                                 />
 
                             </div>
                         }
-
                     >
-                        <Route path='createBard'
+                        <Route path='Bard/*'
                             element={<Bard
-                                newCharState={newCharState}
-                                dispatchNewCharState={dispatchNewCharState}
+                                charState={charState}
+                                dispatchCharState={dispatchCharState}
                             />}
                         />
-                        <Route path='createCleric'
+                        <Route path='Cleric/*'
                             element={<Cleric
-                                newCharState={newCharState}
-                                dispatchNewCharState={dispatchNewCharState}
+                                charState={charState}
+                                dispatchCharState={dispatchCharState}
                             />}
                         />
+
+
+
                     </Route>
 
 
-
+                    <Route path={'/refreshHelper'}
+                        element={<RefreshHelper
+                            userState={userState}
+                        />}
+                    />
                     <Route path='gameInProcess' element={
                         <AuthWrapper
                             userState={userState}
@@ -246,3 +261,15 @@ export default AppRouter;
 // </AuthProvider>
 // </FirebaseAppProvider>
 
+// <ViewEditCharacter
+// newCharState={newCharState}
+// dispatchNewCharState={dispatchNewCharState}
+// charArray={charArray}
+// >
+// </ViewEditCharacter>
+
+// <Route path='bard/:characterID'
+// element={<Bard
+//     newCharState={newCharState}
+//     dispatchNewCharState={dispatchNewCharState}
+// />} />

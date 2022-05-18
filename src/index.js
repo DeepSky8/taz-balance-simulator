@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import AppRouter from './routers/AppRouter';
 import { onAuthStateChanged, signInAnonymously } from 'firebase/auth';
 import { auth } from './firebase/firebase';
-import { registerUser } from './actions/userActions';
+import { startRegisterUser } from './actions/userActions';
 
 
 const jsx = (
@@ -25,12 +25,11 @@ const renderApp = () => {
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    registerUser(user.uid, user.isAnonymous, {}=true)
+    // console.log('user: ', user)
+    startRegisterUser(user.uid, user.isAnonymous)
     renderApp()
   } else {
-    console.log('signing in anonymously')
     signInAnonymously(auth)
-      // .then(() => { renderApp() })
       .catch((error) => {
         console.log('error was: ', error)
       })

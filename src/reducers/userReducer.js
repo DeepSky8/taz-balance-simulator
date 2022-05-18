@@ -7,7 +7,7 @@ const defaultUserProfile = {
     isAnonymous: true,
     joiningGame: true,
     lastActivity: 0,
-    
+    adminCode: null,
     savedGamesArray: [{
         key: null,
         villainCode: null,

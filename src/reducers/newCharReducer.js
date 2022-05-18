@@ -1,6 +1,7 @@
 
 const defaultNewCharState = {
     showAlerts: false,
+    changeClass: true,
     charID: undefined,
     charName: '',
     charClassCode: undefined,
@@ -10,6 +11,7 @@ const defaultNewCharState = {
     charSpecialCode: undefined,
     charNotes: '',
     charKostco: [{}],
+    displayChars: false,
     questCount: 0,
     humanBardBand: '',
     robotBardCreator: '',
@@ -75,6 +77,12 @@ const newCharReducer = (state, action) => {
             return {
                 ...state,
                 charAttributeCode: action.charAttributeCode
+            }
+        case 'EDIT_CHARACTER':
+            return {
+                ...defaultNewCharState,
+                ...action.charObject,
+                changeClass: false
             }
         case 'SET_BARD_INSTRUMENT':
             return {

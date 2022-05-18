@@ -1,44 +1,81 @@
 import React, { useEffect } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
-import { hideAlerts, showAlerts, startSaveNewCharacter } from "../../actions/newCharActions";
-import { auth } from "../../firebase/firebase";
+import {
+    startSetCurrentCharacter,
+    editCharacter,
+    hideAlerts,
+    showAlerts,
+    startSaveNewCharacter,
+    startSaveUpdatedCharacter,
+    resetDefaultNewChar,
+    setNoCurrentChar
+} from "../../../actions/charActions";
+import { auth } from "../../../firebase/firebase";
+import { history } from "../../../routers/AppRouter";
 
-const CreateNewCharacter = ({ newCharState, dispatchNewCharState }) => {
+const CharacterSheet = ({ charArray, charState, dispatchCharState }) => {
     let navigate = useNavigate()
+    const editID = history.location.pathname.split("/")[3]
+    const createNew = history.location.pathname.split("/")[2]
+    let charObject = charArray.find(characterObject =>
+        characterObject.charID === editID)
+    useEffect(() => {
+        if (editID && charObject) {
+            startSetCurrentCharacter(auth.currentUser.uid, charObject.charID)
+            dispatchCharState(editCharacter(charObject))
+        } else if (createNew === 'newCharacter') {
+            dispatchCharState(setNoCurrentChar())
+        }
+        else {
+            navigate('/gameSetup')
+        }
+    }, [editID])
+    let filledSheet = (
+        charState.charName &&
+        charState.charClassCode &&
+        charState.charRaceCode &&
+        charState.charToolCode &&
+        charState.charAttributeCode
+    )
 
-
+    let newCharacter = charState.changeClass
 
     const saveCharacter = () => {
-        if (newCharState.charName &&
-            newCharState.charClassCode &&
-            newCharState.charRaceCode &&
-            newCharState.charToolCode &&
-            newCharState.charAttributeCode) {
-            dispatchNewCharState(hideAlerts())
-            startSaveNewCharacter(auth.currentUser.uid, newCharState)
-            navigate('/gameSetup')
+        if (filledSheet) {
+            if (newCharacter) {
+                console.log('confirm new character, ', newCharacter)
+                dispatchCharState(hideAlerts())
+                startSaveNewCharacter(auth.currentUser.uid, charState)
+                navigate('/gameSetup')
+            } else if (!newCharacter) {
+                console.log('confirm not new character, ', newCharacter)
+                dispatchCharState(hideAlerts())
+                startSaveUpdatedCharacter(auth.currentUser.uid, charState, charState.charID)
+                navigate('/gameSetup')
+            }
         } else {
-            dispatchNewCharState(showAlerts())
+            dispatchCharState(showAlerts())
         }
-
     }
 
     return (
         <div>
 
-            <p>Create New Character page</p>
-            <nav>
-                <NavLink
-                    to='createBard'
-                    className={isActive =>
-                        (isActive ? "nav-link" : "nav-link-unselected")}
-                >Bard</NavLink>
-                <NavLink
-                    to='createCleric'
-                    className={isActive =>
-                        (isActive ? "nav-link" : "nav-link-unselected")}
-                >Cleric</NavLink>
-            </nav>
+            <p>Character Sheet</p>
+            {charState.changeClass && (
+                <nav>
+                    <NavLink
+                        to='Bard'
+                        className={isActive =>
+                            (isActive ? "nav-link" : "nav-link-unselected")}
+                    >Bard</NavLink>
+                    <NavLink
+                        to='Cleric'
+                        className={isActive =>
+                            (isActive ? "nav-link" : "nav-link-unselected")}
+                    >Cleric</NavLink>
+                </nav>
+            )}
 
             <Outlet />
 
@@ -58,7 +95,7 @@ const CreateNewCharacter = ({ newCharState, dispatchNewCharState }) => {
     )
 }
 
-export default CreateNewCharacter
+export default CharacterSheet
 
 // <form id='class-select'>
 // <label>Select a class: </label>

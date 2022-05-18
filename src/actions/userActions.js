@@ -43,7 +43,7 @@ export const removeActiveGameChallengeCodes = () => ({
     type: 'REMOVE_CHALLENGE_CODES'
 })
 
-export const setCharacterListArray = (characterList) => ({ 
+export const setCharacterListArray = (characterList) => ({
     type: 'SET_CHARACTER_ARRAY',
     characterList
 })
@@ -62,6 +62,21 @@ export const startRemoveGameID = (uid) => {
         })
 }
 
-export const registerUser = (uid, isAnonymous, joiningGame) => {
-    update(ref(db, 'users/' + uid), { uid, isAnonymous, joiningGame })
+export const startRegisterUser = (uid, isAnonymous) => {
+    const updates = {}
+    updates['users/' + uid + '/uid'] = uid
+    updates['users/' + uid + '/isAnonymous'] = isAnonymous
+    updates['users/' + uid + '/lastActivity'] = Date.now()
+    updates['users/' + uid + '/gameID'] = null
+    updates['users/' + uid + '/joiningGame'] = true
+    update(ref(db), updates)
+}
+
+export const startRemoveUser = (uid) => {
+    remove(ref(db, 'characters/' + uid))
+    remove(ref(db, 'users/' + uid))
+        .catch((error) => {
+            console.log('error when removing user: ', error)
+            console.log('error when removing UID: ', uid)
+        })
 }

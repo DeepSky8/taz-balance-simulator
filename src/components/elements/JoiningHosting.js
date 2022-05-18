@@ -76,7 +76,11 @@ const JoiningHosting = ({ userState, gameArray }) => {
                 // If joining, set the uid, last activity date, host, and gameID
                 // on user's profile in cloud
                 startSaveGameID(auth.currentUser.uid, gameID)
-            } else if (!userState.joiningGame && !gameCodeRegistered) {
+            } else if (
+                !userState.joiningGame &&
+                !gameCodeRegistered &&
+                !userState.isAnonymous
+            ) {
                 // If hosting, create an activeGames entry with gameID
                 // then set the uid, last activity date, host, and gameID
                 // on user's profile in cloud

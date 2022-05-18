@@ -4,16 +4,20 @@ import { db } from "../firebase/firebase"
 
 // Cloud actions
 
+export const startSaveUpdatedCharacter = (uid, newCharState, charKey) => {
+    const updates = {}
+    updates['characters/' + uid + '/' + charKey] = { ...newCharState };
+    updates['users/' + uid + '/currentCharacterID'] = charKey
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Error when saving new character:', error)
+        })
 
-
+}
 
 export const startSaveNewCharacter = (uid, newCharState) => {
     const newCharKey = push(child(ref(db), uid + '/characterList')).key
-    const updates = {}
-    updates['characters/' + uid + '/' + newCharKey] =
-        { ...newCharState, charID: newCharKey };
-    updates['users/' + uid + '/currentCharacterID'] = newCharKey
-    update(ref(db), updates)
+    startSaveUpdatedCharacter(uid, newCharState, newCharKey)
         .catch((error) => {
             console.log('Error when saving new character:', error)
         })
@@ -62,6 +66,11 @@ export const setCharName = (charName) => ({
 
 export const resetDefaultNewChar = () => ({
     type: 'RESET_DEFAULTS'
+})
+
+export const editCharacter = (charObject) => ({ 
+    type: 'EDIT_CHARACTER',
+    charObject
 })
 
 // Bard-specific actions
