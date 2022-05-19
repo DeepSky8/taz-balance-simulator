@@ -9,13 +9,13 @@ import {
     startSetLocation,
     startSetRelic,
     startSetVillain
-} from "../../actions/challengeSelectActions";
-import { challengeSelectReducer, defaultChallengeState } from "../../reducers/challengeSelectReducer";
-import ChallengeOptionsList from "./Challenges/ChallengeOptionsList";
-import { villainObjectsArray } from "./Challenges/mission-elements/m-villain";
-import { relicObjectsArray } from "./Challenges/mission-elements/m-relic";
-import { locationObjectsArray } from "./Challenges/mission-elements/m-location";
-import challengeTransformer from "../functions/challengeTransformer";
+} from "../../../actions/challengeSelectActions";
+import { challengeSelectReducer, defaultChallengeState } from "../../../reducers/challengeSelectReducer";
+import ChallengeOptionsList from "./ChallengeOptionsList";
+import { villainObjectsArray } from "./mission-elements/m-villain";
+import { relicObjectsArray } from "./mission-elements/m-relic";
+import { locationObjectsArray } from "./mission-elements/m-location";
+import challengeTransformer from "../../functions/challengeTransformer";
 
 const ChallengeSelect = ({ gameState, userState }) => {
     const [challengeState, dispatchChallengeState] = useReducer(challengeSelectReducer, defaultChallengeState)

@@ -3,12 +3,10 @@ const defaultCharState = {
     changeClass: true,
     charID: undefined,
     charName: '',
-    charClassCode: undefined,
-    charRaceCode: undefined,
-    charToolCode: undefined,
-    charAttributeCode: undefined,
-    charSpecialCode: undefined,
-    charTitle: 'New Adventurer',
+    classCode: 5,
+    raceCode: 14,
+    toolCode: undefined,
+    attributeCode: undefined,
     charNotes: '',
     charKostco: [{}],
     displayChars: false,
@@ -53,17 +51,12 @@ const charReducer = (state, action) => {
         case 'SET_CHAR_CLASS_CODE':
             return {
                 ...state,
-                charClassCode: action.charClassCode
-            }
-        case 'SET_CHAR_SPECIAL_CODE':
-            return {
-                ...state,
-                charSpecialCode: action.charSpecialCode
+                classCode: action.classCode
             }
         case 'SET_CHAR_RACE_CODE':
             return {
                 ...state,
-                charRaceCode: action.charRaceCode
+                raceCode: action.raceCode
             }
         case 'SET_HUMAN_BARD_BAND':
             return {

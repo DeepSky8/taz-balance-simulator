@@ -1,9 +1,9 @@
 import React, { useEffect, useReducer } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
-import { hideAlerts, startSaveUpdatedCharacter, showAlerts } from "../../../actions/newCharActions";
-import { auth } from "../../../firebase/firebase";
-import { history } from "../../../routers/AppRouter";
-import Bard from "../../classes/Bard";
+import { hideAlerts, startSaveUpdatedCharacter, showAlerts } from "../../../../actions/newCharActions";
+import { auth } from "../../../../firebase/firebase";
+import { history } from "../../../../routers/AppRouter";
+import Bard from "../../../classes/Bard";
 
 const ViewEditCharacter = ({ newCharState, dispatchNewCharState, charArray }) => {
     let navigate = useNavigate()

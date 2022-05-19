@@ -1,5 +1,5 @@
 import React from "react";
-import PlayerCharacter from "./CharacterSelect";
+import PlayerCharacter from "./CharacterSelect/CharacterSelect";
 
 const PartyMembers = ({ userState, gameState }) => {
 

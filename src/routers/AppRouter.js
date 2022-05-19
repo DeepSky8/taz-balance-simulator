@@ -13,30 +13,31 @@ import { defaultUserProfile, userReducer } from "../reducers/userReducer";
 import { defaultGameState, gameReducer } from "../reducers/gameReducer";
 // import { defaultNewCharState, newCharReducer } from "../reducers/newCharReducer";
 import { defaultCharState, charReducer } from "../reducers/charReducer";
-import ActiveGame from "../components/elements/ActiveGame"
-import AuthWrapper from "../components/elements/AuthWrapper";
-import ChallengeSelect from "../components/elements/ChallengeSelect";
-import ChooseMode from "../components/elements/ChooseMode";
-import FirebaseSignIn from '../components/elements/FirebaseSignIn';
-import GameSetup from "../components/elements/GameSetup";
-import JoiningHosting from "../components/elements/JoiningHosting";
-import NotFoundPage from "../components/elements/NotFoundPage";
-import PrivacyPolicy from "../components/elements/PrivacyPolicy";
-import Tos from "../components/elements/Tos";
-import Welcome from "../components/elements/Welcome";
+import ActiveGame from "../components/elements/ActiveGame/ActiveGame"
+import AuthWrapper from "../components/Authentication/AuthWrapper";
+import ChallengeSelect from "../components/elements/Challenges/ChallengeSelect";
+import ChooseMode from "../components/Authentication/ChooseMode";
+import FirebaseSignIn from '../components/Authentication/FirebaseSignIn';
+import GameSetup from "../components/GameSetup/GameSetup";
+import JoiningHosting from "../components/GameSetup/JoiningHosting";
+import NotFoundPage from "../components/Authentication/NotFoundPage";
+import PrivacyPolicy from "../components/Authentication/PrivacyPolicy";
+import Tos from "../components/Authentication/Tos";
+import Welcome from "../components/Authentication/Welcome";
 import { auth, db } from "../firebase/firebase";
 import { setCharacterListArray, updateUserState } from "../actions/userActions";
 
 import PartyMembers from "../components/elements/Party/PartyMembers";
-import CharacterSelect from "../components/elements/Party/CharacterSelect";
-import CharacterSheet from "../components/elements/Party/CharacterSheet";
+import CharacterSelect from "../components/elements/Party/CharacterSelect/CharacterSelect";
+import CharacterSheet from "../components/elements/Party/CharacterSheetElements/CharacterSheet";
 import Bard from "../components/classes/Bard";
 import Cleric from "../components/classes/Cleric";
 import Test from "../components/classes/Test";
 import { setCharState, setNoCurrentChar } from "../actions/charActions";
-import ViewEditCharacter from "../components/elements/Party/ViewEditCharacter";
+import ViewEditCharacter from "../components/elements/Party/CharacterSheetElements/ViewEditCharacter";
 import { getAuth } from "firebase/auth";
 import { RefreshHelper } from "../components/functions/RefreshHelper";
+import AttributePicker from "../components/elements/Party/CharacterSheetElements/AttributePicker";
 
 export const history = createBrowserHistory();
 
@@ -128,10 +129,6 @@ const AppRouter = () => {
     // }, [gameState])
 
     // useEffect(() => {
-    //     console.log('new character state changed: ', newCharState)
-    // }, [newCharState])
-
-    // useEffect(() => {
     //     console.log('character state changed: ', charState)
     // }, [charState])
 
@@ -190,26 +187,16 @@ const AppRouter = () => {
                                     charArray={charArray}
                                     charState={charState}
                                     dispatchCharState={dispatchCharState}
-                                />
+                                >
+                                    <AttributePicker
+                                        charState={charState}
+                                        dispatchCharState={dispatchCharState}
+                                    />
+                                </CharacterSheet>
 
                             </div>
                         }
                     >
-                        <Route path='Bard/*'
-                            element={<Bard
-                                charState={charState}
-                                dispatchCharState={dispatchCharState}
-                            />}
-                        />
-                        <Route path='Cleric/*'
-                            element={<Cleric
-                                charState={charState}
-                                dispatchCharState={dispatchCharState}
-                            />}
-                        />
-
-
-
                     </Route>
 
 
@@ -252,6 +239,54 @@ const AppRouter = () => {
 }
 
 export default AppRouter;
+
+
+
+
+// <Route path='Bard/*'
+//                             element={<AttributePicker
+//                                 charState={charState}
+//                                 dispatchCharState={dispatchCharState}
+//                             />}
+//                         />
+//                         <Route path='Priest/*'
+//                             element={<AttributePicker
+//                                 charState={charState}
+//                                 dispatchCharState={dispatchCharState}
+//                             />}
+//                         />
+//                         <Route path='Rogue/*'
+//                             element={<AttributePicker
+//                                 charState={charState}
+//                                 dispatchCharState={dispatchCharState}
+//                             />}
+//                         />
+//                         <Route path='Warrior/*'
+//                             element={<AttributePicker
+//                                 charState={charState}
+//                                 dispatchCharState={dispatchCharState}
+//                             />}
+//                         />
+//                         <Route path='Wizard/*'
+//                             element={<AttributePicker
+//                                 charState={charState}
+//                                 dispatchCharState={dispatchCharState}
+//                             />}
+//                         />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // <FirebaseAppProvider firebaseConfig={uiConfig}>
 // <AuthProvider sdk={auth}>

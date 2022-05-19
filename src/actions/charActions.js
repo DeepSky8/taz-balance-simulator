@@ -23,19 +23,15 @@ export const hideAlerts = () => ({
     type: 'HIDE_ALERTS'
 })
 
-export const setCharClassCode = (charClassCode) => ({
+export const setCharClassCode = (classCode) => ({
     type: 'SET_CHAR_CLASS_CODE',
-    charClassCode
+    classCode
 })
 
-export const setCharSpecialCode = (charSpecialCode) => ({
-    type: 'SET_CHAR_SPECIAL_CODE',
-    charSpecialCode
-})
 
-export const setCharRaceCode = (charRaceCode) => ({
+export const setCharRaceCode = (raceCode) => ({
     type: 'SET_CHAR_RACE_CODE',
-    charRaceCode
+    raceCode
 })
 
 export const setCharToolCode = (charToolCode) => ({
