@@ -5,7 +5,6 @@ import { raceCodes } from "../../../../../classes/charInfo";
 
 const BardRaceStingers = ({ charState, dispatchCharState }) => (
     <div>
-        {bardRaceStingerLines[raceCodes[charState.classCode].indexOf(charState.raceCode)]}
         <div id="humanBard">
             {charState.raceCode === 9 &&
                 <div>
@@ -60,3 +59,5 @@ const BardRaceStingers = ({ charState, dispatchCharState }) => (
 )
 
 export default BardRaceStingers
+
+//{bardRaceStingerLines[raceCodes[charState.classCode].indexOf(charState.raceCode)]}

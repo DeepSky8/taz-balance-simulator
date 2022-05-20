@@ -5,7 +5,6 @@ import { rogueRaceStingerLines } from "../../../../../classes/rogueInfo";
 
 const RogueRaceStingers = ({ charState, dispatchCharState }) => (
     <div>
-        {rogueRaceStingerLines[raceCodes[charState.classCode].indexOf(charState.raceCode)]}
         <div id="gerblinRogue">
             {charState.raceCode === 6 &&
                 <input

@@ -1,11 +1,8 @@
 import React from "react";
 import { setDwarfPriestOrigin } from "../../../../../../actions/charActions";
-import { raceCodes } from "../../../../../classes/charInfo";
-import { priestRaceStingerLines } from "../../../../../classes/priestInfo";
 
 const PriestRaceStingers = ({ charState, dispatchCharState }) => (
     <div>
-        {priestRaceStingerLines[raceCodes[charState.classCode].indexOf(charState.raceCode)]}
         <div id="dwarfPriest">
             {charState.raceCode === 4 &&
                 <input

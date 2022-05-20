@@ -10,7 +10,6 @@ const lift = ' lift'
 
 const WarriorRaceStingers = ({ charState, dispatchCharState }) => (
     <div>
-        {warriorRaceStingerLines[raceCodes[charState.classCode].indexOf(charState.raceCode)]}
         <div id="humanWarrior">
             {charState.raceCode === 9 &&
                 <div>

@@ -5,7 +5,6 @@ import { wizardRaceStingerLines } from "../../../../../classes/wizardInfo";
 
 const WizardRaceStingers = ({ charState, dispatchCharState }) => (
     <div>
-        {wizardRaceStingerLines[raceCodes[charState.classCode].indexOf(charState.raceCode)]}
         <div id="undeadWizard">
             {charState.raceCode === 14 &&
                 <div>

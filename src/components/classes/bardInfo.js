@@ -22,22 +22,13 @@ export const bardToolTitles = [
     "Bag Of Tricks"
 ]
 
-export const bardToolStingers = [
+export const bardToolStingerLines = [
     "You've devoted your life to studying relics and magic.",
     "You just know a lot of random, stupid things.",
     "You've been dungeon delving for decades. You're kind of over it, actually.",
     "You don't actually KNOW anything about relics, but a positive attitude goes a long way!",
     "After you bag a few relics, you're going to be a superstar! What is it you want to do?",
     "What have you got in your pocketses? You have a trinket or tool for every occasion."
-]
-
-export const bardAttributeCodes = [
-    'ba0',
-    'ba1',
-    'ba2',
-    'ba3',
-    'ba4',
-    'ba5'
 ]
 
 export const bardAttributeTitles = [
@@ -49,7 +40,7 @@ export const bardAttributeTitles = [
     "Lore"
 ]
 
-export const bardAttributeStingers = [
+export const bardAttributeStingerLines = [
     "As far as you're concerned, life is a musical.",
     "There once was a wizard from Oz...",
     "What instrument do you play? Can you shred?",

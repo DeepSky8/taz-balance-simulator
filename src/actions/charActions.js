@@ -130,6 +130,16 @@ export const setDwarfPriestOrigin = (dwarfPriestOrigin) => ({
     dwarfPriestOrigin
 })
 
+export const setPriestHolySymbol = (priestHolySymbol) => ({ 
+    type: 'SET_PRIEST_HOLY_SYMBOL',
+    priestHolySymbol
+})
+
+export const setPriestMantra = (priestMantra) => ({ 
+    type: 'SET_PRIEST_MANTRA',
+    priestMantra
+})
+
 // Rogue Actions
 
 export const setGerblinRogueOrigin = (gerblinRogueOrigin) => ({

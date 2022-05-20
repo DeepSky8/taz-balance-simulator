@@ -1,8 +1,8 @@
-import { bardToolTitles } from "./bardInfo"
-import { priestToolTitles } from "./priestInfo"
-import { rogueToolTitles } from "./rogueInfo"
-import { warriorToolTitles } from "./warriorInfo"
-import { wizardToolTitles } from "./wizardInfo"
+import { bardRaceStingerLines, bardToolStingerLines, bardToolTitles } from "./bardInfo"
+import { priestRaceStingerLines, priestToolStingerLines, priestToolTitles } from "./priestInfo"
+import { rogueRaceStingerLines, rogueToolStingerLines, rogueToolTitles } from "./rogueInfo"
+import { warriorRaceStingerLines, warriorToolStingerLines, warriorToolTitles } from "./warriorInfo"
+import { wizardRaceStingerLines, wizardToolStingerLines, wizardToolTitles } from "./wizardInfo"
 
 export const asA = "As a "
 export const asAn = "As an "
@@ -45,6 +45,15 @@ export const raceCodes = [
     [0]
 ]
 
+export const raceStingers = [
+    bardRaceStingerLines,
+    priestRaceStingerLines,
+    rogueRaceStingerLines,
+    warriorRaceStingerLines,
+    wizardRaceStingerLines
+]
+
+
 export const raceTitles = [
     "-select-",
     "Cat Person",
@@ -63,8 +72,8 @@ export const raceTitles = [
     "Magical Robot",
     "Orc",
     "Undead",
-
 ]
+
 
 
 export const charBlurb = [
@@ -86,6 +95,14 @@ export const toolTitles = [
     rogueToolTitles,
     warriorToolTitles,
     wizardToolTitles,
+]
+
+export const toolStingers = [
+    bardToolStingerLines,
+    priestToolStingerLines,
+    rogueToolStingerLines,
+    warriorToolStingerLines,
+    wizardToolStingerLines
 ]
 
 export const toolBlurb = [

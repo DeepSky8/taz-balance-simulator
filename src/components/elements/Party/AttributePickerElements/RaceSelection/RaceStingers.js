@@ -1,4 +1,5 @@
 import React from "react";
+import { raceCodes, raceStingers } from "../../../../classes/charInfo";
 import BardRaceStingers from "./RaceStingers/BardRaceStingers";
 import PriestRaceStingers from "./RaceStingers/PriestRaceStingers";
 import RogueRaceStingers from "./RaceStingers/RogueRaceStingers";
@@ -8,6 +9,7 @@ import WizardRaceStingers from "./RaceStingers/WizardRaceStingers";
 
 const RaceStingers = ({ charState, dispatchCharState }) => (
     <div className="raceStingers">
+        {(raceStingers[charState.classCode])[raceCodes[charState.classCode].indexOf(charState.raceCode)]}
         <div id="bardStingers">
             {charState.classCode === 0 &&
                 <BardRaceStingers

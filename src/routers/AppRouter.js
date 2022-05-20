@@ -11,7 +11,6 @@ import {
 } from "firebase/database";
 import { defaultUserProfile, userReducer } from "../reducers/userReducer";
 import { defaultGameState, gameReducer } from "../reducers/gameReducer";
-// import { defaultNewCharState, newCharReducer } from "../reducers/newCharReducer";
 import { defaultCharState, charReducer } from "../reducers/charReducer";
 import ActiveGame from "../components/elements/ActiveGame/ActiveGame"
 import AuthWrapper from "../components/Authentication/AuthWrapper";
@@ -35,6 +34,7 @@ import AttributePicker from "../components/elements/Party/CharacterSheetElements
 import RaceSelection from "../components/elements/Party/AttributePickerElements/RaceSelection/RaceSelection";
 import RaceStingers from "../components/elements/Party/AttributePickerElements/RaceSelection/RaceStingers";
 import ToolSelection from "../components/elements/Party/AttributePickerElements/ToolSelection/ToolSelection";
+import ToolStingers from "../components/elements/Party/AttributePickerElements/ToolSelection/ToolStingers";
 
 export const history = createBrowserHistory();
 
@@ -125,9 +125,9 @@ const AppRouter = () => {
     //     console.log('gameState changed: ', gameState)
     // }, [gameState])
 
-    useEffect(() => {
-        console.log('character state changed: ', charState)
-    }, [charState])
+    // useEffect(() => {
+    //     console.log('character state changed: ', charState)
+    // }, [charState])
 
     // useEffect(() => {
     //     console.log('character array changed: ', charArray)
@@ -198,15 +198,16 @@ const AppRouter = () => {
                                                     charState={charState}
                                                     dispatchCharState={dispatchCharState}
                                                 />
-                                            </div>
-                                        }
-                                        {charState.classCode !== 5 &&
-                                            <div>
                                                 <ToolSelection
                                                     charState={charState}
                                                     dispatchCharState={dispatchCharState}
                                                 />
+                                                <ToolStingers
+                                                    charState={charState}
+                                                    dispatchCharState={dispatchCharState}
+                                                />
                                             </div>
+
                                         }
                                     </AttributePicker>
                                 </CharacterSheet>

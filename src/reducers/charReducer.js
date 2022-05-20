@@ -26,6 +26,8 @@ const defaultCharState = {
     undeadWizardOrigin1: '',
     undeadWizardOrigin2: '',
     undeadWizardOrigin3: '',
+    priestHolySymbol: '',
+    priestMantra: '',
 }
 
 
@@ -127,6 +129,16 @@ const charReducer = (state, action) => {
             return {
                 ...state,
                 dwarfPriestOrigin: action.dwarfPriestOrigin
+            }
+        case 'SET_PRIEST_HOLY_SYMBOL':
+            return {
+                ...state,
+                priestHolySymbol: action.priestHolySymbol
+            }
+        case 'SET_PRIEST_MANTRA':
+            return {
+                ...state,
+                priestMantra: action.priestMantra
             }
         // Rogue Actions
         case 'SET_GERBLIN_ROGUE_ORIGIN':
