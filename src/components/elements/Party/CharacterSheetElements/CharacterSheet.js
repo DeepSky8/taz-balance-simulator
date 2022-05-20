@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
     startSetCurrentCharacter,
     editCharacter,
@@ -7,13 +7,12 @@ import {
     showAlerts,
     startSaveNewCharacter,
     startSaveUpdatedCharacter,
-    resetDefaultNewChar,
     setNoCurrentChar,
     setCharClassCode,
 } from "../../../../actions/charActions";
 import { auth } from "../../../../firebase/firebase";
 import { history } from "../../../../routers/AppRouter";
-import { charClassCodes, charClassTitles } from "../../../classes/charInfo";
+import { charClassTitles } from "../../../classes/charInfo";
 import CharSheetNavBar from "./CharSheetNavBar";
 
 
@@ -75,8 +74,6 @@ const CharacterSheet = ({ charArray, charState, dispatchCharState, children }) =
 
     return (
         <div>
-
-            <p>Character Sheet Streamlined</p>
             <CharSheetNavBar charState={charState} />
 
             {children}

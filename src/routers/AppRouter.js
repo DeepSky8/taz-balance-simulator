@@ -25,19 +25,15 @@ import PrivacyPolicy from "../components/Authentication/PrivacyPolicy";
 import Tos from "../components/Authentication/Tos";
 import Welcome from "../components/Authentication/Welcome";
 import { auth, db } from "../firebase/firebase";
-import { setCharacterListArray, updateUserState } from "../actions/userActions";
-
+import { updateUserState } from "../actions/userActions";
 import PartyMembers from "../components/elements/Party/PartyMembers";
 import CharacterSelect from "../components/elements/Party/CharacterSelect/CharacterSelect";
 import CharacterSheet from "../components/elements/Party/CharacterSheetElements/CharacterSheet";
-import Bard from "../components/classes/Bard";
-import Cleric from "../components/classes/Cleric";
-import Test from "../components/classes/Test";
 import { setCharState, setNoCurrentChar } from "../actions/charActions";
-import ViewEditCharacter from "../components/elements/Party/CharacterSheetElements/ViewEditCharacter";
-import { getAuth } from "firebase/auth";
 import { RefreshHelper } from "../components/functions/RefreshHelper";
 import AttributePicker from "../components/elements/Party/CharacterSheetElements/AttributePicker";
+import RaceSelection from "../components/elements/Party/AttributePickerElements/RaceSelection/RaceSelection";
+import RaceStingers from "../components/elements/Party/AttributePickerElements/RaceSelection/RaceStingers";
 
 export const history = createBrowserHistory();
 
@@ -157,7 +153,6 @@ const AppRouter = () => {
                             />
                             <CharacterSelect
                                 userState={userState}
-                                gameState={gameState}
                                 charState={charState}
                                 dispatchCharState={dispatchCharState}
                                 charArray={charArray}
@@ -191,7 +186,20 @@ const AppRouter = () => {
                                     <AttributePicker
                                         charState={charState}
                                         dispatchCharState={dispatchCharState}
-                                    />
+                                    >
+                                        {charState.classCode !== 5 &&
+                                            <div>
+                                                <RaceSelection
+                                                    charState={charState}
+                                                    dispatchCharState={dispatchCharState}
+                                                />
+                                                <RaceStingers
+                                                    charState={charState}
+                                                    dispatchCharState={dispatchCharState}
+                                                />
+                                            </div>
+                                        }
+                                    </AttributePicker>
                                 </CharacterSheet>
 
                             </div>

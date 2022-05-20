@@ -3,14 +3,14 @@
 
 // export const bardBlurb = " bard, you always have an inspiring word or song"
 
-export const bardRaceCodes = [
-    'br0',
-    'br1',
-    'br2',
-    'br3',
-    'br4',
-    'br5',
-]
+// export const bardRaceCodes = [
+//     'br0',
+//     'br1',
+//     'br2',
+//     'br3',
+//     'br4',
+//     'br5',
+// ]
 
 // export const bardRaceRegTitles = [
 //     "Human",
@@ -21,12 +21,18 @@ export const bardRaceCodes = [
 //     "Magical Robot"
 // ]
 
-export const bardRaceStingers = [
+export const bardRaceStingerLines = [
+    // Human
     "You're a brooding musician. What's the name of your band?",
+    // Elf
     "You sing the ancient songs of the fey. For money.",
+    // Dwarf
     "Who said Dwarves couldn't sing? You've got hidden depths, bro.",
+    // Gnome
     "You've got an innate talent for magic and a really cool hat.",
+    // Halfling
     "You don't actually sing. You're more about the standup.",
+    // Magical Robot
     "Who created you? What do you look like?"
 ]
 

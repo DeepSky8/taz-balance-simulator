@@ -16,7 +16,16 @@ const defaultCharState = {
     robotBardVisual: '',
     bardSuperGoal: '',
     bardInstrument: '',
-    bardMusicSkill: ''
+    bardMusicSkill: '',
+    dwarfPriestOrigin: '',
+    gerblinRogueOrigin: '',
+    humanWarriorOrigin1: '',
+    humanWarriorOrigin2: '',
+    humanWarriorOrigin3: '',
+    dwarfWarriorBeard: '',
+    undeadWizardOrigin1: '',
+    undeadWizardOrigin2: '',
+    undeadWizardOrigin3: '',
 }
 
 
@@ -58,6 +67,46 @@ const charReducer = (state, action) => {
                 ...state,
                 raceCode: action.raceCode
             }
+
+        case 'SET_CHAR_TOOL_CODE':
+            return {
+                ...state,
+                charToolCode: action.charToolCode
+            }
+
+        case 'SET_CHAR_ATT_CODE':
+            return {
+                ...state,
+                charAttributeCode: action.charAttributeCode
+            }
+        case 'EDIT_CHARACTER':
+            return {
+                ...defaultCharState,
+                ...action.charObject,
+                changeClass: false
+            }
+
+        case 'SET_CHAR_NAME':
+            return {
+                ...state,
+                charName: action.charName
+            }
+        // Bard Actions
+        case 'SET_BARD_INSTRUMENT':
+            return {
+                ...state,
+                bardInstrument: action.bardInstrument
+            }
+        case 'SET_BARD_MUSIC_SKILL':
+            return {
+                ...state,
+                bardMusicSkill: action.bardMusicSkill
+            }
+        case 'SET_BARD_SUPER_GOAL':
+            return {
+                ...state,
+                bardSuperGoal: action.bardSuperGoal
+            }
         case 'SET_HUMAN_BARD_BAND':
             return {
                 ...state,
@@ -73,46 +122,55 @@ const charReducer = (state, action) => {
                 ...state,
                 robotBardVisual: action.robotBardVisual
             }
-        case 'SET_CHAR_TOOL_CODE':
+        // Priest Actions
+        case 'SET_DWARF_PRIEST_ORIGIN':
             return {
                 ...state,
-                charToolCode: action.charToolCode
+                dwarfPriestOrigin: action.dwarfPriestOrigin
             }
-        case 'SET_BARD_SUPER_GOAL':
+        // Rogue Actions
+        case 'SET_GERBLIN_ROGUE_ORIGIN':
             return {
                 ...state,
-                bardSuperGoal: action.bardSuperGoal
+                gerblinRogueOrigin: action.gerblinRogueOrigin
             }
-        case 'SET_CHAR_ATT_CODE':
+        // Warrior Actions
+        case 'SET_HUMAN_WARRIOR_ORIGIN_1':
             return {
                 ...state,
-                charAttributeCode: action.charAttributeCode
+                humanWarriorOrigin1: action.humanWarriorOrigin1
             }
-        case 'EDIT_CHARACTER':
-            return {
-                ...defaultCharState,
-                ...action.charObject,
-                changeClass: false
-            }
-        case 'SET_BARD_INSTRUMENT':
+        case 'SET_HUMAN_WARRIOR_ORIGIN_2':
             return {
                 ...state,
-                bardInstrument: action.bardInstrument
+                humanWarriorOrigin2: action.humanWarriorOrigin2
             }
-        case 'SET_BARD_MUSIC_SKILL':
+        case 'SET_HUMAN_WARRIOR_ORIGIN_3':
             return {
                 ...state,
-                bardMusicSkill: action.bardMusicSkill
+                humanWarriorOrigin3: action.humanWarriorOrigin3
             }
-        case 'SET_CHAR_NAME':
+        case 'SET_DWARF_WARRIOR_BEARD':
             return {
                 ...state,
-                charName: action.charName
+                dwarfWarriorBeard: action.dwarfWarriorBeard
             }
-        // case 'RESET_DEFAULTS':
-        //     return {
-        //         ...defaultCharState
-        //     }
+        // Wizard Actions
+        case 'SET_UNDEAD_WIZARD_ORIGIN_1':
+            return {
+                ...state,
+                undeadWizardOrigin1: action.undeadWizardOrigin1
+            }
+        case 'SET_UNDEAD_WIZARD_ORIGIN_2':
+            return {
+                ...state,
+                undeadWizardOrigin2: action.undeadWizardOrigin2
+            }
+        case 'SET_UNDEAD_WIZARD_ORIGIN_3':
+            return {
+                ...state,
+                undeadWizardOrigin3: action.undeadWizardOrigin3
+            }
         default: return state
     }
 }

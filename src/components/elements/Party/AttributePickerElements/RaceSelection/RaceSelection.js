@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import { setCharClassCode, setCharRaceCode, setNoCurrentChar } from "../../../../actions/charActions";
-import { history } from "../../../../routers/AppRouter";
-import { asA, asAn, charBlurb, charClassTitles, raceCodes, raceTitles } from "../../../classes/charInfo";
+import { setCharClassCode, setCharRaceCode, setNoCurrentChar } from "../../../../../actions/charActions";
+import { history } from "../../../../../routers/AppRouter";
+import { asA, asAn, charBlurb, charClassTitles, raceCodes, raceTitles } from "../../../../classes/charInfo";
 
 const RaceSelection = ({ charState, dispatchCharState }) => {
     let classAction = history.location.pathname.split("/")[2]

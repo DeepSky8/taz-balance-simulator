@@ -1,56 +1,19 @@
 import React, { useEffect } from "react";
 import {
-    setBardInstrument,
-    setBardMusicSkill,
-    setBardSuperGoal,
     setCharAttributeCode,
     setCharClassCode,
-    setCharName,
-    setCharRaceCode,
-    setCharSpecialCode,
     setCharToolCode,
-    setHumanBardBand,
-    setRobotBardCreator,
-    setRobotBardVisual,
     setNoCurrentChar
 } from "../../../../actions/charActions";
-import {
-    bardBlurb,
-    asA,
-    asAn,
-    bardRaceCodes,
-    bardRaceRegTitles,
-    bardRaceStingers,
-    bardToolCodes,
-    bardToolPrompt,
-    bardToolTitles,
-    bardToolStingers,
-    bardAttributeCodes,
-    bardAttributePrompt,
-    bardAttributeStingers,
-    bardAttributeTitles,
-    bardSpecialTitle,
-    bardSpecialStinger,
-    bardNumbers,
-} from '../../../classes/bardInfo'
-import classTransformer from "../../../functions/classTransformer";
 
 import { history } from "../../../../routers/AppRouter";
-import classTransform from "../../../functions/classTransform";
-import RaceSelection from "../AttributePickerElements/RaceSelection";
-import RaceStingers from "../AttributePickerElements/RaceStingers";
-import CharToolsSelection from "../AttributePickerElements/CharToolSelection";
-import CharToolStingers from "../AttributePickerElements/CharToolStingers";
-import CharAttributes from "../AttributePickerElements/CharAttributes";
-import CharAttributeStingers from "../AttributePickerElements/CharAttributeStingers";
-import ClassName from "../AttributePickerElements/CharName";
-import SpecialAbility from "../AttributePickerElements/CharSpecialAbility";
-import Stats from "../AttributePickerElements/CharStats";
-import { charClassCodes, charClassTitles, charTitles, raceTitles } from "../../../classes/charInfo";
+import RaceSelection from "../AttributePickerElements/RaceSelection/RaceSelection";
+import RaceStingers from "../AttributePickerElements/RaceSelection/RaceStingers";
+import { charClassTitles, charTitles } from "../../../classes/charInfo";
 
 
 
-const AttributePicker = ({ charState, dispatchCharState }) => {
+const AttributePicker = ({ charState, dispatchCharState, children }) => {
     let classURL = history.location.pathname.split("/")[2]
     let classChoice = charClassTitles.indexOf(classURL)
 
@@ -130,11 +93,7 @@ const AttributePicker = ({ charState, dispatchCharState }) => {
                 }
             </div>
 
-            {charState.classCode !== 5 &&
-                <RaceSelection
-                    charState={charState}
-                    dispatchCharState={dispatchCharState}
-                />}
+            {children}
 
 
 
@@ -146,7 +105,18 @@ export { AttributePicker as default }
 
 
 
-
+// {charState.classCode !== 5 &&
+//     <div>
+//         <RaceSelection
+//             charState={charState}
+//             dispatchCharState={dispatchCharState}
+//         />
+//         <RaceStingers
+//             charState={charState}
+//             dispatchCharState={dispatchCharState}
+//         />
+//     </div>
+// }
 
 // {<RaceStingers
 //     charState={charState}

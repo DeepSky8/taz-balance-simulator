@@ -126,3 +126,56 @@ export const setBardMusicSkill = (bardMusicSkill) => ({
     type: 'SET_BARD_MUSIC_SKILL',
     bardMusicSkill
 })
+
+// Priest Actions
+
+export const setDwarfPriestOrigin = (dwarfPriestOrigin) => ({
+    type: 'SET_DWARF_PRIEST_ORIGIN',
+    dwarfPriestOrigin
+})
+
+// Rogue Actions
+
+export const setGerblinRogueOrigin = (gerblinRogueOrigin) => ({
+    type: 'SET_GERBLIN_ROGUE_ORIGIN',
+    gerblinRogueOrigin
+})
+
+// Warrior Actions
+
+export const setHumanWarriorOrigin1 = (humanWarriorOrigin1) => ({
+    type: 'SET_HUMAN_WARRIOR_ORIGIN_1',
+    humanWarriorOrigin1
+})
+
+export const setHumanWarriorOrigin2 = (humanWarriorOrigin2) => ({
+    type: 'SET_HUMAN_WARRIOR_ORIGIN_1',
+    humanWarriorOrigin2
+})
+
+export const setHumanWarriorOrigin3 = (humanWarriorOrigin3) => ({
+    type: 'SET_HUMAN_WARRIOR_ORIGIN_1',
+    humanWarriorOrigin3
+})
+
+export const setDwarfWarriorBeard = (dwarfWarriorBeard) => ({
+    type: 'SET_DWARF_WARRIOR_BEARD',
+    dwarfWarriorBeard
+})
+
+// Wizard Actions
+
+export const setUndeadWizardOrigin1 = (undeadWizardOrigin1) => ({
+    type: 'SET_UNDEAD_WIZARD_ORIGIN_1',
+    undeadWizardOrigin1
+})
+
+export const setUndeadWizardOrigin2 = (undeadWizardOrigin2) => ({
+    type: 'SET_UNDEAD_WIZARD_ORIGIN_2',
+    undeadWizardOrigin2
+})
+
+export const setUndeadWizardOrigin3 = (undeadWizardOrigin3) => ({
+    type: 'SET_UNDEAD_WIZARD_ORIGIN_3',
+    undeadWizardOrigin3
+})

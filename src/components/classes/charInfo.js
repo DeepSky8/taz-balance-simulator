@@ -46,11 +46,13 @@ export const raceTitles = [
     "Dark Elf",
     "Dwarf",
     "Elf",
+    // Gerblin is 5
     "Gerblin",
     "Gnome",
     "Halfling",
     "Human",
     "Lizardborn",
+    // Lizardfolk is 10
     "Lizardfolk",
     "Magical Robot",
     "Orc",

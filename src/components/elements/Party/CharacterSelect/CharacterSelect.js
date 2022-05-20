@@ -2,10 +2,8 @@ import React from "react";
 import { startRemoveCharacter, startSetCurrentCharacter, toggleCharDisplay } from "../../../../actions/charActions";
 import { CharactersList } from "./CharactersList";
 import { auth } from "../../../../firebase/firebase";
-import classTransformer from "../../../functions/classTransformer";
-import { charClasses } from "../../../classes/default";
 import { useNavigate } from "react-router-dom";
-import { charClassCodes, charClassTitles, charTitles } from "../../../classes/charInfo";
+import { charClassTitles, charTitles } from "../../../classes/charInfo";
 
 const CharacterSelect = ({ userState, gameState, charState, dispatchCharState, charArray }) => {
     let navigate = useNavigate()
