@@ -7,7 +7,7 @@ const WizardRaceStingers = ({ charState, dispatchCharState }) => (
     <div>
         {wizardRaceStingerLines[raceCodes[charState.classCode].indexOf(charState.raceCode)]}
         <div id="undeadWizard">
-            {charState.raceCode === 13 &&
+            {charState.raceCode === 14 &&
                 <div>
                     <input
                         value={charState.undeadWizardOrigin1}

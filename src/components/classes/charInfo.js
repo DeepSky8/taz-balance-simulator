@@ -1,3 +1,9 @@
+import { bardToolTitles } from "./bardInfo"
+import { priestToolTitles } from "./priestInfo"
+import { rogueToolTitles } from "./rogueInfo"
+import { warriorToolTitles } from "./warriorInfo"
+import { wizardToolTitles } from "./wizardInfo"
+
 export const asA = "As a "
 export const asAn = "As an "
 
@@ -26,38 +32,38 @@ export const charClassTitles = [
 
 export const raceCodes = [
     // bard
-    [8, 4, 3, 6, 7, 11],
+    [9, 5, 4, 7, 8, 12],
     // priest
-    [8, 3, 4, 7, 6, 1],
+    [9, 4, 5, 8, 7, 2],
     // rogue
-    [8, 7, 5, 9, 4, 0],
+    [9, 8, 6, 10, 5, 1],
     // warrior
-    [8, 3, 12, 7, 10, 4],
+    [9, 4, 13, 8, 11, 5],
     // wizard
-    [8, 4, 6, 2, 13, 5],
+    [9, 5, 7, 3, 14, 6],
     // default
-    [14]
+    [0]
 ]
 
-
 export const raceTitles = [
+    "-select-",
     "Cat Person",
     "Centaur",
     "Dark Elf",
     "Dwarf",
     "Elf",
-    // Gerblin is 5
+    // Elf is 5
     "Gerblin",
     "Gnome",
     "Halfling",
     "Human",
     "Lizardborn",
-    // Lizardfolk is 10
+    // Lizardborn is 10
     "Lizardfolk",
     "Magical Robot",
     "Orc",
     "Undead",
-    "-select-"
+
 ]
 
 
@@ -74,18 +80,27 @@ export const charBlurb = [
     " wizard, you're a master of magic and can use spells to defeat monsters"
 ]
 
-export const charToolPrompt = [
+export const toolTitles = [
+    bardToolTitles,
+    priestToolTitles,
+    rogueToolTitles,
+    warriorToolTitles,
+    wizardToolTitles,
+]
+
+export const toolBlurb = [
     // Bard
     "You're an expert on relics, mostly because of your ",
     // Priest
     "You're especially strong against undead, because of your ",
     // Rogue
-    "You're especially effective against traps, because of your",
+    "You're especially effective against traps, because of your ",
     // Warrior
-    "You're especially effective against monsters, because of your",
+    "You're especially effective against monsters, because of your ",
     // Wizard
-    "You're especially effective against magical threats, because of your",
-
+    "You're especially effective against magical threats, because of your ",
+    // default
+    ['-select-'],
 ]
 
 

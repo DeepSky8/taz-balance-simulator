@@ -34,9 +34,9 @@ export const setCharRaceCode = (raceCode) => ({
     raceCode
 })
 
-export const setCharToolCode = (charToolCode) => ({
+export const setCharToolCode = (toolCode) => ({
     type: 'SET_CHAR_TOOL_CODE',
-    charToolCode
+    toolCode
 })
 
 export const setCharAttributeCode = (charAttributeCode) => ({
@@ -48,10 +48,6 @@ export const setCharName = (charName) => ({
     type: 'SET_CHAR_NAME',
     charName
 })
-
-// export const resetDefaultNewChar = () => ({
-//     type: 'RESET_DEFAULTS'
-// })
 
 export const editCharacter = (charObject) => ({
     type: 'EDIT_CHARACTER',

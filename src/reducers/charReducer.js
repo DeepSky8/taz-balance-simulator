@@ -4,8 +4,8 @@ const defaultCharState = {
     charID: undefined,
     charName: '',
     classCode: 5,
-    raceCode: 14,
-    toolCode: undefined,
+    raceCode: 0,
+    toolCode: 7,
     attributeCode: undefined,
     charNotes: '',
     charKostco: [{}],
@@ -71,7 +71,7 @@ const charReducer = (state, action) => {
         case 'SET_CHAR_TOOL_CODE':
             return {
                 ...state,
-                charToolCode: action.charToolCode
+                toolCode: action.toolCode
             }
 
         case 'SET_CHAR_ATT_CODE':

@@ -36,6 +36,7 @@ const CharacterSheet = ({ charArray, charState, dispatchCharState, children }) =
             dispatchCharState(setNoCurrentChar())
             dispatchCharState(setCharClassCode(classChoice))
             // console.log(`Creating character of type ${classAction}`)
+            // console.log(`position in CharClassTitles is ${classChoice}`)
         } else {
             navigate('/gameSetup')
         }
@@ -44,9 +45,9 @@ const CharacterSheet = ({ charArray, charState, dispatchCharState, children }) =
     let filledSheet = (
         charState.charName &&
         charState.charClassCode !== 5 &&
-        charState.charRaceCode !== 14 &&
-        charState.charToolCode &&
-        charState.charAttributeCode &&
+        charState.charRaceCode !== 0 &&
+        charState.charToolCode !== 0 &&
+        charState.charAttributeCode !== 0 &&
         true
     )
 

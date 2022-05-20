@@ -1,26 +1,3 @@
-
-
-
-// export const bardBlurb = " bard, you always have an inspiring word or song"
-
-// export const bardRaceCodes = [
-//     'br0',
-//     'br1',
-//     'br2',
-//     'br3',
-//     'br4',
-//     'br5',
-// ]
-
-// export const bardRaceRegTitles = [
-//     "Human",
-//     "Elf",
-//     "Dwarf",
-//     "Gnome",
-//     "Halfling",
-//     "Magical Robot"
-// ]
-
 export const bardRaceStingerLines = [
     // Human
     "You're a brooding musician. What's the name of your band?",
@@ -35,17 +12,6 @@ export const bardRaceStingerLines = [
     // Magical Robot
     "Who created you? What do you look like?"
 ]
-
-export const bardToolCodes = [
-    'bt0',
-    'bt1',
-    'bt2',
-    'bt3',
-    'bt4',
-    'bt5'
-]
-
-// export const bardToolPrompt = "You're an expert on relics, mostly because of your "
 
 export const bardToolTitles = [
     "Arcane Knowledge",
@@ -74,8 +40,6 @@ export const bardAttributeCodes = [
     'ba5'
 ]
 
-// export const bardAttributePrompt = "You generally assist your teammates using your "
-
 export const bardAttributeTitles = [
     "Beautiful Voice",
     "Clever Limericks",
@@ -93,10 +57,6 @@ export const bardAttributeStingers = [
     "Sometimes your ideas are a little over the top, but go big or go home!",
     "You know a little something about everything. Nerd."
 ]
-
-// export const bardSpecialTitle = "Inspiration"
-
-// export const bardSpecialStinger = "Whenever you spend your action token, reclaim it at the end of the turn."
 
 // export const bardNumbers = {
 //     strength: 1,

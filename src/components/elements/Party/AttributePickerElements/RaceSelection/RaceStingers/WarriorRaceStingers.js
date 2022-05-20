@@ -12,14 +12,14 @@ const WarriorRaceStingers = ({ charState, dispatchCharState }) => (
     <div>
         {warriorRaceStingerLines[raceCodes[charState.classCode].indexOf(charState.raceCode)]}
         <div id="humanWarrior">
-            {charState.raceCode === 8 &&
+            {charState.raceCode === 9 &&
                 <div>
                     {imA}
                     <input
                         value={charState.humanWarriorOrigin1}
                         type='text'
                         placeholder="knight, actually..."
-                        maxLength={30}
+                        maxLength={10}
                         onChange={(e) => {
                             dispatchCharState(
                                 setHumanWarriorOrigin1(
@@ -33,7 +33,7 @@ const WarriorRaceStingers = ({ charState, dispatchCharState }) => (
                         value={charState.humanWarriorOrigin2}
                         type='text'
                         placeholder="my parents, chill"
-                        maxLength={30}
+                        maxLength={10}
                         onChange={(e) => {
                             dispatchCharState(
                                 setHumanWarriorOrigin2(
@@ -47,7 +47,7 @@ const WarriorRaceStingers = ({ charState, dispatchCharState }) => (
                         value={charState.humanWarriorOrigin3}
                         type='text'
                         placeholder="there is no 'try'"
-                        maxLength={30}
+                        maxLength={8}
                         onChange={(e) => {
                             dispatchCharState(
                                 setHumanWarriorOrigin2(

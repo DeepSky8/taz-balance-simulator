@@ -7,7 +7,7 @@ const PriestRaceStingers = ({ charState, dispatchCharState }) => (
     <div>
         {priestRaceStingerLines[raceCodes[charState.classCode].indexOf(charState.raceCode)]}
         <div id="dwarfPriest">
-            {charState.raceCode === 3 &&
+            {charState.raceCode === 4 &&
                 <input
                     value={charState.dwarfPriestOrigin}
                     type='text'

@@ -7,8 +7,6 @@ import {
 } from "../../../../actions/charActions";
 
 import { history } from "../../../../routers/AppRouter";
-import RaceSelection from "../AttributePickerElements/RaceSelection/RaceSelection";
-import RaceStingers from "../AttributePickerElements/RaceSelection/RaceStingers";
 import { charClassTitles, charTitles } from "../../../classes/charInfo";
 
 
@@ -23,25 +21,23 @@ const AttributePicker = ({ charState, dispatchCharState, children }) => {
     // switching from a different character class sheet)
     // and set the character state back to blank
     // before automatically setting the current class code
-    useEffect(() => {
-        // console.log('classURL: ', classURL)
-        // console.log('classChoiceObject is: ', classChoice)
-        if (charState.changeClass && classChoice) {
-            // console.log('setting no current char')
-            // console.log('classChoiceObject.class: ', classChoice)
-            // console.log('charState: ', charState)
-            dispatchCharState(setNoCurrentChar())
-            if (classChoice !== -1) {
-                dispatchCharState(setCharClassCode(classChoice))
-            }
-        }
-    }, [classURL])
+    // useEffect(() => {
+    //     // console.log('classURL: ', classURL)
+    //     // console.log('classChoice is: ', classChoice)
+    //     if (charState.changeClass && classChoice) {
+    //         // console.log('setting no current char')
+    //         // console.log('classChoiceObject.class: ', classChoice)
+    //         // console.log('charState: ', charState)
+    //         dispatchCharState(setNoCurrentChar())
+    //         if (classChoice !== -1) {
+    //             dispatchCharState(setCharClassCode(classChoice))
+    //         }
+    //     }
+    // }, [classURL])
 
 
 
-    const toggleToolSelections = () => {
-        document.getElementById('tool-selector').classList.toggle('show')
-    }
+
 
     const toggleAttributeSelections = () => {
         document.getElementById('attribute-selector').classList.toggle('show')

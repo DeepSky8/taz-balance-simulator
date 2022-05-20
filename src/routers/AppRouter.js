@@ -34,6 +34,7 @@ import { RefreshHelper } from "../components/functions/RefreshHelper";
 import AttributePicker from "../components/elements/Party/CharacterSheetElements/AttributePicker";
 import RaceSelection from "../components/elements/Party/AttributePickerElements/RaceSelection/RaceSelection";
 import RaceStingers from "../components/elements/Party/AttributePickerElements/RaceSelection/RaceStingers";
+import ToolSelection from "../components/elements/Party/AttributePickerElements/ToolSelection/ToolSelection";
 
 export const history = createBrowserHistory();
 
@@ -124,9 +125,9 @@ const AppRouter = () => {
     //     console.log('gameState changed: ', gameState)
     // }, [gameState])
 
-    // useEffect(() => {
-    //     console.log('character state changed: ', charState)
-    // }, [charState])
+    useEffect(() => {
+        console.log('character state changed: ', charState)
+    }, [charState])
 
     // useEffect(() => {
     //     console.log('character array changed: ', charArray)
@@ -194,6 +195,14 @@ const AppRouter = () => {
                                                     dispatchCharState={dispatchCharState}
                                                 />
                                                 <RaceStingers
+                                                    charState={charState}
+                                                    dispatchCharState={dispatchCharState}
+                                                />
+                                            </div>
+                                        }
+                                        {charState.classCode !== 5 &&
+                                            <div>
+                                                <ToolSelection
                                                     charState={charState}
                                                     dispatchCharState={dispatchCharState}
                                                 />

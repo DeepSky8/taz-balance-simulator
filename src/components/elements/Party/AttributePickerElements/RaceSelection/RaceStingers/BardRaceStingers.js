@@ -7,7 +7,7 @@ const BardRaceStingers = ({ charState, dispatchCharState }) => (
     <div>
         {bardRaceStingerLines[raceCodes[charState.classCode].indexOf(charState.raceCode)]}
         <div id="humanBard">
-            {charState.raceCode === 8 &&
+            {charState.raceCode === 9 &&
                 <div>
                     <input
                         value={charState.humanBardBand}
@@ -27,7 +27,7 @@ const BardRaceStingers = ({ charState, dispatchCharState }) => (
         </div>
 
         <div id="magicalRobotBard">
-            {charState.raceCode === 11 &&
+            {charState.raceCode === 12 &&
                 (<div>
                     <input
                         value={charState.robotBardCreator}

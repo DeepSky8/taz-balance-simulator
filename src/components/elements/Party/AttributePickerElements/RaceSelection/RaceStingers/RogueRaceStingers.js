@@ -7,7 +7,7 @@ const RogueRaceStingers = ({ charState, dispatchCharState }) => (
     <div>
         {rogueRaceStingerLines[raceCodes[charState.classCode].indexOf(charState.raceCode)]}
         <div id="gerblinRogue">
-            {charState.raceCode === 5 &&
+            {charState.raceCode === 6 &&
                 <input
                     value={charState.gerblinRogueOrigin}
                     type='text'
