@@ -1,6 +1,7 @@
 import React from "react";
 import { setBardSuperGoal } from "../../../../../../actions/charActions";
 import { bardToolBigGoal } from "../../../../../classes/bardInfo";
+import {longDescription} from '../../../../../classes/charInfo';
 
 const BardToolStingers = ({ charState, dispatchCharState }) => (
     <div>
@@ -10,7 +11,7 @@ const BardToolStingers = ({ charState, dispatchCharState }) => (
                     value={charState.bardSuperGoal}
                     type="text"
                     placeholder="Your big goal"
-                    maxLength={30}
+                    maxLength={longDescription}
                     onChange={(e) => {
                         dispatchCharState(
                             setBardSuperGoal(

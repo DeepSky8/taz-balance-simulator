@@ -1,5 +1,6 @@
 import React from "react";
 import { setWizardAssistFame, setWizardAssistFameHelps } from "../../../../../../actions/charActions";
+import { longDescription } from "../../../../../classes/charInfo";
 import { wizardAssistFame } from "../../../../../classes/wizardInfo";
 
 const WizardAssistStingers = ({ charState, dispatchCharState }) => (
@@ -10,7 +11,7 @@ const WizardAssistStingers = ({ charState, dispatchCharState }) => (
                     value={charState.wizardAssistFame}
                     type="text"
                     placeholder="Why are you famous?"
-                    maxLength={30}
+                    maxLength={longDescription}
                     onChange={(e) => {
                         dispatchCharState(
                             setWizardAssistFame(
@@ -24,7 +25,7 @@ const WizardAssistStingers = ({ charState, dispatchCharState }) => (
                     value={charState.wizardAssistFameHelps}
                     type="text"
                     placeholder="How does it help?"
-                    maxLength={30}
+                    maxLength={longDescription}
                     onChange={(e) => {
                         dispatchCharState(
                             setWizardAssistFameHelps(

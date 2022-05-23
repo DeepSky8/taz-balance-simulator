@@ -4,6 +4,11 @@ import { rogueAssistStingerLines, rogueAssistTitles, rogueRaceStingerLines, rogu
 import { warriorAssistStingerLines, warriorAssistTitles, warriorRaceStingerLines, warriorToolStingerLines, warriorToolTitles } from "./warriorInfo"
 import { wizardAssistStingerLines, wizardAssistTitles, wizardRaceStingerLines, wizardToolStingerLines, wizardToolTitles } from "./wizardInfo"
 
+export const shortDescription = 10
+export const mediumDescription = 20
+export const longDescription = 30
+export const extraLongDescription = 40
+
 export const asA = "As a "
 export const asAn = "As an "
 
@@ -51,6 +56,8 @@ export const raceCodes = [
     // default
     [0]
 ]
+
+export const unselectedRace = 0
 
 export const raceStingers = [
     bardRaceStingerLines,

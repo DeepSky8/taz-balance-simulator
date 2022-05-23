@@ -1,6 +1,7 @@
 import React from "react";
 import { setWarriorToolArmor, setWarriorToolBattlecry } from "../../../../../../actions/charActions";
 import { warriorToolArmor, warriorToolBattlecry } from "../../../../../classes/warriorInfo";
+import {longDescription} from '../../../../../classes/charInfo';
 
 const WarriorToolStingers = ({ charState, dispatchCharState }) => (
     <div>
@@ -10,7 +11,7 @@ const WarriorToolStingers = ({ charState, dispatchCharState }) => (
                     value={charState.warriorToolArmor}
                     type="text"
                     placeholder="Your armor looks like..."
-                    maxLength={15}
+                    maxLength={longDescription}
                     onChange={(e) => {
                         dispatchCharState(
                             setWarriorToolArmor(
@@ -26,7 +27,7 @@ const WarriorToolStingers = ({ charState, dispatchCharState }) => (
                     value={charState.warriorToolBattlecry}
                     type="text"
                     placeholder="Your battlecry is..."
-                    maxLength={30}
+                    maxLength={longDescription}
                     onChange={(e) => {
                         dispatchCharState(
                             setWarriorToolBattlecry(

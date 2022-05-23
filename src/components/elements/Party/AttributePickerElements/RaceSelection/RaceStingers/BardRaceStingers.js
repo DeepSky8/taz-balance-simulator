@@ -1,7 +1,6 @@
 import React from "react";
 import { setHumanBardBand, setRobotBardCreator, setRobotBardVisual } from "../../../../../../actions/charActions";
-import { bardRaceStingerLines } from "../../../../../classes/bardInfo";
-import { raceCodes } from "../../../../../classes/charInfo";
+import { longDescription } from "../../../../../classes/charInfo";
 
 const BardRaceStingers = ({ charState, dispatchCharState }) => (
     <div>
@@ -12,7 +11,7 @@ const BardRaceStingers = ({ charState, dispatchCharState }) => (
                         value={charState.humanBardBand}
                         type='text'
                         placeholder='My band is named:'
-                        maxLength={30}
+                        maxLength={longDescription}
                         onChange={(e) => {
                             dispatchCharState(
                                 setHumanBardBand(
@@ -32,7 +31,7 @@ const BardRaceStingers = ({ charState, dispatchCharState }) => (
                         value={charState.robotBardCreator}
                         type="text"
                         placeholder='Created by:'
-                        maxLength={30}
+                        maxLength={longDescription}
                         onChange={(e) => {
                             dispatchCharState(
                                 setRobotBardCreator(
@@ -43,7 +42,7 @@ const BardRaceStingers = ({ charState, dispatchCharState }) => (
                         value={charState.robotBardVisual}
                         type="text"
                         placeholder='I look like:'
-                        maxLength={30}
+                        maxLength={longDescription}
                         onChange={(e) => {
                             dispatchCharState(
                                 setRobotBardVisual(

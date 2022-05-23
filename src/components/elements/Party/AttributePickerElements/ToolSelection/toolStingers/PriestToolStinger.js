@@ -1,6 +1,7 @@
 import React from "react";
 import { setPriestToolHolySymbol, setPriestToolMantra } from "../../../../../../actions/charActions";
 import { priestToolHolySymbol, priestToolMantra } from "../../../../../classes/priestInfo";
+import {longDescription} from '../../../../../classes/charInfo';
 
 const PriestToolStingers = ({ charState, dispatchCharState }) => (
     <div>
@@ -10,7 +11,7 @@ const PriestToolStingers = ({ charState, dispatchCharState }) => (
                     value={charState.priestToolHolySymbol}
                     type="text"
                     placeholder="Your holy symbol is..."
-                    maxLength={30}
+                    maxLength={longDescription}
                     onChange={(e) => {
                         dispatchCharState(
                             setPriestToolHolySymbol(
@@ -26,7 +27,7 @@ const PriestToolStingers = ({ charState, dispatchCharState }) => (
                     value={charState.priestToolMantra}
                     type="text"
                     placeholder="Your mantra is..."
-                    maxLength={30}
+                    maxLength={longDescription}
                     onChange={(e) => {
                         dispatchCharState(
                             setPriestToolMantra(

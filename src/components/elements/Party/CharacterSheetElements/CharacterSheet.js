@@ -12,7 +12,7 @@ import {
 } from "../../../../actions/charActions";
 import { auth } from "../../../../firebase/firebase";
 import { history } from "../../../../routers/AppRouter";
-import { charClassTitles } from "../../../classes/charInfo";
+import { charClassTitles, unselectedAttribute, unselectedClass, unselectedRace } from "../../../classes/charInfo";
 import CharSheetNavBar from "./CharSheetNavBar";
 
 
@@ -44,10 +44,10 @@ const CharacterSheet = ({ charArray, charState, dispatchCharState, children }) =
 
     let filledSheet = (
         charState.charName &&
-        charState.charClassCode !== 5 &&
-        charState.charRaceCode !== 0 &&
-        charState.charToolCode !== 0 &&
-        charState.charAttributeCode !== 0 &&
+        charState.classCode !== unselectedClass &&
+        charState.raceCode !== unselectedRace &&
+        charState.toolCode !== unselectedAttribute &&
+        charState.assistCode !== unselectedAttribute &&
         true
     )
 

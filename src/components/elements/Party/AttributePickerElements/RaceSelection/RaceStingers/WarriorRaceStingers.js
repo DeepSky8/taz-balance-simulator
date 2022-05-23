@@ -1,8 +1,6 @@
 import React from "react";
 import { setDwarfWarriorBeard, setHumanWarriorOrigin1, setHumanWarriorOrigin2, setHumanWarriorOrigin3, } from "../../../../../../actions/charActions";
-import { raceCodes } from "../../../../../classes/charInfo";
-import { warriorRaceStingerLines } from "../../../../../classes/warriorInfo";
-
+import { shortDescription } from "../../../../../classes/charInfo";
 const imA = "I'm a "
 const iWasRaisedBy = "       I was raised by "
 const i = '     I '
@@ -18,7 +16,7 @@ const WarriorRaceStingers = ({ charState, dispatchCharState }) => (
                         value={charState.humanWarriorOrigin1}
                         type='text'
                         placeholder="knight, actually..."
-                        maxLength={10}
+                        maxLength={shortDescription}
                         onChange={(e) => {
                             dispatchCharState(
                                 setHumanWarriorOrigin1(
@@ -32,7 +30,7 @@ const WarriorRaceStingers = ({ charState, dispatchCharState }) => (
                         value={charState.humanWarriorOrigin2}
                         type='text'
                         placeholder="my parents, chill"
-                        maxLength={10}
+                        maxLength={shortDescription}
                         onChange={(e) => {
                             dispatchCharState(
                                 setHumanWarriorOrigin2(
@@ -46,7 +44,7 @@ const WarriorRaceStingers = ({ charState, dispatchCharState }) => (
                         value={charState.humanWarriorOrigin3}
                         type='text'
                         placeholder="there is no 'try'"
-                        maxLength={8}
+                        maxLength={shortDescription}
                         onChange={(e) => {
                             dispatchCharState(
                                 setHumanWarriorOrigin2(

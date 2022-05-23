@@ -1,7 +1,6 @@
 import React from "react";
 import { setGerblinRogueOrigin } from "../../../../../../actions/charActions";
-import { raceCodes } from "../../../../../classes/charInfo";
-import { rogueRaceStingerLines } from "../../../../../classes/rogueInfo";
+import { extraLongDescription } from "../../../../../classes/charInfo";
 
 const RogueRaceStingers = ({ charState, dispatchCharState }) => (
     <div>
@@ -11,7 +10,7 @@ const RogueRaceStingers = ({ charState, dispatchCharState }) => (
                     value={charState.gerblinRogueOrigin}
                     type='text'
                     placeholder='I adventure because:'
-                    maxLength={50}
+                    maxLength={extraLongDescription}
                     onChange={(e) => {
                         dispatchCharState(
                             setGerblinRogueOrigin(

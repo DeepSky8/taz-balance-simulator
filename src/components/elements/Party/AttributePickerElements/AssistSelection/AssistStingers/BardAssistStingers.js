@@ -1,6 +1,7 @@
 import React from "react";
 import { bardAssistMusic } from "../../../../../classes/bardInfo";
 import { setBardInstrument, setBardMusicSkill } from "../../../../../../actions/charActions";
+import { mediumDescription, shortDescription } from "../../../../../classes/charInfo";
 
 const BardAssistStingers = ({ charState, dispatchCharState }) => (
     <div>
@@ -10,7 +11,7 @@ const BardAssistStingers = ({ charState, dispatchCharState }) => (
                     value={charState.bardInstrument}
                     type="text"
                     placeholder="What do you play?"
-                    maxLength={15}
+                    maxLength={mediumDescription}
                     onChange={(e) => {
                         dispatchCharState(
                             setBardInstrument(
@@ -23,7 +24,7 @@ const BardAssistStingers = ({ charState, dispatchCharState }) => (
                     value={charState.bardMusicSkill}
                     type="text"
                     placeholder="Do you shred?"
-                    maxLength={15}
+                    maxLength={shortDescription}
                     onChange={(e) => {
                         dispatchCharState(
                             setBardMusicSkill(

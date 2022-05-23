@@ -1,5 +1,6 @@
 import React from "react";
 import { setPriestAssistFame, setPriestAssistFameHelps, setPriestAssistHobby } from "../../../../../../actions/charActions";
+import { longDescription } from "../../../../../classes/charInfo";
 import { priestAssistFame, priestAssistHobby } from "../../../../../classes/priestInfo";
 
 const PriestAssistStingers = ({ charState, dispatchCharState }) => (
@@ -10,7 +11,7 @@ const PriestAssistStingers = ({ charState, dispatchCharState }) => (
                     value={charState.priestAssistFame}
                     type="text"
                     placeholder="Why are you famous?"
-                    maxLength={15}
+                    maxLength={longDescription}
                     onChange={(e) => {
                         dispatchCharState(
                             setPriestAssistFame(
@@ -24,7 +25,7 @@ const PriestAssistStingers = ({ charState, dispatchCharState }) => (
                     value={charState.priestAssistFameHelps}
                     type="text"
                     placeholder="How does it help?"
-                    maxLength={15}
+                    maxLength={longDescription}
                     onChange={(e) => {
                         dispatchCharState(
                             setPriestAssistFameHelps(

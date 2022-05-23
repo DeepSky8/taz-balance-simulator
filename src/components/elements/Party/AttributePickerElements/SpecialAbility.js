@@ -5,8 +5,10 @@ const SpecialAbility = ({ charState }) => (
     <div id="specialAbility">
         <div>
             <div>
-                <div className="titleText">{specialTitle[charState.classCode] + ': '}</div>
-                
+                <div className="titleText">
+                    {specialTitle[charState.classCode] + ': '}
+                </div>
+
                 {specialStinger[charState.classCode]}
                 <br />
             </div>

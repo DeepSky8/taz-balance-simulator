@@ -1,5 +1,6 @@
 import React from "react";
 import { setWarriorAssistFame, setWarriorAssistFameHelps } from "../../../../../../actions/charActions";
+import { longDescription } from "../../../../../classes/charInfo";
 import { warriorAssistFame } from "../../../../../classes/warriorInfo";
 
 const WarriorAssistStingers = ({ charState, dispatchCharState }) => (
@@ -10,7 +11,7 @@ const WarriorAssistStingers = ({ charState, dispatchCharState }) => (
                     value={charState.warriorAssistFame}
                     type="text"
                     placeholder="Why are you famous?"
-                    maxLength={30}
+                    maxLength={longDescription}
                     onChange={(e) => {
                         dispatchCharState(
                             setWarriorAssistFame(
@@ -24,7 +25,7 @@ const WarriorAssistStingers = ({ charState, dispatchCharState }) => (
                     value={charState.warriorAssistFameHelps}
                     type="text"
                     placeholder="How does it help?"
-                    maxLength={30}
+                    maxLength={longDescription}
                     onChange={(e) => {
                         dispatchCharState(
                             setWarriorAssistFameHelps(

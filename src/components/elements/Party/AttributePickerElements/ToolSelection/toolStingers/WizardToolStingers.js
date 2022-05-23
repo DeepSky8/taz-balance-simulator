@@ -1,6 +1,7 @@
 import React from "react";
 import { setWizardToolCatchphrase } from "../../../../../../actions/charActions";
 import { wizardToolCatchphrase } from "../../../../../classes/wizardInfo";
+import {longDescription} from '../../../../../classes/charInfo';
 
 const WizardToolStingers = ({ charState, dispatchCharState }) => (
     <div>
@@ -10,7 +11,7 @@ const WizardToolStingers = ({ charState, dispatchCharState }) => (
                     value={charState.wizardToolCatchphrase}
                     type="text"
                     placeholder="What's your catchphrase?"
-                    maxLength={30}
+                    maxLength={longDescription}
                     onChange={(e) => {
                         dispatchCharState(
                             setWizardToolCatchphrase(

@@ -1,5 +1,6 @@
 import React from "react";
 import { setDwarfPriestOrigin } from "../../../../../../actions/charActions";
+import { longDescription } from "../../../../../classes/charInfo";
 
 const PriestRaceStingers = ({ charState, dispatchCharState }) => (
     <div>
@@ -9,7 +10,7 @@ const PriestRaceStingers = ({ charState, dispatchCharState }) => (
                     value={charState.dwarfPriestOrigin}
                     type='text'
                     placeholder='I am from:'
-                    maxLength={30}
+                    maxLength={longDescription}
                     onChange={(e) => {
                         dispatchCharState(
                             setDwarfPriestOrigin(
