@@ -1,18 +1,19 @@
 import React from "react";
-import { setPriestHolySymbol, setPriestMantra } from "../../../../../../actions/charActions";
+import { setPriestToolHolySymbol, setPriestToolMantra } from "../../../../../../actions/charActions";
+import { priestToolHolySymbol, priestToolMantra } from "../../../../../classes/priestInfo";
 
 const PriestToolStingers = ({ charState, dispatchCharState }) => (
     <div>
         <div id="priestHolySymbol">
-            {charState.toolCode === 0 &&
+            {charState.toolCode === priestToolHolySymbol &&
                 <input
-                    value={charState.priestHolySymbol}
+                    value={charState.priestToolHolySymbol}
                     type="text"
                     placeholder="Your holy symbol is..."
                     maxLength={30}
                     onChange={(e) => {
                         dispatchCharState(
-                            setPriestHolySymbol(
+                            setPriestToolHolySymbol(
                                 e.target.value.toString()))
                     }}
                 />
@@ -20,15 +21,15 @@ const PriestToolStingers = ({ charState, dispatchCharState }) => (
         </div>
 
         <div id="priestMantra">
-            {charState.toolCode === 2 &&
+            {charState.toolCode === priestToolMantra &&
                 <input
-                    value={charState.priestMantra}
+                    value={charState.priestToolMantra}
                     type="text"
                     placeholder="Your mantra is..."
                     maxLength={30}
                     onChange={(e) => {
                         dispatchCharState(
-                            setPriestMantra(
+                            setPriestToolMantra(
                                 e.target.value.toString()))
                     }}
                 />

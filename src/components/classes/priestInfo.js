@@ -22,6 +22,9 @@ export const priestToolTitles = [
     "Pleasant Converation"
 ]
 
+export const priestToolHolySymbol = 0
+export const priestToolMantra = 2
+
 export const priestToolStingerLines = [
     // "Holy Symbol",
     "What do you use to focus your magical powers?",
@@ -37,16 +40,19 @@ export const priestToolStingerLines = [
     "Most restless spirits just need someone to talk to."
 ]
 
-export const priestAttributeTitles = [
+export const priestAssistTitles = [
     "Magic",
     "Folksy Wisdom",
     "Fame",
     "Optimism",
-    "Hobbies",
+    "Hobby",
     "Divine Insight"
 ]
 
-export const priestAttributeStingerLines = [
+export const priestAssistFame = 2
+export const priestAssistHobby = 4
+
+export const priestAssistStingerLines = [
     // "Magic",
     "Your prayers strengthen your comrades and guide them in battle.",
     // "Folksy Wisdom",

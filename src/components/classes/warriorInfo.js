@@ -22,9 +22,12 @@ export const warriorToolTitles = [
     "Stubborn Determination",
 ]
 
+export const warriorToolArmor = 2
+export const warriorToolBattlecry = 3
+
 export const warriorToolStingerLines = [
     // "Stupidly Large Weapon",
-    "You're not compensating for anything, for sure",
+    "You're not compensating for anything, for sure.",
     // "Killer Instincts",
     "You know how to hit where it hurts. Emotionally.",
     // "Distinctive Armor",
@@ -37,17 +40,18 @@ export const warriorToolStingerLines = [
     "You don't know the meaning of the word 'Failure.' No, really."
 ]
 
-export const warriorAttributeTitles = [
+export const warriorAssistTitles = [
     "Brute Strength",
     "Rugged Good Looks",
     "Courage",
     "Experience",
     "Fame",
     "Common Sense",
-    "",
 ]
 
-export const warriorAttributeStingerLines = [
+export const warriorAssistFame = 4
+
+export const warriorAssistStingerLines = [
     // "Brute Strength",
     "Nothing can stand in your way.",
     // "Rugged Good Looks",
@@ -57,7 +61,7 @@ export const warriorAttributeStingerLines = [
     // "Experience",
     "You've been doing this for a long time, and you're getting too old for this $#!%",
     // "Fame",
-    "Everyone's inspired by a clebrity! What are you known for?",
+    "Everyone's inspired by a celebrity! What are you known for?",
     // "Common Sense",
     "Sometimes, the simplest ideas are the best ones.",
 ]

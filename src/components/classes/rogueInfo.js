@@ -22,6 +22,8 @@ export const rogueToolTitles = [
     "Dumb Luck",
 ]
 
+export const rogueToolCatchphrase = 3
+
 export const rogueToolStingerLines = [
     // "Thieves' Tools",
     "You have an amazing collection of keys, picks, and other tools.",
@@ -37,7 +39,7 @@ export const rogueToolStingerLines = [
     "Things just seem to go your way.",
 ]
 
-export const rogueAttributeTitles = [
+export const rogueAssistTitles = [
     "Wit and Charm",
     "Sleight of Hand",
     "Dagger",
@@ -46,7 +48,7 @@ export const rogueAttributeTitles = [
     "Even Dumber Luck",
 ]
 
-export const rogueAttributeStingerLines = [
+export const rogueAssistStingerLines = [
     // "Wit and Charm",
     "In dangerous situations, the important thing is to lighten the mood.",
     // "Sleight of Hand",

@@ -11,37 +11,29 @@ import { charClassTitles, charTitles } from "../../../classes/charInfo";
 
 
 
-const AttributePicker = ({ charState, dispatchCharState, children }) => {
-    let classURL = history.location.pathname.split("/")[2]
-    let classChoice = charClassTitles.indexOf(classURL)
+const AttributePicker = ({ charState, children }) => {
+    // let classURL = history.location.pathname.split("/")[2]
+    // let classChoice = charClassTitles.indexOf(classURL)
 
-    // If the page is being refreshed or a character is being edited, 
-    // maintain the data stored in the character state
-    // Otherwise treat this as a brand new character (possibly due to 
-    // switching from a different character class sheet)
-    // and set the character state back to blank
-    // before automatically setting the current class code
-    // useEffect(() => {
-    //     // console.log('classURL: ', classURL)
-    //     // console.log('classChoice is: ', classChoice)
-    //     if (charState.changeClass && classChoice) {
-    //         // console.log('setting no current char')
-    //         // console.log('classChoiceObject.class: ', classChoice)
-    //         // console.log('charState: ', charState)
-    //         dispatchCharState(setNoCurrentChar())
-    //         if (classChoice !== -1) {
-    //             dispatchCharState(setCharClassCode(classChoice))
-    //         }
-    //     }
-    // }, [classURL])
-
-
-
-
-
-    const toggleAttributeSelections = () => {
-        document.getElementById('attribute-selector').classList.toggle('show')
-    }
+    // // If the page is being refreshed or a character is being edited, 
+    // // maintain the data stored in the character state
+    // // Otherwise treat this as a brand new character (possibly due to 
+    // // switching from a different character class sheet)
+    // // and set the character state back to blank
+    // // before automatically setting the current class code
+    // // useEffect(() => {
+    // //     // console.log('classURL: ', classURL)
+    // //     // console.log('classChoice is: ', classChoice)
+    // //     if (charState.changeClass && classChoice) {
+    // //         // console.log('setting no current char')
+    // //         // console.log('classChoiceObject.class: ', classChoice)
+    // //         // console.log('charState: ', charState)
+    // //         dispatchCharState(setNoCurrentChar())
+    // //         if (classChoice !== -1) {
+    // //             dispatchCharState(setCharClassCode(classChoice))
+    // //         }
+    // //     }
+    // // }, [classURL])
 
     // Close the race selector dropdown if the user clicks outside of it
     window.onclick = function (event) {
@@ -56,29 +48,6 @@ const AttributePicker = ({ charState, dispatchCharState, children }) => {
             }
         }
     }
-
-
-
-    // When the user clicks on one of the available tools
-    // send that code to the new character reducer for storage
-    const onClickTool = (charToolCode) => {
-        dispatchCharState(
-            setCharToolCode(
-                charToolCode
-            )
-        )
-    }
-
-    // When the user clicks on one of the available attributes
-    // send that code to the new character reducer for storage
-    const onClickAttribute = (charAttributeCode) => {
-        dispatchCharState(
-            setCharAttributeCode(
-                charAttributeCode
-            )
-        )
-    }
-
 
 
     return (

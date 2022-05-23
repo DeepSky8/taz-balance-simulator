@@ -22,6 +22,8 @@ export const bardToolTitles = [
     "Bag Of Tricks"
 ]
 
+export const bardToolBigGoal = 4
+
 export const bardToolStingerLines = [
     "You've devoted your life to studying relics and magic.",
     "You just know a lot of random, stupid things.",
@@ -31,7 +33,7 @@ export const bardToolStingerLines = [
     "What have you got in your pocketses? You have a trinket or tool for every occasion."
 ]
 
-export const bardAttributeTitles = [
+export const bardAssistTitles = [
     "Beautiful Voice",
     "Clever Limericks",
     "Awesome Music",
@@ -40,7 +42,9 @@ export const bardAttributeTitles = [
     "Lore"
 ]
 
-export const bardAttributeStingerLines = [
+export const bardAssistMusic = 2
+
+export const bardAssistStingerLines = [
     "As far as you're concerned, life is a musical.",
     "There once was a wizard from Oz...",
     "What instrument do you play? Can you shred?",

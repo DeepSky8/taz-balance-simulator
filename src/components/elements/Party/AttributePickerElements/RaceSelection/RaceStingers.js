@@ -1,5 +1,5 @@
 import React from "react";
-import { raceCodes, raceStingers } from "../../../../classes/charInfo";
+import { classBard, classPriest, classRogue, classWarrior, classWizard, raceCodes, raceStingers } from "../../../../classes/charInfo";
 import BardRaceStingers from "./RaceStingers/BardRaceStingers";
 import PriestRaceStingers from "./RaceStingers/PriestRaceStingers";
 import RogueRaceStingers from "./RaceStingers/RogueRaceStingers";
@@ -9,9 +9,11 @@ import WizardRaceStingers from "./RaceStingers/WizardRaceStingers";
 
 const RaceStingers = ({ charState, dispatchCharState }) => (
     <div className="raceStingers">
+
         {(raceStingers[charState.classCode])[raceCodes[charState.classCode].indexOf(charState.raceCode)]}
+
         <div id="bardStingers">
-            {charState.classCode === 0 &&
+            {charState.classCode === classBard &&
                 <BardRaceStingers
                     charState={charState}
                     dispatchCharState={dispatchCharState}
@@ -19,7 +21,7 @@ const RaceStingers = ({ charState, dispatchCharState }) => (
             }
         </div>
         <div id="priestStingers">
-            {charState.classCode === 1 &&
+            {charState.classCode === classPriest &&
                 <PriestRaceStingers
                     charState={charState}
                     dispatchCharState={dispatchCharState}
@@ -27,7 +29,7 @@ const RaceStingers = ({ charState, dispatchCharState }) => (
             }
         </div>
         <div id="rogueStingers">
-            {charState.classCode === 2 &&
+            {charState.classCode === classRogue &&
                 <RogueRaceStingers
                     charState={charState}
                     dispatchCharState={dispatchCharState}
@@ -35,7 +37,7 @@ const RaceStingers = ({ charState, dispatchCharState }) => (
             }
         </div>
         <div id="warriorStingers">
-            {charState.classCode === 3 &&
+            {charState.classCode === classWarrior &&
                 <WarriorRaceStingers
                     charState={charState}
                     dispatchCharState={dispatchCharState}
@@ -43,7 +45,7 @@ const RaceStingers = ({ charState, dispatchCharState }) => (
             }
         </div>
         <div id="wizardStingers">
-            {charState.classCode === 4 &&
+            {charState.classCode === classWizard &&
                 <WizardRaceStingers
                     charState={charState}
                     dispatchCharState={dispatchCharState}

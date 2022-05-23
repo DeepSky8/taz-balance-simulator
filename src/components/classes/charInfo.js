@@ -1,8 +1,8 @@
-import { bardRaceStingerLines, bardToolStingerLines, bardToolTitles } from "./bardInfo"
-import { priestRaceStingerLines, priestToolStingerLines, priestToolTitles } from "./priestInfo"
-import { rogueRaceStingerLines, rogueToolStingerLines, rogueToolTitles } from "./rogueInfo"
-import { warriorRaceStingerLines, warriorToolStingerLines, warriorToolTitles } from "./warriorInfo"
-import { wizardRaceStingerLines, wizardToolStingerLines, wizardToolTitles } from "./wizardInfo"
+import { bardAssistStingerLines, bardAssistTitles, bardRaceStingerLines, bardToolStingerLines, bardToolTitles } from "./bardInfo"
+import { priestAssistStingerLines, priestAssistTitles, priestRaceStingerLines, priestToolStingerLines, priestToolTitles } from "./priestInfo"
+import { rogueAssistStingerLines, rogueAssistTitles, rogueRaceStingerLines, rogueToolStingerLines, rogueToolTitles } from "./rogueInfo"
+import { warriorAssistStingerLines, warriorAssistTitles, warriorRaceStingerLines, warriorToolStingerLines, warriorToolTitles } from "./warriorInfo"
+import { wizardAssistStingerLines, wizardAssistTitles, wizardRaceStingerLines, wizardToolStingerLines, wizardToolTitles } from "./wizardInfo"
 
 export const asA = "As a "
 export const asAn = "As an "
@@ -28,6 +28,13 @@ export const charClassTitles = [
     'Warrior',
     'Wizard',
 ]
+
+export const classBard = 0
+export const classPriest = 1
+export const classRogue = 2
+export const classWarrior = 3
+export const classWizard = 4
+export const unselectedClass = 5
 
 
 export const raceCodes = [
@@ -74,6 +81,8 @@ export const raceTitles = [
     "Undead",
 ]
 
+export const modifiedByAn = [5, 13, 14]
+
 
 
 export const charBlurb = [
@@ -88,6 +97,8 @@ export const charBlurb = [
     // Wizard
     " wizard, you're a master of magic and can use spells to defeat monsters"
 ]
+
+export const unselectedAttribute = 7
 
 export const toolTitles = [
     bardToolTitles,
@@ -123,7 +134,7 @@ export const toolBlurb = [
 
 
 
-export const charAttributePrompt = [
+export const assistPrompt = [
     // Bard
     "You generally assist your teammates using your ",
     // Priest
@@ -136,7 +147,23 @@ export const charAttributePrompt = [
     "You assist your teammates with your "
 ]
 
-export const charSpecialTitle = [
+export const assistTitles = [
+    bardAssistTitles,
+    priestAssistTitles,
+    rogueAssistTitles,
+    warriorAssistTitles,
+    wizardAssistTitles
+]
+
+export const assistStingers = [
+    bardAssistStingerLines,
+    priestAssistStingerLines,
+    rogueAssistStingerLines,
+    warriorAssistStingerLines,
+    wizardAssistStingerLines
+]
+
+export const specialTitle = [
     // Bard
     "Inspiration",
     // Priest
@@ -149,15 +176,15 @@ export const charSpecialTitle = [
     "Battle Magic"
 ]
 
-export const charSpecialStinger = [
+export const specialStinger = [
     // Bard
     "Whenever you spend your action token, reclaim it at the end of the turn.",
     // Priest
     "At the end of your turn, you may spend your action token to restore 1 Health to the party.",
     // Rogue
-    "Whenever you draw Fantasky Kostco cards, draw two and immediately discard one of them.",
+    "If you would draw a Fantasy Kostco card, draw two instead and immediately discard one of them.",
     // Warrior
-    "Before you roll the die to defeat a Challenge, you may spend your action token and suffer 1 damage to add +2 to your Strength.",
+    "Before you roll the die to defeat a Challenge, you may spend your action token and suffer 1 team damage to add +2 to your Strength.",
     // Wizard
     "Before you roll the die to defeat a Monster Challenge, you may spend your action token to add +3 to  your Strength."
 ]

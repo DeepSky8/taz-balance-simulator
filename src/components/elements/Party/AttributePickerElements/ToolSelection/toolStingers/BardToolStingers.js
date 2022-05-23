@@ -1,10 +1,11 @@
 import React from "react";
 import { setBardSuperGoal } from "../../../../../../actions/charActions";
+import { bardToolBigGoal } from "../../../../../classes/bardInfo";
 
 const BardToolStingers = ({ charState, dispatchCharState }) => (
     <div>
         <div id="bardSuperGoal">
-            {charState.toolCode === 4 &&
+            {charState.toolCode === bardToolBigGoal &&
                 <input
                     value={charState.bardSuperGoal}
                     type="text"

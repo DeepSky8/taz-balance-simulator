@@ -1,4 +1,5 @@
 import { child, push, ref, remove, update } from "firebase/database"
+import { priestAssistFame } from "../components/classes/priestInfo"
 import { db } from "../firebase/firebase"
 
 // Local Actions
@@ -39,9 +40,9 @@ export const setCharToolCode = (toolCode) => ({
     toolCode
 })
 
-export const setCharAttributeCode = (charAttributeCode) => ({
-    type: 'SET_CHAR_ATT_CODE',
-    charAttributeCode
+export const setCharAssistCode = (assistCode) => ({
+    type: 'SET_CHAR_ASSIST_CODE',
+    assistCode
 })
 
 export const setCharName = (charName) => ({
@@ -92,7 +93,7 @@ export const startRemoveCharacter = (uid, charID) => {
 }
 
 
-// Bard-specific actions
+// Bard actions
 export const setHumanBardBand = (humanBardBand) => ({
     type: 'SET_HUMAN_BARD_BAND',
     humanBardBand
@@ -130,14 +131,29 @@ export const setDwarfPriestOrigin = (dwarfPriestOrigin) => ({
     dwarfPriestOrigin
 })
 
-export const setPriestHolySymbol = (priestHolySymbol) => ({ 
-    type: 'SET_PRIEST_HOLY_SYMBOL',
-    priestHolySymbol
+export const setPriestToolHolySymbol = (priestToolHolySymbol) => ({
+    type: 'SET_PRIEST_TOOL_HOLY_SYMBOL',
+    priestToolHolySymbol
 })
 
-export const setPriestMantra = (priestMantra) => ({ 
-    type: 'SET_PRIEST_MANTRA',
-    priestMantra
+export const setPriestToolMantra = (priestToolMantra) => ({
+    type: 'SET_PRIEST_TOOL_MANTRA',
+    priestToolMantra
+})
+
+export const setPriestAssistFame = (priestAssistFame) => ({
+    type: 'SET_PRIEST_ASSIST_FAME',
+    priestAssistFame
+})
+
+export const setPriestAssistFameHelps = (priestAssistFameHelps) => ({
+    type: 'SET_PRIEST_ASSIST_FAME_HELPS',
+    priestAssistFameHelps
+})
+
+export const setPriestAssistHobby = (priestAssistHobby) => ({
+    type: 'SET_PRIEST_ASSIST_HOBBY',
+    priestAssistHobby
 })
 
 // Rogue Actions
@@ -145,6 +161,11 @@ export const setPriestMantra = (priestMantra) => ({
 export const setGerblinRogueOrigin = (gerblinRogueOrigin) => ({
     type: 'SET_GERBLIN_ROGUE_ORIGIN',
     gerblinRogueOrigin
+})
+
+export const setRogueCatchphrase = (rogueCatchphrase) => ({
+    type: 'SET_ROGUE_CATCHPHRASE',
+    rogueCatchphrase
 })
 
 // Warrior Actions
@@ -169,6 +190,26 @@ export const setDwarfWarriorBeard = (dwarfWarriorBeard) => ({
     dwarfWarriorBeard
 })
 
+export const setWarriorToolArmor = (warriorToolArmor) => ({
+    type: 'SET_WARRIOR_TOOL_ARMOR',
+    warriorToolArmor
+})
+
+export const setWarriorToolBattlecry = (warriorToolBattlecry) => ({
+    type: 'SET_WARRIOR_TOOL_BATTLECRY',
+    warriorToolBattlecry
+})
+
+export const setWarriorAssistFame = (warriorAssistFame) => ({
+    type: 'SET_WARRIOR_ASSIST_FAME',
+    warriorAssistFame
+})
+
+export const setWarriorAssistFameHelps = (warriorAssistFameHelps) => ({
+    type: 'SET_WARRIOR_ASSIST_FAME_HELPS',
+    warriorAssistFameHelps
+})
+
 // Wizard Actions
 
 export const setUndeadWizardOrigin1 = (undeadWizardOrigin1) => ({
@@ -184,4 +225,19 @@ export const setUndeadWizardOrigin2 = (undeadWizardOrigin2) => ({
 export const setUndeadWizardOrigin3 = (undeadWizardOrigin3) => ({
     type: 'SET_UNDEAD_WIZARD_ORIGIN_3',
     undeadWizardOrigin3
+})
+
+export const setWizardToolCatchphrase = (wizardToolCatchphrase) => ({
+    type: 'SET_WIZARD_TOOL_CATCHPHRASE',
+    wizardToolCatchphrase
+})
+
+export const setWizardAssistFame = (wizardAssistFame) => ({
+    type: 'SET_WIZARD_ASSIST_FAME',
+    wizardAssistFame
+})
+
+export const setWizardAssistFameHelps = (wizardAssistFameHelps) => ({
+    type: 'SET_WIZARD_ASSIST_FAME_HELPS',
+    wizardAssistFameHelps
 })

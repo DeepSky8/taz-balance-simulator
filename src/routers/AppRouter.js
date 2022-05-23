@@ -35,7 +35,12 @@ import RaceSelection from "../components/elements/Party/AttributePickerElements/
 import RaceStingers from "../components/elements/Party/AttributePickerElements/RaceSelection/RaceStingers";
 import ToolSelection from "../components/elements/Party/AttributePickerElements/ToolSelection/ToolSelection";
 import ToolStingers from "../components/elements/Party/AttributePickerElements/ToolSelection/ToolStingers";
-
+import { unselectedClass } from "../components/classes/charInfo";
+import AssistSelection from '../components/elements/Party/AttributePickerElements/AssistSelection/AssistSelection';
+import AssistStingers from '../components/elements/Party/AttributePickerElements/AssistSelection/AssistStingers';
+import SpecialAbility from '../components/elements/Party/AttributePickerElements/SpecialAbility';
+import CharStats from '../components/elements/Party/AttributePickerElements/CharStats';
+import CharName from '../components/elements/Party/AttributePickerElements/CharName';
 export const history = createBrowserHistory();
 
 
@@ -188,8 +193,10 @@ const AppRouter = () => {
                                         charState={charState}
                                         dispatchCharState={dispatchCharState}
                                     >
-                                        {charState.classCode !== 5 &&
+                                        {charState.classCode !== unselectedClass &&
                                             <div>
+                                                <SpecialAbility charState={charState} />
+                                                <CharStats charState={charState} />
                                                 <RaceSelection
                                                     charState={charState}
                                                     dispatchCharState={dispatchCharState}
@@ -203,6 +210,18 @@ const AppRouter = () => {
                                                     dispatchCharState={dispatchCharState}
                                                 />
                                                 <ToolStingers
+                                                    charState={charState}
+                                                    dispatchCharState={dispatchCharState}
+                                                />
+                                                <AssistSelection
+                                                    charState={charState}
+                                                    dispatchCharState={dispatchCharState}
+                                                />
+                                                <AssistStingers
+                                                    charState={charState}
+                                                    dispatchCharState={dispatchCharState}
+                                                />
+                                                <CharName
                                                     charState={charState}
                                                     dispatchCharState={dispatchCharState}
                                                 />

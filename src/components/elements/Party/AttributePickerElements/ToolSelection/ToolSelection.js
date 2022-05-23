@@ -1,7 +1,7 @@
 import React from "react";
 import { setCharToolCode } from "../../../../../actions/charActions";
 import { updateUserState } from "../../../../../actions/userActions";
-import { toolBlurb, toolTitles } from "../../../../classes/charInfo";
+import { toolBlurb, toolTitles, unselectedAttribute } from "../../../../classes/charInfo";
 
 const ToolSelection = ({ charState, dispatchCharState }) => {
     // let classAction = history.location.pathname.split("/")[2]
@@ -45,7 +45,7 @@ const ToolSelection = ({ charState, dispatchCharState }) => {
                     onClick={toggleToolSelections}
                     className="dropbtn"
                 >
-                    {charState.toolCode === 7 ?
+                    {charState.toolCode === unselectedAttribute ?
                         "-select-"
                         :
                         (toolTitles[charState.classCode])[charState.toolCode]

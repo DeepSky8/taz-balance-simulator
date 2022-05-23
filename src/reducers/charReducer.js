@@ -6,7 +6,7 @@ const defaultCharState = {
     classCode: 5,
     raceCode: 0,
     toolCode: 7,
-    attributeCode: undefined,
+    assistCode: 7,
     charNotes: '',
     charKostco: [{}],
     displayChars: false,
@@ -26,8 +26,19 @@ const defaultCharState = {
     undeadWizardOrigin1: '',
     undeadWizardOrigin2: '',
     undeadWizardOrigin3: '',
-    priestHolySymbol: '',
-    priestMantra: '',
+    priestToolHolySymbol: '',
+    priestToolMantra: '',
+    rogueToolCatchphrase: '',
+    warriorToolArmor: '',
+    warriorToolBattlecry: '',
+    wizardToolCatchphrase: '',
+    priestAssistFame: '',
+    priestAssistFameHelps: '',
+    priestAssistHobby: '',
+    warriorAssistFame: '',
+    warriorAssistFameHelps: '',
+    wizardAssistFame: '',
+    wizardAssistFameHelps: '',
 }
 
 
@@ -76,10 +87,10 @@ const charReducer = (state, action) => {
                 toolCode: action.toolCode
             }
 
-        case 'SET_CHAR_ATT_CODE':
+        case 'SET_CHAR_ASSIST_CODE':
             return {
                 ...state,
-                charAttributeCode: action.charAttributeCode
+                assistCode: action.assistCode
             }
         case 'EDIT_CHARACTER':
             return {
@@ -99,7 +110,7 @@ const charReducer = (state, action) => {
                 ...state,
                 bardInstrument: action.bardInstrument
             }
-        case 'SET_BARD_MUSIC_SKILL':
+        case 'SET_BARD_ASSIST_MUSIC_SKILL':
             return {
                 ...state,
                 bardMusicSkill: action.bardMusicSkill
@@ -130,21 +141,41 @@ const charReducer = (state, action) => {
                 ...state,
                 dwarfPriestOrigin: action.dwarfPriestOrigin
             }
-        case 'SET_PRIEST_HOLY_SYMBOL':
+        case 'SET_PRIEST_TOOL_HOLY_SYMBOL':
             return {
                 ...state,
-                priestHolySymbol: action.priestHolySymbol
+                priestToolHolySymbol: action.priestToolHolySymbol
             }
-        case 'SET_PRIEST_MANTRA':
+        case 'SET_PRIEST_TOOL_MANTRA':
             return {
                 ...state,
-                priestMantra: action.priestMantra
+                priestToolMantra: action.priestToolMantra
+            }
+        case 'SET_PRIEST_ASSIST_FAME':
+            return {
+                ...state,
+                priestAssistFame: action.priestAssistFame
+            }
+        case 'SET_PRIEST_ASSIST_FAME_HELPS':
+            return {
+                ...state,
+                priestAssistFameHelps: action.priestAssistFameHelps
+            }
+        case 'SET_PRIEST_ASSIST_HOBBY':
+            return {
+                ...state,
+                priestAssistHobby: action.priestAssistHobby
             }
         // Rogue Actions
         case 'SET_GERBLIN_ROGUE_ORIGIN':
             return {
                 ...state,
                 gerblinRogueOrigin: action.gerblinRogueOrigin
+            }
+        case 'SET_ROGUE_TOOL_CATCHPHRASE':
+            return {
+                ...state,
+                rogueToolCatchphrase: action.rogueToolCatchphrase
             }
         // Warrior Actions
         case 'SET_HUMAN_WARRIOR_ORIGIN_1':
@@ -167,6 +198,26 @@ const charReducer = (state, action) => {
                 ...state,
                 dwarfWarriorBeard: action.dwarfWarriorBeard
             }
+        case 'SET_WARRIOR_TOOL_ARMOR':
+            return {
+                ...state,
+                warriorToolArmor: action.warriorToolArmor
+            }
+        case 'SET_WARRIOR_TOOL_BATTLECRY':
+            return {
+                ...state,
+                warriorToolBattlecry: action.warriorToolBattlecry
+            }
+        case 'SET_WARRIOR_ASSIST_FAME':
+            return {
+                ...state,
+                warriorAssistFame: action.warriorAssistFame
+            }
+        case 'SET_WARRIOR_ASSIST_FAME_HELPS':
+            return {
+                ...state,
+                warriorAssistFameHelps: action.warriorAssistFameHelps
+            }
         // Wizard Actions
         case 'SET_UNDEAD_WIZARD_ORIGIN_1':
             return {
@@ -183,6 +234,22 @@ const charReducer = (state, action) => {
                 ...state,
                 undeadWizardOrigin3: action.undeadWizardOrigin3
             }
+        case 'SET_WIZARD_TOOL_CATCHPHRASE':
+            return {
+                ...state,
+                wizardToolCatchphrase: action.wizardToolCatchphrase
+            }
+        case 'SET_WIZARD_ASSIST_FAME':
+            return {
+                ...state,
+                wizardAssistFame: action.wizardAssistFame
+            }
+        case 'SET_WIZARD_ASSIST_FAME_HELPS':
+            return {
+                ...state,
+                wizardAssistFameHelps: action.wizardAssistFameHelps
+            }
+
         default: return state
     }
 }

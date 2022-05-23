@@ -22,6 +22,8 @@ export const wizardToolTitles = [
     "Superstition",
 ]
 
+export const wizardToolCatchphrase = 4
+
 export const wizardToolStingerLines = [
     // "Magic Wand",
     "That's not a euphemism. It's a really cool wand.",
@@ -32,21 +34,23 @@ export const wizardToolStingerLines = [
     // "Amazing Intellect",
     "You're the smartest person in the room, and don't let anyone forget it!",
     // "Catchphrase",
-    "You believe a lot of ridiculous things, but sometimes they can save your life.",
+    "Skill and luck aren't nearly as important as a good catchphrase.",
     // "Superstition",
+    "You believe a lot of ridiculous things, but sometimes they can save your life.",
 ]
 
-export const wizardAttributeTitles = [
+export const wizardAssistTitles = [
     "Magic",
-    "Arcane Lord",
+    "Arcane Lore",
     "Fame",
     "Wisdom",
     "Sarcasm",
     "Fashion Sense",
-    "",
 ]
 
-export const wizardAttributeStingerLines = [
+export const wizardAssistFame = 2
+
+export const wizardAssistStingerLines = [
     // "Magic",
     "There's very few problems that can't be solved with a fireball.",
     // "Arcane Lord",

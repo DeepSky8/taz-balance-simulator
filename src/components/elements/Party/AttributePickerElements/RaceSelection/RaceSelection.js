@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { setCharClassCode, setCharRaceCode, setNoCurrentChar } from "../../../../../actions/charActions";
 import { history } from "../../../../../routers/AppRouter";
-import { asA, asAn, charBlurb, charClassTitles, raceCodes, raceTitles } from "../../../../classes/charInfo";
+import { asA, asAn, charBlurb, charClassTitles, modifiedByAn, raceCodes, raceTitles } from "../../../../classes/charInfo";
 
 const RaceSelection = ({ charState, dispatchCharState }) => {
     // let classAction = history.location.pathname.split("/")[2]
@@ -40,7 +40,7 @@ const RaceSelection = ({ charState, dispatchCharState }) => {
                     'Please make a selection'}
             </div>
             <div className="dropdown">
-                {[5, 13, 14].includes(charState.raceCode) ?
+                {modifiedByAn.includes(charState.raceCode) ?
                     asAn
                     :
                     asA
