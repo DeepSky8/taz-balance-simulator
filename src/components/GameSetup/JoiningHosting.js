@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import generateGameID from '../functions/generateGameID';
 import {
     defaultJoiningReducer,
@@ -6,8 +6,6 @@ import {
 } from "../../reducers/joiningReducer";
 import {
     clearGameCodeError,
-    joiningOnly,
-    joiningOrHosting,
     startRegisterGameID,
     startRemoveGameCode,
     startSaveGameID,
@@ -16,13 +14,40 @@ import {
     setGameID,
     toggleJoiningGame,
     clearGameID,
-    setJoiningState,
+    startExitActiveGame,
+    startJoinActiveGame,
 } from '../../actions/joiningActions';
-import { auth } from "../../firebase/firebase";
+import { auth, db } from "../../firebase/firebase";
+import { off, onValue, ref } from "firebase/database";
+import { clearPlayerList } from "../../actions/gameActions";
 
-const JoiningHosting = ({ userState, gameArray }) => {
-
+const JoiningHosting = ({ userState, dispatchGameState }) => {
+    const [gameArray, setGameArray] = useState([])
     const [joinHost, dispatchJoinHost] = useReducer(joiningReducer, defaultJoiningReducer)
+
+    useEffect(() => {
+
+        // Listen to list of activeGame objects in Firebase
+        onValue(ref(db, 'activeGames'), (snapshot) => {
+            const updatedArray = [];
+            if (snapshot.exists()) {
+                snapshot.forEach((childSnapShot) => {
+                    // console.log('forEach childSnapShot', childSnapShot.val())
+                    updatedArray.push(childSnapShot.val().gameID)
+                })
+            }
+            // Set a new list of current game codes on GameSetup state
+            // when the listener perceives a change
+            setGameArray(updatedArray)
+            // console.log('gameArray changed: ', updatedArray)
+        })
+
+        return () => {
+            // Remove the listener on Active Games in the cloud
+            off(ref(db, 'activeGames'))
+            // console.log('removed activeGame listener')
+        }
+    }, [joinHost.gameID])
 
     // // Monitor whether the player is signed in or not
     // // If not signed in, they will only be able to join a game
@@ -63,22 +88,29 @@ const JoiningHosting = ({ userState, gameArray }) => {
 
         if (fourDigits &&
             (!validGameCode ||
-                userState.joiningGame && !gameCodeRegistered)) {
+                (userState.joiningGame && !gameCodeRegistered))) {
+
             dispatchJoinHost(setGameCodeError())
         } else {
             dispatchJoinHost(clearGameCodeError())
+            dispatchGameState(clearPlayerList())
+            startExitActiveGame(auth.currentUser.uid, userState.gameID)
         }
 
         if (validGameCode) {
-            if (userState.joiningGame &&
-                gameCodeRegistered &&
-                joinHost.gameID === '') {
+            if (userState.joiningGame && gameCodeRegistered) {
                 // If joining, set the uid, last activity date, host, and gameID
                 // on user's profile in cloud
                 startSaveGameID(auth.currentUser.uid, gameID)
+                // console.log('startSaveGameID should have fired')
+                startJoinActiveGame(
+                    auth.currentUser.uid,
+                    joinHost.gameID,
+                    userState.currentCharacterID
+                )
             } else if (
                 !userState.joiningGame &&
-                !gameCodeRegistered &&
+                // !gameCodeRegistered &&
                 !userState.isAnonymous
             ) {
                 // If hosting, create an activeGames entry with gameID
@@ -87,6 +119,12 @@ const JoiningHosting = ({ userState, gameArray }) => {
                 startRegisterGameID(auth.currentUser.uid, parseInt(gameID))
             }
         }
+
+        // console.log('joinHost.gameID changed: ', joinHost.gameID)
+        // console.log('fourDigits state is: ', fourDigits)
+        // console.log('validGameCode state is: ', validGameCode)
+        // console.log('gameCodeRegistered state is: ', gameCodeRegistered)
+
 
     }, [joinHost.gameID])
 
@@ -113,7 +151,8 @@ const JoiningHosting = ({ userState, gameArray }) => {
             // that matches the UID
             // then sets the gameID and host under the user UID to null
             startRemoveGameCode(auth.currentUser.uid, userState.gameID)
-        } else if (!userState.gameID) {
+            dispatchGameState(clearPlayerList())
+        } else if (userState.joiningGame === false) {
             // Generate a short game ID, check it against the current active
             // game IDs, and once it is unique store it locally to be shared with
             // other players joining your game. 

@@ -28,21 +28,21 @@ const defaultUserProfile = {
 const userReducer = (state, action) => {
     switch (action.type) {
         case 'UPDATE_STATE':
-            let gameIDupdate;
-            if(action.updatedState.gameID){
-                gameIDupdate = action.updatedState.gameID
-            } else {
-                gameIDupdate = null;
-            }
-            return { 
-                // ...state, 
+            // let gameIDupdate;
+            // if (action.updatedState.gameID) {
+            //     gameIDupdate = action.updatedState.gameID
+            // } else {
+            //     gameIDupdate = null;
+            // }
+            return {
+                ...defaultUserProfile,
                 ...action.updatedState,
-                gameID: gameIDupdate
+                // gameID: gameIDupdate
             }
         case 'SET_JOINING_GAME':
-            return { 
-                ...state, 
-                joiningGame: action.joiningGame 
+            return {
+                ...state,
+                joiningGame: action.joiningGame
             }
         case 'SET_GAME_ID':
             return {
@@ -82,11 +82,11 @@ const userReducer = (state, action) => {
                     }
                 }
             }
-            case 'SET_CHARACTER_ARRAY':
-                return {
-                    ...state,
-                    characterList: action.characterList
-                }
+        case 'SET_CHARACTER_ARRAY':
+            return {
+                ...state,
+                characterList: action.characterList
+            }
         default:
             return state
     }

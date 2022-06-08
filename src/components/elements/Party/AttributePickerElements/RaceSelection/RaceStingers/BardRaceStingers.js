@@ -1,11 +1,11 @@
 import React from "react";
 import { setHumanBardBand, setRobotBardCreator, setRobotBardVisual } from "../../../../../../actions/charActions";
-import { longDescription } from "../../../../../classes/charInfo";
+import { longDescription, raceTitles } from "../../../../../classes/charInfo";
 
 const BardRaceStingers = ({ charState, dispatchCharState }) => (
     <div>
         <div id="humanBard">
-            {charState.raceCode === 9 &&
+            {charState.raceCode === raceTitles.indexOf('Human') &&
                 <div>
                     <input
                         value={charState.humanBardBand}
@@ -25,7 +25,7 @@ const BardRaceStingers = ({ charState, dispatchCharState }) => (
         </div>
 
         <div id="magicalRobotBard">
-            {charState.raceCode === 12 &&
+            {charState.raceCode === raceTitles.indexOf('Magical Robot') &&
                 (<div>
                     <input
                         value={charState.robotBardCreator}

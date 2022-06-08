@@ -1,6 +1,9 @@
 import { ref, remove, update } from "firebase/database";
 import { db } from "../firebase/firebase";
 
+
+// Local Actions
+
 export const toggleJoiningGame = (joiningGame, isAnonymous) => ({
     type: 'TOGGLE_JOINING_GAME',
     joiningGame,
@@ -37,6 +40,8 @@ export const setJoiningState = (gameID) => ({
     gameID
 })
 
+// Cloud Actions
+
 export const startSetJoiningGame = (uid, joiningGame) => {
     const updates = {}
     updates['users/' + uid + '/joiningGame'] = joiningGame
@@ -44,6 +49,13 @@ export const startSetJoiningGame = (uid, joiningGame) => {
         .catch((error) => {
             console.log('Did not set JoiningState, error: ', error)
         })
+}
+
+export const startJoinActiveGame = (uid, gameID, currentCharacterID) => {
+    const updates = {}
+    updates['activeGames/' + gameID + '/playerList/' + uid + '/uid'] = uid
+    updates['activeGames/' + gameID + '/playerList/' + uid + '/currentCharacterID'] = currentCharacterID
+    update(ref(db), updates)
 }
 
 export const startSaveGameID = (uid, gameID) => {
@@ -85,4 +97,16 @@ export const startRemoveGameCode = (uid, gameID) => {
         .catch((error) => {
             console.log('Error when cleaning game array in cloud:', error)
         })
+}
+// If the user is disconnecting from an active game 
+// (or a game that doesn't exist)
+// set the cloud profile gameID to null, which will
+// propagate to the userState.gameID
+// joiningHosting.gameID will already be updated, as
+// that is where the action was initiated
+export const startExitActiveGame = (uid, gameID) => {
+    const updates = {};
+    updates['users/' + uid + '/gameID'] = null;
+    updates['activeGames/' + gameID + '/playerList/' + uid] = null;
+    update(ref(db), updates)
 }

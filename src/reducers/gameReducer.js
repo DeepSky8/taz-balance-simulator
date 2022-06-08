@@ -14,7 +14,7 @@ const defaultGameState = {
         location: null
     },
     teamHealth: null,
-    characterList: []
+    playerList: []
 }
 
 const gameReducer = (state, action) => {
@@ -22,7 +22,8 @@ const gameReducer = (state, action) => {
         case 'UPDATE_GAME_STATE':
             return {
                 ...state,
-                ...action.currentActiveGame
+                ...action.currentActiveGame,
+                playerList: state.playerList
             }
         case 'CLEAR_GAME_STATE':
             return {
@@ -43,6 +44,21 @@ const gameReducer = (state, action) => {
                     relicCode: null,
                     locationCode: null
                 }
+            }
+        case 'UPDATE_GAME_HOST':
+            return {
+                ...state,
+                host: action.host
+            }
+        case 'UPDATE_PLAYER_LIST':
+            return {
+                ...state,
+                playerList: action.playerList
+            }
+        case 'CLEAR_PLAYER_LIST':
+            return {
+                ...state,
+                playerList: []
             }
         default:
             return state

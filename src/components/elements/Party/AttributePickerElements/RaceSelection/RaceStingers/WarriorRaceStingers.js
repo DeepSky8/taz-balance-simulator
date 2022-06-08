@@ -1,6 +1,6 @@
 import React from "react";
 import { setDwarfWarriorBeard, setHumanWarriorOrigin1, setHumanWarriorOrigin2, setHumanWarriorOrigin3, } from "../../../../../../actions/charActions";
-import { shortDescription } from "../../../../../classes/charInfo";
+import { raceTitles, shortDescription } from "../../../../../classes/charInfo";
 const imA = "I'm a "
 const iWasRaisedBy = "       I was raised by "
 const i = '     I '
@@ -9,7 +9,7 @@ const lift = ' lift'
 const WarriorRaceStingers = ({ charState, dispatchCharState }) => (
     <div>
         <div id="humanWarrior">
-            {charState.raceCode === 9 &&
+            {charState.raceCode === raceTitles.indexOf('Human') &&
                 <div>
                     {imA}
                     <input
@@ -47,7 +47,7 @@ const WarriorRaceStingers = ({ charState, dispatchCharState }) => (
                         maxLength={shortDescription}
                         onChange={(e) => {
                             dispatchCharState(
-                                setHumanWarriorOrigin2(
+                                setHumanWarriorOrigin3(
                                     e.target.value.toString()
                                 )
                             )
@@ -59,7 +59,7 @@ const WarriorRaceStingers = ({ charState, dispatchCharState }) => (
         </div>
 
         <div id="dwarfWarrior">
-            {charState.raceCode === 3 &&
+            {charState.raceCode === raceTitles.indexOf('Dwarf') &&
                 <div>
                     <input
                         value={charState.dwarfWarriorBeard}

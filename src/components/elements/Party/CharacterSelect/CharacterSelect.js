@@ -3,9 +3,9 @@ import { startRemoveCharacter, startSetCurrentCharacter, toggleCharDisplay } fro
 import { CharactersList } from "./CharactersList";
 import { auth } from "../../../../firebase/firebase";
 import { useNavigate } from "react-router-dom";
-import { charClassTitles, charTitles } from "../../../classes/charInfo";
+import { charClassTitles } from "../../../classes/charInfo";
 
-const CharacterSelect = ({ userState, gameState, charState, dispatchCharState, charArray }) => {
+const CharacterSelect = ({ userState, charState, dispatchCharState, charArray }) => {
     let navigate = useNavigate()
     let className = charClassTitles[userState.classCode]
     const charDispatch = (charID) => {
@@ -23,11 +23,6 @@ const CharacterSelect = ({ userState, gameState, charState, dispatchCharState, c
 
     return (
         <div>
-            {userState.currentCharacterID ?
-                'Playing as ' + charState.charName + charTitles[charState.questCount]
-                :
-                ''
-            }
             <div>
                 <button onClick={() => {
                     charArray.length > 0 ? dispatchCharState(toggleCharDisplay())
@@ -35,7 +30,7 @@ const CharacterSelect = ({ userState, gameState, charState, dispatchCharState, c
                         navigate('/characterSheet/newCharacter')
                 }}>
                     {charArray.length > 0 ?
-                        'View all characters'
+                        'View/edit all characters'
                         :
                         'Create a character'}
                 </button>

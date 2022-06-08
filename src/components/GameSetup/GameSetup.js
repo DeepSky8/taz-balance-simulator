@@ -6,60 +6,96 @@ import {
     ref,
 } from "firebase/database";
 import {
-    clearChallengesObject,
-    updateChallengesObject
+    clearPlayerList,
+    updateGameState,
+    updatePlayerList,
 } from "../../actions/gameActions";
 import { startRemoveGameID } from "../../actions/userActions";
 
-
 export const GameSetup = ({
     dispatchGameState,
-    setGameArray,
     userState,
     children
 }) => {
 
     useEffect(() => {
 
-        // Listen to list of activeGame objects in Firebase
-        onValue(ref(db, 'activeGames'), (snapshot) => {
-            const updatedArray = [];
-            snapshot.forEach((childSnapShot) => {
-                updatedArray.push(childSnapShot.val().gameID)
-            })
-
-            // Set a new list of current game codes on GameSetup state
-            // when the listener perceives a change
-            setGameArray(updatedArray)
-        })
-
-        return () => {
-
-            // Remove the listener on Active Games in the cloud
-            off(ref(db, 'activeGames'))
-        }
-    }, [])
-
-    useEffect(() => {
-        const gameID = userState.gameID
-        if (gameID) {
-            onValue(ref(db, 'activeGames/' + gameID), (snapshot) => {
+        if (userState.gameID) {
+            onValue(ref(db, 'activeGames/' + userState.gameID), (snapshot) => {
                 if (snapshot.exists()) {
-                    dispatchGameState(updateChallengesObject(snapshot.val()))
+                    dispatchGameState(updateGameState(snapshot.val()))
+                    // dispatchGameState(updateChallengesObject(snapshot.val()))
                 } else {
                     startRemoveGameID(auth.currentUser.uid)
+                    dispatchGameState(clearPlayerList())
                 }
             })
-        } else {
-            // console.log('dispatching clearChallengesObject')
-            // dispatchGameState(clearChallengesObject())
+
+            onValue(ref(db, 'activeGames/' + userState.gameID + '/playerList'), snapshot => {
+
+                if (snapshot.exists()) {
+                    const playerList = [];
+                    snapshot.forEach((player) => {playerList.push(player.val())})
+                    const otherPlayers = playerList.filter(player => player.uid !== auth.currentUser.uid)
+                    dispatchGameState(updatePlayerList(otherPlayers))
+                    
+                }
+
+            })
         }
 
         return () => {
-            off(ref(db, 'activeGames/' + gameID))
+            off(ref(db, 'activeGames/' + userState.gameID))
+            off(ref(db, 'activeGames/' + userState.gameID + '/playerList'))
         }
-
     }, [userState.gameID])
+
+    // useEffect(() => {
+
+    // }, [userState.gameID])
+
+    // If this user is associated with an Active Game
+    // start a listener on the list of characters associated 
+    // with this game
+    // useEffect(() => {
+    // if (userState.gameID) {
+    //     onValue(ref(db, 'activeGames/' + userState.gameID), (snapshot) => {
+    //         if (snapshot.exists()) {
+    //             dispatchGameState(updateChallengesObject(snapshot.val()))
+    //         } else {
+    //             startRemoveGameID(auth.currentUser.uid)
+    //         }
+    //     })
+
+
+
+    //     onValue(ref(db, 'activeGames/' + userState.gameID + '/characterList'), snapshot => {
+    //         const userList = [];
+    //         console.log('characterList useEffect onValue fired: ')
+    //         if (snapshot.exists()) {
+    //             console.log('character list', snapshot.val())
+    //             snapshot.forEach(
+    //                 childSnapShot =>
+    //                     userList.push(
+    //                         childSnapShot.val()
+    //                     )
+    //             )
+    //         }
+    //         dispatchGameState(
+    //             updateUserList(
+    //                 userList.filter(user => user.uid !== userState.uid)
+    //             )
+    //         )
+    //     })
+    // }
+
+    // return () => {
+    //     off(ref(db, 'activeGames/' + userState.gameID))
+    //     off(ref(db, 'activeGames/' + userState.gameID + '/characterList'))
+    // }
+    // }, [userState.gameID])
+
+
 
     return (
         <div>

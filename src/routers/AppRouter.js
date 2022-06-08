@@ -1,13 +1,11 @@
 import React, { useEffect, useReducer, useState } from "react";
-import { Routes, Route, Outlet } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import {
-    get,
     off,
     onValue,
     ref,
-    set,
 } from "firebase/database";
 import { defaultUserProfile, userReducer } from "../reducers/userReducer";
 import { defaultGameState, gameReducer } from "../reducers/gameReducer";
@@ -25,7 +23,6 @@ import Tos from "../components/Authentication/Tos";
 import Welcome from "../components/Authentication/Welcome";
 import { auth, db } from "../firebase/firebase";
 import { updateUserState } from "../actions/userActions";
-import PartyMembers from "../components/elements/Party/PartyMembers";
 import CharacterSelect from "../components/elements/Party/CharacterSelect/CharacterSelect";
 import CharacterSheet from "../components/elements/Party/CharacterSheetElements/CharacterSheet";
 import { setCharState, setNoCurrentChar } from "../actions/charActions";
@@ -41,19 +38,18 @@ import AssistStingers from '../components/elements/Party/AttributePickerElements
 import SpecialAbility from '../components/elements/Party/AttributePickerElements/SpecialAbility';
 import CharStats from '../components/elements/Party/AttributePickerElements/CharStats';
 import CharName from '../components/elements/Party/AttributePickerElements/CharName';
+import { startJoinActiveGame } from '../actions/joiningActions';
+import PlayingAs from "../components/elements/Party/partyMembers/PlayingAs";
+import RestOfParty from "../components/elements/Party/partyMembers/RestOfParty";
 export const history = createBrowserHistory();
 
 
 const AppRouter = () => {
-    const [gameArray, setGameArray] = useState([])
+
     const [charArray, setCharArray] = useState([])
     const [gameState, dispatchGameState] = useReducer(gameReducer, defaultGameState)
     const [userState, dispatchUserState] = useReducer(userReducer, defaultUserProfile)
     const [charState, dispatchCharState] = useReducer(charReducer, defaultCharState)
-
-
-
-    //user.val().lastActivity < (Date.now() - 86400000) || user.val().lastActivity === null
 
 
     // This listener updates the local state to 
@@ -108,6 +104,8 @@ const AppRouter = () => {
 
     }, [])
 
+    // Update the Character state with changes made to the currently-selected
+    // character when then cloud array of characters changes
     useEffect(() => {
         if (userState.currentCharacterID) {
             let charObject = charArray.find(character =>
@@ -121,6 +119,12 @@ const AppRouter = () => {
         }
     }, [userState.currentCharacterID, charArray])
 
+    useEffect(() => {
+        if (userState.currentCharacterID && gameState.gameID) {
+            startJoinActiveGame(auth.currentUser.uid, gameState.gameID, userState.currentCharacterID)
+        }
+
+    }, [userState.currentCharacterID, gameState.gameID])
 
     // useEffect(() => {
     //     console.log('userState changed: ', userState)
@@ -148,14 +152,13 @@ const AppRouter = () => {
                     <Route path='chooseMode' element={<ChooseMode />} />
                     <Route path='gameSetup' element={
                         <GameSetup
-                            setGameArray={setGameArray}
                             userState={userState}
                             dispatchGameState={dispatchGameState}
                         >
                             <AuthWrapper />
                             <JoiningHosting
                                 userState={userState}
-                                gameArray={gameArray}
+                                dispatchGameState={dispatchGameState}
                             />
                             <CharacterSelect
                                 userState={userState}
@@ -163,11 +166,15 @@ const AppRouter = () => {
                                 dispatchCharState={dispatchCharState}
                                 charArray={charArray}
                             />
-                            <PartyMembers
+                            <PlayingAs
                                 userState={userState}
-                                gameState={gameState}
-
+                                charState={charState}
                             />
+                            <RestOfParty
+                                gameState={gameState}
+                            />
+
+
                             <ChallengeSelect
                                 userState={userState}
                                 gameState={gameState}
@@ -180,10 +187,6 @@ const AppRouter = () => {
                         element={
                             <div>
                                 <AuthWrapper />
-                                <JoiningHosting
-                                    userState={userState}
-                                    gameArray={gameArray}
-                                />
                                 <CharacterSheet
                                     charArray={charArray}
                                     charState={charState}
@@ -278,6 +281,11 @@ const AppRouter = () => {
 export default AppRouter;
 
 
+
+// <JoiningHosting
+//     userState={userState}
+//     dispatchGameState={dispatchGameState}
+// />
 
 
 // <Route path='Bard/*'

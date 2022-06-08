@@ -1,12 +1,11 @@
 import React from "react";
-import { setDwarfPriestOrigin, setUndeadWizardOrigin1, setUndeadWizardOrigin2, setUndeadWizardOrigin3 } from "../../../../../../actions/charActions";
-import { longDescription, raceCodes } from "../../../../../classes/charInfo";
-import { wizardRaceStingerLines } from "../../../../../classes/wizardInfo";
+import { setUndeadWizardOrigin1, setUndeadWizardOrigin2, setUndeadWizardOrigin3 } from "../../../../../../actions/charActions";
+import { longDescription, raceTitles } from "../../../../../classes/charInfo";
 
 const WizardRaceStingers = ({ charState, dispatchCharState }) => (
     <div>
         <div id="undeadWizard">
-            {charState.raceCode === 14 &&
+            {charState.raceCode === raceTitles.indexOf('Undead') &&
                 <div>
                     <input
                         value={charState.undeadWizardOrigin1}
