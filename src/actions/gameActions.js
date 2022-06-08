@@ -1,3 +1,6 @@
+import { push, ref, remove, update } from "firebase/database";
+import { db } from "../firebase/firebase";
+
 // Local Actions
 export const updateGameState = (currentActiveGame) => ({
     type: 'UPDATE_GAME_STATE',
@@ -30,3 +33,43 @@ export const updatePlayerList = (playerList) => ({
 export const clearPlayerList = () => ({
     type: 'CLEAR_PLAYER_LIST'
 })
+
+// Cloud Actions
+
+// const actuallySaveGame = (uid, key, gameData) => {
+
+// }
+
+export const startGetKey = (uid) => {
+    return push(ref(db, 'savedGames/' + uid)).key;
+}
+
+export const startSaveGame = (uid, key, gameData) => {
+    const updates = {}
+    updates['savedGames/' + uid + '/' + key] = { ...gameData, key }
+    update(ref(db), updates)
+
+        .catch((error) => {
+            console.log('Did not start Save Game, error: ', error)
+        })
+}
+
+export const startRemoveSavedGame = (uid, key) => {
+    remove(ref(db, 'savedGames/' + uid + '/' + key))
+        .catch((error) => {
+            console.log('Did not remove Saved Game, error: ', error)
+        })
+}
+
+export const startResumeSavedGame = (gameID, gameData) => {
+    const updates = {}
+    updates['activeGames/' + gameID + '/challengesObject'] = { ...gameData.challengesObject }
+    updates['activeGames/' + gameID + '/surprises'] = gameData.surprises
+    updates['activeGames/' + gameID + '/progress'] = { ...gameData.progress }
+    updates['activeGames/' + gameID + '/teamHealth'] = gameData.teamHealth
+    update(ref(db), updates)
+
+        .catch((error) => {
+            console.log('Did not start Load Game, error: ', error)
+        })
+}

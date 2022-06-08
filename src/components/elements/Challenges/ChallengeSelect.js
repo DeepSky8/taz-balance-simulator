@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer} from "react";
+import React, { useEffect, useReducer } from "react";
 import {
     setReceivedVillainObject,
     setReceivedRelicObject,
@@ -16,6 +16,7 @@ import { villainObjectsArray } from "./mission-elements/m-villain";
 import { relicObjectsArray } from "./mission-elements/m-relic";
 import { locationObjectsArray } from "./mission-elements/m-location";
 import challengeTransformer from "../../functions/challengeTransformer";
+import { Link } from "react-router-dom";
 
 const ChallengeSelect = ({ gameState, userState }) => {
     const [challengeState, dispatchChallengeState] = useReducer(challengeSelectReducer, defaultChallengeState)
@@ -145,6 +146,11 @@ const ChallengeSelect = ({ gameState, userState }) => {
                         challengeDispatch={locationDispatch}
                         joining={userState.joiningGame}
                     />}
+            </div>
+
+            <div>
+                <Link to='/savedGames'>Saved Games</Link>
+
             </div>
         </div>
     )

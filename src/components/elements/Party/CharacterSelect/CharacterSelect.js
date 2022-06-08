@@ -30,7 +30,7 @@ const CharacterSelect = ({ userState, charState, dispatchCharState, charArray })
                         navigate('/characterSheet/newCharacter')
                 }}>
                     {charArray.length > 0 ?
-                        'View/edit all characters'
+                        'Your Saved Characters'
                         :
                         'Create a character'}
                 </button>

@@ -18,6 +18,11 @@ export const GameSetup = ({
     children
 }) => {
 
+
+    // When the local gameID changes, either start a listener to get the host
+    // and then start a listener to get the participating players.
+    // If the Active Game record no longer exists, 
+    // get rid of the stored gameID and clear the local player list
     useEffect(() => {
 
         if (userState.gameID) {
@@ -26,7 +31,8 @@ export const GameSetup = ({
                     dispatchGameState(updateGameState(snapshot.val()))
                     // dispatchGameState(updateChallengesObject(snapshot.val()))
                 } else {
-                    startRemoveGameID(auth.currentUser.uid)
+                    // startRemoveGameID(auth.currentUser.uid)
+                    console.log('would have started StartRemoveGameID with auth: ', auth.currentUser.uid)
                     dispatchGameState(clearPlayerList())
                 }
             })
@@ -35,10 +41,10 @@ export const GameSetup = ({
 
                 if (snapshot.exists()) {
                     const playerList = [];
-                    snapshot.forEach((player) => {playerList.push(player.val())})
+                    snapshot.forEach((player) => { playerList.push(player.val()) })
                     const otherPlayers = playerList.filter(player => player.uid !== auth.currentUser.uid)
                     dispatchGameState(updatePlayerList(otherPlayers))
-                    
+
                 }
 
             })
@@ -50,9 +56,7 @@ export const GameSetup = ({
         }
     }, [userState.gameID])
 
-    // useEffect(() => {
 
-    // }, [userState.gameID])
 
     // If this user is associated with an Active Game
     // start a listener on the list of characters associated 
@@ -99,7 +103,6 @@ export const GameSetup = ({
 
     return (
         <div>
-            <p>Game Setup page</p>
             {children}
         </div>
     )

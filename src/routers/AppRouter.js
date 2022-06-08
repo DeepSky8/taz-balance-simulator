@@ -41,6 +41,7 @@ import CharName from '../components/elements/Party/AttributePickerElements/CharN
 import { startJoinActiveGame } from '../actions/joiningActions';
 import PlayingAs from "../components/elements/Party/partyMembers/PlayingAs";
 import RestOfParty from "../components/elements/Party/partyMembers/RestOfParty";
+import SavedGames from "../components/elements/Challenges/savedGames/SavedGames";
 export const history = createBrowserHistory();
 
 
@@ -86,6 +87,8 @@ const AppRouter = () => {
         })
     }, [])
 
+
+
     // Listen to the cloud list of characters created by this user
     // When the list changes, set the new list in local storage
     useEffect(() => {
@@ -104,6 +107,8 @@ const AppRouter = () => {
 
     }, [])
 
+
+
     // Update the Character state with changes made to the currently-selected
     // character when then cloud array of characters changes
     useEffect(() => {
@@ -119,6 +124,8 @@ const AppRouter = () => {
         }
     }, [userState.currentCharacterID, charArray])
 
+
+    // Join an active game if both a character has been selected and a game ID has been entered
     useEffect(() => {
         if (userState.currentCharacterID && gameState.gameID) {
             startJoinActiveGame(auth.currentUser.uid, gameState.gameID, userState.currentCharacterID)
@@ -160,12 +167,12 @@ const AppRouter = () => {
                                 userState={userState}
                                 dispatchGameState={dispatchGameState}
                             />
-                            <CharacterSelect
+                            <ChallengeSelect
                                 userState={userState}
-                                charState={charState}
-                                dispatchCharState={dispatchCharState}
-                                charArray={charArray}
+                                gameState={gameState}
                             />
+
+
                             <PlayingAs
                                 userState={userState}
                                 charState={charState}
@@ -174,11 +181,13 @@ const AppRouter = () => {
                                 gameState={gameState}
                             />
 
-
-                            <ChallengeSelect
+                            <CharacterSelect
                                 userState={userState}
-                                gameState={gameState}
+                                charState={charState}
+                                dispatchCharState={dispatchCharState}
+                                charArray={charArray}
                             />
+
 
                         </GameSetup>
 
@@ -237,6 +246,11 @@ const AppRouter = () => {
                             </div>
                         }
                     >
+                    </Route>
+
+                    <Route path={'/savedGames'}
+                        element={<SavedGames />}>
+
                     </Route>
 
 
