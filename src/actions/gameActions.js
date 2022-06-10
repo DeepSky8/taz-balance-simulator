@@ -61,12 +61,10 @@ export const startRemoveSavedGame = (uid, key) => {
         })
 }
 
-export const startResumeSavedGame = (gameID, gameData) => {
+export const startResumeSavedGame = (gameID, key, challengesObject) => {
     const updates = {}
-    updates['activeGames/' + gameID + '/challengesObject'] = { ...gameData.challengesObject }
-    updates['activeGames/' + gameID + '/surprises'] = gameData.surprises
-    updates['activeGames/' + gameID + '/progress'] = { ...gameData.progress }
-    updates['activeGames/' + gameID + '/teamHealth'] = gameData.teamHealth
+    updates['activeGames/' + gameID + '/key'] = key
+    updates['activeGames/' + gameID + '/challengesObject'] = { ...challengesObject }
     update(ref(db), updates)
 
         .catch((error) => {

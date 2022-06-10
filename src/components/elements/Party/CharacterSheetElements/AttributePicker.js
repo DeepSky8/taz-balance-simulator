@@ -1,15 +1,5 @@
-import React, { useEffect } from "react";
-import {
-    setCharAttributeCode,
-    setCharClassCode,
-    setCharToolCode,
-    setNoCurrentChar
-} from "../../../../actions/charActions";
-
-import { history } from "../../../../routers/AppRouter";
-import { charClassTitles, charTitles } from "../../../classes/charInfo";
-
-
+import React from "react";
+import { charTitles } from "../../../classes/charInfo";
 
 const AttributePicker = ({ charState, children }) => {
     // let classURL = history.location.pathname.split("/")[2]

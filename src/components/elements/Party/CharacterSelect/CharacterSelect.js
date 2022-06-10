@@ -22,31 +22,36 @@ const CharacterSelect = ({ userState, charState, dispatchCharState, charArray })
     }
 
     return (
-        <div>
-            <div>
-                <button onClick={() => {
-                    charArray.length > 0 ? dispatchCharState(toggleCharDisplay())
-                        :
-                        navigate('/characterSheet/newCharacter')
-                }}>
-                    {charArray.length > 0 ?
-                        'Your Saved Characters'
-                        :
-                        'Create a character'}
-                </button>
-            </div>
-
-            {charState.displayChars &&
-                <CharactersList
-                    charDispatch={charDispatch}
-                    charArray={charArray}
-                    viewEdit={viewEdit}
-                    deleteChar={deleteChar}
-                />
-            }
-        </div>
-
+        <CharactersList
+            charDispatch={charDispatch}
+            charArray={charArray}
+            viewEdit={viewEdit}
+            deleteChar={deleteChar}
+        />
     )
 }
 
-export default CharacterSelect  
+export default CharacterSelect
+
+
+// <button onClick={() => {
+//     charArray.length > 0 ? dispatchCharState(toggleCharDisplay())
+//         :
+//         navigate('/characterSheet/newCharacter')
+// }}>
+//     {charArray.length > 0 ?
+//         'Your Saved Characters'
+//         :
+//         'Create a character'}
+// </button>
+
+
+
+// {charState.displayChars &&
+//     <CharactersList
+//         charDispatch={charDispatch}
+//         charArray={charArray}
+//         viewEdit={viewEdit}
+//         deleteChar={deleteChar}
+//     />
+// }

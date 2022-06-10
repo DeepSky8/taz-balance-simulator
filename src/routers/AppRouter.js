@@ -2,11 +2,7 @@ import React, { useEffect, useReducer, useState } from "react";
 import { Routes, Route } from 'react-router-dom';
 import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
 import { createBrowserHistory } from "history";
-import {
-    off,
-    onValue,
-    ref,
-} from "firebase/database";
+import { off, onValue, ref, } from "firebase/database";
 import { defaultUserProfile, userReducer } from "../reducers/userReducer";
 import { defaultGameState, gameReducer } from "../reducers/gameReducer";
 import { defaultCharState, charReducer } from "../reducers/charReducer";
@@ -16,7 +12,6 @@ import ChallengeSelect from "../components/elements/Challenges/ChallengeSelect";
 import ChooseMode from "../components/Authentication/ChooseMode";
 import FirebaseSignIn from '../components/Authentication/FirebaseSignIn';
 import GameSetup from "../components/GameSetup/GameSetup";
-import JoiningHosting from "../components/GameSetup/JoiningHosting";
 import NotFoundPage from "../components/Authentication/NotFoundPage";
 import PrivacyPolicy from "../components/Authentication/PrivacyPolicy";
 import Tos from "../components/Authentication/Tos";
@@ -42,6 +37,8 @@ import { startJoinActiveGame } from '../actions/joiningActions';
 import PlayingAs from "../components/elements/Party/partyMembers/PlayingAs";
 import RestOfParty from "../components/elements/Party/partyMembers/RestOfParty";
 import SavedGames from "../components/elements/Challenges/savedGames/SavedGames";
+import NewLoadWrapper from "../components/elements/Challenges/NewLoadWrapper";
+import GameInstructions from "../components/GameSetup/GameInstructions";
 export const history = createBrowserHistory();
 
 
@@ -51,7 +48,7 @@ const AppRouter = () => {
     const [gameState, dispatchGameState] = useReducer(gameReducer, defaultGameState)
     const [userState, dispatchUserState] = useReducer(userReducer, defaultUserProfile)
     const [charState, dispatchCharState] = useReducer(charReducer, defaultCharState)
-
+    const [savedGameArray, setSavedGameArray] = useState([])
 
     // This listener updates the local state to 
     // mirror the user account in the cloud
@@ -110,14 +107,11 @@ const AppRouter = () => {
 
 
     // Update the Character state with changes made to the currently-selected
-    // character when then cloud array of characters changes
+    // character when the cloud array of characters changes
     useEffect(() => {
         if (userState.currentCharacterID) {
             let charObject = charArray.find(character =>
                 character.charID === userState.currentCharacterID)
-            // console.log('charArray: ', charArray)
-            // console.log('charObject', charObject)
-            // console.log('currentCharacterID', userState.currentCharacterID)
             dispatchCharState(setCharState(charObject))
         } else {
             dispatchCharState(setNoCurrentChar())
@@ -156,42 +150,48 @@ const AppRouter = () => {
             <div>
                 <Routes>
                     <Route path="/" element={<Welcome />} />
-                    <Route path='chooseMode' element={<ChooseMode />} />
-                    <Route path='gameSetup' element={
+                    <Route path='/chooseMode/' element={<ChooseMode />} />
+                    <Route path='/gameSetup/*' element={
                         <GameSetup
                             userState={userState}
                             dispatchGameState={dispatchGameState}
-                        >
-                            <AuthWrapper />
-                            <JoiningHosting
-                                userState={userState}
-                                dispatchGameState={dispatchGameState}
-                            />
-                            <ChallengeSelect
-                                userState={userState}
-                                gameState={gameState}
-                            />
+                            gameState={gameState}
+                            charState={charState}
+                            setSavedGameArray={setSavedGameArray}
+                        />
+                    } >
+                        <Route
+                            path="gameInstructions"
+                            element={<GameInstructions />}
+                        />
+                        <Route
+                            path='selectCharacter'
+                            element={
+                                <CharacterSelect
+                                    userState={userState}
+                                    charState={charState}
+                                    dispatchCharState={dispatchCharState}
+                                    charArray={charArray}
+                                />
+                            } />
+                        <Route
+                            path='selectChallenges'
+                            element={
+                                <NewLoadWrapper
+                                    userState={userState}
+                                    gameState={gameState}
+                                    savedGameArray={savedGameArray}
+                                />
+                            } />
+                        <Route
+                            path='restOfParty'
+                            element={
+                                <RestOfParty
+                                    gameState={gameState}
+                                />
+                            } />
+                    </Route>
 
-
-                            <PlayingAs
-                                userState={userState}
-                                charState={charState}
-                            />
-                            <RestOfParty
-                                gameState={gameState}
-                            />
-
-                            <CharacterSelect
-                                userState={userState}
-                                charState={charState}
-                                dispatchCharState={dispatchCharState}
-                                charArray={charArray}
-                            />
-
-
-                        </GameSetup>
-
-                    } />
                     <Route path="/characterSheet/*"
                         element={
                             <div>
@@ -294,6 +294,17 @@ const AppRouter = () => {
 
 export default AppRouter;
 
+
+
+
+// <ChallengeSelect
+//     userState={userState}
+//     gameState={gameState}
+// >
+//     <SavedGames
+//         gameState={gameState}
+//     />
+// </ChallengeSelect>
 
 
 // <JoiningHosting

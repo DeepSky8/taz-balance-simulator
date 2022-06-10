@@ -73,7 +73,7 @@ export const startSaveGameID = (uid, gameID) => {
 export const startRegisterGameID = (uid, gameID) => {
     const updates = {};
     updates['activeGames/' + gameID] = { host: uid, gameID };
-    updates['users/' + uid + '/host'] = uid;
+    // updates['users/' + uid + '/host'] = true;
     update(ref(db), updates)
         .then(() => {
             startSaveGameID(uid, gameID)
@@ -84,16 +84,14 @@ export const startRegisterGameID = (uid, gameID) => {
 }
 
 
-// Clears the cloud record location under activeGames that matches the UID
+// Clears the activeGame with local userState gameID
 // then sets the gameID under the user UID to null
 export const startRemoveGameCode = (uid, gameID) => {
-    remove(ref(db, 'activeGames/' + gameID))
-        .then(() => {
-            const updates = {}
-            updates['users/' + uid + '/host'] = null
-            updates['users/' + uid + '/gameID'] = null
-            update(ref(db), updates)
-        })
+    const updates = {};
+    updates['activeGames/' + gameID] = null;
+    // updates['users/' + uid + '/host'] = null
+    updates['users/' + uid + '/gameID'] = null
+    update(ref(db), updates)
         .catch((error) => {
             console.log('Error when cleaning game array in cloud:', error)
         })

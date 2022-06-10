@@ -9,7 +9,7 @@ const defaultCharState = {
     assistCode: 7,
     charNotes: '',
     charKostco: [{}],
-    displayChars: false,
+    displayChars: true,
     questCount: 0,
     humanBardBand: '',
     robotBardCreator: '',

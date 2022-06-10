@@ -5,39 +5,49 @@ import { startRemoveSavedGame, startResumeSavedGame } from "../../../../actions/
 import { auth, db } from "../../../../firebase/firebase";
 import SavedGame from "./SavedGame";
 
-const SavedGames = ({ gameState }) => {
-    const [savedGameArray, setSavedGameArray] = useState([])
+const SavedGames = ({ gameState, toggleGameType, gameTypeButtonText, savedGameArray }) => {
+    const [hosting, setHosting] = useState(false)
 
     useEffect(() => {
-        onValue(ref(db, 'savedGames/' + auth.currentUser.uid), (snapshot) => {
-            const userSavedGames = [];
-            if (snapshot.exists()) {
-                snapshot.forEach((savedGame) => { userSavedGames.push(savedGame.val()) })
-            }
-            setSavedGameArray(userSavedGames)
+        setHosting(gameState.gameID && gameState.host === auth.currentUser.uid)
+    }, [gameState.gameID])
 
-        })
+    // useEffect(() => {
+    //     onValue(ref(db, 'savedGames/' + auth.currentUser.uid), (snapshot) => {
+    //         const userSavedGames = [];
+    //         if (snapshot.exists()) {
+    //             snapshot.forEach((savedGame) => { userSavedGames.push(savedGame.val()) })
+    //         }
+    //         setSavedGameArray(userSavedGames)
 
-        return () => {
-            off(ref(db, 'savedGames/' + auth.currentUser.uid))
-        }
-    }, [])
+    //     })
 
-    const loadGame = (savedGame) => { 
-        if(gameState.gameID){
-            startResumeSavedGame(gameState.gameID, savedGame)
+    //     return () => {
+    //         off(ref(db, 'savedGames/' + auth.currentUser.uid))
+    //     }
+    // }, [])
+
+    const loadGame = (savedGameKey, challengesObject) => {
+        if (hosting) {
+            startResumeSavedGame(gameState.gameID, savedGameKey, challengesObject)
         }
     }
 
     return (
         <div>
-
+            <button
+                onClick={toggleGameType}
+            >
+                {gameTypeButtonText}
+            </button>
+            <h4>Your Saved Games:</h4>
             {savedGameArray.map((savedGame) => {
                 return <SavedGame
                     key={savedGame.key}
                     savedGame={savedGame}
                     removeSavedGame={() => { startRemoveSavedGame(auth.currentUser.uid, savedGame.key) }}
-                    resumeSavedGame={() => { loadGame(savedGame) }}
+                    resumeSavedGame={() => { loadGame(savedGame.key, savedGame.challengesObject) }}
+                    hosting={hosting}
                 />
             })}
 

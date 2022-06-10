@@ -4,7 +4,9 @@ import { locationObjectsArray } from "../mission-elements/m-location";
 import { relicObjectsArray } from "../mission-elements/m-relic";
 import { villainObjectsArray } from "../mission-elements/m-villain";
 
-const SavedGame = ({ savedGame, removeSavedGame, resumeSavedGame }) => {
+const SavedGame = ({ savedGame, removeSavedGame, resumeSavedGame, hosting }) => {
+    const resumeMission = 'Resume Mission'
+    const notHosting = 'Not Hosting'
 
     const villain = challengeTransformer(villainObjectsArray, savedGame.challengesObject.villainCode)
     const relic = challengeTransformer(relicObjectsArray, savedGame.challengesObject.relicCode)
@@ -18,7 +20,16 @@ const SavedGame = ({ savedGame, removeSavedGame, resumeSavedGame }) => {
             <div>Relic challenges completed: {savedGame.progress.relic}</div>
             <div>Location challenges completed: {savedGame.progress.location}</div>
             <div>Team health remaining: {savedGame.teamHealth}</div>
-            <button onClick={resumeSavedGame}>Resume mission</button>
+            <button
+                onClick={resumeSavedGame}
+                disabled={!hosting}
+            >
+                {hosting ?
+                    resumeMission
+                    :
+                    notHosting
+                }
+            </button>
             <button onClick={removeSavedGame}>Abandon Mission Forever</button>
         </div>
     )

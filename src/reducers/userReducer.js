@@ -3,27 +3,30 @@ const defaultUserProfile = {
     anonymousUID: null,
     currentCharacterID: null,
     gameID: '',
-    host: null,
+    // host: null,
     isAnonymous: true,
     joiningGame: true,
     lastActivity: 0,
     adminCode: null,
-    savedGamesArray: [{
-        key: null,
-        villainCode: null,
-        relicCode: null,
-        locationCode: null,
-        surprises: [{}],
-        progress: {
-            villain: '',
-            relic: '',
-            location: ''
-        },
-        teamHealth: ''
-    }],
+    savedGamesArray: [],
     uid: null,
 
 }
+
+// Game Object
+// {
+//     key: null,
+//     villainCode: null,
+//     relicCode: null,
+//     locationCode: null,
+//     surprises: [{}],
+//     progress: {
+//         villain: '',
+//         relic: '',
+//         location: ''
+//     },
+//     teamHealth: ''
+// }
 
 const userReducer = (state, action) => {
     switch (action.type) {

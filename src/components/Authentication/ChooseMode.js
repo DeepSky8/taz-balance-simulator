@@ -10,7 +10,7 @@ const ChooseMode = () => {
         if (!auth.currentUser.isAnonymous) {
             signInAnonymously(auth)
         }
-        navigate('/gameSetup')
+        navigate('/gameSetup/gameInstructions')
     }
 
     const signIn = () => {

@@ -16,9 +16,8 @@ import { villainObjectsArray } from "./mission-elements/m-villain";
 import { relicObjectsArray } from "./mission-elements/m-relic";
 import { locationObjectsArray } from "./mission-elements/m-location";
 import challengeTransformer from "../../functions/challengeTransformer";
-import { Link } from "react-router-dom";
 
-const ChallengeSelect = ({ gameState, userState }) => {
+const ChallengeSelect = ({ gameState, userState, toggleGameType, gameTypeButtonText, savedGameArray }) => {
     const [challengeState, dispatchChallengeState] = useReducer(challengeSelectReducer, defaultChallengeState)
 
     const toggleVillainDisplay = () => {
@@ -148,10 +147,13 @@ const ChallengeSelect = ({ gameState, userState }) => {
                     />}
             </div>
 
-            <div>
-                <Link to='/savedGames'>Saved Games</Link>
-
-            </div>
+            {savedGameArray.length > 0 &&
+                <button
+                    onClick={toggleGameType}
+                >
+                    {gameTypeButtonText}
+                </button>
+            }
         </div>
     )
 }
