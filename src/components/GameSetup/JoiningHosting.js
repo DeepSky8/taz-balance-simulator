@@ -12,7 +12,6 @@ import {
     toggleJoiningGame,
     clearGameID,
     startExitActiveGame,
-    startJoinActiveGame,
 } from '../../actions/joiningActions';
 import { auth, db } from "../../firebase/firebase";
 import { off, onValue, ref } from "firebase/database";
@@ -87,14 +86,7 @@ const JoiningHosting = ({ userState, dispatchGameState, gameArray }) => {
                 startSaveGameID(auth.currentUser.uid, gameID)
                 // A useEffect on GameSetup will monitor the gameID on userState
                 // and update the active game with the the appropriate player information
-
-                // AND ALSO add the UID and current character key to the list of players
-                // on the Active Game
-                startJoinActiveGame(
-                    auth.currentUser.uid,
-                    joinHost.gameID,
-                    userState.currentCharacterID
-                )
+                // (now including the player class codes, to ensure no duplicate classes)
             } else if (
                 // OTHERWISE if the player is hosting a game
                 // AND is not anonymous

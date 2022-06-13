@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { auth, db } from "../../firebase/firebase";
 import { off, onValue, ref, } from "firebase/database";
-import { clearGameState, clearPlayerList, updateGameState, updatePlayerList, } from "../../actions/gameActions";
+import { clearGameState, clearPlayerClassesArray, clearPlayerList, startJoinActiveGame, updateGameHost, updateGameState, updatePlayerClassesArray, updatePlayerList, } from "../../actions/gameActions";
 import { startRemoveGameID } from "../../actions/userActions";
 import AuthWrapper from "../Authentication/AuthWrapper";
 import JoiningHosting from "./JoiningHosting";
@@ -43,39 +43,59 @@ export const GameSetup = ({ dispatchGameState, userState, gameState, charState, 
         }
     }, [])
 
-    // Join Active Game
+    // Establish listeners on Active Game
     useEffect(() => {
         if (userState.gameID) {
+            console.log('userState.gameID is: ', userState.gameID)
             // When the local gameID changes, if the local gameID exists
             // start a listener to get the game information
             onValue(ref(db, 'activeGames/' + userState.gameID), (snapshot) => {
                 if (snapshot.exists()) {
                     dispatchGameState(updateGameState(snapshot.val()))
-                    // dispatchGameState(updateChallengesObject(snapshot.val()))
+                    // dispatchGameState(updateGameHost(snapshot.val()))
                 } else {
                     dispatchGameState(clearGameState())
                     off(ref(db, 'activeGames/' + userState.gameID))
                 }
             })
             // and then start a listener to get the participating players.
-            onValue(ref(db, 'activeGames/' + userState.gameID + '/playerList'), snapshot => {
+            onValue(ref(db, 'activeGames/' + userState.gameID + '/playerList'),
+                snapshot => {
 
-                if (snapshot.exists()) {
-                    const playerList = [];
-                    snapshot.forEach((player) => { playerList.push(player.val()) })
-                    const otherPlayers = playerList.filter(player => player.uid !== auth.currentUser.uid)
-                    dispatchGameState(updatePlayerList(otherPlayers))
-                } else {
-                    dispatchGameState(clearPlayerList())
-                    off(ref(db, 'activeGames/' + userState.gameID + '/playerList'))
-                }
+                    if (snapshot.exists()) {
+                        const playerList = [];
+                        snapshot.forEach((player) => {
+                            playerList.push(player.val());
+                        })
+                        const otherPlayers = playerList.filter(player => player.uid !== auth.currentUser.uid)
+                        dispatchGameState(updatePlayerList(otherPlayers))
+                        console.log('other players list is: ', otherPlayers)
+                    } 
+                    else {
+                        console.log('dispatched clearPlayerList')
+                        dispatchGameState(clearPlayerList())
+                        off(ref(db, 'activeGames/' + userState.gameID + '/playerList'))
+                    }
 
-            })
+                })
+            // and then start a listener to get the current classes in the party
+            onValue(ref(db, 'activeGames/' + userState.gameID + '/classStorage'),
+                snapshot => {
+                    if (snapshot.exists()) {
+                        const updatedClassArray = [];
+                        snapshot.forEach((playerclass) => {
+                            updatedClassArray.push(playerclass.val())
+                        })
+                        dispatchGameState(updatePlayerClassesArray(updatedClassArray))
+                    } else {
+                        dispatchGameState(clearPlayerClassesArray())
+                        off(ref(db, 'activeGames/' + userState.gameID + '/classStorage'))
+                    }
+                })
+        } else {
+            console.log('clearing Game State')
+            dispatchGameState(clearGameState())
         }
-
-        // else {
-        //     dispatchGameState(clearGameState())
-        // }
 
         // If the Active Game record no longer exists, 
         // get rid of the stored gameID and clear the local player list
@@ -90,8 +110,28 @@ export const GameSetup = ({ dispatchGameState, userState, gameState, charState, 
         return () => {
             off(ref(db, 'activeGames/' + userState.gameID))
             off(ref(db, 'activeGames/' + userState.gameID + '/playerList'))
+            off(ref(db, 'activeGames/' + userState.gameID + '/classStorage'))
         }
     }, [userState.gameID])
+
+    // Join an active game when a character has been selected and gameID entered
+    // This must occurr on AppRouter so that the whole app is rerendered
+    useEffect(() => {
+
+        // Add the current character class code to the active game 
+        // and the UID and current character key to the list of 
+        // players on the Active Game
+
+        if (userState.currentCharacterID && userState.gameID) {
+            startJoinActiveGame(
+                auth.currentUser.uid,
+                userState.gameID,
+                userState.currentCharacterID,
+                charState.classCode
+            )
+        }
+
+    }, [userState.currentCharacterID, userState.gameID])
 
     // Get list of saved games for this user
     useEffect(() => {
@@ -108,8 +148,6 @@ export const GameSetup = ({ dispatchGameState, userState, gameState, charState, 
             off(ref(db, 'savedGames/' + auth.currentUser.uid))
         }
     }, [])
-
-    useEffect(() => { },[])
 
     return (
         <div>

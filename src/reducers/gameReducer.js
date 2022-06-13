@@ -5,9 +5,10 @@ const defaultGameState = {
         relicCode: null,
         locationCode: null
     },
+    classArray: [],
     gameID: null,
     host: null,
-    surprises: [{}],
+    surprises: [],
     progress: {
         villain: null,
         relic: null,
@@ -23,7 +24,8 @@ const gameReducer = (state, action) => {
             return {
                 ...defaultGameState,
                 ...action.currentActiveGame,
-                playerList: state.playerList
+                playerList: state.playerList,
+                classArray: state.classArray
             }
         case 'CLEAR_GAME_STATE':
             return {
@@ -59,6 +61,16 @@ const gameReducer = (state, action) => {
             return {
                 ...state,
                 playerList: []
+            }
+        case 'UPDATE_CLASS_ARRAY':
+            return {
+                ...state,
+                classArray: action.classArray
+            }
+        case 'CLEAR_PLAYER_CLASSES':
+            return {
+                ...state,
+                classArray: []
             }
         default:
             return state

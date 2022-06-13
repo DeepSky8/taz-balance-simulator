@@ -33,12 +33,12 @@ import AssistStingers from '../components/elements/Party/AttributePickerElements
 import SpecialAbility from '../components/elements/Party/AttributePickerElements/SpecialAbility';
 import CharStats from '../components/elements/Party/AttributePickerElements/CharStats';
 import CharName from '../components/elements/Party/AttributePickerElements/CharName';
-import { startJoinActiveGame } from '../actions/joiningActions';
 import PlayingAs from "../components/elements/Party/partyMembers/PlayingAs";
 import RestOfParty from "../components/elements/Party/partyMembers/RestOfParty";
 import SavedGames from "../components/elements/Challenges/savedGames/SavedGames";
 import NewLoadWrapper from "../components/elements/Challenges/NewLoadWrapper";
 import GameInstructions from "../components/GameSetup/GameInstructions";
+import { startJoinActiveGame } from "../actions/gameActions";
 export const history = createBrowserHistory();
 
 
@@ -117,15 +117,6 @@ const AppRouter = () => {
             dispatchCharState(setNoCurrentChar())
         }
     }, [userState.currentCharacterID, charArray])
-
-
-    // Join an active game if both a character has been selected and a game ID has been entered
-    useEffect(() => {
-        if (userState.currentCharacterID && gameState.gameID) {
-            startJoinActiveGame(auth.currentUser.uid, gameState.gameID, userState.currentCharacterID)
-        }
-
-    }, [userState.currentCharacterID, gameState.gameID])
 
     // useEffect(() => {
     //     console.log('userState changed: ', userState)

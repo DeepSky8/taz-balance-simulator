@@ -51,13 +51,6 @@ export const startSetJoiningGame = (uid, joiningGame) => {
         })
 }
 
-export const startJoinActiveGame = (uid, gameID, currentCharacterID) => {
-    const updates = {}
-    updates['activeGames/' + gameID + '/playerList/' + uid + '/uid'] = uid
-    updates['activeGames/' + gameID + '/playerList/' + uid + '/currentCharacterID'] = currentCharacterID
-    update(ref(db), updates)
-}
-
 export const startSaveGameID = (uid, gameID) => {
     const updates = {}
 

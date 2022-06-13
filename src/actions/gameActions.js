@@ -30,6 +30,15 @@ export const updatePlayerList = (playerList) => ({
     playerList
 })
 
+export const updatePlayerClassesArray = (classArray) => ({
+    type: 'UPDATE_CLASS_ARRAY',
+    classArray
+})
+
+export const clearPlayerClassesArray = () => ({ 
+    type: 'CLEAR_PLAYER_CLASSES'
+})
+
 export const clearPlayerList = () => ({
     type: 'CLEAR_PLAYER_LIST'
 })
@@ -70,4 +79,12 @@ export const startResumeSavedGame = (gameID, key, challengesObject) => {
         .catch((error) => {
             console.log('Did not start Load Game, error: ', error)
         })
+}
+
+export const startJoinActiveGame = (uid, gameID, currentCharacterID, classCode) => {
+    const updates = {}
+    updates['activeGames/' + gameID + '/playerList/' + uid + '/uid'] = uid
+    updates['activeGames/' + gameID + '/playerList/' + uid + '/currentCharacterID'] = currentCharacterID
+    updates['activeGames/' + gameID + '/classStorage/' + uid] = classCode
+    update(ref(db), updates)
 }
