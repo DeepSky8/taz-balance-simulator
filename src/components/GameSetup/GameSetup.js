@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { auth, db } from "../../firebase/firebase";
 import { off, onValue, ref, } from "firebase/database";
-import { clearPlayerList, updateGameState, updatePlayerList, } from "../../actions/gameActions";
+import { clearGameState, clearPlayerList, updateGameState, updatePlayerList, } from "../../actions/gameActions";
 import { startRemoveGameID } from "../../actions/userActions";
 import AuthWrapper from "../Authentication/AuthWrapper";
 import JoiningHosting from "./JoiningHosting";
@@ -9,6 +9,7 @@ import ChallengeDisplay from "../elements/Challenges/ChallengeDisplay";
 import { Outlet } from "react-router-dom";
 import CharacterChallengeNavBar from "./CharacterChallengeNavBar";
 import PlayingAs from "../elements/Party/partyMembers/PlayingAs";
+import StartGame from "./StartGame";
 
 export const GameSetup = ({ dispatchGameState, userState, gameState, charState, setSavedGameArray }) => {
     const [gameArray, setGameArray] = useState([])
@@ -30,6 +31,10 @@ export const GameSetup = ({ dispatchGameState, userState, gameState, charState, 
             // when the listener perceives a change
             setGameArray(updatedArray)
 
+            // if (!updatedArray.includes(userState.gameID)) {
+            //     // console.log('Clearing cloud gameID would have fired')
+            //     startRemoveGameID(auth.currentUser.uid)
+            // }
         })
 
         return () => {
@@ -47,6 +52,9 @@ export const GameSetup = ({ dispatchGameState, userState, gameState, charState, 
                 if (snapshot.exists()) {
                     dispatchGameState(updateGameState(snapshot.val()))
                     // dispatchGameState(updateChallengesObject(snapshot.val()))
+                } else {
+                    dispatchGameState(clearGameState())
+                    off(ref(db, 'activeGames/' + userState.gameID))
                 }
             })
             // and then start a listener to get the participating players.
@@ -57,10 +65,17 @@ export const GameSetup = ({ dispatchGameState, userState, gameState, charState, 
                     snapshot.forEach((player) => { playerList.push(player.val()) })
                     const otherPlayers = playerList.filter(player => player.uid !== auth.currentUser.uid)
                     dispatchGameState(updatePlayerList(otherPlayers))
+                } else {
+                    dispatchGameState(clearPlayerList())
+                    off(ref(db, 'activeGames/' + userState.gameID + '/playerList'))
                 }
 
             })
         }
+
+        // else {
+        //     dispatchGameState(clearGameState())
+        // }
 
         // If the Active Game record no longer exists, 
         // get rid of the stored gameID and clear the local player list
@@ -94,6 +109,7 @@ export const GameSetup = ({ dispatchGameState, userState, gameState, charState, 
         }
     }, [])
 
+    useEffect(() => { },[])
 
     return (
         <div>
@@ -114,7 +130,7 @@ export const GameSetup = ({ dispatchGameState, userState, gameState, charState, 
 
             />
             <Outlet />
-            Start Game button goes here
+            <StartGame />
         </div>
     )
 

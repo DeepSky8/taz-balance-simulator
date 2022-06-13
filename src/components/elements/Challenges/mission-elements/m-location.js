@@ -18,7 +18,7 @@ const locationObjectsArray = [
     {
         challengeName: 'The Temple',
         challengeCode: 'l1',
-        challengeFlavor: `A foul presence has corrupted this grand temple, and sinister forces lurk in the gilded shadows. It might have a name like "The Temple of Absolute, Certain Death" but it's probably not that BaseAudioContext.`
+        challengeFlavor: `A foul presence has corrupted this grand temple, and sinister forces lurk in the gilded shadows. It might have a name like "The Temple of Absolute, Certain Death" but it's probably not that bad.`
     },
     {
         challengeName: 'The Tomb',

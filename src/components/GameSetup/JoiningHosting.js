@@ -28,6 +28,7 @@ const JoiningHosting = ({ userState, dispatchGameState, gameArray }) => {
     useEffect(() => {
         if (userState.gameID === '' || userState.gameID === null) {
             dispatchJoinHost(clearGameID())
+            // dispatchJoinHost(setGameCodeError())
         } else {
             dispatchJoinHost(
                 setGameID(
@@ -62,7 +63,6 @@ const JoiningHosting = ({ userState, dispatchGameState, gameArray }) => {
 
         // Exit any active games whenver the game code changes
         if (!fourDigits) {
-            console.log('startExit fired')
             startExitActiveGame(auth.currentUser.uid, userState.gameID)
         }
 
@@ -85,6 +85,9 @@ const JoiningHosting = ({ userState, dispatchGameState, gameArray }) => {
                 // THEN set the uid, last activity date, host, and gameID
                 // on user's profile in cloud
                 startSaveGameID(auth.currentUser.uid, gameID)
+                // A useEffect on GameSetup will monitor the gameID on userState
+                // and update the active game with the the appropriate player information
+
                 // AND ALSO add the UID and current character key to the list of players
                 // on the Active Game
                 startJoinActiveGame(

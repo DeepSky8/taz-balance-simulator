@@ -21,13 +21,13 @@ const gameReducer = (state, action) => {
     switch (action.type) {
         case 'UPDATE_GAME_STATE':
             return {
-                ...state,
+                ...defaultGameState,
                 ...action.currentActiveGame,
                 playerList: state.playerList
             }
         case 'CLEAR_GAME_STATE':
             return {
-                state: defaultGameState
+                ...defaultGameState
             }
         case 'UPDATE_CHALLENGES_OBJECT':
             return {
