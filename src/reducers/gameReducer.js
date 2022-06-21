@@ -1,3 +1,4 @@
+import { applyActionCode } from "firebase/auth"
 
 const defaultGameState = {
     challengesObject: {
@@ -5,7 +6,7 @@ const defaultGameState = {
         relicCode: null,
         locationCode: null
     },
-    classArray: [],
+    classList: [],
     gameID: null,
     host: null,
     surprises: [],
@@ -14,6 +15,8 @@ const defaultGameState = {
         relic: null,
         location: null
     },
+    ready: false,
+    readyList: [],
     teamHealth: null,
     playerList: []
 }
@@ -25,7 +28,9 @@ const gameReducer = (state, action) => {
                 ...defaultGameState,
                 ...action.currentActiveGame,
                 playerList: state.playerList,
-                classArray: state.classArray
+                classList: state.classList,
+                readyList: state.readyList,
+                ready: state.ready
             }
         case 'CLEAR_GAME_STATE':
             return {
@@ -62,15 +67,30 @@ const gameReducer = (state, action) => {
                 ...state,
                 playerList: []
             }
-        case 'UPDATE_CLASS_ARRAY':
+        case 'UPDATE_CLASS_LIST':
             return {
                 ...state,
-                classArray: action.classArray
+                classList: action.classList
             }
-        case 'CLEAR_PLAYER_CLASSES':
+        case 'CLEAR_CLASS_LIST':
             return {
                 ...state,
-                classArray: []
+                classList: []
+            }
+        case 'UPDATE_READY_LIST':
+            return {
+                ...state,
+                readyList: action.readyList
+            }
+        case 'CLEAR_READY_LIST':
+            return {
+                ...state,
+                readyList: []
+            }        
+        case 'UPDATE_READY_STATUS':
+            return {
+                ...state,
+                ready: action.ready
             }
         default:
             return state

@@ -4,6 +4,7 @@ import { CharactersList } from "./CharactersList";
 import { auth } from "../../../../firebase/firebase";
 import { useNavigate } from "react-router-dom";
 import { charClassTitles } from "../../../classes/charInfo";
+import { startJoinActiveGame } from "../../../../actions/gameActions";
 
 const CharacterSelect = ({ userState, charState, dispatchCharState, charArray }) => {
     let navigate = useNavigate()

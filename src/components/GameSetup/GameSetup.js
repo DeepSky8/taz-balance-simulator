@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { auth, db } from "../../firebase/firebase";
 import { off, onValue, ref, } from "firebase/database";
-import { clearGameState, clearPlayerClassesArray, clearPlayerList, startJoinActiveGame, updateGameHost, updateGameState, updatePlayerClassesArray, updatePlayerList, } from "../../actions/gameActions";
+import { clearGameState, clearClassList, clearPlayerList, startJoinActiveGame, updateGameHost, updateGameState, updateClassList, updatePlayerList, updateReadyList, updateReadyStatus, clearReadyList, } from "../../actions/gameActions";
 import { startRemoveGameID } from "../../actions/userActions";
 import AuthWrapper from "../Authentication/AuthWrapper";
 import JoiningHosting from "./JoiningHosting";
@@ -15,21 +15,23 @@ export const GameSetup = ({ dispatchGameState, userState, gameState, charState, 
     const [gameArray, setGameArray] = useState([])
 
 
-    // Get list of active games
+    // Listener on the gameList element
     useEffect(() => {
         // Listen to list of activeGame objects in Firebase
-        onValue(ref(db, 'activeGames'), (snapshot) => {
-
+        onValue(ref(db, 'gameList'), (snapshot) => {
             const updatedArray = [];
             if (snapshot.exists()) {
 
                 snapshot.forEach((childSnapShot) => {
                     updatedArray.push(childSnapShot.val().gameID)
                 })
+            } else {
+                setGameArray([])
             }
             // Set a new list of current game codes on GameSetup state
             // when the listener perceives a change
             setGameArray(updatedArray)
+            console.log('game array is now: ', updatedArray)
 
             // if (!updatedArray.includes(userState.gameID)) {
             //     // console.log('Clearing cloud gameID would have fired')
@@ -39,14 +41,13 @@ export const GameSetup = ({ dispatchGameState, userState, gameState, charState, 
 
         return () => {
             // Remove the listener on Active Games in the cloud
-            off(ref(db, 'activeGames'))
+            off(ref(db, 'gameList'))
         }
     }, [])
 
     // Establish listeners on Active Game
     useEffect(() => {
         if (userState.gameID) {
-            console.log('userState.gameID is: ', userState.gameID)
             // When the local gameID changes, if the local gameID exists
             // start a listener to get the game information
             onValue(ref(db, 'activeGames/' + userState.gameID), (snapshot) => {
@@ -69,10 +70,8 @@ export const GameSetup = ({ dispatchGameState, userState, gameState, charState, 
                         })
                         const otherPlayers = playerList.filter(player => player.uid !== auth.currentUser.uid)
                         dispatchGameState(updatePlayerList(otherPlayers))
-                        console.log('other players list is: ', otherPlayers)
-                    } 
+                    }
                     else {
-                        console.log('dispatched clearPlayerList')
                         dispatchGameState(clearPlayerList())
                         off(ref(db, 'activeGames/' + userState.gameID + '/playerList'))
                     }
@@ -86,31 +85,55 @@ export const GameSetup = ({ dispatchGameState, userState, gameState, charState, 
                         snapshot.forEach((playerclass) => {
                             updatedClassArray.push(playerclass.val())
                         })
-                        dispatchGameState(updatePlayerClassesArray(updatedClassArray))
+                        dispatchGameState(updateClassList(updatedClassArray))
+                        // console.log('classList is now: ', updatedClassArray)
                     } else {
-                        dispatchGameState(clearPlayerClassesArray())
+                        dispatchGameState(clearClassList())
                         off(ref(db, 'activeGames/' + userState.gameID + '/classStorage'))
                     }
                 })
+            // and then start a listener on the readyCheck list
+            onValue(ref(db, 'activeGames/' + userState.gameID + '/readyCheck'),
+                snapshot => {
+                    if (snapshot.exists()) {
+                        const updatedReadyList = [];
+                        snapshot.forEach((readyPlayer) => {
+                            updatedReadyList.push(readyPlayer.val())
+                        })
+                        // Update local state with the list of ready players
+                        dispatchGameState(updateReadyList(updatedReadyList))
+
+                        // If this player is in the list, 
+                        // update local state to reflect
+                        if (updatedReadyList.includes(auth.currentUser.uid)) {
+                            console.log('player ready: ', charState.charName)
+                            dispatchGameState(updateReadyStatus(true))
+                        } else {
+                            // otherwise set this player's ready status to false
+                            dispatchGameState(updateReadyStatus(false))
+                        }
+                    } else {
+                        // if there are no ready players, clear the ready list locally
+                        dispatchGameState(clearReadyList())
+                        // clear the current player's ready status
+                        dispatchGameState(updateReadyStatus(false))
+
+                        // off(ref(db, 'activeGames/' + userState.gameID + '/readyCheck'))
+                    }
+
+                })
+
         } else {
-            console.log('clearing Game State')
             dispatchGameState(clearGameState())
         }
 
-        // If the Active Game record no longer exists, 
-        // get rid of the stored gameID and clear the local player list
 
-        // else {
-        //     console.log('would have started StartRemoveGameID with auth: ', auth.currentUser.uid)
-        //     dispatchGameState(clearPlayerList())
-        //     off(ref(db, 'activeGames/' + userState.gameID))
-        //     off(ref(db, 'activeGames/' + userState.gameID + '/playerList'))
-        // }
 
         return () => {
             off(ref(db, 'activeGames/' + userState.gameID))
             off(ref(db, 'activeGames/' + userState.gameID + '/playerList'))
             off(ref(db, 'activeGames/' + userState.gameID + '/classStorage'))
+            off(ref(db, 'activeGames/' + userState.gameID + '/readyCheck'))
         }
     }, [userState.gameID])
 
@@ -131,7 +154,7 @@ export const GameSetup = ({ dispatchGameState, userState, gameState, charState, 
             )
         }
 
-    }, [userState.currentCharacterID, userState.gameID])
+    }, [charState.classCode, userState.gameID])
 
     // Get list of saved games for this user
     useEffect(() => {
@@ -168,7 +191,10 @@ export const GameSetup = ({ dispatchGameState, userState, gameState, charState, 
 
             />
             <Outlet />
-            <StartGame />
+            <StartGame
+                userState={userState}
+                gameState={gameState}
+            />
         </div>
     )
 

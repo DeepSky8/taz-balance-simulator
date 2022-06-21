@@ -30,17 +30,31 @@ export const updatePlayerList = (playerList) => ({
     playerList
 })
 
-export const updatePlayerClassesArray = (classArray) => ({
-    type: 'UPDATE_CLASS_ARRAY',
-    classArray
-})
-
-export const clearPlayerClassesArray = () => ({ 
-    type: 'CLEAR_PLAYER_CLASSES'
-})
-
 export const clearPlayerList = () => ({
     type: 'CLEAR_PLAYER_LIST'
+})
+
+export const updateClassList = (classList) => ({
+    type: 'UPDATE_CLASS_LIST',
+    classList
+})
+
+export const clearClassList = () => ({
+    type: 'CLEAR_CLASS_LIST'
+})
+
+export const updateReadyList = (readyList) => ({
+    type: 'UPDATE_READY_LIST',
+    readyList
+})
+
+export const clearReadyList = () => ({
+    type: 'CLEAR_READY_LIST'
+})
+
+export const updateReadyStatus = (ready) => ({
+    type: 'UPDATE_READY_STATUS',
+    ready
 })
 
 // Cloud Actions
@@ -75,7 +89,6 @@ export const startResumeSavedGame = (gameID, key, challengesObject) => {
     updates['activeGames/' + gameID + '/key'] = key
     updates['activeGames/' + gameID + '/challengesObject'] = { ...challengesObject }
     update(ref(db), updates)
-
         .catch((error) => {
             console.log('Did not start Load Game, error: ', error)
         })
@@ -87,4 +100,34 @@ export const startJoinActiveGame = (uid, gameID, currentCharacterID, classCode) 
     updates['activeGames/' + gameID + '/playerList/' + uid + '/currentCharacterID'] = currentCharacterID
     updates['activeGames/' + gameID + '/classStorage/' + uid] = classCode
     update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not join active game, error: ', error)
+        })
 }
+
+export const startReadyCheck = (uid, gameID) => {
+    const updates = {}
+    updates['activeGames/' + gameID + '/readyCheck/' + uid] = uid
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not successfully Ready Check, error: ', error)
+        })
+}
+
+export const startStopReadyCheck = (uid, gameID) => {
+    const updates = {}
+    updates['activeGames/' + gameID + '/readyCheck/' + uid] = null
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not successfully stop Ready Check, error: ', error)
+        })
+}
+
+// export const startChangeActiveCharacter = () => { 
+//     const updates = {}
+//     updates['activeGames/' + gameID + '/readyCheck/' + uid] = null
+//     update(ref(db), updates)
+//         .catch((error) => {
+//             console.log('Did not successfully stop Ready Check, error: ', error)
+//         })
+// }

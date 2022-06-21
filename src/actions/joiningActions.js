@@ -66,6 +66,7 @@ export const startSaveGameID = (uid, gameID) => {
 export const startRegisterGameID = (uid, gameID) => {
     const updates = {};
     updates['activeGames/' + gameID] = { host: uid, gameID };
+    updates['gameList/' + gameID] = { host: uid, gameID };
     // updates['users/' + uid + '/host'] = true;
     update(ref(db), updates)
         .then(() => {
@@ -82,6 +83,7 @@ export const startRegisterGameID = (uid, gameID) => {
 export const startRemoveGameCode = (uid, gameID) => {
     const updates = {};
     updates['activeGames/' + gameID] = null;
+    updates['gameList/' + gameID] = null;
     // updates['users/' + uid + '/host'] = null
     updates['users/' + uid + '/gameID'] = null
     update(ref(db), updates)
@@ -99,5 +101,6 @@ export const startExitActiveGame = (uid, gameID) => {
     const updates = {};
     updates['users/' + uid + '/gameID'] = null;
     updates['activeGames/' + gameID + '/playerList/' + uid] = null;
+    updates['activeGames/' + gameID + '/classStorage/' + uid] = null;
     update(ref(db), updates)
 }

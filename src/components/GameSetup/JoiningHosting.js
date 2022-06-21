@@ -73,6 +73,7 @@ const JoiningHosting = ({ userState, dispatchGameState, gameArray }) => {
                 (userState.joiningGame && !gameCodeRegistered))) {
             // Set an error that the game code isn't found
             dispatchJoinHost(setGameCodeError())
+            
         } else {
             // Otherwise clear the error
             dispatchJoinHost(clearGameCodeError())
