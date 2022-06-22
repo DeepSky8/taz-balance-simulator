@@ -5,7 +5,7 @@ const RestOfParty = ({ gameState }) => {
 
     return (
         <div>
-            {gameState.playerList.length < 1 && "It's dangerous to go alone!"}
+            
             {gameState.playerList.map(user => {
                 return <PartyMember
                     key={user.uid}

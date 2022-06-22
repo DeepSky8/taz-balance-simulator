@@ -3,7 +3,8 @@ import { startReadyCheck, startStopReadyCheck } from "../../actions/gameActions"
 import { auth } from "../../firebase/firebase";
 
 const StartGame = ({ userState, gameState }) => {
-    const addPartyMembers = 'Please gather like-minded adventurers to join you on this Quest. Mission. Thing.'
+    const addPartyMembers = 'Please gather like-minded adventurers to join you on this ... quest ... mission ... thing.'
+    const dangerousAlone = "It's dangerous to go alone!"
     const change2PlayerTeamComp = 'In two-player mode, please only select from the Rogue, Wizard, and Warrior classes.'
     const changeTeamComp = 'Please ensure each party member has a different class.'
     const readyCheck = 'Ready to begin mission?'
@@ -26,11 +27,16 @@ const StartGame = ({ userState, gameState }) => {
     // If all players are ready, change button text and allow
     // the host to start the game
     useEffect(() => {
-
+        console.log('player list length', gameState.playerList.length)
         // If player is joining game
         if (userState.joiningGame) {
-            // and the player has indicated that they are ready to begin
-            if (gameState.ready) {
+
+            if (gameState.playerList.length < 1) {
+                // but they're not in a team, the button text
+                // reflects that they can't start the game
+                setStartText(dangerousAlone)
+            } else if (gameState.ready) {
+                // and the player has indicated that they are ready to begin
                 // set the button text to indicate that the player can click the 
                 // button again to 'un-ready'
                 setStartText(notReady)
@@ -63,7 +69,7 @@ const StartGame = ({ userState, gameState }) => {
             }
         }
 
-    }, [gameState.playerList, gameState.readyList, gameState.ready, userState.joiningGame])
+    }, [gameState.playerList, gameState.readyList, gameState.ready, userState.joiningGame, userState.gameID])
 
 
 

@@ -31,7 +31,7 @@ export const GameSetup = ({ dispatchGameState, userState, gameState, charState, 
             // Set a new list of current game codes on GameSetup state
             // when the listener perceives a change
             setGameArray(updatedArray)
-            console.log('game array is now: ', updatedArray)
+            // console.log('game array is now: ', updatedArray)
 
             // if (!updatedArray.includes(userState.gameID)) {
             //     // console.log('Clearing cloud gameID would have fired')
@@ -106,7 +106,7 @@ export const GameSetup = ({ dispatchGameState, userState, gameState, charState, 
                         // If this player is in the list, 
                         // update local state to reflect
                         if (updatedReadyList.includes(auth.currentUser.uid)) {
-                            console.log('player ready: ', charState.charName)
+                            // console.log('player ready: ', charState.charName)
                             dispatchGameState(updateReadyStatus(true))
                         } else {
                             // otherwise set this player's ready status to false
