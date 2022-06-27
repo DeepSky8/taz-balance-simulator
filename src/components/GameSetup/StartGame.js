@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { setGameKey, startActiveGame, startGetKey, startReadyCheck, startRemoveGameCode, startSaveGameKeyPlus, startSaveGame, startStopReadyCheck, updateReadyStatus } from "../../actions/gameActions";
+import { setGameKey, startSavedGame, startGetKey, startReadyCheck, startRemoveGameCode, startNewGame, startSaveGame, startStopReadyCheck, updateReadyStatus } from "../../actions/gameActions";
 import { auth } from "../../firebase/firebase";
 import { useNavigate } from "react-router-dom";
 
@@ -20,18 +20,6 @@ const StartGame = ({ userState, gameState, dispatchGameState }) => {
     const [startText, setStartText] = useState(readyCheck)
     const [startGame, setStartGame] = useState(false)
 
-    // // When startGame is TRUE
-    // // confirm that a gameState.key exists, and move all players to 
-    // // the activeGame screen
-    // useEffect(() => {
-    //     // If a game key exists, 
-    //     // navigate to the Active Game screen
-    //     // as the game has begun
-    //     console.log('Should have gone to active game screen')
-
-    //     // navigate('/activeGame')
-
-    // }, [gameState.key])
 
     // Clear start error if the userState or gameState changes at all
     useEffect(() => {
@@ -86,9 +74,6 @@ const StartGame = ({ userState, gameState, dispatchGameState }) => {
 
     }, [gameState.playerList, gameState.readyList, gameState.ready, userState.joiningGame, userState.gameID])
 
-
-
-
     // Boolean result indicating whether the list of players includes
     // duplicate classes
     const duplicateClassTypes = (array) => (new Set(array).size !== array.length)
@@ -131,7 +116,8 @@ const StartGame = ({ userState, gameState, dispatchGameState }) => {
         return answer
 
     }
-
+    // Generates the error message if the full challenge set
+    // is not yet selected
     const missionSelected = (challengesObject) => {
         const villainCode = challengesObject.villainCode
         const relicCode = challengesObject.relicCode
@@ -144,6 +130,22 @@ const StartGame = ({ userState, gameState, dispatchGameState }) => {
         } else {
             setStartError(selectMission)
             return false
+        }
+    }
+
+    // Calculates the team starting health based on team size
+    const healthCalc = (teamSize) => {
+        switch (teamSize) {
+            case 5:
+                return 10
+            case 4:
+                return 10
+            case 3:
+                return 12
+            case 2:
+                return 14
+            default:
+                return 10;
         }
     }
 
@@ -177,31 +179,36 @@ const StartGame = ({ userState, gameState, dispatchGameState }) => {
             } else if (startGame && missionChecked) {
                 // If this player is hosting (inferred)
                 // and the full team has indicated they are ready to start
-                // check whether a key exists for this game (previously saved)
-                // and create a key for a new game if needed (new game)
+                // set this player's status to ready both locally and in the cloud
                 dispatchGameState(updateReadyStatus(true))
                 startReadyCheck(auth.currentUser.uid, userState.gameID)
+                // then check whether a key exists for this game (previously saved)
                 if (gameState.key === null) {
-                    startSaveGameKeyPlus(
+                    // and create a key for a new game if needed (new game)
+                    // as well as creating the rest of the game data
+                    const teamHealth = healthCalc(gameState.playerList.length + 1)
+
+
+                    startNewGame(
                         auth.currentUser.uid,
                         userState.gameID,
                         [{
                             uid: auth.currentUser.uid,
                             currentCharacterID: userState.currentCharacterID
                         }].concat(gameState.playerList),
-                        gameState.challengesObject
+                        gameState.challengesObject,
+                        teamHealth
                     )
 
                 } else {
-                    startActiveGame(
+                    startSavedGame(
                         auth.currentUser.uid,
                         userState.gameID,
                         gameState.key,
                         [{
                             uid: auth.currentUser.uid,
                             currentCharacterID: userState.currentCharacterID
-                        }].concat(gameState.playerList),
-                        gameState.challengesObject
+                        }].concat(gameState.playerList)
                     )
                 }
                 // navigate('/activeGame')
