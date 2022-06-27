@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { off, onValue, ref } from "firebase/database";
 
-import { startRemoveSavedGame, startResumeSavedGame } from "../../../../actions/gameActions";
+import { startRemoveSavedGame, startLoadSavedGame } from "../../../../actions/gameActions";
 import { auth, db } from "../../../../firebase/firebase";
 import SavedGame from "./SavedGame";
 
@@ -29,7 +29,7 @@ const SavedGames = ({ gameState, toggleGameType, gameTypeButtonText, savedGameAr
 
     const loadGame = (savedGameKey, challengesObject) => {
         if (hosting) {
-            startResumeSavedGame(gameState.gameID, savedGameKey, challengesObject)
+            startLoadSavedGame(gameState.gameID, savedGameKey, challengesObject)
         }
     }
 

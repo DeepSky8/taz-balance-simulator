@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { auth, db } from "../../firebase/firebase";
 import { off, onValue, ref, } from "firebase/database";
-import { clearGameState, clearClassList, clearPlayerList, startJoinActiveGame, updateGameHost, updateGameState, updateClassList, updatePlayerList, updateReadyList, updateReadyStatus, clearReadyList, } from "../../actions/gameActions";
+import { clearGameState, clearClassList, clearPlayerList, startJoinActiveGame, updateGameHost, updateGameState, updateClassList, updatePlayerList, updateReadyList, updateReadyStatus, clearReadyList, setGameKey, } from "../../actions/gameActions";
 import { startRemoveGameID } from "../../actions/userActions";
 import AuthWrapper from "../Authentication/AuthWrapper";
 import JoiningHosting from "./JoiningHosting";
 import ChallengeDisplay from "../elements/Challenges/ChallengeDisplay";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import CharacterChallengeNavBar from "./CharacterChallengeNavBar";
 import PlayingAs from "../elements/Party/partyMembers/PlayingAs";
 import StartGame from "./StartGame";
 
 export const GameSetup = ({ dispatchGameState, userState, gameState, charState, setSavedGameArray }) => {
+    let navigate = useNavigate()
     const [gameArray, setGameArray] = useState([])
 
 
@@ -31,12 +32,7 @@ export const GameSetup = ({ dispatchGameState, userState, gameState, charState, 
             // Set a new list of current game codes on GameSetup state
             // when the listener perceives a change
             setGameArray(updatedArray)
-            // console.log('game array is now: ', updatedArray)
 
-            // if (!updatedArray.includes(userState.gameID)) {
-            //     // console.log('Clearing cloud gameID would have fired')
-            //     startRemoveGameID(auth.currentUser.uid)
-            // }
         })
 
         return () => {
@@ -45,18 +41,45 @@ export const GameSetup = ({ dispatchGameState, userState, gameState, charState, 
         }
     }, [])
 
+    // The presence of a local gameState.key will
+    // confirm that a game has started, and move all players to 
+    // the activeGame screen
+    useEffect(() => {
+        // If a game key exists, 
+        // and the list of ready players is the same length as the list of (other) players
+        // and THIS player is ready
+        // navigate to the Active Game screen
+        // as the game has begun
+
+        if (gameState.key !== null &&
+            gameState.readyList.length === (gameState.playerList.length + 1) &&
+            gameState.ready) {
+            navigate('/activeGame')
+        }
+
+
+
+    }, [gameState.key, gameState.readyList, gameState.ready])
+
     // Establish listeners on Active Game
     useEffect(() => {
         if (userState.gameID) {
             // When the local gameID changes, if the local gameID exists
             // start a listener to get the game information
             onValue(ref(db, 'activeGames/' + userState.gameID), (snapshot) => {
+
                 if (snapshot.exists()) {
+                    // If the game information exists, copy it to local
                     dispatchGameState(updateGameState(snapshot.val()))
-                    // dispatchGameState(updateGameHost(snapshot.val()))
                 } else {
-                    dispatchGameState(clearGameState())
-                    off(ref(db, 'activeGames/' + userState.gameID))
+                    // If the game information does not exist,
+                    if (gameState.key === null) {
+                        // check for a game key.
+                        // Without a key, clear the local state
+                        dispatchGameState(clearGameState())
+                        // then close the listener
+                        off(ref(db, 'activeGames/' + userState.gameID))
+                    }
                 }
             })
             // and then start a listener to get the participating players.
@@ -127,8 +150,6 @@ export const GameSetup = ({ dispatchGameState, userState, gameState, charState, 
             dispatchGameState(clearGameState())
         }
 
-
-
         return () => {
             off(ref(db, 'activeGames/' + userState.gameID))
             off(ref(db, 'activeGames/' + userState.gameID + '/playerList'))
@@ -194,6 +215,7 @@ export const GameSetup = ({ dispatchGameState, userState, gameState, charState, 
             <StartGame
                 userState={userState}
                 gameState={gameState}
+                dispatchGameState={dispatchGameState}
             />
         </div>
     )

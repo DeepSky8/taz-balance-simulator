@@ -4,7 +4,6 @@ import { defaultJoiningReducer, joiningReducer } from "../../reducers/joiningRed
 import {
     clearGameCodeError,
     startRegisterGameID,
-    startRemoveGameCode,
     startSaveGameID,
     startSetJoiningGame,
     setGameCodeError,
@@ -15,7 +14,7 @@ import {
 } from '../../actions/joiningActions';
 import { auth, db } from "../../firebase/firebase";
 import { off, onValue, ref } from "firebase/database";
-import { clearPlayerList } from "../../actions/gameActions";
+import { clearPlayerList, startRemoveGameCode } from "../../actions/gameActions";
 
 const JoiningHosting = ({ userState, dispatchGameState, gameArray }) => {
 

@@ -57,6 +57,11 @@ export const updateReadyStatus = (ready) => ({
     ready
 })
 
+export const setGameKey = (key) => ({
+    type: 'SET_GAME_KEY',
+    key
+})
+
 // Cloud Actions
 
 // const actuallySaveGame = (uid, key, gameData) => {
@@ -67,14 +72,14 @@ export const startGetKey = (uid) => {
     return push(ref(db, 'savedGames/' + uid)).key;
 }
 
-export const startSaveGame = (uid, key, gameData) => {
+export const startSaveGame = (uid, key, gameState) => {
     const updates = {}
-    updates['savedGames/' + uid + '/' + key] = { ...gameData, key }
-    update(ref(db), updates)
+    updates['savedGames/' + uid + '/' + key] = { ...gameState, key }
+    return update(ref(db), updates)
 
-        .catch((error) => {
-            console.log('Did not start Save Game, error: ', error)
-        })
+    // .catch((error) => {
+    //     console.log('Did not start Save Game, error: ', error)
+    // })
 }
 
 export const startRemoveSavedGame = (uid, key) => {
@@ -84,7 +89,7 @@ export const startRemoveSavedGame = (uid, key) => {
         })
 }
 
-export const startResumeSavedGame = (gameID, key, challengesObject) => {
+export const startLoadSavedGame = (gameID, key, challengesObject) => {
     const updates = {}
     updates['activeGames/' + gameID + '/key'] = key
     updates['activeGames/' + gameID + '/challengesObject'] = { ...challengesObject }
@@ -123,11 +128,45 @@ export const startStopReadyCheck = (uid, gameID) => {
         })
 }
 
-// export const startChangeActiveCharacter = () => { 
-//     const updates = {}
-//     updates['activeGames/' + gameID + '/readyCheck/' + uid] = null
-//     update(ref(db), updates)
-//         .catch((error) => {
-//             console.log('Did not successfully stop Ready Check, error: ', error)
-//         })
-// }
+// Clears the activeGame with local userState gameID
+// then sets the gameID under the user UID to null
+export const startRemoveGameCode = (uid, gameID) => {
+    const updates = {};
+    updates['activeGames/' + gameID] = null;
+    updates['gameList/' + gameID] = null;
+    // updates['users/' + uid + '/host'] = null
+    updates['users/' + uid + '/gameID'] = null
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Error when cleaning game array in cloud:', error)
+        })
+}
+
+export const startActiveGame = (uid, gameID, key, playerList, challengesObject) => {
+    const updates = {};
+    updates['activeGames/' + gameID + '/ready'] = true;
+    updates['savedGames/' + uid + '/' + key + '/playerList'] = playerList;
+    updates['savedGames/' + uid + '/' + key + '/challengesObject'] = challengesObject;
+    update(ref(db), updates)
+        .then(() => {
+            startRemoveGameCode(uid, gameID)
+        })
+        .catch((error) => {
+            console.log('Error when starting game (saved):', error)
+        })
+}
+
+export const startSaveGameKeyPlus = (uid, gameID, playerList, challengesObject) => {
+    console.log('fired startSaveGameKeyPlus')
+    const key = startGetKey(uid)
+    console.log('key is: ', key)
+    const updates = {};
+    updates['activeGames/' + gameID + '/key'] = key;
+    updates['activeGames/' + gameID + '/ready'] = true;
+    updates['savedGames/' + uid + '/' + key + '/key'] = key;
+    update(ref(db), updates)
+        .then(() => {
+            startActiveGame(uid, gameID, key, playerList, challengesObject)
+        })
+}
+

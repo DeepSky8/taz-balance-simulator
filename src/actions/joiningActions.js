@@ -77,20 +77,6 @@ export const startRegisterGameID = (uid, gameID) => {
         })
 }
 
-
-// Clears the activeGame with local userState gameID
-// then sets the gameID under the user UID to null
-export const startRemoveGameCode = (uid, gameID) => {
-    const updates = {};
-    updates['activeGames/' + gameID] = null;
-    updates['gameList/' + gameID] = null;
-    // updates['users/' + uid + '/host'] = null
-    updates['users/' + uid + '/gameID'] = null
-    update(ref(db), updates)
-        .catch((error) => {
-            console.log('Error when cleaning game array in cloud:', error)
-        })
-}
 // If the user is disconnecting from an active game 
 // (or a game that doesn't exist)
 // set the cloud profile gameID to null, which will

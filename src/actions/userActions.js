@@ -58,7 +58,7 @@ export const startRemoveGameID = (uid) => {
     updates['users/' + uid + '/host'] = null
     update(ref(db), updates)
         .catch((error) => {
-            console.log('Error when removing challenge codes in cloud:', error)
+            console.log('Error when removing game ID from user in cloud:', error)
         })
 }
 

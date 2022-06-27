@@ -7,8 +7,8 @@ const defaultGameState = {
         locationCode: null
     },
     classList: [],
-    gameID: null,
     host: null,
+    key: null,
     surprises: [],
     progress: {
         villain: null,
@@ -45,7 +45,7 @@ const gameReducer = (state, action) => {
         case 'CLEAR_CHALLENGES_OBJECT':
             return {
                 ...state,
-                gameID: null,
+                key: null,
                 challengesObject: {
                     villainCode: null,
                     relicCode: null,
@@ -86,11 +86,16 @@ const gameReducer = (state, action) => {
             return {
                 ...state,
                 readyList: []
-            }        
+            }
         case 'UPDATE_READY_STATUS':
             return {
                 ...state,
                 ready: action.ready
+            }
+        case 'SET_GAME_KEY':
+            return {
+                ...state,
+                key: action.key
             }
         default:
             return state

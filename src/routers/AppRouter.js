@@ -239,23 +239,19 @@ const AppRouter = () => {
                     >
                     </Route>
 
-                    <Route path={'/savedGames'}
-                        element={<SavedGames />}>
-
-                    </Route>
-
-
                     <Route path={'/refreshHelper'}
                         element={<RefreshHelper
                             userState={userState}
                         />}
                     />
-                    <Route path='gameInProcess' element={
-                        <AuthWrapper
-                            userState={userState}
-                            dispatchSetupState={dispatchUserState}>
-                            <ActiveGame />
-                        </AuthWrapper>
+                    <Route path='/activeGame' element={
+                        <div>
+                            <AuthWrapper />
+                            <ActiveGame
+                            gameState={gameState}
+                            dispatchGameState={dispatchGameState}
+                            />
+                        </div>
                     }
                     />
 

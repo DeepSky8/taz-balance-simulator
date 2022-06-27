@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { startReadyCheck, startStopReadyCheck } from "../../actions/gameActions";
+import { setGameKey, startActiveGame, startGetKey, startReadyCheck, startRemoveGameCode, startSaveGameKeyPlus, startSaveGame, startStopReadyCheck, updateReadyStatus } from "../../actions/gameActions";
 import { auth } from "../../firebase/firebase";
+import { useNavigate } from "react-router-dom";
 
-const StartGame = ({ userState, gameState }) => {
+const StartGame = ({ userState, gameState, dispatchGameState }) => {
+    let navigate = useNavigate()
     const addPartyMembers = 'Please gather like-minded adventurers to join you on this ... quest ... mission ... thing.'
     const dangerousAlone = "It's dangerous to go alone!"
     const change2PlayerTeamComp = 'In two-player mode, please only select from the Rogue, Wizard, and Warrior classes.'
@@ -12,10 +14,24 @@ const StartGame = ({ userState, gameState }) => {
     const waitForTeam = 'Party not yet ready'
     const beginMission = 'Begin Mission!'
     const oversizeParty = 'Your party is too big!'
+    const selectMission = 'Please select a complete mission (three challenges)'
     const unknownError = 'An unknown error is preventing the mission'
     const [startError, setStartError] = useState('')
     const [startText, setStartText] = useState(readyCheck)
     const [startGame, setStartGame] = useState(false)
+
+    // // When startGame is TRUE
+    // // confirm that a gameState.key exists, and move all players to 
+    // // the activeGame screen
+    // useEffect(() => {
+    //     // If a game key exists, 
+    //     // navigate to the Active Game screen
+    //     // as the game has begun
+    //     console.log('Should have gone to active game screen')
+
+    //     // navigate('/activeGame')
+
+    // }, [gameState.key])
 
     // Clear start error if the userState or gameState changes at all
     useEffect(() => {
@@ -27,7 +43,6 @@ const StartGame = ({ userState, gameState }) => {
     // If all players are ready, change button text and allow
     // the host to start the game
     useEffect(() => {
-        console.log('player list length', gameState.playerList.length)
         // If player is joining game
         if (userState.joiningGame) {
 
@@ -117,23 +132,79 @@ const StartGame = ({ userState, gameState }) => {
 
     }
 
+    const missionSelected = (challengesObject) => {
+        const villainCode = challengesObject.villainCode
+        const relicCode = challengesObject.relicCode
+        const locationCode = challengesObject.locationCode
 
+        if (villainCode !== null &&
+            relicCode !== null &&
+            locationCode !== null) {
+            return true
+        } else {
+            setStartError(selectMission)
+            return false
+        }
+    }
+
+    // When the 'Start Game' button is clicked
     const onStartGame = () => {
+        // Check if the team comp is correct, based on the updated class list
         const teamChecked = acceptableTeamComp(gameState.classList)
-
-        if ((userState.gameID) &&
+        const missionChecked = missionSelected(gameState.challengesObject)
+        // If a gameID exists AND this player has selected a character AND
+        // the team comp is acceptable, then proceed
+        if ((userState.gameID !== null) &&
             (userState.currentCharacter !== null) &&
             (teamChecked)
         ) {
 
             if (userState.joiningGame && !gameState.ready) {
+                // If this player is joining a game, 
+                // and has not yet indicated they are ready to play
+                // set their cloud Ready status to 'true'
                 startReadyCheck(auth.currentUser.uid, userState.gameID)
             } else if (userState.joiningGame && gameState.ready) {
+                // If this player is joining a game, 
+                // and has already indicated they are ready to play
+                // set their cloud Ready status to 'false'
                 startStopReadyCheck(auth.currentUser.uid, userState.gameID)
             } else if (gameState.readyList.length !== gameState.playerList.length) {
+                // If the player is hosting (inferred from the previous two options)
+                // and if the full team hasn't indicated they are ready yet
+                // set an error indicating the full team isn't ready yet
                 setStartError(waitForTeam)
-            } else if (startGame) {
-                console.log('Game has begun')
+            } else if (startGame && missionChecked) {
+                // If this player is hosting (inferred)
+                // and the full team has indicated they are ready to start
+                // check whether a key exists for this game (previously saved)
+                // and create a key for a new game if needed (new game)
+                dispatchGameState(updateReadyStatus(true))
+                startReadyCheck(auth.currentUser.uid, userState.gameID)
+                if (gameState.key === null) {
+                    startSaveGameKeyPlus(
+                        auth.currentUser.uid,
+                        userState.gameID,
+                        [{
+                            uid: auth.currentUser.uid,
+                            currentCharacterID: userState.currentCharacterID
+                        }].concat(gameState.playerList),
+                        gameState.challengesObject
+                    )
+
+                } else {
+                    startActiveGame(
+                        auth.currentUser.uid,
+                        userState.gameID,
+                        gameState.key,
+                        [{
+                            uid: auth.currentUser.uid,
+                            currentCharacterID: userState.currentCharacterID
+                        }].concat(gameState.playerList),
+                        gameState.challengesObject
+                    )
+                }
+                // navigate('/activeGame')
             }
         }
     }
