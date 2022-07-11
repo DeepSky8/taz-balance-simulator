@@ -1,8 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { auth, db } from "../../firebase/firebase";
 import { off, onValue, ref, } from "firebase/database";
-import { clearGameState, clearClassList, clearPlayerList, startJoinActiveGame, updateGameHost, updateGameState, updateClassList, updatePlayerList, updateReadyList, updateReadyStatus, clearReadyList, setGameKey, } from "../../actions/gameActions";
-import { startRemoveGameID } from "../../actions/userActions";
+import {
+    clearGameState,
+    clearClassList,
+    clearPlayerList,
+    startJoinActiveGame,
+    updateGameState,
+    updateClassList,
+    updatePlayerList,
+    updateReadyList,
+    updateReadyStatus,
+    clearReadyList,
+} from "../../actions/gameActions";
 import AuthWrapper from "../Authentication/AuthWrapper";
 import JoiningHosting from "./JoiningHosting";
 import ChallengeDisplay from "../elements/Challenges/ChallengeDisplay";
@@ -10,8 +20,17 @@ import { Outlet, useNavigate } from "react-router-dom";
 import CharacterChallengeNavBar from "./CharacterChallengeNavBar";
 import PlayingAs from "../elements/Party/partyMembers/PlayingAs";
 import StartGame from "./StartGame";
+import { startRecordCurrentGame, startRemoveCurrentGame } from "../../actions/userActions";
 
-export const GameSetup = ({ dispatchGameState, userState, gameState, charState, setSavedGameArray }) => {
+export const GameSetup = (
+    {
+        dispatchGameState,
+        userState,
+        gameState,
+        charState,
+        setSavedGameArray
+    }
+) => {
     let navigate = useNavigate()
     const [gameArray, setGameArray] = useState([])
 
@@ -48,16 +67,18 @@ export const GameSetup = ({ dispatchGameState, userState, gameState, charState, 
         // If a game key exists, 
         // and the list of ready players is the same length as the list of (other) players
         // and THIS player is ready
-        // navigate to the Active Game screen
+        // navigate to the Introductions screen on the ActiveGame
         // as the game has begun
 
         if (gameState.key !== null &&
             gameState.readyList.length === (gameState.playerList.length + 1) &&
             gameState.ready) {
-            navigate('/activeGame')
+            startRecordCurrentGame(auth.currentUser.uid, gameState.key, gameState.host)
+            navigate('/activeGame/introductions')
         }
-
-
+        //  else {
+        //     startRemoveCurrentGame(auth.currentUser.uid)
+        // }
 
     }, [gameState.key, gameState.readyList, gameState.ready])
 
@@ -159,7 +180,6 @@ export const GameSetup = ({ dispatchGameState, userState, gameState, charState, 
     }, [userState.gameID])
 
     // Join an active game when a character has been selected and gameID entered
-    // This must occurr on AppRouter so that the whole app is rerendered
     useEffect(() => {
 
         // Add the current character class code to the active game 

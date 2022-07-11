@@ -2,6 +2,10 @@
 const defaultUserProfile = {
     anonymousUID: null,
     currentCharacterID: null,
+    currentGame:{
+        host: null,
+        key: null
+    },
     gameID: '',
     // host: null,
     isAnonymous: true,

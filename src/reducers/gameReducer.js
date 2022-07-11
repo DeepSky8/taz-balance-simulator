@@ -1,6 +1,7 @@
 import { applyActionCode } from "firebase/auth"
 
 const defaultGameState = {
+    activePlayer: null,
     challengesObject: {
         villainCode: null,
         relicCode: null,
@@ -31,6 +32,11 @@ const gameReducer = (state, action) => {
                 classList: state.classList,
                 readyList: state.readyList,
                 ready: state.ready
+            }
+        case 'UPDATE_GAME_STATE_FULL':
+            return {
+                ...defaultGameState,
+                ...action.currentActiveGameFull
             }
         case 'CLEAR_GAME_STATE':
             return {
@@ -96,6 +102,11 @@ const gameReducer = (state, action) => {
             return {
                 ...state,
                 key: action.key
+            }
+        case 'SET_ACTIVE_PLAYER':
+            return {
+                ...state,
+                activePlayer: action.activePlayer
             }
         default:
             return state

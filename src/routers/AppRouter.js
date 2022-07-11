@@ -8,7 +8,6 @@ import { defaultGameState, gameReducer } from "../reducers/gameReducer";
 import { defaultCharState, charReducer } from "../reducers/charReducer";
 import ActiveGame from "../components/elements/ActiveGame/ActiveGame"
 import AuthWrapper from "../components/Authentication/AuthWrapper";
-import ChallengeSelect from "../components/elements/Challenges/ChallengeSelect";
 import ChooseMode from "../components/Authentication/ChooseMode";
 import FirebaseSignIn from '../components/Authentication/FirebaseSignIn';
 import GameSetup from "../components/GameSetup/GameSetup";
@@ -33,12 +32,10 @@ import AssistStingers from '../components/elements/Party/AttributePickerElements
 import SpecialAbility from '../components/elements/Party/AttributePickerElements/SpecialAbility';
 import CharStats from '../components/elements/Party/AttributePickerElements/CharStats';
 import CharName from '../components/elements/Party/AttributePickerElements/CharName';
-import PlayingAs from "../components/elements/Party/partyMembers/PlayingAs";
 import RestOfParty from "../components/elements/Party/partyMembers/RestOfParty";
-import SavedGames from "../components/elements/Challenges/savedGames/SavedGames";
 import NewLoadWrapper from "../components/elements/Challenges/NewLoadWrapper";
 import GameInstructions from "../components/GameSetup/GameInstructions";
-import { startJoinActiveGame } from "../actions/gameActions";
+import Introductions from "../components/introductions/Introductions";
 export const history = createBrowserHistory();
 
 
@@ -239,21 +236,32 @@ const AppRouter = () => {
                     >
                     </Route>
 
-                    <Route path={'/refreshHelper'}
-                        element={<RefreshHelper
-                            userState={userState}
-                        />}
-                    />
-                    <Route path='/activeGame' element={
+
+
+
+                    <Route path='/activeGame/*' element={
                         <div>
                             <AuthWrapper />
                             <ActiveGame
-                            gameState={gameState}
-                            dispatchGameState={dispatchGameState}
+                                userState={userState}
+                                gameState={gameState}
+                                dispatchGameState={dispatchGameState}
                             />
                         </div>
                     }
-                    />
+                    >
+                        <Route
+                            path="introductions"
+                            element={
+                                <Introductions
+                                    gameState={gameState}
+                                    dispatchGameState={dispatchGameState}
+                                />
+                            }
+                        />
+                    </Route>
+
+
 
                     <Route
                         path="/signIn"
@@ -266,6 +274,11 @@ const AppRouter = () => {
                     <Route
                         path="privacypolicy"
                         element={<PrivacyPolicy />}
+                    />
+                    <Route path={'/refreshHelper'}
+                        element={<RefreshHelper
+                            userState={userState}
+                        />}
                     />
                     <Route path="*" element={<NotFoundPage />} />
                 </Routes>

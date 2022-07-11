@@ -80,3 +80,21 @@ export const startRemoveUser = (uid) => {
             console.log('error when removing UID: ', uid)
         })
 }
+
+export const startRecordCurrentGame = (uid, key, host) => {
+    const updates = {};
+    updates['users/' + uid + '/currentGame'] = { host, key };
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Error when recording current game:', error)
+        })
+}
+
+export const startRemoveCurrentGame = (uid) => { 
+    const updates = {};
+    updates['users/' + uid + '/currentGame'] = null;
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Error when removing current game:', error)
+        })
+}

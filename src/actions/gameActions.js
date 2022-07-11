@@ -7,6 +7,11 @@ export const updateGameState = (currentActiveGame) => ({
     currentActiveGame
 })
 
+export const updateGameStateFull = (currentActiveGameFull) => ({
+    type: 'UPDATE_GAME_STATE',
+    currentActiveGameFull
+})
+
 export const updateChallengesObject = (challengesObject) => ({
     type: 'UPDATE_CHALLENGES_OBJECT',
     challengesObject
@@ -60,6 +65,11 @@ export const updateReadyStatus = (ready) => ({
 export const setGameKey = (key) => ({
     type: 'SET_GAME_KEY',
     key
+})
+
+export const setActivePlayer = (activePlayer) => ({
+    type: 'SET_ACTIVE_PLAYER',
+    activePlayer
 })
 
 // Cloud Actions
@@ -145,6 +155,9 @@ export const startRemoveGameCode = (uid, gameID) => {
 export const startSavedGame = (uid, gameID, key, playerList) => {
     const updates = {};
     updates['savedGames/' + uid + '/' + key + '/playerList'] = playerList;
+    updates['savedGames/' + uid + '/' + key + '/key'] = key;
+    updates['savedGames/' + uid + '/' + key + '/host'] = uid;
+    updates['savedGames/' + uid + '/' + key + '/ready'] = false;
     update(ref(db), updates)
         .then(() => {
             startRemoveGameCode(uid, gameID)
@@ -161,12 +174,49 @@ export const startNewGame = (uid, gameID, playerList, challengesObject, teamHeal
     updates['savedGames/' + uid + '/' + key + '/key'] = key;
     updates['savedGames/' + uid + '/' + key + '/host'] = uid;
     updates['savedGames/' + uid + '/' + key + '/playerList'] = playerList;
-    updates['savedGames/' + uid + '/' + key + '/challengesObject'] = {...challengesObject};
+    updates['savedGames/' + uid + '/' + key + '/challengesObject'] = { ...challengesObject };
     updates['savedGames/' + uid + '/' + key + '/teamHealth'] = teamHealth;
-    updates['savedGames/' + uid + '/' + key + '/progress'] = {location: 0, relic: 0, villain: 0};
+    updates['savedGames/' + uid + '/' + key + '/progress'] = { location: 0, relic: 0, villain: 0 };
     update(ref(db), updates)
-    .catch((error) => {
-        console.log('Error when starting game (new):', error)
-    })
+        .catch((error) => {
+            console.log('Error when starting game (new):', error)
+        })
 }
 
+export const startMarkTurnComplete = (uid, key, readyList) => {
+    const updates = {};
+    updates['savedGames/' + uid + '/' + key + '/readyList'] = { ...readyList };
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Error when marking turn complete:', error)
+        })
+}
+
+export const startNewRound = (uid, key) => {
+    const updates = {};
+    updates['savedGames/' + uid + '/' + key + '/readyList'] = null;
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Error when starting new round:', error)
+        })
+}
+
+export const startSetReadyTrue = (uid, key) => {
+    const updates = {};
+    updates['savedGames/' + uid + '/' + key + '/ready'] = true;
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Error setting Ready to true:', error)
+        })
+}
+
+export const startSetReadyFalse = (uid, key) => {
+    const updates = {};
+    updates['savedGames/' + uid + '/' + key + '/ready'] = false;
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Error setting Ready to false:', error)
+        })
+}
+
+// updates['users/' + uid + '/currentGame'] = { host: uid, key };

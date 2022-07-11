@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { setGameKey, startSavedGame, startGetKey, startReadyCheck, startRemoveGameCode, startNewGame, startSaveGame, startStopReadyCheck, updateReadyStatus } from "../../actions/gameActions";
+import {
+    startSavedGame,
+    startReadyCheck,
+    startNewGame,
+    startStopReadyCheck,
+    updateReadyStatus
+} from "../../actions/gameActions";
 import { auth } from "../../firebase/firebase";
 import { useNavigate } from "react-router-dom";
 
@@ -184,7 +190,7 @@ const StartGame = ({ userState, gameState, dispatchGameState }) => {
                 startReadyCheck(auth.currentUser.uid, userState.gameID)
                 // then check whether a key exists for this game (previously saved)
                 if (gameState.key === null) {
-                    // and create a key for a new game if needed (new game)
+                    // and create a key for a new game
                     // as well as creating the rest of the game data
                     const teamHealth = healthCalc(gameState.playerList.length + 1)
 
@@ -201,6 +207,7 @@ const StartGame = ({ userState, gameState, dispatchGameState }) => {
                     )
 
                 } else {
+                    // If the game was previously saved, join it
                     startSavedGame(
                         auth.currentUser.uid,
                         userState.gameID,
@@ -211,7 +218,6 @@ const StartGame = ({ userState, gameState, dispatchGameState }) => {
                         }].concat(gameState.playerList)
                     )
                 }
-                // navigate('/activeGame')
             }
         }
     }
