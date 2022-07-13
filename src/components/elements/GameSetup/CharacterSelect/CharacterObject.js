@@ -1,4 +1,4 @@
-import { charClassTitles } from "../../../classes/charInfo"
+import { charClassTitles } from "../../CharacterSheet/classes/charInfo"
 
 export const CharacterObject = ({ charObject, selectChar, viewEdit, deleteChar }) => {
     const classTitle = charClassTitles[charObject.classCode]

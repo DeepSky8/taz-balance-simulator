@@ -12,7 +12,7 @@ import {
 } from "../../../../actions/charActions";
 import { auth } from "../../../../firebase/firebase";
 import { history } from "../../../../routers/AppRouter";
-import { charClassTitles, unselectedAttribute, unselectedClass, unselectedRace } from "../../../classes/charInfo";
+import { charClassTitles, unselectedAttribute, unselectedClass, unselectedRace } from "../classes/charInfo";
 import CharSheetNavBar from "./CharSheetNavBar";
 
 

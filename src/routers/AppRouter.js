@@ -1,45 +1,15 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React from "react";
 import { Routes, Route } from 'react-router-dom';
 import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
 import { createBrowserHistory } from "history";
-import { off, onValue, ref, } from "firebase/database";
-import { defaultUserProfile, userReducer } from "../reducers/userReducer";
-import { defaultGameState, gameReducer } from "../reducers/gameReducer";
-import { defaultCharState, charReducer } from "../reducers/charReducer";
-import ActiveGame from "../components/elements/ActiveGame/ActiveGame"
-import AuthWrapper from "../components/Authentication/AuthWrapper";
 import ChooseMode from "../components/Authentication/ChooseMode";
 import FirebaseSignIn from '../components/Authentication/FirebaseSignIn';
-import GameSetup from "../components/GameSetup/GameSetup";
 import NotFoundPage from "../components/Authentication/NotFoundPage";
 import PrivacyPolicy from "../components/Authentication/PrivacyPolicy";
 import Tos from "../components/Authentication/Tos";
 import Welcome from "../components/Authentication/Welcome";
-import { auth, db } from "../firebase/firebase";
-import { updateUserState } from "../actions/userActions";
-import CharacterSelect from "../components/elements/Party/CharacterSelect/CharacterSelect";
-import CharacterSheet from "../components/elements/Party/CharacterSheetElements/CharacterSheet";
-import { setCharState, setNoCurrentChar } from "../actions/charActions";
 import { RefreshHelper } from "../components/functions/RefreshHelper";
-import AttributePicker from "../components/elements/Party/CharacterSheetElements/AttributePicker";
-import RaceSelection from "../components/elements/Party/AttributePickerElements/RaceSelection/RaceSelection";
-import RaceStingers from "../components/elements/Party/AttributePickerElements/RaceSelection/RaceStingers";
-import ToolSelection from "../components/elements/Party/AttributePickerElements/ToolSelection/ToolSelection";
-import ToolStingers from "../components/elements/Party/AttributePickerElements/ToolSelection/ToolStingers";
-import { unselectedClass } from "../components/classes/charInfo";
-import AssistSelection from '../components/elements/Party/AttributePickerElements/AssistSelection/AssistSelection';
-import AssistStingers from '../components/elements/Party/AttributePickerElements/AssistSelection/AssistStingers';
-import SpecialAbility from '../components/elements/Party/AttributePickerElements/SpecialAbility';
-import CharStats from '../components/elements/Party/AttributePickerElements/CharStats';
-import CharName from '../components/elements/Party/AttributePickerElements/CharName';
-import RestOfParty from "../components/elements/Party/partyMembers/RestOfParty";
-import NewLoadWrapper from "../components/elements/Challenges/NewLoadWrapper";
-import GameInstructions from "../components/GameSetup/GameInstructions";
-import Introductions from "../components/introductions/Introductions";
-import ActiveCharWrapper from "../components/elements/ActiveGame/ActiveCharWrapper";
-import IntroDescription from "../components/introductions/IntroDescription";
-import IntroCharacter from "../components/introductions/IntroCharacter";
-import PassTurn from "../components/functions/PassTurn";
+import GameSetup from "../components/elements/GameSetup/GameSetup";
 export const history = createBrowserHistory();
 
 
@@ -193,13 +163,12 @@ const AppRouter = () => {
                     <Route path='/chooseMode/' element={<ChooseMode />} />
                     <Route path='/gameSetup/*' element={<GameSetup />} />
 
-
-
-
-
                     <Route
                         path="/signIn"
                         element={<FirebaseSignIn />}
+                    />
+                    <Route path={'/refreshHelper'}
+                        element={<RefreshHelper />}
                     />
                     <Route
                         path="termsofservice"
@@ -224,11 +193,7 @@ const AppRouter = () => {
 
 export default AppRouter;
 
-// <Route path={'/refreshHelper'}
-// element={<RefreshHelper
-//     userState={userState}
-// />}
-// />
+
 
 
 

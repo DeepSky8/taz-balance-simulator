@@ -1,5 +1,5 @@
 import React from "react";
-import { charClassTitles, charTitles } from "../../../classes/charInfo";
+import { charClassTitles, charTitles } from "../CharacterSheet/classes/charInfo";
 
 export const PlayingAs = ({ userState, charState }) => (
     <div>
@@ -14,5 +14,3 @@ export const PlayingAs = ({ userState, charState }) => (
 )
 
 export default PlayingAs
-
-//         {'  ' + userState.currentCharacterID}

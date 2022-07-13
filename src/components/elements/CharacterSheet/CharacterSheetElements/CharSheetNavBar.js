@@ -1,6 +1,6 @@
 import React from "react"
 import { NavLink } from "react-router-dom"
-import { charClassTitles } from "../../../classes/charInfo"
+import { charClassTitles } from "../classes/charInfo"
 
 const CharSheetNavBar = ({ charState }) => (
 
@@ -24,14 +24,3 @@ const CharSheetNavBar = ({ charState }) => (
 )
 
 export default CharSheetNavBar
-
-//     < NavLink
-// to = 'Bard'
-// className = { isActive =>
-//     (isActive ? "nav-link" : "nav-link-unselected")}
-// > Bard</NavLink >
-//     <NavLink
-//         to='Priest'
-//         className={isActive =>
-//             (isActive ? "nav-link" : "nav-link-unselected")}
-//     >Priest</NavLink>

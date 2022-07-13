@@ -1,5 +1,5 @@
 import React from "react";
-import { startMarkTurnComplete } from "../../actions/gameActions";
+import { startMarkTurnComplete } from "../../../actions/gameActions";
 
 const PassTurn = ({ gameState }) => {
 

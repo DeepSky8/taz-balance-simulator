@@ -1,7 +1,7 @@
 import { off, onValue, ref } from "firebase/database";
 import React, { useEffect, useState } from "react";
 import { db } from "../../../../firebase/firebase";
-import { charClassTitles, charTitles } from "../../../classes/charInfo";
+import { charClassTitles, charTitles } from "../../CharacterSheet/classes/charInfo";
 
 export const PartyMember = ({ uid, charID, hostID }) => {
     const [charName, setCharName] = useState('')

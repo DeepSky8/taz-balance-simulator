@@ -5,12 +5,10 @@ import {
     startNewGame,
     startStopReadyCheck,
     updateReadyStatus
-} from "../../actions/gameActions";
-import { auth } from "../../firebase/firebase";
-import { useNavigate } from "react-router-dom";
+} from "../../../actions/gameActions";
+import { auth } from "../../../firebase/firebase";
 
 const StartGame = ({ userState, gameState, dispatchGameState }) => {
-    let navigate = useNavigate()
     const addPartyMembers = 'Please gather like-minded adventurers to join you on this ... quest ... mission ... thing.'
     const dangerousAlone = "It's dangerous to go alone!"
     const change2PlayerTeamComp = 'In two-player mode, please only select from the Rogue, Wizard, and Warrior classes.'
@@ -21,7 +19,6 @@ const StartGame = ({ userState, gameState, dispatchGameState }) => {
     const beginMission = 'Begin Mission!'
     const oversizeParty = 'Your party is too big!'
     const selectMission = 'Please select a complete mission (three challenges)'
-    const unknownError = 'An unknown error is preventing the mission'
     const [startError, setStartError] = useState('')
     const [startText, setStartText] = useState(readyCheck)
     const [startGame, setStartGame] = useState(false)

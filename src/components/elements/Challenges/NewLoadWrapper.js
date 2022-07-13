@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ChallengeSelect from "./ChallengeSelect";
-import SavedGames from "./savedGames/SavedGames";
+import SavedGames from "../GameSetup/savedGames/SavedGames";
+
 
 const NewLoadWrapper = ({ userState, gameState, savedGameArray }) => {
     const newGameText = 'Display saved missions'

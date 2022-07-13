@@ -1,5 +1,5 @@
 import React from "react";
-import PassTurn from "../../functions/PassTurn";
+import PassTurn from "./PassTurn";
 
 const ActiveCharWrapper = ({ gameState, children }) => {
 

@@ -1,20 +1,8 @@
-import React, { useEffect } from "react";
-import { setCharClassCode, setCharRaceCode, setNoCurrentChar } from "../../../../../actions/charActions";
-import { history } from "../../../../../routers/AppRouter";
-import { asA, asAn, charBlurb, charClassTitles, modifiedByAn, raceCodes, raceTitles } from "../../../../classes/charInfo";
+import React from "react";
+import { setCharRaceCode } from "../../../../../actions/charActions";
+import { asA, asAn, charBlurb, modifiedByAn, raceCodes, raceTitles } from "../../classes/charInfo";
 
 const RaceSelection = ({ charState, dispatchCharState }) => {
-    // let classAction = history.location.pathname.split("/")[2]
-    // let editID = history.location.pathname.split("/")[3]
-
-    // useEffect(() => {
-    //     let classChoice = charClassTitles.indexOf(classAction)
-    //     if (classChoice !== -1 && editID === undefined) {
-    //         dispatchCharState(setNoCurrentChar())
-    //         dispatchCharState(setCharClassCode(classChoice))
-    //         // console.log(`Creating character of type ${classAction}`)
-    //     }
-    // }, [editID, classAction])
 
     // Use the CSS 'show' feature to toggle the race selector open and closed
     const toggleRaceSelections = () => {
@@ -81,13 +69,3 @@ const RaceSelection = ({ charState, dispatchCharState }) => {
 
 
 export default RaceSelection
-
-// {(raceCodes[charState.classCode]).map((code) => {
-//     return (
-//         <div
-//             key={code}
-//             onClick={() => { onClickRace(code) }}
-//         >
-//             {raceTitles[code]}
-//         </div>)
-// })}

@@ -1,6 +1,6 @@
 import React from "react";
 import { setCharAssistCode } from "../../../../../actions/charActions";
-import { assistPrompt, assistTitles, unselectedAttribute } from "../../../../classes/charInfo";
+import { assistPrompt, assistTitles, unselectedAttribute } from "../../classes/charInfo";
 
 export const AssistPicker = ({ charState, dispatchCharState }) => {
 

@@ -1,12 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { get, ref, update } from "firebase/database";
+import { get, onValue, ref } from "firebase/database";
 import { auth, db } from "../../firebase/firebase";
 import { startRemoveUser } from "../../actions/userActions";
 
-export const RefreshHelper = ({ userState }) => {
+export const RefreshHelper = ({ }) => {
     let navigate = useNavigate()
     const [commandCode, setCommandCode] = useState('')
+    const [adminCode, setAdminCode] = useState('')
+
+    useEffect(() => {
+        return onValue(ref(db, 'users/' + auth.currentUser.uid + '/adminCode'),
+            (snapshot) => {
+                if (snapshot.exists()) {
+                    setAdminCode(snapshot.val())
+                }
+            })
+    }, [])
 
     const refreshAccounts = () => {
         const today = new Date().getTime()
@@ -24,7 +34,6 @@ export const RefreshHelper = ({ userState }) => {
                             refreshArray.push(user.val())
                         }
                     })
-                    console.log('refreshArray:', refreshArray)
                     refreshArray.forEach((user) => { startRemoveUser(user.uid) })
                 }
             })
@@ -33,7 +42,7 @@ export const RefreshHelper = ({ userState }) => {
 
     const checkCommandCode = (e) => {
         e.preventDefault();
-        if (commandCode === userState.adminCode) {
+        if (commandCode === adminCode) {
             setCommandCode('')
             refreshAccounts()
         } else {

@@ -1,6 +1,7 @@
 import React, { useEffect, useReducer, useState } from "react";
-import { auth, db } from "../../firebase/firebase";
-import { off, onValue, ref, } from "firebase/database";
+import { auth, db } from "../../../firebase/firebase";
+import { off, onValue, ref } from "firebase/database";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import {
     clearGameState,
     clearClassList,
@@ -12,27 +13,29 @@ import {
     updateReadyList,
     updateReadyStatus,
     clearReadyList,
-} from "../../actions/gameActions";
-import AuthWrapper from "../Authentication/AuthWrapper";
-import JoiningHosting from "./JoiningHosting";
-import ChallengeDisplay from "../elements/Challenges/ChallengeDisplay";
-import { Route, Routes, useNavigate } from "react-router-dom";
+} from "../../../actions/gameActions";
 import CharacterChallengeNavBar from "./CharacterChallengeNavBar";
-import PlayingAs from "../elements/Party/partyMembers/PlayingAs";
-import StartGame from "./StartGame";
+import PlayingAs from "./PlayingAs";
 import {
     clearUserState,
     startRecordCurrentGame,
     updateUserState
-} from "../../actions/userActions";
+} from "../../../actions/userActions";
+import CharacterSelect from "./CharacterSelect/CharacterSelect";
+import { setCharState, setNoCurrentChar } from "../../../actions/charActions";
+import { charReducer, defaultCharState } from "../../../reducers/charReducer";
+import { defaultGameState, gameReducer } from "../../../reducers/gameReducer";
+import { defaultUserProfile, userReducer } from "../../../reducers/userReducer";
+import NewLoadWrapper from "../Challenges/NewLoadWrapper";
+import RestOfParty from "./Party/RestOfParty";
+import JoiningHosting from "./JoiningHosting";
+import StartGame from "./StartGame";
 import GameInstructions from "./GameInstructions";
-import CharacterSelect from "../elements/Party/CharacterSelect/CharacterSelect";
-import { setCharState, setNoCurrentChar } from "../../actions/charActions";
-import { charReducer, defaultCharState } from "../../reducers/charReducer";
-import { defaultGameState, gameReducer } from "../../reducers/gameReducer";
-import { defaultUserProfile, userReducer } from "../../reducers/userReducer";
-import NewLoadWrapper from "../elements/Challenges/NewLoadWrapper";
-import RestOfParty from "../elements/Party/partyMembers/RestOfParty";
+import AuthWrapper from "../../Authentication/AuthWrapper";
+import ChallengeDisplay from "./ChallengeDisplay";
+
+
+
 
 export const GameSetup = ({ }) => {
     let navigate = useNavigate()

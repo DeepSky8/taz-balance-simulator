@@ -1,5 +1,4 @@
-import { child, push, ref, remove, update } from "firebase/database"
-import { priestAssistFame } from "../components/classes/priestInfo"
+import { child, push, ref, update } from "firebase/database"
 import { db } from "../firebase/firebase"
 
 // Local Actions

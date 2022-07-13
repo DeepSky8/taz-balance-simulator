@@ -1,6 +1,6 @@
-import React, { useEffect, useReducer, useState } from "react";
-import generateGameID from '../functions/generateGameID';
-import { defaultJoiningReducer, joiningReducer } from "../../reducers/joiningReducer";
+import React, { useEffect, useReducer } from "react";
+import generateGameID from '../../functions/generateGameID';
+import { defaultJoiningReducer, joiningReducer } from "../../../reducers/joiningReducer";
 import {
     clearGameCodeError,
     startRegisterGameID,
@@ -11,10 +11,9 @@ import {
     toggleJoiningGame,
     clearGameID,
     startExitActiveGame,
-} from '../../actions/joiningActions';
-import { auth, db } from "../../firebase/firebase";
-import { off, onValue, ref } from "firebase/database";
-import { clearPlayerList, startRemoveGameCode } from "../../actions/gameActions";
+} from '../../../actions/joiningActions';
+import { auth } from "../../../firebase/firebase";
+import { clearPlayerList, startRemoveGameCode } from "../../../actions/gameActions";
 
 const JoiningHosting = ({ userState, dispatchGameState, gameArray }) => {
 
@@ -26,7 +25,6 @@ const JoiningHosting = ({ userState, dispatchGameState, gameArray }) => {
     useEffect(() => {
         if (userState.gameID === '' || userState.gameID === null) {
             dispatchJoinHost(clearGameID())
-            // dispatchJoinHost(setGameCodeError())
         } else {
             dispatchJoinHost(
                 setGameID(
@@ -72,7 +70,7 @@ const JoiningHosting = ({ userState, dispatchGameState, gameArray }) => {
                 (userState.joiningGame && !gameCodeRegistered))) {
             // Set an error that the game code isn't found
             dispatchJoinHost(setGameCodeError())
-            
+
         } else {
             // Otherwise clear the error
             dispatchJoinHost(clearGameCodeError())
@@ -98,13 +96,6 @@ const JoiningHosting = ({ userState, dispatchGameState, gameArray }) => {
                 startRegisterGameID(auth.currentUser.uid, parseInt(gameID))
             }
         }
-
-
-        // console.log('joinHost.gameID changed: ', joinHost.gameID)
-        // console.log('fourDigits state is: ', fourDigits)
-        // console.log('validGameCode state is: ', validGameCode)
-        // console.log('gameCodeRegistered state is: ', gameCodeRegistered)
-
 
     }, [joinHost.gameID])
 
