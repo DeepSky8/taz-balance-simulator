@@ -1,7 +1,7 @@
 import React from "react";
 import { setWarriorToolArmor, setWarriorToolBattlecry } from "../../../../../../actions/charActions";
-import { warriorToolArmor, warriorToolBattlecry } from "../../../../../classes/warriorInfo";
-import {longDescription} from '../../../../../classes/charInfo';
+import { warriorToolArmor, warriorToolBattlecry } from "../../../classes/warriorInfo";
+import {longDescription} from '../../../classes/charInfo';
 
 const WarriorToolStingers = ({ charState, dispatchCharState }) => (
     <div>

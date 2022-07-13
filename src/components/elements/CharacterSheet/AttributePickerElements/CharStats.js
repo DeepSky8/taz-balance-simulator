@@ -1,5 +1,5 @@
 import React from "react";
-import { stats } from "../../../classes/charInfo";
+import { stats } from "../classes/charInfo";
 
 const Stats = ({ charState }) => {
     let classStats = stats[charState.classCode]

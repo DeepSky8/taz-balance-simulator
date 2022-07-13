@@ -1,7 +1,7 @@
 import React from "react";
 import { setPriestAssistFame, setPriestAssistFameHelps, setPriestAssistHobby } from "../../../../../../actions/charActions";
-import { longDescription } from "../../../../../classes/charInfo";
-import { priestAssistFame, priestAssistHobby } from "../../../../../classes/priestInfo";
+import { longDescription } from "../../../classes/charInfo";
+import { priestAssistFame, priestAssistHobby } from "../../../classes/priestInfo";
 
 const PriestAssistStingers = ({ charState, dispatchCharState }) => (
     <div>

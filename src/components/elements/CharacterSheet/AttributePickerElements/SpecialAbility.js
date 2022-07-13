@@ -1,5 +1,5 @@
 import React from "react";
-import { specialStinger, specialTitle } from "../../../classes/charInfo";
+import { specialStinger, specialTitle } from "../classes/charInfo";
 
 const SpecialAbility = ({ charState }) => (
     <div id="specialAbility">

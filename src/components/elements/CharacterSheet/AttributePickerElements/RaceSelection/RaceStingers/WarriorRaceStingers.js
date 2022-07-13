@@ -1,6 +1,6 @@
 import React from "react";
 import { setDwarfWarriorBeard, setHumanWarriorOrigin1, setHumanWarriorOrigin2, setHumanWarriorOrigin3, } from "../../../../../../actions/charActions";
-import { raceTitles, shortDescription } from "../../../../../classes/charInfo";
+import { raceTitles, shortDescription } from "../../../classes/charInfo";
 const imA = "I'm a "
 const iWasRaisedBy = "       I was raised by "
 const i = '     I '

@@ -1,9 +1,9 @@
 import React from "react";
-import { assistStingers, classBard, classPriest, classRogue, classWarrior, classWizard } from "../../../../classes/charInfo";
-import BardAssistStingers from "../../../CharacterSheet/AttributePickerElements/AssistSelection/AssistStingers/BardAssistStingers";
-import PriestAssistStingers from "../../../CharacterSheet/AttributePickerElements/AssistSelection/AssistStingers/PriestAssistStingers";
-import WarriorAssistStingers from "../../../CharacterSheet/AttributePickerElements/AssistSelection/AssistStingers/WarriorAssistStingers";
-import WizardAssistStingers from "../../../CharacterSheet/AttributePickerElements/AssistSelection/AssistStingers/WizardAssistStingers";
+import { assistStingers, classBard, classPriest, classWarrior, classWizard } from "../../classes/charInfo";
+import BardAssistStingers from "./AssistStingers/BardAssistStingers";
+import PriestAssistStingers from "./AssistStingers/PriestAssistStingers";
+import WarriorAssistStingers from "./AssistStingers/WarriorAssistStingers";
+import WizardAssistStingers from "./AssistStingers/WizardAssistStingers";
 
 const AssistStingers = ({ charState, dispatchCharState }) => (
     <div id="assistStingers">

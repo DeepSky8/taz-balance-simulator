@@ -1,7 +1,7 @@
 import React from "react";
 import { setWarriorAssistFame, setWarriorAssistFameHelps } from "../../../../../../actions/charActions";
-import { longDescription } from "../../../../../classes/charInfo";
-import { warriorAssistFame } from "../../../../../classes/warriorInfo";
+import { longDescription } from "../../../classes/charInfo";
+import { warriorAssistFame } from "../../../classes/warriorInfo";
 
 const WarriorAssistStingers = ({ charState, dispatchCharState }) => (
     <div>

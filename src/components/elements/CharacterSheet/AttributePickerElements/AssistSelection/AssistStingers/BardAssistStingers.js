@@ -1,7 +1,7 @@
 import React from "react";
-import { bardAssistMusic } from "../../../../../classes/bardInfo";
+import { bardAssistMusic } from "../../../classes/bardInfo";
 import { setBardInstrument, setBardMusicSkill } from "../../../../../../actions/charActions";
-import { mediumDescription, shortDescription } from "../../../../../classes/charInfo";
+import { mediumDescription, shortDescription } from "../../../classes/charInfo";
 
 const BardAssistStingers = ({ charState, dispatchCharState }) => (
     <div>

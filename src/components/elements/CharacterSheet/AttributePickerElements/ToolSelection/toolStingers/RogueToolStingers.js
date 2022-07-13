@@ -1,7 +1,7 @@
 import React from "react";
 import { setRogueCatchphrase } from "../../../../../../actions/charActions";
-import { rogueToolCatchphrase } from "../../../../../classes/rogueInfo";
-import {longDescription} from '../../../../../classes/charInfo';
+import { rogueToolCatchphrase } from "../../../classes/rogueInfo";
+import {longDescription} from '../../../classes/charInfo';
 
 const RogueToolStingers = ({ charState, dispatchCharState }) => (
     <div>

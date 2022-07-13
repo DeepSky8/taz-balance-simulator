@@ -1,6 +1,6 @@
 import React from "react";
 import { setDwarfPriestOrigin } from "../../../../../../actions/charActions";
-import { longDescription, raceTitles } from "../../../../../classes/charInfo";
+import { longDescription, raceTitles } from "../../../classes/charInfo";
 
 const PriestRaceStingers = ({ charState, dispatchCharState }) => (
     <div>

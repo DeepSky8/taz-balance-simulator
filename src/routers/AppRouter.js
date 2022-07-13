@@ -10,6 +10,7 @@ import Tos from "../components/Authentication/Tos";
 import Welcome from "../components/Authentication/Welcome";
 import { RefreshHelper } from "../components/functions/RefreshHelper";
 import GameSetup from "../components/elements/GameSetup/GameSetup";
+import CharacterSheet from "../components/elements/CharacterSheet/CharacterSheet";
 export const history = createBrowserHistory();
 
 
@@ -162,7 +163,7 @@ const AppRouter = () => {
                     <Route path="/" element={<Welcome />} />
                     <Route path='/chooseMode/' element={<ChooseMode />} />
                     <Route path='/gameSetup/*' element={<GameSetup />} />
-
+                    <Route path="/charactersheet/*" element={<CharacterSheet />} />
                     <Route
                         path="/signIn"
                         element={<FirebaseSignIn />}
@@ -206,46 +207,7 @@ export default AppRouter;
 //             charState={charState}
 //             dispatchCharState={dispatchCharState}
 //         >
-//             <AttributePicker
-//                 charState={charState}
-//                 dispatchCharState={dispatchCharState}
-//             >
-//                 {charState.classCode !== unselectedClass &&
-//                     <div>
-//                         <SpecialAbility charState={charState} />
-//                         <CharStats charState={charState} />
-//                         <RaceSelection
-//                             charState={charState}
-//                             dispatchCharState={dispatchCharState}
-//                         />
-//                         <RaceStingers
-//                             charState={charState}
-//                             dispatchCharState={dispatchCharState}
-//                         />
-//                         <ToolSelection
-//                             charState={charState}
-//                             dispatchCharState={dispatchCharState}
-//                         />
-//                         <ToolStingers
-//                             charState={charState}
-//                             dispatchCharState={dispatchCharState}
-//                         />
-//                         <AssistSelection
-//                             charState={charState}
-//                             dispatchCharState={dispatchCharState}
-//                         />
-//                         <AssistStingers
-//                             charState={charState}
-//                             dispatchCharState={dispatchCharState}
-//                         />
-//                         <CharName
-//                             charState={charState}
-//                             dispatchCharState={dispatchCharState}
-//                         />
-//                     </div>
-
-//                 }
-//             </AttributePicker>
+//             
 //         </CharacterSheet>
 
 //     </div>

@@ -1,7 +1,7 @@
 import React from "react";
 import { setBardSuperGoal } from "../../../../../../actions/charActions";
-import { bardToolBigGoal } from "../../../../../classes/bardInfo";
-import {longDescription} from '../../../../../classes/charInfo';
+import { bardToolBigGoal } from "../../../classes/bardInfo";
+import {longDescription} from '../../../classes/charInfo';
 
 const BardToolStingers = ({ charState, dispatchCharState }) => (
     <div>

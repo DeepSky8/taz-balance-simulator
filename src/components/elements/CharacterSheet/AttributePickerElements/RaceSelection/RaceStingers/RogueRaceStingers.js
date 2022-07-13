@@ -1,6 +1,6 @@
 import React from "react";
 import { setGerblinRogueOrigin } from "../../../../../../actions/charActions";
-import { extraLongDescription, raceTitles } from "../../../../../classes/charInfo";
+import { extraLongDescription, raceTitles } from "../../../classes/charInfo";
 
 const RogueRaceStingers = ({ charState, dispatchCharState }) => (
     <div>

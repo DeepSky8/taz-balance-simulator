@@ -1,7 +1,7 @@
 import React from "react";
 import { setWizardToolCatchphrase } from "../../../../../../actions/charActions";
-import { wizardToolCatchphrase } from "../../../../../classes/wizardInfo";
-import {longDescription} from '../../../../../classes/charInfo';
+import { wizardToolCatchphrase } from "../../../classes/wizardInfo";
+import {longDescription} from '../../../classes/charInfo';
 
 const WizardToolStingers = ({ charState, dispatchCharState }) => (
     <div>

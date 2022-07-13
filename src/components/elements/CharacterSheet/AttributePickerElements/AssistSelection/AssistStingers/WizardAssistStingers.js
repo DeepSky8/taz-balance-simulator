@@ -1,7 +1,7 @@
 import React from "react";
 import { setWizardAssistFame, setWizardAssistFameHelps } from "../../../../../../actions/charActions";
-import { longDescription } from "../../../../../classes/charInfo";
-import { wizardAssistFame } from "../../../../../classes/wizardInfo";
+import { longDescription } from "../../../classes/charInfo";
+import { wizardAssistFame } from "../../../classes/wizardInfo";
 
 const WizardAssistStingers = ({ charState, dispatchCharState }) => (
     <div>

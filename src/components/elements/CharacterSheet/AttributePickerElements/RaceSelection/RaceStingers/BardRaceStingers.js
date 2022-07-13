@@ -1,6 +1,6 @@
 import React from "react";
 import { setHumanBardBand, setRobotBardCreator, setRobotBardVisual } from "../../../../../../actions/charActions";
-import { longDescription, raceTitles } from "../../../../../classes/charInfo";
+import { longDescription, raceTitles } from "../../../classes/charInfo";
 
 const BardRaceStingers = ({ charState, dispatchCharState }) => (
     <div>

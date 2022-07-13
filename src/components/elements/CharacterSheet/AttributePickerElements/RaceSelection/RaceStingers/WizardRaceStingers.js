@@ -1,6 +1,6 @@
 import React from "react";
 import { setUndeadWizardOrigin1, setUndeadWizardOrigin2, setUndeadWizardOrigin3 } from "../../../../../../actions/charActions";
-import { longDescription, raceTitles } from "../../../../../classes/charInfo";
+import { longDescription, raceTitles } from "../../../classes/charInfo";
 
 const WizardRaceStingers = ({ charState, dispatchCharState }) => (
     <div>

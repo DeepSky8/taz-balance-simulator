@@ -180,12 +180,12 @@ export const setHumanWarriorOrigin1 = (humanWarriorOrigin1) => ({
 })
 
 export const setHumanWarriorOrigin2 = (humanWarriorOrigin2) => ({
-    type: 'SET_HUMAN_WARRIOR_ORIGIN_1',
+    type: 'SET_HUMAN_WARRIOR_ORIGIN_2',
     humanWarriorOrigin2
 })
 
 export const setHumanWarriorOrigin3 = (humanWarriorOrigin3) => ({
-    type: 'SET_HUMAN_WARRIOR_ORIGIN_1',
+    type: 'SET_HUMAN_WARRIOR_ORIGIN_3',
     humanWarriorOrigin3
 })
 

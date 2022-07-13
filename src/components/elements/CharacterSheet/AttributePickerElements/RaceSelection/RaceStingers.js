@@ -1,5 +1,5 @@
 import React from "react";
-import { classBard, classPriest, classRogue, classWarrior, classWizard, raceCodes, raceStingers } from "../../../../classes/charInfo";
+import { classBard, classPriest, classRogue, classWarrior, classWizard, raceCodes, raceStingers } from "../../classes/charInfo";
 import BardRaceStingers from "./RaceStingers/BardRaceStingers";
 import PriestRaceStingers from "./RaceStingers/PriestRaceStingers";
 import RogueRaceStingers from "./RaceStingers/RogueRaceStingers";
