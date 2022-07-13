@@ -2,35 +2,18 @@
 const defaultUserProfile = {
     anonymousUID: null,
     currentCharacterID: null,
-    currentGame:{
+    currentGame: {
         host: null,
         key: null
     },
     gameID: '',
-    // host: null,
     isAnonymous: true,
     joiningGame: true,
     lastActivity: 0,
     adminCode: null,
-    savedGamesArray: [],
     uid: null,
 
 }
-
-// Game Object
-// {
-//     key: null,
-//     villainCode: null,
-//     relicCode: null,
-//     locationCode: null,
-//     surprises: [{}],
-//     progress: {
-//         villain: '',
-//         relic: '',
-//         location: ''
-//     },
-//     teamHealth: ''
-// }
 
 const userReducer = (state, action) => {
     switch (action.type) {
@@ -45,6 +28,10 @@ const userReducer = (state, action) => {
                 ...defaultUserProfile,
                 ...action.updatedState,
                 // gameID: gameIDupdate
+            }
+        case 'CLEAR_STATE':
+            return {
+                ...defaultUserProfile
             }
         case 'SET_JOINING_GAME':
             return {

@@ -30,7 +30,7 @@ export const AuthWrapper = () => {
 
     return (
         <div>
-            <Link to="/gameSetup">Game Setup</Link>
+            <Link to="/gameSetup/gameInstructions">Game Setup</Link>
             {auth.currentUser.isAnonymous === false
                 ?
                 <LogoutLink />

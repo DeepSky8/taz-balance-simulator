@@ -72,6 +72,11 @@ export const startSaveUpdatedCharacter = (uid, charState, charKey) => {
     updates['characters/' + uid + '/' + charKey] = { ...charState, charID: charKey };
     updates['users/' + uid + '/currentCharacterID'] = charKey
     update(ref(db), updates)
+        .then(() => {
+            const updates = {}
+            updates['characters/' + uid + '/' + charKey + '/changeClass'] = false;
+            update(ref(db), updates)
+        })
         .catch((error) => {
             console.log('Error when saving new character:', error)
         })

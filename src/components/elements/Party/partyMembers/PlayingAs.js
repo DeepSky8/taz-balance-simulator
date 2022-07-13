@@ -3,7 +3,7 @@ import { charClassTitles, charTitles } from "../../../classes/charInfo";
 
 export const PlayingAs = ({ userState, charState }) => (
     <div>
-        {userState.currentCharacterID ?
+        {charState.charName ?
             'Playing as ' + charState.charName + ' the ' + charClassTitles[charState.classCode] + [charTitles[charState.questCount]]
             :
             'Please select or create a character'

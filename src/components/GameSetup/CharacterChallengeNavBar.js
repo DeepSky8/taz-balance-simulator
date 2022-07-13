@@ -5,18 +5,25 @@ const CharacterChallengeNavBar = () => {
     return (
         <div>
             <NavLink
+                to={'gameInstructions'}
+                className={isActive =>
+                    (isActive ? "nav-link" : "nav-link-unselected")}
+            >
+                |  Instructions  |
+            </NavLink>
+            <NavLink
                 to={'selectCharacter'}
                 className={isActive =>
                     (isActive ? "nav-link" : "nav-link-unselected")}
             >
-                |  Character  |  
+                |  Character  |
             </NavLink>
             <NavLink
                 to={'selectChallenges'}
                 className={isActive =>
                     (isActive ? "nav-link" : "nav-link-unselected")}
             >
-                |  Challenges  |  
+                |  Challenges  |
             </NavLink>
             <NavLink
                 to={'restOfParty'}

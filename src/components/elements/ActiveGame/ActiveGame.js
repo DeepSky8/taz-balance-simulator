@@ -68,7 +68,7 @@ const ActiveGame = ({ userState, gameState, dispatchGameState }) => {
         // Ongoing ready (gameState) monitor
         onValue(ref(db, 'savedGames/' + userState.currentGame.host + '/' + userState.currentGame.key + '/ready'), (snapshot) => {
             if (snapshot.exists()) {
-                console.log('ready status in cloud: ', snapshot.val())
+                // console.log('ready status in cloud: ', snapshot.val())
                 dispatchGameState(updateReadyStatus(snapshot.val()))
             }
         })
@@ -104,7 +104,7 @@ const ActiveGame = ({ userState, gameState, dispatchGameState }) => {
 
     }, [gameState.readyList])
 
-    console.log('gameState: ', gameState)
+    // console.log('gameState: ', gameState)
     return (
         <div>
             This is the active game screen
@@ -130,8 +130,8 @@ const ActiveGame = ({ userState, gameState, dispatchGameState }) => {
                 gameState.readyList.forEach((remainingPlayer) => {
                     // return (<div>Ready Player Object: {playerObject} </div>)
                     <div>Object</div>
-                    console.log('remainingPlayer', remainingPlayer)
-                    console.log('readyList on page: ', gameState.readyList)
+                    // console.log('remainingPlayer', remainingPlayer)
+                    // console.log('readyList on page: ', gameState.readyList)
                 })
             }
 

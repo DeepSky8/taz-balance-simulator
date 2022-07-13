@@ -2,10 +2,11 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { startSetReadyFalse } from "../../actions/gameActions";
 import ActiveCharWrapper from "../elements/ActiveGame/ActiveCharWrapper";
+import IntroCharacter from "./IntroCharacter";
 import IntroDescription from "./IntroDescription";
 
 
-const Introductions = ({ gameState, dispatchGameState }) => {
+const Introductions = ({ gameState, children }) => {
     let navigate = useNavigate()
 
     // Monitor the ready state of the game
@@ -22,15 +23,18 @@ const Introductions = ({ gameState, dispatchGameState }) => {
 
     return (
         <div>
-            {<ActiveCharWrapper
-                gameState={gameState}
-                dispatchGameState={dispatchGameState}
-            />}
-            {<IntroDescription />}
-
+            {children}
         </div>
     )
 }
 
 
 export default Introductions
+
+
+// {<ActiveCharWrapper
+//     gameState={gameState}
+//     dispatchGameState={dispatchGameState}
+// />}
+// {<IntroDescription />}
+// {<IntroCharacter gameState={gameState} />}
