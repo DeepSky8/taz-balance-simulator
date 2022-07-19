@@ -11,6 +11,7 @@ import Welcome from "../components/Authentication/Welcome";
 import { RefreshHelper } from "../components/functions/RefreshHelper";
 import GameSetup from "../components/elements/GameSetup/GameSetup";
 import CharacterSheet from "../components/elements/CharacterSheet/CharacterSheet";
+import ActiveGame from "../components/elements/ActiveGame/ActiveGame";
 export const history = createBrowserHistory();
 
 
@@ -164,21 +165,11 @@ const AppRouter = () => {
                     <Route path='/chooseMode/' element={<ChooseMode />} />
                     <Route path='/gameSetup/*' element={<GameSetup />} />
                     <Route path="/charactersheet/*" element={<CharacterSheet />} />
-                    <Route
-                        path="/signIn"
-                        element={<FirebaseSignIn />}
-                    />
-                    <Route path={'/refreshHelper'}
-                        element={<RefreshHelper />}
-                    />
-                    <Route
-                        path="termsofservice"
-                        element={<Tos />}
-                    />
-                    <Route
-                        path="privacypolicy"
-                        element={<PrivacyPolicy />}
-                    />
+                    <Route path="/activeGame/*" element={<ActiveGame />} />
+                    <Route path="/signIn" element={<FirebaseSignIn />} />
+                    <Route path='/refreshHelper' element={<RefreshHelper />} />
+                    <Route path="termsofservice" element={<Tos />} />
+                    <Route path="privacypolicy" element={<PrivacyPolicy />} />
 
                     <Route path="*" element={<NotFoundPage />} />
                 </Routes>
@@ -193,68 +184,6 @@ const AppRouter = () => {
 }
 
 export default AppRouter;
-
-
-
-
-
-// <Route path="/characterSheet/*"
-// element={
-//     <div>
-//         <AuthWrapper />
-//         <CharacterSheet
-//             charArray={charArray}
-//             charState={charState}
-//             dispatchCharState={dispatchCharState}
-//         >
-//             
-//         </CharacterSheet>
-
-//     </div>
-// }
-// >
-// </Route>
-
-
-
-
-// <Route path='/activeGame/*' element={
-// <div>
-//     <AuthWrapper />
-//     <ActiveGame
-//         userState={userState}
-//         gameState={gameState}
-//         dispatchGameState={dispatchGameState}
-//     />
-// </div>
-// }
-// >
-// <Route
-//     path="introductions"
-//     element={
-//         <div>
-//             <Introductions
-//                 gameState={gameState}
-//                 dispatchGameState={dispatchGameState}
-//             />
-//             <ActiveCharWrapper
-//                 gameState={gameState}
-//                 dispatchGameState={dispatchGameState}
-//             >
-//                 <PassTurn
-//                     gameState={gameState}
-//                 />
-//                 <IntroDescription />
-//                 <IntroCharacter
-//                     gameState={gameState}
-//                     charState={charState}
-//                 />
-//             </ActiveCharWrapper>
-
-//         </div>
-//     }
-// />
-// </Route>
 
 // userState={userState}
 // dispatchGameState={dispatchGameState}

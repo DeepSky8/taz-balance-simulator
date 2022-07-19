@@ -10,6 +10,7 @@ const defaultGameState = {
     classList: [],
     host: null,
     key: null,
+    stage: '',
     surprises: [],
     progress: {
         villain: null,
@@ -28,10 +29,12 @@ const gameReducer = (state, action) => {
             return {
                 ...defaultGameState,
                 ...action.currentActiveGame,
-                playerList: state.playerList,
                 classList: state.classList,
+                playerList: state.playerList,
+                stage: state.stage,
+                // ready: state.ready,
                 readyList: state.readyList,
-                ready: state.ready
+                activePlayer: state.activePlayer
             }
         case 'UPDATE_GAME_STATE_FULL':
             return {
@@ -107,6 +110,11 @@ const gameReducer = (state, action) => {
             return {
                 ...state,
                 activePlayer: action.activePlayer
+            }
+        case 'UPDATE_STAGE':
+            return {
+                ...state,
+                stage: action.stage
             }
         default:
             return state

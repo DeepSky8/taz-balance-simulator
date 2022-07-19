@@ -1,7 +1,14 @@
 import React from "react";
-import { startMarkTurnComplete } from "../../../actions/gameActions";
+import { startMarkTurnComplete, startUpdateGameStage } from "../../../actions/gameActions";
+import { auth } from "../../../firebase/firebase";
 
-const PassTurn = ({ gameState }) => {
+const PassTurn = ({ gameState, resetStages }) => {
+    let isActivePlayer = (gameState.activePlayer ?
+        (gameState.activePlayer.uid !== auth.currentUser.uid)
+        :
+        true
+    )
+
 
     const passTurn = () => {
         startMarkTurnComplete(
@@ -13,10 +20,17 @@ const PassTurn = ({ gameState }) => {
     }
 
     return (
-        <button
-            onClick={() => { passTurn() }}>
-            Pass Turn
-        </button>
+        <div>
+            <button
+                onClick={() => { passTurn() }}
+                disabled={isActivePlayer}
+            >
+                Pass Turn
+            </button>
+            <button
+                onClick={() => { resetStages() }}
+            >Reset Stages</button>
+        </div>
     )
 }
 

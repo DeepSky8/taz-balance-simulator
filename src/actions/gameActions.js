@@ -72,6 +72,11 @@ export const setActivePlayer = (activePlayer) => ({
     activePlayer
 })
 
+export const updateStage = (stage) => ({
+    type: 'UPDATE_STAGE',
+    stage
+})
+
 // Cloud Actions
 
 // const actuallySaveGame = (uid, key, gameData) => {
@@ -157,7 +162,6 @@ export const startSavedGame = (uid, gameID, key, playerList) => {
     updates['savedGames/' + uid + '/' + key + '/playerList'] = playerList;
     updates['savedGames/' + uid + '/' + key + '/key'] = key;
     updates['savedGames/' + uid + '/' + key + '/host'] = uid;
-    updates['savedGames/' + uid + '/' + key + '/ready'] = false;
     update(ref(db), updates)
         .then(() => {
             startRemoveGameCode(uid, gameID)
@@ -177,6 +181,8 @@ export const startNewGame = (uid, gameID, playerList, challengesObject, teamHeal
     updates['savedGames/' + uid + '/' + key + '/challengesObject'] = { ...challengesObject };
     updates['savedGames/' + uid + '/' + key + '/teamHealth'] = teamHealth;
     updates['savedGames/' + uid + '/' + key + '/progress'] = { location: 0, relic: 0, villain: 0 };
+    updates['savedGames/' + uid + '/' + key + '/stage'] = 'INTRO';
+    updates['savedGames/' + uid + '/' + key + '/ready'] = false;
     update(ref(db), updates)
         .catch((error) => {
             console.log('Error when starting game (new):', error)
@@ -216,6 +222,60 @@ export const startSetReadyFalse = (uid, key) => {
     update(ref(db), updates)
         .catch((error) => {
             console.log('Error setting Ready to false:', error)
+        })
+}
+
+export const startUpdateGameStage = (uid, key, stage) => { 
+    const updates = {};
+    updates['savedGames/' + uid + '/' + key + '/stage'] = stage;
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Error updating game stages:', error)
+        })
+}
+
+const startCreateGameStages = (uid, key) => {
+    const updates = {};
+    updates['savedGames/' + uid + '/' + key + '/stage'] = 'INTRO';
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Error creating game stages:', error)
+        })
+}
+
+const startCompleteIntroStage = (uid, key) => {
+    const updates = {};
+    updates['savedGames/' + uid + '/' + key + '/stage'] = 'BRIEF';
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Error completing Intro stage:', error)
+        })
+}
+
+const startCompleteBriefingStage = (uid, key) => {
+    const updates = {};
+    updates['savedGames/' + uid + '/' + key + '/stage'] = 'BACKSTORY';
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Error completing Briefing stage:', error)
+        })
+}
+
+const startCompleteBackstoryStage = (uid, key) => {
+    const updates = {};
+    updates['savedGames/' + uid + '/' + key + '/stage'] = 'CHALLENGES'
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Error completing Backstory stage:', error)
+        })
+}
+
+const startCompleteChallengesStage = (uid, key) => {
+    const updates = {};
+    updates['savedGames/' + uid + '/' + key + '/stage'] = 'END';
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Error completing Challenges stage:', error)
         })
 }
 

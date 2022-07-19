@@ -1,16 +1,12 @@
 import React from "react";
-import PassTurn from "./PassTurn";
 
-const ActiveCharWrapper = ({ gameState, children }) => {
+const ActiveCharWrapper = ({ activePlayer }) => (
+    <div>
+        Active Char Name - color matches char type:
+        {activePlayer && activePlayer.currentCharacterID}
+    </div>
+)
 
-    return (
-        <div>
-            Active Char Name - color matches char type:  
-            {gameState.activePlayer && gameState.activePlayer.currentCharacterID}
-            {children}
-        </div>
-    )
-}
 
 
 export default ActiveCharWrapper

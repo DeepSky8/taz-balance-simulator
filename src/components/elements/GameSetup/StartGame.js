@@ -55,7 +55,7 @@ const StartGame = ({ userState, gameState, dispatchGameState }) => {
             // If the player is hosting the game, however
             if (
                 // If more than one player is in the party
-                (gameState.playerList.length > 1) &&
+                (gameState.playerList.length >= 1) &&
                 // and if the rest of the party has indicated they are ready to play
                 (gameState.readyList.length === gameState.playerList.length) &&
                 // and if the host has selected a character
@@ -202,7 +202,6 @@ const StartGame = ({ userState, gameState, dispatchGameState }) => {
                         gameState.challengesObject,
                         teamHealth
                     )
-
                 } else {
                     // If the game was previously saved, join it
                     startSavedGame(

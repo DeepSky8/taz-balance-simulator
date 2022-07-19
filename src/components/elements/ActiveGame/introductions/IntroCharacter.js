@@ -1,28 +1,21 @@
-import { onValue, ref } from "firebase/database";
-import React, { useEffect } from "react";
-import { db } from "../../firebase/firebase";
-
-const IntroCharacter = ({ gameState, charState, dispatchCharState }) => {
-
-    useEffect(() => {
-        const uid = gameState.activePlayer.uid
-        const currentCharacterID = gameState.activePlayer.currentCharacterID
-        if (gameState.activePlayer) {
-            onValue(ref(db, 'characters/' + gameState.activePlayer.uid + '/' + gameState.activePlayer.currentCharacterID), (snapshot) => {
-                if (snapshot.exists()) {
-
-                }
-            })
-        }
+import React from "react";
+import { charClassTitles, raceTitles, stats, toolTitles } from "../../CharacterSheet/classes/charInfo";
 
 
-    }, [gameState.activePlayer])
-
-    return (
+const IntroCharacter = ({ character}) => (
         <div>
-            My character is named { }
+            <div>
+                {character && (`My character is named ${character.charName}`)}
+
+            </div>
+            <div>
+                {character && (`I'm a ${raceTitles[character.raceCode]} ${charClassTitles[character.classCode]}`)}
+            </div>
+            <div>
+                {(character.classCode && character.toolCode) &&
+                    (`I'm especially effective against ${(stats[character.classCode]).specialTarget} challenges because of my ${(toolTitles[character.classCode])[character.toolCode]}`)}
+            </div>
         </div>
     )
-}
 
 export default IntroCharacter
