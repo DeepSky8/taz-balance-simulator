@@ -9,27 +9,12 @@ const SavedGames = ({ gameState, toggleGameType, gameTypeButtonText, savedGameAr
     const [hosting, setHosting] = useState(false)
 
     useEffect(() => {
-        setHosting(gameState.gameID && gameState.host === auth.currentUser.uid)
-    }, [gameState.gameID])
-
-    // useEffect(() => {
-    //     onValue(ref(db, 'savedGames/' + auth.currentUser.uid), (snapshot) => {
-    //         const userSavedGames = [];
-    //         if (snapshot.exists()) {
-    //             snapshot.forEach((savedGame) => { userSavedGames.push(savedGame.val()) })
-    //         }
-    //         setSavedGameArray(userSavedGames)
-
-    //     })
-
-    //     return () => {
-    //         off(ref(db, 'savedGames/' + auth.currentUser.uid))
-    //     }
-    // }, [])
+        setHosting(gameState.static.gameID && gameState.static.host === auth.currentUser.uid)
+    }, [gameState.static.gameID])
 
     const loadGame = (savedGameKey, challengesObject) => {
         if (hosting) {
-            startLoadSavedGame(gameState.gameID, savedGameKey, challengesObject)
+            startLoadSavedGame(gameState.static.gameID, savedGameKey, challengesObject)
         }
     }
 
@@ -43,10 +28,18 @@ const SavedGames = ({ gameState, toggleGameType, gameTypeButtonText, savedGameAr
             <h4>Your Saved Games:</h4>
             {savedGameArray.map((savedGame) => {
                 return <SavedGame
-                    key={savedGame.key}
+                    key={savedGame.static.key}
                     savedGame={savedGame}
-                    removeSavedGame={() => { startRemoveSavedGame(auth.currentUser.uid, savedGame.key) }}
-                    resumeSavedGame={() => { loadGame(savedGame.key, savedGame.challengesObject) }}
+                    removeSavedGame={() => { startRemoveSavedGame(auth.currentUser.uid, savedGame.static.key) }}
+                    resumeSavedGame={() => {
+                        loadGame(
+                            savedGame.static.key,
+                            {
+                                codeVillain: savedGame.static.codeVillain,
+                                codeRelic: savedGame.static.codeRelic,
+                                codeLocation: savedGame.static.codeLocation
+                            })
+                    }}
                     hosting={hosting}
                 />
             })}

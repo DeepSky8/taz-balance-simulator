@@ -65,7 +65,8 @@ export const startSaveGameID = (uid, gameID) => {
 
 export const startRegisterGameID = (uid, gameID) => {
     const updates = {};
-    updates['activeGames/' + gameID] = { host: uid, gameID };
+    updates['gameSetup/' + gameID + '/static/host'] = uid;
+    updates['gameSetup/' + gameID + '/static/gameID'] = gameID;
     updates['gameList/' + gameID] = { host: uid, gameID };
     // updates['users/' + uid + '/host'] = true;
     update(ref(db), updates)
@@ -86,7 +87,7 @@ export const startRegisterGameID = (uid, gameID) => {
 export const startExitActiveGame = (uid, gameID) => {
     const updates = {};
     updates['users/' + uid + '/gameID'] = null;
-    updates['activeGames/' + gameID + '/playerList/' + uid] = null;
-    updates['activeGames/' + gameID + '/classStorage/' + uid] = null;
+    updates['gameSetup/' + gameID + '/playerList/' + uid] = null;
+    updates['gameSetup/' + gameID + '/classStorage/' + uid] = null;
     update(ref(db), updates)
 }

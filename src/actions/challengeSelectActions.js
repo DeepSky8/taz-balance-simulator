@@ -14,51 +14,33 @@ export const toggleLocation = () => ({
    type: 'TOGGLE_LOCATION'
 })
 
-const setVillainObject = (selectedVillainObject) => ({
-   type: 'SET_VILLAIN',
-   selectedVillainObject
-})
-
-const setRelicObject = (selectedRelicObject) => ({
-   type: 'SET_RELIC',
-   selectedRelicObject
-})
-
-const setLocationObject = (selectedLocationObject) => ({
-   type: 'SET_LOCATION',
-   selectedLocationObject
-})
-
 export const startSetVillain = (
    gameID,
-   villainCode
+   codeVillain
 ) => {
    
    const updates = {}
-   updates['activeGames/' + gameID + '/challengesObject/villainCode'] = villainCode;
-   // updates['users/' + uid + '/currentGames/' + gameID] = challengeCodes;
+   updates['gameSetup/' + gameID + '/static/codeVillain'] = codeVillain;
    update(ref(db), updates)
 }
 
 export const startSetRelic = (
    gameID,
-   relicCode
+   codeRelic
 ) => {
    
    const updates = {}
-   updates['activeGames/' + gameID + '/challengesObject/relicCode'] = relicCode;
-   // updates['users/' + uid + '/currentGames/' + gameID] = challengeCodes;
+   updates['gameSetup/' + gameID + '/static/codeRelic'] = codeRelic;
    update(ref(db), updates)
 }
 
 export const startSetLocation = (
    gameID,
-   locationCode
+   codeLocation
 ) => {
    
    const updates = {}
-   updates['activeGames/' + gameID + '/challengesObject/locationCode'] = locationCode;
-   // updates['users/' + uid + '/currentGames/' + gameID] = challengeCodes;
+   updates['gameSetup/' + gameID + '/static/codeLocation'] = codeLocation;
    update(ref(db), updates)
 }
 
@@ -76,18 +58,3 @@ export const setReceivedLocationObject = (receivedLocationObject) => ({
    type: 'RECEIVE_LOCATION',
    receivedLocationObject
 })
-
-
-// const challengeCodeParser = (challengeCode) => {
-//     const codeType = challengeCode.split('')[0]
-//     switch (codeType) {
-//         case 'v':
-//             return { villainCode: challengeCode }
-//         case 'r':
-//             return { relicCode: challengeCode }
-//         case 'l':
-//             return { locationCode: challengeCode }
-//         default:
-//             return {}
-//     }
-// }

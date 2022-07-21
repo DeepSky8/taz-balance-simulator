@@ -1,10 +1,10 @@
 import React from "react";
-import { startMarkTurnComplete, startUpdateGameStage } from "../../../actions/gameActions";
+import { startMarkTurnComplete } from "../../../actions/gameActions";
 import { auth } from "../../../firebase/firebase";
 
-const PassTurn = ({ gameState, resetStages }) => {
-    let isActivePlayer = (gameState.activePlayer ?
-        (gameState.activePlayer.uid !== auth.currentUser.uid)
+const PassTurn = ({ gameState}) => {
+    let isActivePlayer = (gameState.active.activePlayer ?
+        (gameState.active.activePlayer.uid !== auth.currentUser.uid)
         :
         true
     )
@@ -12,9 +12,9 @@ const PassTurn = ({ gameState, resetStages }) => {
 
     const passTurn = () => {
         startMarkTurnComplete(
-            gameState.host,
-            gameState.key,
-            [gameState.activePlayer.uid].concat(
+            gameState.static.host,
+            gameState.static.key,
+            [gameState.active.activePlayer.uid].concat(
                 gameState.readyList
             ))
     }
@@ -27,9 +27,7 @@ const PassTurn = ({ gameState, resetStages }) => {
             >
                 Pass Turn
             </button>
-            <button
-                onClick={() => { resetStages() }}
-            >Reset Stages</button>
+
         </div>
     )
 }

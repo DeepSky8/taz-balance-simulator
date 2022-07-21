@@ -10,7 +10,7 @@ const incrementStage = (stage) => {
         case 'CHALLENGES':
             return 'END';
         case 'END':
-            break;
+            return 'gameSetup';
         default:
             return 'INTRO';
     }

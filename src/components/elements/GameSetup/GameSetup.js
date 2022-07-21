@@ -7,12 +7,14 @@ import {
     clearClassList,
     clearPlayerList,
     startJoinActiveGame,
-    updateGameState,
     updateClassList,
     updatePlayerList,
     updateReadyList,
     updateReadyStatus,
     clearReadyList,
+    startRemoveGameCode,
+    updateGameStatic,
+    updateGameActive,
 } from "../../../actions/gameActions";
 import CharacterChallengeNavBar from "./CharacterChallengeNavBar";
 import PlayingAs from "./PlayingAs";
@@ -45,9 +47,9 @@ export const GameSetup = ({ }) => {
     const [savedGameArray, setSavedGameArray] = useState([])
     const [charState, dispatchCharState] = useReducer(charReducer, defaultCharState)
     const [gameState, dispatchGameState] = useReducer(gameReducer, defaultGameState)
-    // Single-fire listeners:
+    // Ongoing listeners:
     // User Account
-    // Game Array
+    // gameList Array
     // Character Array
     // Saved Game Array
     useEffect(() => {
@@ -97,7 +99,9 @@ export const GameSetup = ({ }) => {
             (snapshot) => {
                 const userSavedGames = [];
                 if (snapshot.exists()) {
-                    snapshot.forEach((savedGame) => { userSavedGames.push(savedGame.val()) })
+                    snapshot.forEach((savedGame) => {
+                        userSavedGames.push(savedGame.val())
+                    })
                 }
                 setSavedGameArray(userSavedGames)
 
@@ -130,26 +134,39 @@ export const GameSetup = ({ }) => {
     useEffect(() => {
         if (userState.gameID) {
             // When the local gameID changes, if the local gameID exists
-            // start a listener to get the game information
-            onValue(ref(db, 'activeGames/' + userState.gameID),
+            // start listeners to get the game information
+
+            // Ongoing gameState Static listener
+            onValue(ref(db, 'gameSetup/' + userState.gameID + '/static'),
                 (snapshot) => {
 
                     if (snapshot.exists()) {
                         // If the game information exists, copy it to local
-                        dispatchGameState(updateGameState(snapshot.val()))
+                        dispatchGameState(updateGameStatic(snapshot.val()))
                     } else {
                         // If the game information does not exist,
-                        if (gameState.key === null) {
+                        if (gameState.static.key === null) {
                             // check for a game key.
                             // Without a key, clear the local state
                             dispatchGameState(clearGameState())
                             // then close the listener
-                            off(ref(db, 'activeGames/' + userState.gameID))
+                            off(ref(db, 'gameSetup/' + userState.gameID + '/static'))
                         }
                     }
                 })
-            // and then start a listener to get the participating players.
-            onValue(ref(db, 'activeGames/' + userState.gameID + '/playerList'),
+
+            // Ongoing gameState Active listener
+            onValue(ref(db, 'gameSetup/' + userState.gameID + '/active'),
+                (snapshot) => {
+                    if (snapshot.exists()) {
+                        // If the game information exists, copy it to local
+                        dispatchGameState(updateGameActive(snapshot.val()))
+                        // console.log('gameState singles update: ', snapshot.val())
+                    }
+                })
+
+            // Ongoing playerList listener
+            onValue(ref(db, 'gameSetup/' + userState.gameID + '/playerList'),
                 (snapshot) => {
 
                     if (snapshot.exists()) {
@@ -164,12 +181,13 @@ export const GameSetup = ({ }) => {
                     }
                     else {
                         dispatchGameState(clearPlayerList())
-                        off(ref(db, 'activeGames/' + userState.gameID + '/playerList'))
+                        off(ref(db, 'gameSetup/' + userState.gameID + '/playerList'))
                     }
 
                 })
-            // and then start a listener to get the current classes in the party
-            onValue(ref(db, 'activeGames/' + userState.gameID + '/classStorage'),
+
+            // Ongoing classStorage listener
+            onValue(ref(db, 'gameSetup/' + userState.gameID + '/classStorage'),
                 snapshot => {
                     if (snapshot.exists()) {
                         const updatedClassArray = [];
@@ -180,11 +198,12 @@ export const GameSetup = ({ }) => {
 
                     } else {
                         dispatchGameState(clearClassList())
-                        off(ref(db, 'activeGames/' + userState.gameID + '/classStorage'))
+                        off(ref(db, 'gameSetup/' + userState.gameID + '/classStorage'))
                     }
                 })
-            // and then start a listener on the readyCheck list
-            onValue(ref(db, 'activeGames/' + userState.gameID + '/readyCheck'),
+
+            // Ongoing readyCheck listener
+            onValue(ref(db, 'gameSetup/' + userState.gameID + '/readyCheck'),
                 snapshot => {
                     if (snapshot.exists()) {
                         const updatedReadyList = [];
@@ -193,7 +212,6 @@ export const GameSetup = ({ }) => {
                         })
                         // Update local state with the list of ready players
                         dispatchGameState(updateReadyList(updatedReadyList))
-
                         // If this player is in the list, 
                         // update local state to reflect
                         if (updatedReadyList.includes(auth.currentUser.uid)) {
@@ -216,14 +234,15 @@ export const GameSetup = ({ }) => {
         }
 
         return () => {
-            off(ref(db, 'activeGames/' + userState.gameID))
-            off(ref(db, 'activeGames/' + userState.gameID + '/playerList'))
-            off(ref(db, 'activeGames/' + userState.gameID + '/classStorage'))
-            off(ref(db, 'activeGames/' + userState.gameID + '/readyCheck'))
+            off(ref(db, 'gameSetup/' + userState.gameID + '/static'))
+            off(ref(db, 'gameSetup/' + userState.gameID + '/active'))
+            off(ref(db, 'gameSetup/' + userState.gameID + '/playerList'))
+            off(ref(db, 'gameSetup/' + userState.gameID + '/classStorage'))
+            off(ref(db, 'gameSetup/' + userState.gameID + '/readyCheck'))
         }
     }, [userState.gameID])
 
-    // The presence of a local gameState.key will
+    // The presence of a local gameState.static.key will
     // confirm that a game has started, and move all players to 
     // the activeGame screen
     useEffect(() => {
@@ -233,16 +252,18 @@ export const GameSetup = ({ }) => {
         // navigate to the Introductions screen on the ActiveGame
         // as the game has begun
 
-        if (gameState.key !== null &&
+        if (gameState.static.key !== null &&
             gameState.readyList.length === (gameState.playerList.length + 1) &&
-            gameState.ready) {
+            gameState.active.ready) {
+                console.log('ready to record current game', gameState)
             startRecordCurrentGame(
-                auth.currentUser.uid, gameState.key, gameState.host
+                auth.currentUser.uid, gameState.static.key, gameState.static.host
             )
             navigate('/activeGame/introductions')
+            startRemoveGameCode(auth.currentUser.uid, gameState.static.gameID)
         }
 
-    }, [gameState.key, gameState.readyList, gameState.ready])
+    }, [gameState.static.key, gameState.readyList, gameState.active.ready])
 
 
 

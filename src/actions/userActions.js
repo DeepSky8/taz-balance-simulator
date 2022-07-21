@@ -103,20 +103,11 @@ export const startRemoveCurrentGame = (uid) => {
         })
 }
 
-const startSetGameStatusSetup = (uid) => {
+export const startSetJoining = (uid) => { 
     const updates = {};
-    updates['users/' + uid + '/gameStatus'] = 'setup';
+    updates['users/' + uid + '/joiningGame'] = true;
     update(ref(db), updates)
         .catch((error) => {
-            console.log('Error when setting game status: setup:', error)
-        })
-}
-
-const startSetGameStatusActive = (uid) => {
-    const updates = {};
-    updates['users/' + uid + '/gameStatus'] = 'active';
-    update(ref(db), updates)
-        .catch((error) => {
-            console.log('Error when setting game status: active:', error)
+            console.log('Error when setting joiningGame to true:', error)
         })
 }

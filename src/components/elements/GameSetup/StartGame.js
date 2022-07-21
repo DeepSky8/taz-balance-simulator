@@ -6,6 +6,7 @@ import {
     startStopReadyCheck,
     updateReadyStatus
 } from "../../../actions/gameActions";
+import { startSetJoining } from "../../../actions/userActions";
 import { auth } from "../../../firebase/firebase";
 
 const StartGame = ({ userState, gameState, dispatchGameState }) => {
@@ -41,7 +42,7 @@ const StartGame = ({ userState, gameState, dispatchGameState }) => {
                 // but they're not in a team, the button text
                 // reflects that they can't start the game
                 setStartText(dangerousAlone)
-            } else if (gameState.ready) {
+            } else if (gameState.active.ready) {
                 // and the player has indicated that they are ready to begin
                 // set the button text to indicate that the player can click the 
                 // button again to 'un-ready'
@@ -75,7 +76,7 @@ const StartGame = ({ userState, gameState, dispatchGameState }) => {
             }
         }
 
-    }, [gameState.playerList, gameState.readyList, gameState.ready, userState.joiningGame, userState.gameID])
+    }, [gameState.playerList, gameState.readyList, gameState.active.ready, userState.joiningGame, userState.gameID])
 
     // Boolean result indicating whether the list of players includes
     // duplicate classes
@@ -121,14 +122,11 @@ const StartGame = ({ userState, gameState, dispatchGameState }) => {
     }
     // Generates the error message if the full challenge set
     // is not yet selected
-    const missionSelected = (challengesObject) => {
-        const villainCode = challengesObject.villainCode
-        const relicCode = challengesObject.relicCode
-        const locationCode = challengesObject.locationCode
+    const missionSelected = ({ codeVillain, codeRelic, codeLocation }) => {
 
-        if (villainCode !== null &&
-            relicCode !== null &&
-            locationCode !== null) {
+        if (codeVillain !== null &&
+            codeRelic !== null &&
+            codeLocation !== null) {
             return true
         } else {
             setStartError(selectMission)
@@ -154,9 +152,11 @@ const StartGame = ({ userState, gameState, dispatchGameState }) => {
 
     // When the 'Start Game' button is clicked
     const onStartGame = () => {
+
         // Check if the team comp is correct, based on the updated class list
         const teamChecked = acceptableTeamComp(gameState.classList)
-        const missionChecked = missionSelected(gameState.challengesObject)
+        const missionChecked = missionSelected({ ...gameState.static }
+        )
         // If a gameID exists AND this player has selected a character AND
         // the team comp is acceptable, then proceed
         if ((userState.gameID !== null) &&
@@ -164,12 +164,12 @@ const StartGame = ({ userState, gameState, dispatchGameState }) => {
             (teamChecked)
         ) {
 
-            if (userState.joiningGame && !gameState.ready) {
+            if (userState.joiningGame && !gameState.active.ready) {
                 // If this player is joining a game, 
                 // and has not yet indicated they are ready to play
                 // set their cloud Ready status to 'true'
                 startReadyCheck(auth.currentUser.uid, userState.gameID)
-            } else if (userState.joiningGame && gameState.ready) {
+            } else if (userState.joiningGame && gameState.active.ready) {
                 // If this player is joining a game, 
                 // and has already indicated they are ready to play
                 // set their cloud Ready status to 'false'
@@ -186,7 +186,8 @@ const StartGame = ({ userState, gameState, dispatchGameState }) => {
                 dispatchGameState(updateReadyStatus(true))
                 startReadyCheck(auth.currentUser.uid, userState.gameID)
                 // then check whether a key exists for this game (previously saved)
-                if (gameState.key === null) {
+                if (gameState.static.key === null || gameState.static.key === undefined) {
+                    console.log('gameState.static.key === null', gameState.static.key)
                     // and create a key for a new game
                     // as well as creating the rest of the game data
                     const teamHealth = healthCalc(gameState.playerList.length + 1)
@@ -199,21 +200,27 @@ const StartGame = ({ userState, gameState, dispatchGameState }) => {
                             uid: auth.currentUser.uid,
                             currentCharacterID: userState.currentCharacterID
                         }].concat(gameState.playerList),
-                        gameState.challengesObject,
+                        {
+                            codeVillain: gameState.static.codeVillain,
+                            codeRelic: gameState.static.codeRelic,
+                            codeLocation: gameState.static.codeLocation
+                        },
                         teamHealth
                     )
                 } else {
+                    console.log('gameState.static.key !== null', gameState.static.key)
                     // If the game was previously saved, join it
                     startSavedGame(
                         auth.currentUser.uid,
                         userState.gameID,
-                        gameState.key,
+                        gameState.singles.key,
                         [{
                             uid: auth.currentUser.uid,
                             currentCharacterID: userState.currentCharacterID
                         }].concat(gameState.playerList)
                     )
                 }
+                startSetJoining(auth.currentUser.uid)
             }
         }
     }

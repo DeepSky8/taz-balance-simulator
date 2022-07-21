@@ -56,21 +56,21 @@ const ChallengeSelect = ({ gameState, userState, toggleGameType, gameTypeButtonT
             setReceivedVillainObject(
                 challengeTransformer(
                     villainObjectsArray,
-                    gameState.challengesObject.villainCode
+                    gameState.static.codeVillain
                 )))
         dispatchChallengeState(
             setReceivedRelicObject(
                 challengeTransformer(
                     relicObjectsArray,
-                    gameState.challengesObject.relicCode
+                    gameState.static.codeRelic
                 )))
         dispatchChallengeState(
             setReceivedLocationObject(
                 challengeTransformer(
                     locationObjectsArray,
-                    gameState.challengesObject.locationCode
+                    gameState.static.codeLocation
                 )))
-    }, [gameState, userState.gameID])
+    }, [gameState.static, userState.gameID])
 
 
 
@@ -159,6 +159,4 @@ const ChallengeSelect = ({ gameState, userState, toggleGameType, gameTypeButtonT
 }
 
 export { ChallengeSelect as default }
-
-// startSetChallenges(challengeCode, auth.currentUser.uid, )
 

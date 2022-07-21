@@ -5,11 +5,15 @@ import {
     setActivePlayer,
     startNewRound,
     startUpdateGameStage,
-    updateGameState,
+    updateChallengesObject,
+    updateGameActive,
+    updateGameStatic,
     updatePlayerList,
+    updateProgress,
     updateReadyList,
     updateReadyStatus,
-    updateStage
+    updateStage,
+    updateTeamHealth
 } from "../../../actions/gameActions";
 import { auth, db } from "../../../firebase/firebase";
 import { defaultGameState, gameReducer } from "../../../reducers/gameReducer";
@@ -19,6 +23,7 @@ import PassTurn from "./PassTurn";
 import IntroDescription from "./introductions/IntroDescription";
 import IntroCharacter from './introductions/IntroCharacter';
 import incrementStage from "../../functions/incrementStage";
+import MissionBriefing from "./missionBriefing/MissionBriefing";
 
 const ActiveGame = ({ }) => {
     let navigate = useNavigate()
@@ -28,10 +33,6 @@ const ActiveGame = ({ }) => {
     const [activeCharacterObject, dispatchActiveCharacterObject] = useState({})
     const [gameState, dispatchGameState] = useReducer(gameReducer, defaultGameState)
     const [localCharObject, dispatchLocalCharObject] = useState({})
-
-    const resetStages = () => {
-        startUpdateGameStage(currentGameID.host, currentGameID.key, 'INTRO')
-    }
 
     // User listener, updated a single time:
     // Current Game: host and key
@@ -65,15 +66,15 @@ const ActiveGame = ({ }) => {
     }, [])
 
     // GameState listeners, monitoring most game elements and updating local gameState
-    // Updated a single time: playerList
+    // Updated a single time: static, playerList
     // Not updated: classList
     useEffect(() => {
-        // Overall ongoing saved game state listener
-        onValue(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key),
+        // Single-time Static listener
+        onValue(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/static'),
             (snapshot) => {
                 if (snapshot.exists()) {
-                    // If a gameState exists at this address, sync the local gameState
-                    dispatchGameState(updateGameState(snapshot.val()))
+                    // If gameState static items exists at this address, sync the local gameState
+                    dispatchGameState(updateGameStatic(snapshot.val()))
                 } else if (auth.currentUser.uid !== null) {
                     // If a gamestate doesn't exist, but there IS a user signed in
                     // navigate to the gameSetup
@@ -82,7 +83,9 @@ const ActiveGame = ({ }) => {
                     // If there is not a user signed in, navigate to the main welcome screen
                     navigate('/')
                 }
-            })
+            }, {
+            onlyOnce: true
+        })
 
         // Single-time playerList listener
         onValue(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/playerList'),
@@ -92,7 +95,6 @@ const ActiveGame = ({ }) => {
                     snapshot.forEach((player) => {
                         playerList.push(player.val())
                     })
-                    // console.log('playerList: ', playerList)
                     dispatchGameState(updatePlayerList(playerList))
                 } else {
 
@@ -100,6 +102,22 @@ const ActiveGame = ({ }) => {
             }, {
             onlyOnce: true
         })
+
+        // Ongoing Active listener
+        onValue(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/active'),
+            (snapshot) => {
+                if (snapshot.exists()) {
+                    // If gameState progress object exists at this address, sync the local gameState
+                    dispatchGameState(updateGameActive(snapshot.val()))
+                } else if (auth.currentUser.uid !== null) {
+                    // If a gamestate doesn't exist, but there IS a user signed in
+                    // navigate to the gameSetup
+                    navigate('/gameSetup')
+                } else {
+                    // If there is not a user signed in, navigate to the main welcome screen
+                    navigate('/')
+                }
+            })
 
         // Ongoing readyList listener
         onValue(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/readyList'),
@@ -113,28 +131,11 @@ const ActiveGame = ({ }) => {
                 dispatchGameState(updateReadyList(readyList))
             })
 
-        // // Ongoing ready (gameState) listener
-        // onValue(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/ready'),
-        //     (snapshot) => {
-        //         if (snapshot.exists()) {
-        //             dispatchGameState(updateReadyStatus(snapshot.val()))
-        //         }
-        //     })
-
-        // Ongoing stage listener
-        onValue(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/stage'),
-            (snapshot) => {
-                if (snapshot.exists()) {
-                    dispatchGameState(updateStage(snapshot.val()))
-                }
-            })
-
         return () => {
-            off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key))
+            off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/static'))
+            off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/active'))
             off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/playerList'))
             off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/readyList'))
-            off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/ready'))
-            off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/stage'))
         }
 
     }, [currentGameID])
@@ -167,6 +168,7 @@ const ActiveGame = ({ }) => {
                 remainingPlayers.push(player)
             }
         })
+        // console.log('remainingplayers', remainingPlayers)
         if (remainingPlayers.length > 0) {
             dispatchGameState(setActivePlayer(remainingPlayers[0]))
         }
@@ -180,11 +182,11 @@ const ActiveGame = ({ }) => {
 
     // Listener for remote activePlayer on gameState
     useEffect(() => {
-        if (gameState.activePlayer && gameState.activePlayer.uid !== auth.currentUser.uid) {
+        if (gameState.active.activePlayer && gameState.active.activePlayer.uid !== auth.currentUser.uid) {
             dispatchActiveCharacterObject({})
             // If the current Active Player is not the local player, 
             // establish a listener for the duration of their turn
-            onValue(ref(db, 'characters/' + gameState.activePlayer.uid + '/' + gameState.activePlayer.currentCharacterID),
+            onValue(ref(db, 'characters/' + gameState.active.activePlayer.uid + '/' + gameState.active.activePlayer.currentCharacterID),
                 (snapshot) => {
                     if (snapshot.exists()) {
                         dispatchActiveCharacterObject(snapshot.val())
@@ -193,27 +195,25 @@ const ActiveGame = ({ }) => {
         }
 
         return () => {
-            if (gameState.activePlayer && gameState.activePlayer.uid !== auth.currentUser.uid) {
-                // console.log('removed listener for ', gameState.activePlayer.uid)
-                // off(ref(db, 'characters/' + gameState.activePlayer.uid + '/' + gameState.activePlayer.currentCharacterID))
+            if (gameState.active.activePlayer && gameState.active.activePlayer.uid !== auth.currentUser.uid) {
                 gameState.playerList.forEach((player) => {
                     off(ref(db, 'characters/' + player.uid + '/' + player.currentCharacterID))
                 })
             }
         }
-    }, [gameState.activePlayer])
+    }, [gameState.active.activePlayer])
 
     // If activePlayer is the local player
     // mirror the localChar state into the activeCharacterObject
     useEffect(() => {
-        if (gameState.activePlayer && gameState.activePlayer.currentCharacterID === localCharID) {
+        if (gameState.active.activePlayer && gameState.active.activePlayer.currentCharacterID === localCharID) {
             dispatchActiveCharacterObject(localCharObject)
         }
 
     }, [gameState.activePlayer, localCharObject])
 
     const incrementGameStage = () => {
-        startUpdateGameStage(currentGameID.host, currentGameID.key, incrementStage(gameState.stage))
+        startUpdateGameStage(currentGameID.host, currentGameID.key, incrementStage(gameState.active.stage))
         dispatchGameState(updateReadyStatus(false))
     }
 
@@ -222,28 +222,28 @@ const ActiveGame = ({ }) => {
     // and advance it when appropriate
     useEffect(() => {
         if (
-            (introStages.includes(gameState.stage)) &&
-            gameState.ready
+            (introStages.includes(gameState.active.stage)) &&
+            gameState.active.ready
         ) {
             incrementGameStage()
         } else if (
-            (gameState.teamHealth === 0) &&
-            gameState.ready
+            (gameState.active.teamHealth === 0) &&
+            gameState.active.ready
         ) {
             incrementGameStage()
         } else if (
-            ((gameState.progress.relic > 10) &&
-                (gameState.progress.villain > 10 || gameState.progress.location > 10))
+            ((gameState.active.progressRelic > 10) &&
+                (gameState.active.progressVillain > 10 || gameState.active.progressLocation > 10))
         ) {
             incrementGameStage()
         }
 
-    }, [gameState.ready, gameState.teamHealth])
+    }, [gameState.active.ready, gameState.active.teamHealth])
 
     // Navigate to activeGame pages
     // based on game stages completed
     useEffect(() => {
-        switch (gameState.stage) {
+        switch (gameState.active.stage) {
             case 'INTRO':
                 navigate('introductions')
                 break;
@@ -259,26 +259,43 @@ const ActiveGame = ({ }) => {
             case 'END':
                 navigate('summary')
                 break;
+            case 'gameSetup':
+                navigate('/gameSetup')
+                break;
             default:
                 break;
         }
-    }, [gameState.stage])
+    }, [gameState.active.stage])
+
+
+    // Testing tools
+    const resetStages = () => {
+        startUpdateGameStage(currentGameID.host, currentGameID.key, 'INTRO')
+    }
+
+    const stepStage = () => {
+        startUpdateGameStage(currentGameID.host, currentGameID.key, incrementStage(gameState.active.stage))
+    }
+    // Testing tools
 
     return (
         <div>
             <AuthWrapper />
             <ActiveCharWrapper
-                activePlayer={gameState.activePlayer}
-            />
-            <PassTurn
                 gameState={gameState}
+                character={activeCharacterObject}
                 resetStages={resetStages}
+                stepStage={stepStage}
             />
+
             <Routes>
                 <Route
                     path="introductions"
                     element={
                         <div>
+                            <PassTurn
+                                gameState={gameState}
+                            />
                             <IntroDescription />
                             <IntroCharacter
                                 character={activeCharacterObject}
@@ -290,9 +307,9 @@ const ActiveGame = ({ }) => {
                 <Route
                     path="missionBriefing"
                     element={
-                        <div>
-                            missionBriefing
-                        </div>
+                        <MissionBriefing
+                            gameState={gameState}
+                        />
                     }
                 />
                 <Route
@@ -308,6 +325,9 @@ const ActiveGame = ({ }) => {
                     element={
                         <div>
                             playing
+                            <PassTurn
+                                gameState={gameState}
+                            />
                         </div>
                     }
                 />
@@ -322,20 +342,20 @@ const ActiveGame = ({ }) => {
             </Routes>
             <div>
                 <p> - break - </p>
-                <div>Villain Code: {gameState.challengesObject.villainCode}</div>
-                <div>Relic Code: {gameState.challengesObject.relicCode}</div>
-                <div>Location Code: {gameState.challengesObject.locationCode}</div>
-                <div>Stage: {gameState.stage}</div>
-                <div>Game ID: {gameState.gameID}</div>
-                <div>Host: {gameState.host}</div>
-                <div>Key: {gameState.key}</div>
+                <div>Villain Code: {gameState.static.codeVillain}</div>
+                <div>Relic Code: {gameState.static.codeRelic}</div>
+                <div>Location Code: {gameState.static.codeLocation}</div>
+                <div>Stage: {gameState.active.stage}</div>
+                
+                <div>Host: {gameState.static.host}</div>
+                <div>Key: {gameState.static.key}</div>
                 <div>Surprises: {gameState.surprises}</div>
-                <div>Villain Progress: {gameState.progress.villain}</div>
-                <div>Relic Progress: {gameState.progress.relic}</div>
-                <div>Location Progress: {gameState.progress.location}</div>
-                <div>Ready state: {gameState.ready && gameState.ready ? 'true' : 'false'}</div>
-                <div>Team Health: {gameState.teamHealth}</div>
-                <div>Active Player: {gameState.activePlayer && gameState.activePlayer.currentCharacterID}</div>
+                <div>Villain Progress: {gameState.active.progressVillain}</div>
+                <div>Relic Progress: {gameState.active.progressRelic}</div>
+                <div>Location Progress: {gameState.active.progressLocation}</div>
+                <div>Ready state: {gameState.active.ready && gameState.active.ready ? 'true' : 'false'}</div>
+                <div>Team Health: {gameState.active.teamHealth}</div>
+                <div>Active Character: {gameState.active.activePlayer && gameState.active.activePlayer.currentCharacterID}</div>
             </div>
         </div>
     )

@@ -8,18 +8,18 @@ const SavedGame = ({ savedGame, removeSavedGame, resumeSavedGame, hosting }) => 
     const resumeMission = 'Resume Mission'
     const notHosting = 'Not Hosting'
 
-    const villain = challengeTransformer(villainObjectsArray, savedGame.challengesObject.villainCode)
-    const relic = challengeTransformer(relicObjectsArray, savedGame.challengesObject.relicCode)
-    const location = challengeTransformer(locationObjectsArray, savedGame.challengesObject.locationCode)
+    const villain = challengeTransformer(villainObjectsArray, savedGame.static.codeVillain)
+    const relic = challengeTransformer(relicObjectsArray, savedGame.static.codeRelic)
+    const location = challengeTransformer(locationObjectsArray, savedGame.static.codeLocation)
     const inON = location.challengeCode === 'l3' ? 'on' : 'in'
 
     return (
         <div>
             <div>Battling {villain.challengeName} to reclaim {relic.challengeName} {inON} {location.challengeName}</div>
-            <div>Villain challenges completed: {savedGame.progress.villain}</div>
-            <div>Relic challenges completed: {savedGame.progress.relic}</div>
-            <div>Location challenges completed: {savedGame.progress.location}</div>
-            <div>Team health remaining: {savedGame.teamHealth}</div>
+            <div>Villain challenges completed: {savedGame.active.progressVillain}</div>
+            <div>Relic challenges completed: {savedGame.active.progressRelic}</div>
+            <div>Location challenges completed: {savedGame.active.progressLocation}</div>
+            <div>Team health remaining: {savedGame.active.teamHealth}</div>
             <button
                 onClick={resumeSavedGame}
                 disabled={!hosting}

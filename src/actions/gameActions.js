@@ -2,9 +2,14 @@ import { push, ref, remove, update } from "firebase/database";
 import { db } from "../firebase/firebase";
 
 // Local Actions
-export const updateGameState = (currentActiveGame) => ({
-    type: 'UPDATE_GAME_STATE',
-    currentActiveGame
+export const updateGameStatic = (staticData) => ({
+    type: 'UPDATE_GAME_STATIC',
+    staticData
+})
+
+export const updateGameActive = (activeData) => ({
+    type: 'UPDATE_GAME_ACTIVE',
+    activeData
 })
 
 export const updateGameStateFull = (currentActiveGameFull) => ({
@@ -37,6 +42,11 @@ export const updatePlayerList = (playerList) => ({
 
 export const clearPlayerList = () => ({
     type: 'CLEAR_PLAYER_LIST'
+})
+
+export const updateProgress = (progress) => ({
+    type: 'UPDATE_PROGRESS',
+    progress
 })
 
 export const updateClassList = (classList) => ({
@@ -77,19 +87,21 @@ export const updateStage = (stage) => ({
     stage
 })
 
+export const updateTeamHealth = (teamHealth) => ({
+    type: 'UPDATE_TEAM_HEALTH',
+    teamHealth
+})
+
 // Cloud Actions
-
-// const actuallySaveGame = (uid, key, gameData) => {
-
-// }
 
 export const startGetKey = (uid) => {
     return push(ref(db, 'savedGames/' + uid)).key;
 }
 
-export const startSaveGame = (uid, key, gameState) => {
+//review this!!!!
+const startSaveGame = (uid, key, gameState) => {
     const updates = {}
-    updates['savedGames/' + uid + '/' + key] = { ...gameState, key }
+    updates['savedGames/' + uid + '/' + key + '/static'] = { ...gameState, key }
     return update(ref(db), updates)
 
     // .catch((error) => {
@@ -106,8 +118,10 @@ export const startRemoveSavedGame = (uid, key) => {
 
 export const startLoadSavedGame = (gameID, key, challengesObject) => {
     const updates = {}
-    updates['activeGames/' + gameID + '/key'] = key
-    updates['activeGames/' + gameID + '/challengesObject'] = { ...challengesObject }
+    updates['gameSetup/' + gameID + '/static/key'] = key
+    updates['gameSetup/' + gameID + '/static/codeVillain'] = challengesObject.codeVillain
+    updates['gameSetup/' + gameID + '/static/codeRelic'] = challengesObject.codeRelic
+    updates['gameSetup/' + gameID + '/static/codeLocation'] = challengesObject.codeLocation
     update(ref(db), updates)
         .catch((error) => {
             console.log('Did not start Load Game, error: ', error)
@@ -116,9 +130,9 @@ export const startLoadSavedGame = (gameID, key, challengesObject) => {
 
 export const startJoinActiveGame = (uid, gameID, currentCharacterID, classCode) => {
     const updates = {}
-    updates['activeGames/' + gameID + '/playerList/' + uid + '/uid'] = uid
-    updates['activeGames/' + gameID + '/playerList/' + uid + '/currentCharacterID'] = currentCharacterID
-    updates['activeGames/' + gameID + '/classStorage/' + uid] = classCode
+    updates['gameSetup/' + gameID + '/playerList/' + uid + '/uid'] = uid
+    updates['gameSetup/' + gameID + '/playerList/' + uid + '/currentCharacterID'] = currentCharacterID
+    updates['gameSetup/' + gameID + '/classStorage/' + uid] = classCode
     update(ref(db), updates)
         .catch((error) => {
             console.log('Did not join active game, error: ', error)
@@ -127,7 +141,7 @@ export const startJoinActiveGame = (uid, gameID, currentCharacterID, classCode) 
 
 export const startReadyCheck = (uid, gameID) => {
     const updates = {}
-    updates['activeGames/' + gameID + '/readyCheck/' + uid] = uid
+    updates['gameSetup/' + gameID + '/readyCheck/' + uid] = uid
     update(ref(db), updates)
         .catch((error) => {
             console.log('Did not successfully Ready Check, error: ', error)
@@ -136,7 +150,7 @@ export const startReadyCheck = (uid, gameID) => {
 
 export const startStopReadyCheck = (uid, gameID) => {
     const updates = {}
-    updates['activeGames/' + gameID + '/readyCheck/' + uid] = null
+    updates['gameSetup/' + gameID + '/readyCheck/' + uid] = null
     update(ref(db), updates)
         .catch((error) => {
             console.log('Did not successfully stop Ready Check, error: ', error)
@@ -147,9 +161,8 @@ export const startStopReadyCheck = (uid, gameID) => {
 // then sets the gameID under the user UID to null
 export const startRemoveGameCode = (uid, gameID) => {
     const updates = {};
-    updates['activeGames/' + gameID] = null;
+    updates['gameSetup/' + gameID] = null;
     updates['gameList/' + gameID] = null;
-    // updates['users/' + uid + '/host'] = null
     updates['users/' + uid + '/gameID'] = null
     update(ref(db), updates)
         .catch((error) => {
@@ -160,8 +173,8 @@ export const startRemoveGameCode = (uid, gameID) => {
 export const startSavedGame = (uid, gameID, key, playerList) => {
     const updates = {};
     updates['savedGames/' + uid + '/' + key + '/playerList'] = playerList;
-    updates['savedGames/' + uid + '/' + key + '/key'] = key;
-    updates['savedGames/' + uid + '/' + key + '/host'] = uid;
+    updates['savedGames/' + uid + '/' + key + '/static/key'] = key;
+    updates['savedGames/' + uid + '/' + key + '/static/host'] = uid;
     update(ref(db), updates)
         .then(() => {
             startRemoveGameCode(uid, gameID)
@@ -174,16 +187,27 @@ export const startSavedGame = (uid, gameID, key, playerList) => {
 export const startNewGame = (uid, gameID, playerList, challengesObject, teamHealth) => {
     const key = startGetKey(uid)
     const updates = {};
-    updates['activeGames/' + gameID + '/key'] = key;
-    updates['savedGames/' + uid + '/' + key + '/key'] = key;
-    updates['savedGames/' + uid + '/' + key + '/host'] = uid;
+    updates['gameSetup/' + gameID + '/static/key'] = key;
+    
+    updates['savedGames/' + uid + '/' + key + '/static/key'] = key;
+    updates['savedGames/' + uid + '/' + key + '/static/host'] = uid;
+    updates['savedGames/' + uid + '/' + key + '/static/codeVillain'] = challengesObject.codeVillain;
+    updates['savedGames/' + uid + '/' + key + '/static/codeRelic'] = challengesObject.codeRelic;
+    updates['savedGames/' + uid + '/' + key + '/static/codeLocation'] = challengesObject.codeLocation;
+
+    updates['savedGames/' + uid + '/' + key + '/active/teamHealth'] = teamHealth;
+    updates['savedGames/' + uid + '/' + key + '/active/stage'] = 'INTRO';
+    updates['savedGames/' + uid + '/' + key + '/active/ready'] = false;
+    updates['savedGames/' + uid + '/' + key + '/active/progressVillain'] = 0
+    updates['savedGames/' + uid + '/' + key + '/active/progressRelic'] = 0
+    updates['savedGames/' + uid + '/' + key + '/active/progressLocation'] = 0
+    
     updates['savedGames/' + uid + '/' + key + '/playerList'] = playerList;
-    updates['savedGames/' + uid + '/' + key + '/challengesObject'] = { ...challengesObject };
-    updates['savedGames/' + uid + '/' + key + '/teamHealth'] = teamHealth;
-    updates['savedGames/' + uid + '/' + key + '/progress'] = { location: 0, relic: 0, villain: 0 };
-    updates['savedGames/' + uid + '/' + key + '/stage'] = 'INTRO';
-    updates['savedGames/' + uid + '/' + key + '/ready'] = false;
+    
     update(ref(db), updates)
+        // .then(() => {
+        //     startRemoveGameCode(uid, gameID)
+        // })
         .catch((error) => {
             console.log('Error when starting game (new):', error)
         })
@@ -209,7 +233,7 @@ export const startNewRound = (uid, key) => {
 
 export const startSetReadyTrue = (uid, key) => {
     const updates = {};
-    updates['savedGames/' + uid + '/' + key + '/ready'] = true;
+    updates['savedGames/' + uid + '/' + key + '/active/ready'] = true;
     update(ref(db), updates)
         .catch((error) => {
             console.log('Error setting Ready to true:', error)
@@ -218,65 +242,18 @@ export const startSetReadyTrue = (uid, key) => {
 
 export const startSetReadyFalse = (uid, key) => {
     const updates = {};
-    updates['savedGames/' + uid + '/' + key + '/ready'] = false;
+    updates['savedGames/' + uid + '/' + key + '/active/ready'] = false;
     update(ref(db), updates)
         .catch((error) => {
             console.log('Error setting Ready to false:', error)
         })
 }
 
-export const startUpdateGameStage = (uid, key, stage) => { 
+export const startUpdateGameStage = (uid, key, stage) => {
     const updates = {};
-    updates['savedGames/' + uid + '/' + key + '/stage'] = stage;
+    updates['savedGames/' + uid + '/' + key + '/active/stage'] = stage;
     update(ref(db), updates)
         .catch((error) => {
             console.log('Error updating game stages:', error)
         })
 }
-
-const startCreateGameStages = (uid, key) => {
-    const updates = {};
-    updates['savedGames/' + uid + '/' + key + '/stage'] = 'INTRO';
-    update(ref(db), updates)
-        .catch((error) => {
-            console.log('Error creating game stages:', error)
-        })
-}
-
-const startCompleteIntroStage = (uid, key) => {
-    const updates = {};
-    updates['savedGames/' + uid + '/' + key + '/stage'] = 'BRIEF';
-    update(ref(db), updates)
-        .catch((error) => {
-            console.log('Error completing Intro stage:', error)
-        })
-}
-
-const startCompleteBriefingStage = (uid, key) => {
-    const updates = {};
-    updates['savedGames/' + uid + '/' + key + '/stage'] = 'BACKSTORY';
-    update(ref(db), updates)
-        .catch((error) => {
-            console.log('Error completing Briefing stage:', error)
-        })
-}
-
-const startCompleteBackstoryStage = (uid, key) => {
-    const updates = {};
-    updates['savedGames/' + uid + '/' + key + '/stage'] = 'CHALLENGES'
-    update(ref(db), updates)
-        .catch((error) => {
-            console.log('Error completing Backstory stage:', error)
-        })
-}
-
-const startCompleteChallengesStage = (uid, key) => {
-    const updates = {};
-    updates['savedGames/' + uid + '/' + key + '/stage'] = 'END';
-    update(ref(db), updates)
-        .catch((error) => {
-            console.log('Error completing Challenges stage:', error)
-        })
-}
-
-// updates['users/' + uid + '/currentGame'] = { host: uid, key };

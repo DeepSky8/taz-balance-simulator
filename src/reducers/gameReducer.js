@@ -1,40 +1,44 @@
-import { applyActionCode } from "firebase/auth"
-
 const defaultGameState = {
-    activePlayer: null,
-    challengesObject: {
-        villainCode: null,
-        relicCode: null,
-        locationCode: null
+    static: {
+        codeVillain: null,
+        codeRelic: null,
+        codeLocation: null,
+        gameID: null,
+        host: null,
+        key: null,
+    },
+    active: {
+        activePlayer: null,
+        progressVillain: null,
+        progressRelic: null,
+        progressLocation: null,
+        ready: false,
+        stage: '',
+        teamHealth: null
     },
     classList: [],
-    host: null,
-    key: null,
-    stage: '',
-    surprises: [],
-    progress: {
-        villain: null,
-        relic: null,
-        location: null
-    },
-    ready: false,
+    playerList: [],
     readyList: [],
-    teamHealth: null,
-    playerList: []
+    surprises: [],
 }
 
 const gameReducer = (state, action) => {
     switch (action.type) {
-        case 'UPDATE_GAME_STATE':
+        case 'UPDATE_GAME_STATIC':
             return {
                 ...defaultGameState,
-                ...action.currentActiveGame,
-                classList: state.classList,
-                playerList: state.playerList,
-                stage: state.stage,
-                // ready: state.ready,
-                readyList: state.readyList,
-                activePlayer: state.activePlayer
+                ...state,
+                static: {
+                    ...action.staticData
+                }
+            }
+        case 'UPDATE_GAME_ACTIVE':
+            return {
+                ...defaultGameState,
+                ...state,
+                active: {
+                    ...action.activeData
+                }
             }
         case 'UPDATE_GAME_STATE_FULL':
             return {
@@ -48,23 +52,29 @@ const gameReducer = (state, action) => {
         case 'UPDATE_CHALLENGES_OBJECT':
             return {
                 ...state,
-                ...action.challengesObject
-
+                static: {
+                    ...state.static,
+                    ...action.challengesObject
+                }
             }
         case 'CLEAR_CHALLENGES_OBJECT':
             return {
                 ...state,
-                key: null,
-                challengesObject: {
-                    villainCode: null,
-                    relicCode: null,
-                    locationCode: null
+                static: {
+                    ...state.static,
+                    codeVillain: null,
+                    codeRelic: null,
+                    codeLocation: null,
+                    key: null
                 }
             }
         case 'UPDATE_GAME_HOST':
             return {
                 ...state,
-                host: action.host
+                static: {
+                    ...state.static,
+                    host: action.host
+                }
             }
         case 'UPDATE_PLAYER_LIST':
             return {
@@ -75,6 +85,14 @@ const gameReducer = (state, action) => {
             return {
                 ...state,
                 playerList: []
+            }
+        case 'UPDATE_PROGRESS':
+            return {
+                ...state,
+                active: {
+                    ...state.active,
+                    ...action.progress
+                }
             }
         case 'UPDATE_CLASS_LIST':
             return {
@@ -99,22 +117,43 @@ const gameReducer = (state, action) => {
         case 'UPDATE_READY_STATUS':
             return {
                 ...state,
-                ready: action.ready
+                active: {
+                    ...state.active,
+                    ready: action.ready
+                },
             }
         case 'SET_GAME_KEY':
             return {
                 ...state,
-                key: action.key
+                static: {
+                    ...state.static,
+                    key: action.key
+                }
             }
         case 'SET_ACTIVE_PLAYER':
             return {
                 ...state,
-                activePlayer: action.activePlayer
+                active: {
+                    ...state.active,
+                    activePlayer: action.activePlayer
+                },
+
             }
         case 'UPDATE_STAGE':
             return {
                 ...state,
-                stage: action.stage
+                active: {
+                    ...state.active,
+                    stage: action.stage
+                }
+            }
+        case 'UPDATE_TEAM_HEALTH':
+            return {
+                ...state,
+                active: {
+                    ...state.active,
+                    teamHealth: action.teamHealth
+                }
             }
         default:
             return state

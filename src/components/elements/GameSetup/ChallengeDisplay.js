@@ -7,15 +7,15 @@ import { villainObjectsArray } from "../Challenges/mission-elements/m-villain";
 const ChallengeDisplay = ({ gameState }) => {
     return (
         <div>
-            {gameState.challengesObject.villainCode && 
+            {gameState.static.codeVillain && 
                 challengeTransformer(
-                    villainObjectsArray, gameState.challengesObject.villainCode).challengeName + ' | '}
-            {gameState.challengesObject.relicCode && 
+                    villainObjectsArray, gameState.static.codeVillain).challengeName + ' | '}
+            {gameState.static.codeRelic && 
                 challengeTransformer(
-                    relicObjectsArray, gameState.challengesObject.relicCode).challengeName + ' | '}
-            {gameState.challengesObject.locationCode && 
+                    relicObjectsArray, gameState.static.codeRelic).challengeName + ' | '}
+            {gameState.static.codeLocation && 
                 challengeTransformer(
-                    locationObjectsArray, gameState.challengesObject.locationCode).challengeName}
+                    locationObjectsArray, gameState.static.codeLocation).challengeName}
         </div>
     )
 }

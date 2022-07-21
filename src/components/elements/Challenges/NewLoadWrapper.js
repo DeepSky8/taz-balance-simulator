@@ -45,9 +45,3 @@ const NewLoadWrapper = ({ userState, gameState, savedGameArray }) => {
 }
 
 export default NewLoadWrapper
-
-//     < button
-// onClick = { toggleGameType }
-//     >
-//     { gameTypeButtonText }
-// </button >

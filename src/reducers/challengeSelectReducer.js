@@ -177,29 +177,3 @@ const challengeSelectReducer = (state, action) => {
 }
 
 export { defaultChallengeState, challengeSelectReducer }
-
-
-        // case 'SET_VILLAIN':
-        //     return {
-        //         ...state,
-        //         selectedVillainObject: action.selectedVillainObject,
-        //         villainDisplayed: false,
-        //         relicDisplayed: false,
-        //         locationDisplayed: false,
-        //     }
-        // case 'SET_RELIC':
-        //     return {
-        //         ...state,
-        //         selectedRelicObject: action.selectedRelicObject,
-        //         villainDisplayed: false,
-        //         relicDisplayed: false,
-        //         locationDisplayed: false,
-        //     }
-        // case 'SET_LOCATION':
-        //     return {
-        //         ...state,
-        //         selectedLocationObject: action.selectedLocationObject,
-        //         villainDisplayed: false,
-        //         relicDisplayed: false,
-        //         locationDisplayed: false,
-        //     }
