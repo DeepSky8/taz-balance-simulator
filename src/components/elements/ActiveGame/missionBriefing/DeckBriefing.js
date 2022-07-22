@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const DeckBriefing = ({ flavor, p1, a1, u1, p2, a2, u2 }) => {
+const DeckBriefing = ({ intro, flavor, p1, a1, u1, p2, a2, u2 }) => {
     const [prompt1, setPrompt1] = useState('')
     const [prompt2, setPrompt2] = useState('')
 
@@ -12,6 +12,7 @@ const DeckBriefing = ({ flavor, p1, a1, u1, p2, a2, u2 }) => {
 
     return (
         <div>
+            <div>{intro}</div>
             <div>{flavor}</div>
             <div>
                 <form>

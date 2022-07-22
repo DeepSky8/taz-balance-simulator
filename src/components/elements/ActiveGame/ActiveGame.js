@@ -21,6 +21,7 @@ import IntroDescription from "./introductions/IntroDescription";
 import IntroCharacter from './introductions/IntroCharacter';
 import incrementStage from "../../functions/incrementStage";
 import MissionBriefing from "./missionBriefing/MissionBriefing";
+import Playing from "./playing/Playing";
 
 const ActiveGame = ({ }) => {
     let navigate = useNavigate()
@@ -258,9 +259,9 @@ const ActiveGame = ({ }) => {
             case 'BRIEF':
                 navigate('missionBriefing')
                 break;
-            case 'BACKSTORY':
-                navigate('backstory')
-                break;
+            // case 'BACKSTORY':
+            //     navigate('backstory')
+            //     break;
             case 'CHALLENGES':
                 navigate('playing')
                 break;
@@ -332,10 +333,8 @@ const ActiveGame = ({ }) => {
                     path="playing"
                     element={
                         <div>
-                            playing
-                            <PassTurn
-                                gameState={gameState}
-                            />
+                            <Playing />
+
                         </div>
                     }
                 />

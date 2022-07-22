@@ -20,7 +20,7 @@ const PassTurn = ({ gameState}) => {
     }
 
     return (
-        <div>
+        <>
             <button
                 onClick={() => { passTurn() }}
                 disabled={isActivePlayer}
@@ -28,7 +28,7 @@ const PassTurn = ({ gameState}) => {
                 Pass Turn
             </button>
 
-        </div>
+        </>
     )
 }
 

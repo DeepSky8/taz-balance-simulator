@@ -19,6 +19,8 @@ const challengeTransformer = (challengeArray, challengeCode) => {
                     challengeName: null,
                     challengeCode: null,
                     challengeFlavor: null,
+                    promptFlavor1: null,
+                    promptFlavor2: null,
                     prompt1: null,
                     prompt2: null
                 }
@@ -28,6 +30,8 @@ const challengeTransformer = (challengeArray, challengeCode) => {
             challengeName: null,
             challengeCode: null,
             challengeFlavor: null,
+            promptFlavor1: null,
+            promptFlavor2: null,
             prompt1: null,
             prompt2: null
         }
