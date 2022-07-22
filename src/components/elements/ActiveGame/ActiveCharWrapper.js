@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { auth } from "../../../firebase/firebase";
 import NextDeck from "./missionBriefing/NextDeck";
 import PrevDeck from "./missionBriefing/PrevDeck";
 
@@ -34,9 +35,11 @@ const ActiveCharWrapper = ({ gameState, character, resetStages, stepStage }) => 
     return (
         <div>
             {gameState.active.stage === 'BRIEF' &&
+                gameState.static.host === auth.currentUser.uid &&
                 <PrevDeck gameState={gameState} />}
             {actionBarText}
             {gameState.active.stage === 'BRIEF' &&
+                gameState.static.host === auth.currentUser.uid &&
                 <NextDeck gameState={gameState} />}
             <div>
                 <button
