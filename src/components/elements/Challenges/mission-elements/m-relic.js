@@ -13,22 +13,30 @@ const relicObjectsArray = [
     {
         challengeName: 'The Ring',
         challengeCode: 'r0',
-        challengeFlavor: `The Villain can use the Ring to conjure illusions and nightmares, forcing you to face your inner fears. It probably has a cool name, like "The Mind's Eye`
+        challengeFlavor: `The Villain can use the Ring to conjure illusions and nightmares, forcing you to face your inner fears. It probably has a cool name, like "The Mind's Eye`,
+        prompt1: `What is the name of the Ring?`,
+        prompt2: `Shiny? Dull and battered?`,
     },
     {
         challengeName: 'The Idol',
         challengeCode: 'r1',
-        challengeFlavor: "The Idol can alter reality and twist time and space. It doesn't belong in this world."
+        challengeFlavor: "The Idol can alter reality and twist time and space. It doesn't belong in this world.",
+        prompt1: `Do you know its name?`,
+        prompt2: `Where did it come from?`,
     },
     {
         challengeName: 'The Hoard',
         challengeCode: 'r2',
-        challengeFlavor: "This treasure hoard is legendary, and many greedy adventurers hope to claim it. You'll have to deal with these deadly rivals as well as curses and traps laid on the hoard itself."
+        challengeFlavor: "This treasure hoard is legendary, and many greedy adventurers hope to claim it. You'll have to deal with these deadly rivals as well as curses and traps laid on the hoard itself.",
+        prompt1: `Who gathered this hoard?`,
+        prompt2: `What's one thing you hope to find in it?`,
     },
     {
         challengeName: 'The Staff',
         challengeCode: 'r3',
-        challengeFlavor: 'The Staff grants The Villain power over the elements, allowing them to control the weather and conjure fire and ice. It probably has a cool name, like "The Staff of Endless Winter."'
+        challengeFlavor: 'The Staff grants The Villain power over the elements, allowing them to control the weather and conjure fire and ice. It probably has a cool name, like "The Staff of Endless Winter."',
+        prompt1: `Do you know its name?`,
+        prompt2: `Rough-hewn? Polished and lacquered`,
     }
 ]
 

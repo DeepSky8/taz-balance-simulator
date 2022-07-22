@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import NextDeck from "./missionBriefing/NextDeck";
+import PrevDeck from "./missionBriefing/PrevDeck";
 
 const ActiveCharWrapper = ({ gameState, character, resetStages, stepStage }) => {
     const [actionBarText, setActionBarText] = useState('Active Character: ')
@@ -31,7 +33,11 @@ const ActiveCharWrapper = ({ gameState, character, resetStages, stepStage }) => 
 
     return (
         <div>
+            {gameState.active.stage === 'BRIEF' &&
+                <PrevDeck gameState={gameState} />}
             {actionBarText}
+            {gameState.active.stage === 'BRIEF' &&
+                <NextDeck gameState={gameState} />}
             <div>
                 <button
                     onClick={() => { resetStages() }}

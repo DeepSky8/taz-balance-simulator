@@ -18,14 +18,18 @@ const challengeTransformer = (challengeArray, challengeCode) => {
                 return {
                     challengeName: null,
                     challengeCode: null,
-                    challengeFlavor: null
+                    challengeFlavor: null,
+                    prompt1: null,
+                    prompt2: null
                 }
         }
     } else {
         return {
             challengeName: null,
             challengeCode: null,
-            challengeFlavor: null
+            challengeFlavor: null,
+            prompt1: null,
+            prompt2: null
         }
     }
 

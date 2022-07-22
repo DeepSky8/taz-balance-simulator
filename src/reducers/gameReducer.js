@@ -16,6 +16,15 @@ const defaultGameState = {
         stage: '',
         teamHealth: null
     },
+    backstory: {
+        briefingStage: 'VILLAIN',
+        villainOne: null,
+        villainTwo: null,
+        relicOne: null,
+        relicTwo: null,
+        locationOne: null,
+        locationTwo: null,
+    },
     classList: [],
     playerList: [],
     readyList: [],
@@ -154,6 +163,12 @@ const gameReducer = (state, action) => {
                     ...state.active,
                     teamHealth: action.teamHealth
                 }
+            }
+        case 'UPDATE_BACKSTORY':
+            return {
+                ...defaultGameState,
+                ...state,
+                backstory: action.backstory
             }
         default:
             return state

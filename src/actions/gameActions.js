@@ -92,6 +92,12 @@ export const updateTeamHealth = (teamHealth) => ({
     teamHealth
 })
 
+export const updateBackstory = (backstory) => ({
+    type: 'UPDATE_BACKSTORY',
+    backstory
+})
+
+
 // Cloud Actions
 
 export const startGetKey = (uid) => {
@@ -188,7 +194,7 @@ export const startNewGame = (uid, gameID, playerList, challengesObject, teamHeal
     const key = startGetKey(uid)
     const updates = {};
     updates['gameSetup/' + gameID + '/static/key'] = key;
-    
+
     updates['savedGames/' + uid + '/' + key + '/static/key'] = key;
     updates['savedGames/' + uid + '/' + key + '/static/host'] = uid;
     updates['savedGames/' + uid + '/' + key + '/static/codeVillain'] = challengesObject.codeVillain;
@@ -201,9 +207,9 @@ export const startNewGame = (uid, gameID, playerList, challengesObject, teamHeal
     updates['savedGames/' + uid + '/' + key + '/active/progressVillain'] = 0
     updates['savedGames/' + uid + '/' + key + '/active/progressRelic'] = 0
     updates['savedGames/' + uid + '/' + key + '/active/progressLocation'] = 0
-    
+
     updates['savedGames/' + uid + '/' + key + '/playerList'] = playerList;
-    
+
     update(ref(db), updates)
         // .then(() => {
         //     startRemoveGameCode(uid, gameID)
@@ -255,5 +261,23 @@ export const startUpdateGameStage = (uid, key, stage) => {
     update(ref(db), updates)
         .catch((error) => {
             console.log('Error updating game stages:', error)
+        })
+}
+
+export const startUpdateBriefingStage = (uid, key, stage) => {
+    const updates = {};
+    updates['savedGames/' + uid + '/' + key + '/backstory/briefingStage'] = stage;
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Error updating briefing stage:', error)
+        })
+}
+
+export const startUpdatePrompt = (uid, key, deck, number, updateText) => {
+    const updates = {};
+    updates['savedGames/' + uid + '/' + key + `/backstory/${deck}${number}`] = updateText;
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log(`Error updating ${deck}${number} text:`, error)
         })
 }

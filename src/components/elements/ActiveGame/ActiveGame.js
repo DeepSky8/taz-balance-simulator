@@ -5,15 +5,12 @@ import {
     setActivePlayer,
     startNewRound,
     startUpdateGameStage,
-    updateChallengesObject,
+    updateBackstory,
     updateGameActive,
     updateGameStatic,
     updatePlayerList,
-    updateProgress,
     updateReadyList,
     updateReadyStatus,
-    updateStage,
-    updateTeamHealth
 } from "../../../actions/gameActions";
 import { auth, db } from "../../../firebase/firebase";
 import { defaultGameState, gameReducer } from "../../../reducers/gameReducer";
@@ -33,6 +30,7 @@ const ActiveGame = ({ }) => {
     const [activeCharacterObject, dispatchActiveCharacterObject] = useState({})
     const [gameState, dispatchGameState] = useReducer(gameReducer, defaultGameState)
     const [localCharObject, dispatchLocalCharObject] = useState({})
+
 
     // User listener, updated a single time:
     // Current Game: host and key
@@ -131,11 +129,21 @@ const ActiveGame = ({ }) => {
                 dispatchGameState(updateReadyList(readyList))
             })
 
+        // Ongoing backstory listener
+        onValue(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/backstory'),
+            (snapshot) => {
+                if (snapshot.exists()) {
+                    dispatchGameState(updateBackstory(snapshot.val()))
+                }
+
+            })
+
         return () => {
             off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/static'))
             off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/active'))
             off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/playerList'))
             off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/readyList'))
+            off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/backstory'))
         }
 
     }, [currentGameID])
@@ -305,7 +313,7 @@ const ActiveGame = ({ }) => {
                     }
                 />
                 <Route
-                    path="missionBriefing"
+                    path="missionBriefing/*"
                     element={
                         <MissionBriefing
                             gameState={gameState}
@@ -346,7 +354,7 @@ const ActiveGame = ({ }) => {
                 <div>Relic Code: {gameState.static.codeRelic}</div>
                 <div>Location Code: {gameState.static.codeLocation}</div>
                 <div>Stage: {gameState.active.stage}</div>
-                
+                <div>Briefing Stage: {gameState.backstory.briefingStage}</div>
                 <div>Host: {gameState.static.host}</div>
                 <div>Key: {gameState.static.key}</div>
                 <div>Surprises: {gameState.surprises}</div>

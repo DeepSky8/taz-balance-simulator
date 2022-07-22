@@ -13,22 +13,30 @@ const locationObjectsArray = [
     {
         challengeName: 'The Cave',
         challengeCode: 'l0',
-        challengeFlavor: `The Cave is a maze of tunnels stretching deep below the surface. It's filled with traps, haunted ruins, and foul monsters. It might have a fancy name like "The Caves of Despair."`
+        challengeFlavor: `The Cave is a maze of tunnels stretching deep below the surface. It's filled with traps, haunted ruins, and foul monsters. It might have a fancy name like "The Caves of Despair."`,
+        prompt1: `Do you know the name of this cave?`,
+        prompt2: `What does the entrance look like?`,
     },
     {
         challengeName: 'The Temple',
         challengeCode: 'l1',
-        challengeFlavor: `A foul presence has corrupted this grand temple, and sinister forces lurk in the gilded shadows. It might have a name like "The Temple of Absolute, Certain Death" but it's probably not that bad.`
+        challengeFlavor: `A foul presence has corrupted this grand temple, and sinister forces lurk in the gilded shadows. It might have a name like "The Temple of Absolute, Certain Death" but it's probably not that bad.`,
+        prompt1: `What's the name of the temple?`,
+        prompt2: `How big are we talking here?`,
     },
     {
         challengeName: 'The Tomb',
         challengeCode: 'l2',
-        challengeFlavor: 'Deadly traps and vengeful ghosts guard the ancient treasures interred in this Tomb.'
+        challengeFlavor: 'Deadly traps and vengeful ghosts guard the ancient treasures interred in this Tomb.',
+        prompt1: `What is the name of the Tomb?`,
+        prompt2: `Do you know who's buried here?`,
     },
     {
         challengeName: 'The Train',
         challengeCode: 'l3',
-        challengeFlavor: 'The Villain has stolen the Relic, and you have to catch them before the train reaches the end of the line.'
+        challengeFlavor: 'The Villain has stolen the Relic, and you have to catch them before the train reaches the end of the line.',
+        prompt1: `What is the name of this fantasy train?`,
+        prompt2: `Where is it going?`,
     }
 ]
 
