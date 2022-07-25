@@ -23,7 +23,7 @@ const DeckBriefing = ({ intro, flavor, p1, a1, u1, p2, a2, u2 }) => {
                         value={prompt1}
                         placeholder='Click out of box to save'
                         type='text'
-                        onChange={(e) => { e.preventDefault(); setPrompt1(e.target.value) }}
+                        onChange={(e) => { setPrompt1(e.target.value) }}
                         onBlur={() => { u1(prompt1); }}
                     />
 
@@ -62,3 +62,6 @@ export default DeckBriefing
 // />
 
 // onChange={(e) => { u1(e) }}
+
+
+// e.preventDefault();
