@@ -1,11 +1,12 @@
 import React from "react";
 
-const Playing = () => { 
+const Playing = ({ gameState }) => {
 
 
     return (
         <div>
-        
+
+
         </div>
     )
 }

@@ -1,22 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { auth } from "../../../firebase/firebase";
-import NextDeck from "./missionBriefing/NextDeck";
-import PrevDeck from "./missionBriefing/PrevDeck";
-import PassTurn from "./PassTurn";
 
-const ActiveCharWrapper = ({ gameState, character, resetStages, stepStage }) => {
+const ActiveCharWrapper = ({ gameState, character, resetStages, stepStage, resetTurnStage }) => {
     const [actionBarText, setActionBarText] = useState('Active Character: ')
     const activeCharacter = 'Active Character: '
-    const introMission = "Today's Mission"
+    const missionBriefBy = "Today's briefing conducted by "
     const createBackstory = 'Create backstory together'
     const gameEnded = 'Game Ended'
+
     useEffect(() => {
-        switch (gameState.active.stage) {
+        switch (gameState.active.gameStage) {
             case 'INTRO':
                 setActionBarText(activeCharacter + character.charName)
                 break;
             case 'BRIEF':
-                setActionBarText(introMission)
+                setActionBarText(missionBriefBy + character.charName)
                 break;
             // case 'BACKSTORY':
             //     setActionBarText(createBackstory)
@@ -31,20 +28,11 @@ const ActiveCharWrapper = ({ gameState, character, resetStages, stepStage }) => 
                 setActionBarText(activeCharacter)
                 break;
         }
-    }, [gameState.active.stage, character])
+    }, [gameState.active.gameStage, character])
 
     return (
         <div>
-            {gameState.active.stage === 'BRIEF' &&
-                gameState.static.host === auth.currentUser.uid &&
-                <PrevDeck gameState={gameState} />}
             {actionBarText}
-            {gameState.active.stage !== 'BRIEF' &&
-                <PassTurn gameState={gameState} />
-            }
-            {gameState.active.stage === 'BRIEF' &&
-                gameState.static.host === auth.currentUser.uid &&
-                <NextDeck gameState={gameState} />}
             <div>
                 <button
                     onClick={() => { resetStages() }}
@@ -52,6 +40,9 @@ const ActiveCharWrapper = ({ gameState, character, resetStages, stepStage }) => 
                 <button
                     onClick={() => { stepStage() }}
                 >-Step Stage-</button>
+                <button
+                    onClick={() => { resetTurnStage() }}
+                >-Reset Turn-</button>
             </div>
         </div>
     )

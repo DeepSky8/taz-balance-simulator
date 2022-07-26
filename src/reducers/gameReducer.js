@@ -8,12 +8,13 @@ const defaultGameState = {
         key: null,
     },
     active: {
-        activePlayer: null,
+        activeCharID: null,
+        activeUID: null,
+        gameStage: '',
         progressVillain: null,
         progressRelic: null,
         progressLocation: null,
         ready: false,
-        stage: '',
         teamHealth: null
     },
     backstory: {
@@ -24,6 +25,9 @@ const defaultGameState = {
         relicTwo: '',
         locationOne: '',
         locationTwo: '',
+    },
+    currentTurn: {
+        turnStage: 'CHALLENGE'
     },
     classList: [],
     playerList: [],
@@ -46,7 +50,7 @@ const gameReducer = (state, action) => {
                 ...defaultGameState,
                 ...state,
                 active: {
-                    ...action.activeData
+                    ...action.activeData,
                 }
             }
         case 'UPDATE_GAME_STATE_FULL':
@@ -139,21 +143,21 @@ const gameReducer = (state, action) => {
                     key: action.key
                 }
             }
-        case 'SET_ACTIVE_PLAYER':
+        case 'CLEAR_ACTIVE_PLAYER':
             return {
                 ...state,
                 active: {
                     ...state.active,
-                    activePlayer: action.activePlayer
-                },
-
+                    activeUID: null,
+                    activeChar: null
+                }
             }
-        case 'UPDATE_STAGE':
+        case 'UPDATE_GAME_STAGE':
             return {
                 ...state,
                 active: {
                     ...state.active,
-                    stage: action.stage
+                    gameStage: action.gameStage
                 }
             }
         case 'UPDATE_TEAM_HEALTH':
@@ -169,6 +173,12 @@ const gameReducer = (state, action) => {
                 ...defaultGameState,
                 ...state,
                 backstory: action.backstory
+            }
+        case 'UPDATE_CURRENT_TURN':
+            return {
+                ...defaultGameState,
+                ...state,
+                currentTurn: action.currentTurn
             }
         default:
             return state

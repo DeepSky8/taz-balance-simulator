@@ -2,10 +2,12 @@ import React, { useEffect, useReducer, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { off, onValue, ref } from "firebase/database";
 import {
-    setActivePlayer,
     startNewRound,
+    startSetActivePlayer,
     startUpdateGameStage,
+    startUpdateTurnStage,
     updateBackstory,
+    updateCurrentTurn,
     updateGameActive,
     updateGameStatic,
     updatePlayerList,
@@ -16,12 +18,12 @@ import { auth, db } from "../../../firebase/firebase";
 import { defaultGameState, gameReducer } from "../../../reducers/gameReducer";
 import AuthWrapper from "../../Authentication/AuthWrapper";
 import ActiveCharWrapper from "./ActiveCharWrapper";
-import PassTurn from "./PassTurn";
 import IntroDescription from "./introductions/IntroDescription";
 import IntroCharacter from './introductions/IntroCharacter';
 import incrementStage from "../../functions/incrementStage";
 import MissionBriefing from "./missionBriefing/MissionBriefing";
 import Playing from "./playing/Playing";
+import PassTurn from './turnStep/PassTurn';
 
 const ActiveGame = ({ }) => {
     let navigate = useNavigate()
@@ -127,6 +129,9 @@ const ActiveGame = ({ }) => {
                         readyList.push(readyPlayer.val())
                     })
                 }
+                // else {
+                //     dispatchGameState(clearActivePlayer())
+                // }
                 dispatchGameState(updateReadyList(readyList))
             })
 
@@ -139,12 +144,22 @@ const ActiveGame = ({ }) => {
 
             })
 
+        // Ongoing currentTurn listener
+        onValue(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/currentTurn'),
+            (snapshot) => {
+                if (snapshot.exists()) {
+                    dispatchGameState(updateCurrentTurn(snapshot.val()))
+                }
+
+            })
+
         return () => {
             off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/static'))
             off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/active'))
             off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/playerList'))
             off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/readyList'))
             off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/backstory'))
+            off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/currentTurn'))
         }
 
     }, [currentGameID])
@@ -152,11 +167,12 @@ const ActiveGame = ({ }) => {
     // Ongoing local character listener
     useEffect(() => {
         if (localCharID !== '') {
-            onValue(ref(db, 'characters/' + auth.currentUser.uid + '/' + localCharID), (snapshot) => {
-                if (snapshot.exists()) {
-                    dispatchLocalCharObject(snapshot.val())
-                }
-            })
+            onValue(ref(db, 'characters/' + auth.currentUser.uid + '/' + localCharID),
+                (snapshot) => {
+                    if (snapshot.exists()) {
+                        dispatchLocalCharObject(snapshot.val())
+                    }
+                })
         }
 
         return () => {
@@ -177,9 +193,8 @@ const ActiveGame = ({ }) => {
                 remainingPlayers.push(player)
             }
         })
-        // console.log('remainingplayers', remainingPlayers)
         if (remainingPlayers.length > 0) {
-            dispatchGameState(setActivePlayer(remainingPlayers[0]))
+            startSetActivePlayer(gameState.static.host, gameState.static.key, remainingPlayers[0].uid, remainingPlayers[0].currentCharacterID)
         }
         if ((gameState.playerList.length !== 0) &&
             (gameState.playerList.length === gameState.readyList.length)
@@ -191,11 +206,13 @@ const ActiveGame = ({ }) => {
 
     // Listener for remote activePlayer on gameState
     useEffect(() => {
-        if (gameState.active.activePlayer && gameState.active.activePlayer.uid !== auth.currentUser.uid) {
+        if (gameState.active.activeUID &&
+            (gameState.active.activeUID !== auth.currentUser.uid)
+        ) {
             dispatchActiveCharacterObject({})
             // If the current Active Player is not the local player, 
             // establish a listener for the duration of their turn
-            onValue(ref(db, 'characters/' + gameState.active.activePlayer.uid + '/' + gameState.active.activePlayer.currentCharacterID),
+            onValue(ref(db, 'characters/' + gameState.active.activeUID + '/' + gameState.active.activeCharID),
                 (snapshot) => {
                     if (snapshot.exists()) {
                         dispatchActiveCharacterObject(snapshot.val())
@@ -204,25 +221,27 @@ const ActiveGame = ({ }) => {
         }
 
         return () => {
-            if (gameState.active.activePlayer && gameState.active.activePlayer.uid !== auth.currentUser.uid) {
+            if (gameState.active.activeUID && gameState.active.activeUID !== auth.currentUser.uid) {
                 gameState.playerList.forEach((player) => {
                     off(ref(db, 'characters/' + player.uid + '/' + player.currentCharacterID))
                 })
             }
         }
-    }, [gameState.active.activePlayer])
+    }, [gameState.active.activeUID])
 
     // If activePlayer is the local player
     // mirror the localChar state into the activeCharacterObject
     useEffect(() => {
-        if (gameState.active.activePlayer && gameState.active.activePlayer.currentCharacterID === localCharID) {
+        if (gameState.active.activeCharID &&
+            (gameState.active.activeCharID === localCharID)
+        ) {
             dispatchActiveCharacterObject(localCharObject)
         }
 
-    }, [gameState.activePlayer, localCharObject])
+    }, [gameState.active, localCharObject, localCharID])
 
     const incrementGameStage = () => {
-        startUpdateGameStage(currentGameID.host, currentGameID.key, incrementStage(gameState.active.stage))
+        startUpdateGameStage(currentGameID.host, currentGameID.key, incrementStage(gameState.active.gameStage))
         dispatchGameState(updateReadyStatus(false))
     }
 
@@ -231,7 +250,7 @@ const ActiveGame = ({ }) => {
     // and advance it when appropriate
     useEffect(() => {
         if (
-            (introStages.includes(gameState.active.stage)) &&
+            (introStages.includes(gameState.active.gameStage)) &&
             gameState.active.ready
         ) {
             incrementGameStage()
@@ -252,7 +271,7 @@ const ActiveGame = ({ }) => {
     // Navigate to activeGame pages
     // based on game stages completed
     useEffect(() => {
-        switch (gameState.active.stage) {
+        switch (gameState.active.gameStage) {
             case 'INTRO':
                 navigate('introductions')
                 break;
@@ -274,8 +293,17 @@ const ActiveGame = ({ }) => {
             default:
                 break;
         }
-    }, [gameState.active.stage])
+    }, [gameState.active.gameStage])
 
+    // When a player's turn is complete, advance to the next player
+    // useEffect(() => { 
+    //     switch(gameState.currentTurn.turnStage){
+    //         case 'PASS':
+
+    //         default:
+    //             break;
+    //     }
+    // },[gameState.currentTurn.turnStage])
 
     // Testing tools
     const resetStages = () => {
@@ -283,9 +311,14 @@ const ActiveGame = ({ }) => {
     }
 
     const stepStage = () => {
-        startUpdateGameStage(currentGameID.host, currentGameID.key, incrementStage(gameState.active.stage))
+        startUpdateGameStage(currentGameID.host, currentGameID.key, incrementStage(gameState.active.gameStage))
+    }
+
+    const resetTurnStage = () => {
+        startUpdateTurnStage(currentGameID.host, currentGameID.key, 'CHALLENGE')
     }
     // Testing tools
+
 
     return (
         <div>
@@ -295,6 +328,11 @@ const ActiveGame = ({ }) => {
                 character={activeCharacterObject}
                 resetStages={resetStages}
                 stepStage={stepStage}
+                resetTurnStage={resetTurnStage}
+            />
+            <PassTurn
+                gameState={gameState}
+                character={activeCharacterObject}
             />
 
             <Routes>
@@ -302,9 +340,6 @@ const ActiveGame = ({ }) => {
                     path="introductions"
                     element={
                         <div>
-                            <PassTurn
-                                gameState={gameState}
-                            />
                             <IntroDescription />
                             <IntroCharacter
                                 character={activeCharacterObject}
@@ -333,7 +368,9 @@ const ActiveGame = ({ }) => {
                     path="playing"
                     element={
                         <div>
-                            <Playing />
+                            <Playing
+                                gameState={gameState}
+                            />
 
                         </div>
                     }
@@ -352,7 +389,8 @@ const ActiveGame = ({ }) => {
                 <div>Villain Code: {gameState.static.codeVillain}</div>
                 <div>Relic Code: {gameState.static.codeRelic}</div>
                 <div>Location Code: {gameState.static.codeLocation}</div>
-                <div>Stage: {gameState.active.stage}</div>
+                <div>Game Stage: {gameState.active.gameStage}</div>
+                <div>Turn Stage: {gameState.currentTurn.turnStage}</div>
                 <div>Briefing Stage: {gameState.backstory.briefingStage}</div>
                 <div>Host: {gameState.static.host}</div>
                 <div>Key: {gameState.static.key}</div>
@@ -362,7 +400,7 @@ const ActiveGame = ({ }) => {
                 <div>Location Progress: {gameState.active.progressLocation}</div>
                 <div>Ready state: {gameState.active.ready && gameState.active.ready ? 'true' : 'false'}</div>
                 <div>Team Health: {gameState.active.teamHealth}</div>
-                <div>Active Character: {gameState.active.activePlayer && gameState.active.activePlayer.currentCharacterID}</div>
+                <div>Active Character: {gameState.active.activeUID && gameState.active.activeCharID}</div>
             </div>
         </div>
     )

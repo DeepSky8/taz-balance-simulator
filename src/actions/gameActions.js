@@ -77,14 +77,13 @@ export const setGameKey = (key) => ({
     key
 })
 
-export const setActivePlayer = (activePlayer) => ({
-    type: 'SET_ACTIVE_PLAYER',
-    activePlayer
+export const clearActivePlayer = () => ({
+    type: 'CLEAR_ACTIVE_PLAYER'
 })
 
-export const updateStage = (stage) => ({
-    type: 'UPDATE_STAGE',
-    stage
+export const updateGameStage = (gameStage) => ({
+    type: 'UPDATE_GAME_STAGE',
+    gameStage
 })
 
 export const updateTeamHealth = (teamHealth) => ({
@@ -97,22 +96,15 @@ export const updateBackstory = (backstory) => ({
     backstory
 })
 
+export const updateCurrentTurn = (currentTurn) => ({
+    type: 'UPDATE_CURRENT_TURN',
+    currentTurn
+})
 
 // Cloud Actions
 
 export const startGetKey = (uid) => {
     return push(ref(db, 'savedGames/' + uid)).key;
-}
-
-//review this!!!!
-const startSaveGame = (uid, key, gameState) => {
-    const updates = {}
-    updates['savedGames/' + uid + '/' + key + '/static'] = { ...gameState, key }
-    return update(ref(db), updates)
-
-    // .catch((error) => {
-    //     console.log('Did not start Save Game, error: ', error)
-    // })
 }
 
 export const startRemoveSavedGame = (uid, key) => {
@@ -202,7 +194,7 @@ export const startNewGame = (uid, gameID, playerList, challengesObject, teamHeal
     updates['savedGames/' + uid + '/' + key + '/static/codeLocation'] = challengesObject.codeLocation;
 
     updates['savedGames/' + uid + '/' + key + '/active/teamHealth'] = teamHealth;
-    updates['savedGames/' + uid + '/' + key + '/active/stage'] = 'INTRO';
+    updates['savedGames/' + uid + '/' + key + '/active/gameStage'] = 'INTRO';
     updates['savedGames/' + uid + '/' + key + '/active/ready'] = false;
     updates['savedGames/' + uid + '/' + key + '/active/progressVillain'] = 0
     updates['savedGames/' + uid + '/' + key + '/active/progressRelic'] = 0
@@ -255,18 +247,18 @@ export const startSetReadyFalse = (uid, key) => {
         })
 }
 
-export const startUpdateGameStage = (uid, key, stage) => {
+export const startUpdateGameStage = (uid, key, gameStage) => {
     const updates = {};
-    updates['savedGames/' + uid + '/' + key + '/active/stage'] = stage;
+    updates['savedGames/' + uid + '/' + key + '/active/gameStage'] = gameStage;
     update(ref(db), updates)
         .catch((error) => {
             console.log('Error updating game stages:', error)
         })
 }
 
-export const startUpdateBriefingStage = (uid, key, stage) => {
+export const startUpdateBriefingStage = (uid, key, briefingStage) => {
     const updates = {};
-    updates['savedGames/' + uid + '/' + key + '/backstory/briefingStage'] = stage;
+    updates['savedGames/' + uid + '/' + key + '/backstory/briefingStage'] = briefingStage;
     update(ref(db), updates)
         .catch((error) => {
             console.log('Error updating briefing stage:', error)
@@ -279,5 +271,24 @@ export const startUpdatePrompt = (uid, key, deck, number, updateText) => {
     update(ref(db), updates)
         .catch((error) => {
             console.log(`Error updating ${deck}${number} text:`, error)
+        })
+}
+
+export const startUpdateTurnStage = (uid, key, turnStage) => {
+    const updates = {};
+    updates['savedGames/' + uid + '/' + key + `/currentTurn/turnStage`] = turnStage;
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log(`Error updating turnStage:`, error)
+        })
+}
+
+export const startSetActivePlayer = (uid, key, activeUID, activeCharID) => {
+    const updates = {};
+    updates['savedGames/' + uid + '/' + key + `/active/activeUID`] = activeUID;
+    updates['savedGames/' + uid + '/' + key + `/active/activeCharID`] = activeCharID;
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log(`Error updating turnStage:`, error)
         })
 }
