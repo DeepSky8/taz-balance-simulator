@@ -3,9 +3,11 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import { off, onValue, ref } from "firebase/database";
 import {
     startNewRound,
+    startResetActionTokens,
     startSetActivePlayer,
     startUpdateGameStage,
     startUpdateTurnStage,
+    updateActionTokenList,
     updateBackstory,
     updateCurrentTurn,
     updateGameActive,
@@ -153,6 +155,18 @@ const ActiveGame = ({ }) => {
 
             })
 
+        // Ongoing hasActionToken listener
+        onValue(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/hasActionToken'),
+            (snapshot) => {
+                const actionTokenList = []
+                if (snapshot.exists()) {
+                    snapshot.forEach((hasTokenPlayer) => {
+                        actionTokenList.push(hasTokenPlayer.val())
+                    })
+                }
+                dispatchGameState(updateActionTokenList(actionTokenList))
+            })
+
         return () => {
             off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/static'))
             off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/active'))
@@ -160,6 +174,7 @@ const ActiveGame = ({ }) => {
             off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/readyList'))
             off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/backstory'))
             off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/currentTurn'))
+            off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/hasActionToken'))
         }
 
     }, [currentGameID])
@@ -200,6 +215,7 @@ const ActiveGame = ({ }) => {
             (gameState.playerList.length === gameState.readyList.length)
         ) {
             startNewRound(currentGameID.host, currentGameID.key)
+            startResetActionTokens(currentGameID.host, currentGameID.key, gameState.playerList)
             dispatchGameState(updateReadyStatus(true))
         }
     }, [gameState.readyList])
@@ -295,16 +311,6 @@ const ActiveGame = ({ }) => {
         }
     }, [gameState.active.gameStage])
 
-    // When a player's turn is complete, advance to the next player
-    // useEffect(() => { 
-    //     switch(gameState.currentTurn.turnStage){
-    //         case 'PASS':
-
-    //         default:
-    //             break;
-    //     }
-    // },[gameState.currentTurn.turnStage])
-
     // Testing tools
     const resetStages = () => {
         startUpdateGameStage(currentGameID.host, currentGameID.key, 'INTRO')
@@ -316,6 +322,10 @@ const ActiveGame = ({ }) => {
 
     const resetTurnStage = () => {
         startUpdateTurnStage(currentGameID.host, currentGameID.key, 'CHALLENGE')
+    }
+
+    const resetActionTokens = () => {
+        startResetActionTokens(currentGameID.host, currentGameID.key, gameState.playerList)
     }
     // Testing tools
 
@@ -329,6 +339,7 @@ const ActiveGame = ({ }) => {
                 resetStages={resetStages}
                 stepStage={stepStage}
                 resetTurnStage={resetTurnStage}
+                resetActionTokens={resetActionTokens}
             />
             <PassTurn
                 gameState={gameState}

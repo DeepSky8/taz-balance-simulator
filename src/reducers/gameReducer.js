@@ -29,10 +29,27 @@ const defaultGameState = {
     currentTurn: {
         turnStage: 'CHALLENGE'
     },
-    classList: [],
-    playerList: [],
-    readyList: [],
+    classList: [
+        // digit representing classCode
+    ],
+    playerList: [
+        // {
+        // uid
+        // currentCharacterID
+        // classCode
+        // }
+    ],
+    readyList: [
+        // uid
+    ],
     surprises: [],
+    hasActionToken: [
+        //{
+        // uid
+        // currentCharacterID
+        // classCode
+        // }
+    ]
 }
 
 const gameReducer = (state, action) => {
@@ -179,6 +196,18 @@ const gameReducer = (state, action) => {
                 ...defaultGameState,
                 ...state,
                 currentTurn: action.currentTurn
+            }
+        case 'UPDATE_ACTION_TOKENS':
+            return {
+                ...defaultGameState,
+                ...state,
+                hasActionToken: action.hasActionToken
+            }
+        case 'CLEAR_ACTION_TOKENS':
+            return {
+                ...defaultGameState,
+                ...state,
+                hasActionToken: []
             }
         default:
             return state

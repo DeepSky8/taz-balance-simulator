@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { startResetActionTokens } from "../../../actions/gameActions";
 
-const ActiveCharWrapper = ({ gameState, character, resetStages, stepStage, resetTurnStage }) => {
+const ActiveCharWrapper = ({ gameState, character, resetStages, stepStage, resetTurnStage, resetActionTokens }) => {
     const [actionBarText, setActionBarText] = useState('Active Character: ')
     const activeCharacter = 'Active Character: '
     const missionBriefBy = "Today's briefing conducted by "
@@ -43,6 +44,7 @@ const ActiveCharWrapper = ({ gameState, character, resetStages, stepStage, reset
                 <button
                     onClick={() => { resetTurnStage() }}
                 >-Reset Turn-</button>
+                <button onClick={() => { resetActionTokens() }}>-Reset Action Tokens-</button>
             </div>
         </div>
     )

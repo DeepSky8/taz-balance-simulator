@@ -101,6 +101,15 @@ export const updateCurrentTurn = (currentTurn) => ({
     currentTurn
 })
 
+export const updateActionTokenList = (hasActionToken) => ({
+    type: 'UPDATE_ACTION_TOKENS',
+    hasActionToken
+})
+
+export const clearActionTokenList = () => ({ 
+    type: 'CLEAR_ACTION_TOKENS'
+})
+
 // Cloud Actions
 
 export const startGetKey = (uid) => {
@@ -130,6 +139,7 @@ export const startJoinActiveGame = (uid, gameID, currentCharacterID, classCode) 
     const updates = {}
     updates['gameSetup/' + gameID + '/playerList/' + uid + '/uid'] = uid
     updates['gameSetup/' + gameID + '/playerList/' + uid + '/currentCharacterID'] = currentCharacterID
+    updates['gameSetup/' + gameID + '/playerList/' + uid + '/classCode'] = classCode
     updates['gameSetup/' + gameID + '/classStorage/' + uid] = classCode
     update(ref(db), updates)
         .catch((error) => {
@@ -226,6 +236,15 @@ export const startNewRound = (uid, key) => {
     update(ref(db), updates)
         .catch((error) => {
             console.log('Error when starting new round:', error)
+        })
+}
+
+export const startResetActionTokens = (uid, key, playerList) => {
+    const updates = {};
+    updates['savedGames/' + uid + '/' + key + '/hasActionToken'] = playerList;
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Error when setting action tokens available:', error)
         })
 }
 
