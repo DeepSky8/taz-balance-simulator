@@ -271,7 +271,7 @@ export const GameSetup = ({ }) => {
     useEffect(() => {
 
         // Add the current character class code to the active game 
-        // and the UID and current character key to the list of 
+        // and the UID, current character key, and name to the list of 
         // players on the Active Game
 
         if (userState.currentCharacterID && userState.gameID) {
@@ -279,7 +279,8 @@ export const GameSetup = ({ }) => {
                 auth.currentUser.uid,
                 userState.gameID,
                 userState.currentCharacterID,
-                charState.classCode
+                charState.classCode,
+                charState.charName
             )
         }
 

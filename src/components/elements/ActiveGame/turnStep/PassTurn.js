@@ -8,15 +8,26 @@ import PrevDeck from './PrevDeck';
 
 const PassTurn = ({ gameState, character }) => {
     const [stepText, setStepText] = useState('Select a challenge to engage')
-    // let isActivePlayer = (gameState.active.activeUID ?
-    //     (gameState.active.activeUID !== auth.currentUser.uid)
-    //     :
-    //     true
-    // )
+    const [activeAssistPlayer, setActiveAssistPlayer] = useState('Friend')
+
+    useEffect(() => {
+        if (gameState.activeAssistTokens.length > 0) {
+            setActiveAssistPlayer(gameState.activeAssistTokens[0].charName)
+        } else {
+            setActiveAssistPlayer('Friend')
+        }
+    }, [gameState.activeAssistTokens])
 
 
     useEffect(() => {
-        setStepText(turnTextSwitcher(gameState.active.gameStage, gameState.backstory.briefingStage, gameState.currentTurn.turnStage, character))
+        setStepText(
+            turnTextSwitcher(
+                gameState.active.gameStage,
+                gameState.backstory.briefingStage,
+                gameState.currentTurn.turnStage,
+                character,
+                activeAssistPlayer)
+        )
     }, [
         gameState.active.gameStage,
         gameState.backstory.briefingStage,
@@ -32,7 +43,7 @@ const PassTurn = ({ gameState, character }) => {
                 <PrevDeck gameState={gameState} />}
 
             <button
-                onClick={() => { clickForNext({ gameState }) }}
+                onClick={() => { clickForNext({ gameState, character }) }}
             >
                 {stepText}
             </button>

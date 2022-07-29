@@ -106,8 +106,18 @@ export const updateActionTokenList = (hasActionToken) => ({
     hasActionToken
 })
 
-export const clearActionTokenList = () => ({ 
+export const clearActionTokenList = () => ({
     type: 'CLEAR_ACTION_TOKENS'
+})
+
+export const updateActiveTokensList = (activeActionTokens) => ({
+    type: 'UPDATE_ACTIVE_TOKENS',
+    activeActionTokens
+})
+
+export const updateAssistTokensList = (activeAssistTokens) => ({
+    type: 'UPDATE_ASSIST_TOKENS',
+    activeAssistTokens
 })
 
 // Cloud Actions
@@ -135,11 +145,12 @@ export const startLoadSavedGame = (gameID, key, challengesObject) => {
         })
 }
 
-export const startJoinActiveGame = (uid, gameID, currentCharacterID, classCode) => {
+export const startJoinActiveGame = (uid, gameID, currentCharacterID, classCode, charName) => {
     const updates = {}
     updates['gameSetup/' + gameID + '/playerList/' + uid + '/uid'] = uid
     updates['gameSetup/' + gameID + '/playerList/' + uid + '/currentCharacterID'] = currentCharacterID
     updates['gameSetup/' + gameID + '/playerList/' + uid + '/classCode'] = classCode
+    updates['gameSetup/' + gameID + '/playerList/' + uid + '/charName'] = charName
     updates['gameSetup/' + gameID + '/classStorage/' + uid] = classCode
     update(ref(db), updates)
         .catch((error) => {
@@ -239,14 +250,6 @@ export const startNewRound = (uid, key) => {
         })
 }
 
-export const startResetActionTokens = (uid, key, playerList) => {
-    const updates = {};
-    updates['savedGames/' + uid + '/' + key + '/hasActionToken'] = playerList;
-    update(ref(db), updates)
-        .catch((error) => {
-            console.log('Error when setting action tokens available:', error)
-        })
-}
 
 export const startSetReadyTrue = (uid, key) => {
     const updates = {};
@@ -296,6 +299,7 @@ export const startUpdatePrompt = (uid, key, deck, number, updateText) => {
 export const startUpdateTurnStage = (uid, key, turnStage) => {
     const updates = {};
     updates['savedGames/' + uid + '/' + key + `/currentTurn/turnStage`] = turnStage;
+    updates['savedGames/' + uid + '/' + key + `/activeActionTokens`] = null;
     update(ref(db), updates)
         .catch((error) => {
             console.log(`Error updating turnStage:`, error)
@@ -311,3 +315,72 @@ export const startSetActivePlayer = (uid, key, activeUID, activeCharID) => {
             console.log(`Error updating turnStage:`, error)
         })
 }
+
+// Action Tokens
+export const startSpendActionToken = (uid, key, updatedHasActionToken, activeActionTokens) => {
+    const updates = {};
+    updates['savedGames/' + uid + '/' + key + `/hasActionToken`] = updatedHasActionToken;
+    updates['savedGames/' + uid + '/' + key + `/activeActionTokens`] = activeActionTokens;
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log(`Error updating hasActionToken:`, error)
+        })
+}
+
+export const startSpendAssistToken = (uid, key, activeAssistTokens) => {
+    const updates = {};
+    updates['savedGames/' + uid + '/' + key + `/activeAssistTokens`] = activeAssistTokens;
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log(`Error updating hasAssistToken:`, error)
+        })
+}
+
+export const startUNspendActionToken = (uid, key, updatedHasActionToken, updatedActiveActionTokens) => {
+    const updates = {};
+    updates['savedGames/' + uid + '/' + key + `/hasActionToken`] = updatedHasActionToken;
+    updates['savedGames/' + uid + '/' + key + `/activeActionTokens`] = updatedActiveActionTokens;
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log(`Error unspending action token:`, error)
+        })
+}
+
+export const startUNspendAssistToken = (uid, key, updatedActiveAssistTokens) => {
+    const updates = {};
+    updates['savedGames/' + uid + '/' + key + `/activeAssistTokens`] = updatedActiveAssistTokens;
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log(`Error unspending assist token:`, error)
+        })
+}
+
+export const startUpdateAssistTokens = (uid, key, updatedActiveAssistTokens) => {
+    const updates = {};
+    updates['savedGames/' + uid + '/' + key + `/activeAssistTokens`] = updatedActiveAssistTokens;
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log(`Error updating assist token array:`, error)
+        })
+}
+
+export const startRESETActionTokens = (uid, key, playerList) => {
+    const updates = {};
+    updates['savedGames/' + uid + '/' + key + '/hasActionToken'] = playerList;
+    updates['savedGames/' + uid + '/' + key + '/activeActionTokens'] = null;
+    updates['savedGames/' + uid + '/' + key + '/activeAssistTokens'] = null;
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Error when setting action tokens available:', error)
+        })
+}
+
+export const startCLEARActionTokens = (uid, key) => {
+    const updates = {};
+    updates['savedGames/' + uid + '/' + key + '/activeActionTokens'] = null;
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Error when clearing active Action Token array:', error)
+        })
+}
+// Action Tokens

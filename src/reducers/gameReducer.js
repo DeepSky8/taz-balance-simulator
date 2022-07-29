@@ -27,7 +27,7 @@ const defaultGameState = {
         locationTwo: '',
     },
     currentTurn: {
-        turnStage: 'CHALLENGE'
+        turnStage: 'CHALLENGE',
     },
     classList: [
         // digit representing classCode
@@ -37,6 +37,7 @@ const defaultGameState = {
         // uid
         // currentCharacterID
         // classCode
+        // charName
         // }
     ],
     readyList: [
@@ -48,6 +49,23 @@ const defaultGameState = {
         // uid
         // currentCharacterID
         // classCode
+        // charName
+        // }
+    ],
+    activeActionTokens: [
+        //{
+        // uid
+        // currentCharacterID
+        // classCode
+        // charName
+        // }
+    ],
+    activeAssistTokens: [
+        //{
+        // uid
+        // currentCharacterID
+        // classCode
+        // charName
         // }
     ]
 }
@@ -209,6 +227,18 @@ const gameReducer = (state, action) => {
                 ...state,
                 hasActionToken: []
             }
+        case 'UPDATE_ACTIVE_TOKENS':
+            return {
+                ...defaultGameState,
+                ...state,
+                activeActionTokens: action.activeActionTokens
+            }
+            case 'UPDATE_ASSIST_TOKENS':
+                return {
+                    ...defaultGameState,
+                    ...state,
+                    activeAssistTokens: action.activeAssistTokens
+                }
         default:
             return state
     }

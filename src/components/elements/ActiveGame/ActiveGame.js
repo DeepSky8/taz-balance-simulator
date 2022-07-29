@@ -3,11 +3,13 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import { off, onValue, ref } from "firebase/database";
 import {
     startNewRound,
-    startResetActionTokens,
+    startRESETActionTokens,
     startSetActivePlayer,
     startUpdateGameStage,
     startUpdateTurnStage,
     updateActionTokenList,
+    updateActiveTokensList,
+    updateAssistTokensList,
     updateBackstory,
     updateCurrentTurn,
     updateGameActive,
@@ -167,6 +169,30 @@ const ActiveGame = ({ }) => {
                 dispatchGameState(updateActionTokenList(actionTokenList))
             })
 
+        // Ongoing activeActionTokens listener
+        onValue(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/activeActionTokens'),
+            (snapshot) => {
+                const actionTokenList = []
+                if (snapshot.exists()) {
+                    snapshot.forEach((activeTokenPlayer) => {
+                        actionTokenList.push(activeTokenPlayer.val())
+                    })
+                }
+                dispatchGameState(updateActiveTokensList(actionTokenList))
+            })
+
+        // Ongoing activeAssistTokens listener
+        onValue(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/activeAssistTokens'),
+            (snapshot) => {
+                const assistTokenList = []
+                if (snapshot.exists()) {
+                    snapshot.forEach((assistTokenPlayer) => {
+                        assistTokenList.push(assistTokenPlayer.val())
+                    })
+                }
+                dispatchGameState(updateAssistTokensList(assistTokenList))
+            })
+
         return () => {
             off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/static'))
             off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/active'))
@@ -175,6 +201,9 @@ const ActiveGame = ({ }) => {
             off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/backstory'))
             off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/currentTurn'))
             off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/hasActionToken'))
+            off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/activeActionTokens'))
+            off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/activeAssistTokens'))
+
         }
 
     }, [currentGameID])
@@ -215,7 +244,7 @@ const ActiveGame = ({ }) => {
             (gameState.playerList.length === gameState.readyList.length)
         ) {
             startNewRound(currentGameID.host, currentGameID.key)
-            startResetActionTokens(currentGameID.host, currentGameID.key, gameState.playerList)
+            startRESETActionTokens(currentGameID.host, currentGameID.key, gameState.playerList)
             dispatchGameState(updateReadyStatus(true))
         }
     }, [gameState.readyList])
@@ -325,7 +354,7 @@ const ActiveGame = ({ }) => {
     }
 
     const resetActionTokens = () => {
-        startResetActionTokens(currentGameID.host, currentGameID.key, gameState.playerList)
+        startRESETActionTokens(currentGameID.host, currentGameID.key, gameState.playerList)
     }
     // Testing tools
 
@@ -335,7 +364,8 @@ const ActiveGame = ({ }) => {
             <AuthWrapper />
             <ActiveCharWrapper
                 gameState={gameState}
-                character={activeCharacterObject}
+                activeCharacter={activeCharacterObject}
+                localCharacter={localCharObject}
                 resetStages={resetStages}
                 stepStage={stepStage}
                 resetTurnStage={resetTurnStage}

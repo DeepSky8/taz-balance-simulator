@@ -10,12 +10,14 @@ const incrementTurn = (stage) => {
         case 'PREASSIST':
             return 'SCENE';
         case 'SCENE':
-            return 'ASSIST_SCENE';
-        case 'ASSIST_SCENE':
+            return 'PRE_ASSIST_SCENE';
+        case 'PRE_ASSIST_SCENE':
             return 'ROLL';
         case 'ROLL':
             return 'POSTASSIST';
         case 'POSTASSIST':
+            return 'POST_ASSIST_SCENE';
+        case 'POST_ASSIST_SCENE':
             return 'DESCRIBE';
         case 'DESCRIBE':
             return 'KOSTCO';
