@@ -15,6 +15,9 @@ import {
     startRemoveGameCode,
     updateGameStatic,
     updateGameActive,
+    startSetVillainDeck,
+    startSetRelicDeck,
+    startSetLocationDeck,
 } from "../../../actions/gameActions";
 import CharacterChallengeNavBar from "./CharacterChallengeNavBar";
 import PlayingAs from "./PlayingAs";
@@ -35,7 +38,6 @@ import StartGame from "./StartGame";
 import GameInstructions from "./GameInstructions";
 import AuthWrapper from "../../Authentication/AuthWrapper";
 import ChallengeDisplay from "./ChallengeDisplay";
-
 
 
 
@@ -255,10 +257,13 @@ export const GameSetup = ({ }) => {
         if (gameState.static.key !== null &&
             gameState.readyList.length === (gameState.playerList.length + 1) &&
             gameState.active.ready) {
-                console.log('ready to record current game', gameState)
+
             startRecordCurrentGame(
-                auth.currentUser.uid, gameState.static.key, gameState.static.host
+                auth.currentUser.uid,
+                gameState.static.key,
+                gameState.static.host
             )
+
             navigate('/activeGame/introductions')
             startRemoveGameCode(auth.currentUser.uid, gameState.static.gameID)
         }

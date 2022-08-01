@@ -1,4 +1,4 @@
-import { cardPicker, shuffle } from '../functions/deckRandomizers';
+import { cardPicker, shuffle } from '../../../functions/deckRandomizers';
 import Card from '../mission-elements/m-card';
 
 // Ring challenges are not designed to be sequential in any way

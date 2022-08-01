@@ -3,7 +3,7 @@
 
 const challengeTransformer = (challengeArray, challengeCode) => {
     if (challengeCode) {
-        switch (challengeCode.split('')[1]) {
+        switch (challengeCode) {
             case '0':
                 return challengeArray[0]
             case '1':
@@ -40,3 +40,5 @@ const challengeTransformer = (challengeArray, challengeCode) => {
 }
 
 export { challengeTransformer as default }
+
+// .split('')[1]

@@ -1,5 +1,5 @@
 import Card from '../mission-elements/m-card';
-import { cardPicker } from '../functions/deckRandomizers';
+import { cardPicker } from '../../../functions/deckRandomizers';
 
 // The Lich deck is designed to be played sequentially. 
 // Based on the flip mechanic introduced by a few cards,

@@ -384,3 +384,33 @@ export const startCLEARActionTokens = (uid, key) => {
         })
 }
 // Action Tokens
+
+// Challenge Actions
+export const startSetVillainDeck = (uid, key, villainDeck) => { 
+    const updates = {};
+    updates['savedGames/' + uid + '/' + key + '/villainDeck'] = villainDeck;
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Error when setting Villain deck:', error)
+        })
+}
+
+export const startSetRelicDeck = (uid, key, relicDeck) => { 
+    const updates = {};
+    updates['savedGames/' + uid + '/' + key + '/relicDeck'] = relicDeck;
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Error when setting Relic deck:', error)
+        })
+}
+
+export const startSetLocationDeck = (uid, key, locationDeck) => { 
+    const updates = {};
+    updates['savedGames/' + uid + '/' + key + '/locationDeck'] = locationDeck;
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Error when setting Location deck:', error)
+        })
+}
+
+// Challenge Actions

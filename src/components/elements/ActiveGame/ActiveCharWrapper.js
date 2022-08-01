@@ -11,7 +11,7 @@ const ActiveCharWrapper = ({ gameState, activeCharacter, localCharacter, resetSt
     useEffect(() => {
         switch (gameState.active.gameStage) {
             case 'INTRO':
-                setActionBarText(currentActiveChar + activeCharacter.charName + myCharacter)
+                setActionBarText(myCharacter + currentActiveChar + activeCharacter.charName)
                 break;
             case 'BRIEF':
                 setActionBarText(missionBriefBy + activeCharacter.charName + myCharacter)
@@ -20,7 +20,7 @@ const ActiveCharWrapper = ({ gameState, activeCharacter, localCharacter, resetSt
             //     setActionBarText(createBackstory)
             //     break;
             case 'CHALLENGES':
-                setActionBarText(myCharacter + currentActiveChar + activeCharacter.charName )
+                setActionBarText(myCharacter + currentActiveChar + activeCharacter.charName)
                 break;
             case 'END':
                 setActionBarText(gameEnded)

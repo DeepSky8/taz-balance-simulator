@@ -87,7 +87,7 @@ const ChallengeSelect = ({ gameState, userState, toggleGameType, gameTypeButtonT
                         {challengeState.selectedRelicObject.challengeName}
                     </button>
 
-                    {challengeState.selectedLocationObject.challengeCode === 'l3'
+                    {challengeState.selectedLocationObject.challengeCode === 3
                         ?
                         'on'
                         :
@@ -111,7 +111,7 @@ const ChallengeSelect = ({ gameState, userState, toggleGameType, gameTypeButtonT
                         {challengeState.selectedRelicObject.challengeName}
                     </button>
 
-                    {challengeState.selectedLocationObject.challengeCode === 'l3' ?
+                    {challengeState.selectedLocationObject.challengeCode === 3 ?
                         'on'
                         :
                         'in'

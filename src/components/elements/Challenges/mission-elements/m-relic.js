@@ -12,7 +12,7 @@
 const relicObjectsArray = [
     {
         challengeName: 'The Ring',
-        challengeCode: 'r0',
+        challengeCode: 0,
         challengeFlavor: `The Villain can use the Ring to conjure illusions and nightmares, forcing you to face your inner fears. It probably has a cool name, like "The Mind's Eye`,
         promptFlavor1: `'s mere presence is causing the Ring to conjure illusions and nightmares, forcing you to face your inner fears. It probably has a cool name, like "The Mind's Eye`,
         promptFlavor2: ` can use the Ring to conjure illusions and nightmares, forcing you to face your inner fears. It probably has a cool name, like "The Mind's Eye`,
@@ -21,7 +21,7 @@ const relicObjectsArray = [
     },
     {
         challengeName: 'The Idol',
-        challengeCode: 'r1',
+        challengeCode: 1,
         challengeFlavor: "The Idol can alter reality and twist time and space. It doesn't belong in this world.",
         promptFlavor1: "The Idol can alter reality and twist time and space. It doesn't belong in this world.",
         promptFlavor2: "",
@@ -30,7 +30,7 @@ const relicObjectsArray = [
     },
     {
         challengeName: 'The Hoard',
-        challengeCode: 'r2',
+        challengeCode: 2,
         challengeFlavor: "This treasure hoard is legendary, and many greedy adventurers hope to claim it. You'll have to deal with these deadly rivals as well as curses and traps laid on the hoard itself.",
         promptFlavor1: "This treasure hoard is legendary, and many greedy adventurers hope to claim it. You'll have to deal with these deadly rivals as well as curses and traps laid on the hoard itself.",
         promptFlavor2: '',
@@ -39,7 +39,7 @@ const relicObjectsArray = [
     },
     {
         challengeName: 'The Staff',
-        challengeCode: 'r3',
+        challengeCode: 4,
         challengeFlavor: 'The Staff grants The Villain power over the elements, allowing them to control the weather and conjure fire and ice. It probably has a cool name, like "The Staff of Endless Winter."',
         promptFlavor1: 'The Staff grants ',
         promptFlavor2: ' power over the elements, allowing them to control the weather and conjure fire and ice. It probably has a cool name, like "The Staff of Endless Winter."',
@@ -60,9 +60,9 @@ const relicObjectsArray = [
 //     constructor(number) {
 //         super();
 //         this.number = number
-//         this.flavor = relicFlavorArray[this.number]
-//         this.storyPrompt1 = relicStoryPrompt1[this.number]
-//         this.storyPrompt2 = relicStoryPrompt2[this.number]
+//         this.flavor = relicObjectsArray[this.number].challengeFlavor
+//         this.storyPrompt1 = relicObjectsArray[this.number].prompt1
+//         this.storyPrompt2 = relicObjectsArray[this.number].prompt2
 //         this.deck = relicDecks[this.number].cards
 //     }
 // }
