@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { get, onValue, ref } from "firebase/database";
-import { auth, db } from "../../firebase/firebase";
-import { startRemoveUser } from "../../actions/userActions";
+import { auth, db } from "../../../firebase/firebase";
+import { startRemoveUser } from "../../../actions/userActions";
 
 export const RefreshHelper = ({ }) => {
     let navigate = useNavigate()

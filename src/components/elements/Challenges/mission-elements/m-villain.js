@@ -12,7 +12,7 @@
 const villainObjectsArray = [
     {
         challengeName: 'The Lich',
-        challengeCode: 0,
+        challengeCode: 'v0',
         challengeFlavor: 'The Lich is a powerful Undead wizard. It has a host of vile servants and wields foul magic.',
         promptFlavor1: 'The Lich is a powerful Undead wizard. It has a host of vile servants and wields foul magic.',
         promptFlavor2: '',
@@ -21,7 +21,7 @@ const villainObjectsArray = [
     },
     {
         challengeName: 'The Cult',
-        challengeCode: 1,
+        challengeCode: 'v1',
         challengeFlavor: 'The Cult is a nefarious conspiracy with ties to dark powers. They could be summoning ghosts, fiends, or strange creatures from beyond time and space.',
         promptFlavor1: 'The Cult is a nefarious conspiracy with ties to dark powers. They could be summoning ghosts, fiends, or strange creatures from beyond time and space.',
         promptFlavor2: '',
@@ -30,7 +30,7 @@ const villainObjectsArray = [
     },
     {
         challengeName: 'The Dark Lord',
-        challengeCode: 2,
+        challengeCode: 'v2',
         challengeFlavor: 'The Dark Lord is a cruel tyrant with an army of monstrous minions. They are searching for the Relic, and if they claim it before you do, the world is doomed!',
         promptFlavor1: 'The Dark Lord is a cruel tyrant with an army of monstrous minions. They are searching for ',
         promptFlavor2: ', and if they claim it before you do, the world is doomed!',
@@ -39,7 +39,7 @@ const villainObjectsArray = [
     },
     {
         challengeName: 'The Dragon',
-        challengeCode: 3,
+        challengeCode: 'v3',
         challengeFlavor: 'The Dragon is ancient and powerful, and it is determined to destroy you. You must survive its attacks and press forward until you have an opportunity to defeat it once and for all.',
         promptFlavor1: 'The Dragon is ancient and powerful, and it is determined to destroy you. You must survive its attacks and press forward until you have an opportunity to defeat it once and for all.',
         promptFlavor2: '',
@@ -48,7 +48,7 @@ const villainObjectsArray = [
     },
     {
         challengeName: 'The Band of Rogues',
-        challengeCode: 3,
+        challengeCode: 'v4',
         challengeFlavor: 'Why settle for one villain when you can have ten? A host of enemies stand between you and your goal.',
         promptFlavor1: 'Why settle for one villain when you can have ten? A host of enemies stand between you and ',
         promptFlavor2: '.',

@@ -12,7 +12,7 @@
 const locationObjectsArray = [
     {
         challengeName: 'The Cave',
-        challengeCode: 0,
+        challengeCode: 'l0',
         challengeFlavor: `The Cave is a maze of tunnels stretching deep below the surface. It's filled with traps, haunted ruins, and foul monsters. It might have a fancy name like "The Caves of Despair."`,
         promptFlavor1: `The Cave is a maze of tunnels stretching deep below the surface. It's filled with traps, haunted ruins, and foul monsters. It might have a fancy name like "The Caves of Despair."`,
         promptFlavor2: '',
@@ -21,7 +21,7 @@ const locationObjectsArray = [
     },
     {
         challengeName: 'The Temple',
-        challengeCode: 1,
+        challengeCode: 'l1',
         challengeFlavor: `A foul presence has corrupted this grand temple, and sinister forces lurk in the gilded shadows. It might have a name like "The Temple of Absolute, Certain Death" but it's probably not that bad.`,
         promptFlavor1: `A foul presence has corrupted this grand temple, and sinister forces lurk in the gilded shadows. It might have a name like "The Temple of Absolute, Certain Death" but it's probably not that bad.`,
         promptFlavor2: '',
@@ -30,7 +30,7 @@ const locationObjectsArray = [
     },
     {
         challengeName: 'The Tomb',
-        challengeCode: 2,
+        challengeCode: 'l2',
         challengeFlavor: 'Deadly traps and vengeful ghosts guard the ancient treasures interred in this Tomb.',
         promptFlavor1: 'Deadly traps and vengeful ghosts guard the ancient treasures interred in this Tomb.',
         promptFlavor2: '',
@@ -39,7 +39,7 @@ const locationObjectsArray = [
     },
     {
         challengeName: 'The Train',
-        challengeCode: 3,
+        challengeCode: 'l3',
         challengeFlavor: 'The Villain has stolen the Relic, and you have to catch them before the train reaches the end of the line.',
         promptFlavor1: ' has stolen ',
         promptFlavor2: ', and you have to catch them before the train reaches the end of the line.',
