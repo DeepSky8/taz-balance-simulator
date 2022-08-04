@@ -45,7 +45,6 @@ const EditCard = ({ deckCard, updateCardCloud, currentCardNumber, removeCard }) 
 
     useEffect(() => {
         // When this element is passed a card number, update the local state
-        // then update the cloud
         dispatchCardState(updateCardNumber(currentCardNumber))
     }, [currentCardNumber])
 
@@ -53,7 +52,20 @@ const EditCard = ({ deckCard, updateCardCloud, currentCardNumber, removeCard }) 
 
     return (
         <div>
-            Card Number: {currentCardNumber}
+            <div>
+                <label htmlFor="cardNumber">Card Number: </label>
+                <input
+                    id="cardNumber"
+                    name="cardNumber"
+                    type='number'
+                    value={cardState.cardNumber}
+                    onChange={(e) => {
+                        dispatchCardState(updateCardNumber(e.target.value))
+                    }}
+                    onBlur={() => { saveChange() }}
+                />
+
+            </div>
             <div>
 
                 <label htmlFor="nameFlavor">Name Flavor: </label>
@@ -364,3 +376,6 @@ const EditCard = ({ deckCard, updateCardCloud, currentCardNumber, removeCard }) 
 }
 
 export default EditCard
+
+
+

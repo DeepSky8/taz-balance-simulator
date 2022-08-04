@@ -41,9 +41,16 @@ const DeckUpdates = () => {
                     if (snapshot.exists()) {
                         snapshot.forEach((deckSnapshot) => {
                             deckArray.push(deckSnapshot.val())
-                            cardKeyArray.push(deckSnapshot.val().cardKey)
                         })
                     }
+                    // After getting the list of cards from the server
+                    // sort them by current cardNumber
+                    deckArray.sort((a, b) => { return a.cardNumber - b.cardNumber })
+                    // Create a corresponding list of cardKeys to use in 
+                    // re-generating cardNumbers in the event that you need to
+                    // remove or manually renumber the cards
+                    deckArray.forEach((card) => { cardKeyArray.push(card.cardKey) })
+
                     setActiveDeck(deckArray)
                     setCardKeyIndex(cardKeyArray)
                 })
@@ -51,9 +58,6 @@ const DeckUpdates = () => {
 
         return (() => {
             off(ref(db, `decks/${activeDeckCode}`))
-            // off(ref(db, 'decks/villainHeaders'))
-            // off(ref(db, 'decks/relicHeaders'))
-            // off(ref(db, 'decks/locationHeaders'))
         })
 
     }, [activeDeckCode])
@@ -85,7 +89,7 @@ const DeckUpdates = () => {
                         return (
                             <option
                                 key={headerObject.challengeCode}
-                                value={headerObject.challengeCode}
+                                value={headerObject.challengeCode + '-' + headerObject.challengeName}
                             >
                                 {headerObject.challengeName}
                             </option>
@@ -97,7 +101,7 @@ const DeckUpdates = () => {
                         return (
                             <option
                                 key={headerObject.challengeCode}
-                                value={headerObject.challengeCode}
+                                value={headerObject.challengeCode + '-' + headerObject.challengeName}
                             >
                                 {headerObject.challengeName}
                             </option>
