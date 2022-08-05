@@ -25,10 +25,19 @@ const defaultCardState = {
 
     completed: false,
     autoComplete: false,
+    autoDefeat: false,
+    autoDiscard: false,
     kostcoDiscard: false,
     requiresToken: false,
     requiresReroll: false,
     gerblin: false,
+
+    flipEffect: false,
+    flipTarget: '',
+    flipOnDefeat: false,
+    flipOnDiscard: false,
+    flipOnFail: false,
+
     failedAttempts: 0,
     counters: 0,
     flippable: true,
@@ -163,7 +172,24 @@ const cardReducer = (state, action) => {
         case 'UPDATE_AUTO_COMPLETE':
             return {
                 ...state,
-                autoComplete: action.autoComplete === 'true' ? true : false
+                autoComplete: action.autoComplete === 'true' ? true : false,
+                autoDefeat: action.autoComplete === 'true' ? state.autoDefeat : false,
+                autoDiscard: action.autoComplete === 'true' ? state.autoDiscard : false
+
+            }
+        case 'UPDATE_AUTO_DEFEAT':
+            return {
+                ...state,
+                autoDefeat: action.autoDefeat === 'true' ? true : false,
+                autoComplete: action.autoDefeat === 'true' ? true : state.autoComplete,
+                autoDiscard: action.autoDefeat === 'true' ? false : state.autoDiscard,
+            }
+        case 'UPDATE_AUTO_DISCARD':
+            return {
+                ...state,
+                autoDiscard: action.autoDiscard === 'true' ? true : false,
+                autoComplete: action.autoDiscard === 'true' ? true : state.autoComplete,
+                autoDefeat: action.autoDiscard === 'true' ? false : state.autoDefeat
             }
         case 'UPDATE_REQUIRES_TOKEN':
             return {
@@ -179,6 +205,47 @@ const cardReducer = (state, action) => {
             return {
                 ...state,
                 gerblin: action.gerblin === 'true' ? true : false
+            }
+        case 'UPDATE_FLIP_EFFECT':
+            return {
+                ...state,
+                flipEffect: action.flipEffect === 'true' ? true : false,
+                flipTarget: action.flipEffect === 'true' ? state.flipTarget : '',
+                flipOnDefeat: action.flipEffect === 'true' ? state.flipOnDefeat : false,
+                flipOnDiscard: action.flipEffect === 'true' ? state.flipOnDiscard : false,
+                flipOnFail: action.flipEffect === 'true' ? state.flipOnFail : false,
+            }
+        case 'UPDATE_FLIP_TARGET':
+            return {
+                ...state,
+                flipTarget: action.flipTarget,
+                flipEffect: action.flipTarget !== '' ? true : state.flipTarget
+            }
+        case 'UPDATE_FLIP_ON_DEFEAT':
+            return {
+                ...state,
+                flipOnDefeat: action.flipOnDefeat === 'true' ? true : false,
+                flipEffect: action.flipOnDefeat === 'true' ? true : state.flipEffect,
+                flipOnDiscard: action.flipOnDefeat === 'true' ? false : state.flipOnDiscard,
+                flipOnFail: action.flipOnDefeat === 'true' ? false : state.flipOnFail,
+            }
+        case 'UPDATE_FLIP_ON_DISCARD':
+            return {
+                ...state,
+                flipOnDiscard: action.flipOnDiscard === 'true' ? true : false,
+                flipEffect: action.flipOnDiscard === 'true' ? true : state.flipEffect,
+                flipOnDefeat: action.flipOnDiscard === 'true' ? false : state.flipOnDefeat,
+                flipOnFail: action.flipOnDiscard === 'true' ? false : state.flipOnFail,
+
+            }
+        case 'UPDATE_FLIP_ON_FAIL':
+            return {
+                ...state,
+                flipOnFail: action.flipOnFail === 'true' ? true : false,
+                flipEffect: action.flipOnFail === 'true' ? true : state.flipEffect,
+                flipOnDiscard: action.flipOnFail === 'true' ? false : state.flipOnDiscard,
+                flipOnDefeat: action.flipOnDefeat === 'true' ? false : state.flipOnDefeat,
+
             }
         case 'UPDATE_FLIPPABLE':
             return {

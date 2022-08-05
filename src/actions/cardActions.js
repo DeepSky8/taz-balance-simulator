@@ -127,6 +127,16 @@ export const updateAutoComplete = (autoComplete) => ({
     autoComplete
 })
 
+export const updateAutoDefeat = (autoDefeat) => ({
+    type: 'UPDATE_AUTO_DEFEAT',
+    autoDefeat
+})
+
+export const updateAutoDiscard = (autoDiscard) => ({
+    type: 'UPDATE_AUTO_DISCARD',
+    autoDiscard
+})
+
 export const updateRequiresToken = (requiresToken) => ({
     type: 'UPDATE_REQUIRES_TOKEN',
     requiresToken
@@ -140,6 +150,31 @@ export const updateRequiresReroll = (requiresReroll) => ({
 export const updateGerblin = (gerblin) => ({
     type: 'UPDATE_GERBLIN',
     gerblin
+})
+
+export const updateFlipEffect = (flipEffect) => ({
+    type: 'UPDATE_FLIP_EFFECT',
+    flipEffect
+})
+
+export const updateFlipTarget = (flipTarget) => ({
+    type: 'UPDATE_FLIP_TARGET',
+    flipTarget
+})
+
+export const updateFlipOnDefeat = (flipOnDefeat) => ({
+    type: 'UPDATE_FLIP_ON_DEFEAT',
+    flipOnDefeat
+})
+
+export const updateFlipOnDiscard = (flipOnDiscard) => ({
+    type: 'UPDATE_FLIP_ON_DISCARD',
+    flipOnDiscard
+})
+
+export const updateFlipOnFail = (flipOnFail) => ({ 
+    type: 'UPDATE_FLIP_ON_FAIL',
+    flipOnFail
 })
 
 export const updateFlippable = (flippable) => ({
@@ -157,7 +192,7 @@ export const updateFinale = (finale) => ({
     finale
 })
 
-export const updateCounters = (counters) => ({ 
+export const updateCounters = (counters) => ({
     type: 'UPDATE_COUNTERS',
     counters
 })

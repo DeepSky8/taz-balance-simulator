@@ -1,6 +1,8 @@
 import React, { useEffect, useReducer, useState } from "react";
 import {
     updateAutoComplete,
+    updateAutoDefeat,
+    updateAutoDiscard,
     updateBoss,
     updateCard,
     updateCardName,
@@ -11,7 +13,12 @@ import {
     updateEffectText,
     updateFaceUp,
     updateFinale,
+    updateFlipEffect,
+    updateFlipOnDefeat,
+    updateFlipOnDiscard,
+    updateFlipOnFail,
     updateFlippable,
+    updateFlipTarget,
     updateGerblin,
     updateHasEffect,
     updateHealth,
@@ -371,6 +378,30 @@ const EditCard = ({ deckCard, updateCardCloud, currentCardNumber, removeCard, ca
                             <option value={false}>false</option>
                         </select>
 
+                        <label htmlFor="autoDefeat">Auto Defeat: </label>
+                        <select
+                            name="autoDefeat"
+                            id="autoDefeat"
+                            value={cardState.autoDefeat}
+                            onChange={(e) => { dispatchCardState(updateAutoDefeat(e.target.value)) }}
+                            onBlur={() => { saveChange() }}
+                        >
+                            <option value={true}>true</option>
+                            <option value={false}>false</option>
+                        </select>
+
+                        <label htmlFor="autoDiscard">Auto Discard: </label>
+                        <select
+                            name="autoDiscard"
+                            id="autoDiscard"
+                            value={cardState.autoDiscard}
+                            onChange={(e) => { dispatchCardState(updateAutoDiscard(e.target.value)) }}
+                            onBlur={() => { saveChange() }}
+                        >
+                            <option value={true}>true</option>
+                            <option value={false}>false</option>
+                        </select>
+
                         <label htmlFor="requiresToken"> Requires Token: </label>
                         <select
                             name="requiresToken"
@@ -406,6 +437,83 @@ const EditCard = ({ deckCard, updateCardCloud, currentCardNumber, removeCard, ca
                             <option value={true}>true</option>
                             <option value={false}>false</option>
                         </select>
+
+                    </div>
+
+
+                    <div>
+                        <label htmlFor="flipEffect">Flip Effect: </label>
+                        <select
+                            name="flipEffect"
+                            id="flipEffect"
+                            value={cardState.flipEffect}
+                            onChange={(e) => { dispatchCardState(updateFlipEffect(e.target.value)) }}
+                            onBlur={() => { saveChange() }}
+                        >
+                            <option value={true}>true</option>
+                            <option value={false}>false</option>
+                        </select>
+
+                        {cardState.flipEffect &&
+                            <span>
+
+                                <label htmlFor="flipTarget">    Flip Target: </label>
+                                <select
+                                    name="flipTarget"
+                                    id="flipTarget"
+                                    value={cardState.flipTarget}
+                                    onChange={(e) => { dispatchCardState(updateFlipTarget(e.target.value)) }}
+                                    onBlur={() => { saveChange() }}
+                                >
+                                    <option value={''}>--none--</option>
+                                    <option value={'villain'}>Villain</option>
+                                    <option value={'relic'}>Relic</option>
+                                    <option value={'location'}>Location</option>
+                                </select>
+
+                                <label htmlFor="flipOnDefeat">  Flip on defeat: </label>
+                                <select
+                                    name="flipOnDefeat"
+                                    id="flipOnDefeat"
+                                    value={cardState.flipOnDefeat}
+                                    onChange={(e) => { dispatchCardState(updateFlipOnDefeat(e.target.value)) }}
+                                    onBlur={() => { saveChange() }}
+                                >
+                                    <option value={true}>true</option>
+                                    <option value={false}>false</option>
+                                </select>
+
+                                <label htmlFor="flipOnDiscard"> Flip on discard: </label>
+                                <select
+                                    name="flipOnDiscard"
+                                    id="flipOnDiscard"
+                                    value={cardState.flipOnDiscard}
+                                    onChange={(e) => { dispatchCardState(updateFlipOnDiscard(e.target.value)) }}
+                                    onBlur={() => { saveChange() }}
+                                >
+                                    <option value={true}>true</option>
+                                    <option value={false}>false</option>
+                                </select>
+
+                                <label htmlFor="flipOnFail">    Flip on fail: </label>
+                                <select
+                                    name="flipOnFail"
+                                    id="flipOnFail"
+                                    value={cardState.flipOnFail}
+                                    onChange={(e) => { dispatchCardState(updateFlipOnFail(e.target.value)) }}
+                                    onBlur={() => { saveChange() }}
+                                >
+                                    <option value={true}>true</option>
+                                    <option value={false}>false</option>
+                                </select>
+
+
+                            </span>
+                        }
+
+                    </div>
+
+                    <div>
 
                         <label htmlFor="flippable">   Flippable: </label>
                         <select
