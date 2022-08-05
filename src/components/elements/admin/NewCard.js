@@ -5,11 +5,15 @@ import {
     updateBoss,
     updateCardName,
     updateCardNumber,
+    updateCounters,
     updateDifficulty,
     updateDoubleAssist,
     updateEffectText,
+    updateFaceUp,
     updateFinale,
+    updateFlippable,
     updateGerblin,
+    updateHasEffect,
     updateHealth,
     updateLocationModifier,
     updateLoot,
@@ -17,6 +21,7 @@ import {
     updateMonster,
     updateNameFlavor,
     updateNoAssist,
+    updatePairedWith,
     updateRelicModifier,
     updateRequiresReroll,
     updateRequiresToken,
@@ -32,7 +37,21 @@ const NewCard = ({ saveNewCard, cardNumber }) => {
     const [cardState, dispatchCardState] = useReducer(cardReducer, defaultCardState)
     return (
         <div>
-            Card Number: {cardNumber}
+            <div>
+                Card Number: {cardNumber}
+                <label htmlFor="pairedWith">    ||    Paired With: </label>
+                <input
+                    id="pairedWith"
+                    name="pairedWith"
+                    type='text'
+                    placeholder="enter cardKey"
+                    value={cardState.pairedWith}
+                    onChange={(e) => {
+                        dispatchCardState(updatePairedWith(e.target.value))
+                    }}
+                />
+            </div>
+
             <div>
 
                 <label htmlFor="nameFlavor">Name Flavor: </label>
@@ -135,6 +154,18 @@ const NewCard = ({ saveNewCard, cardNumber }) => {
                         dispatchCardState(updateHealth(e.target.value))
                     }}
                 />
+
+                <label htmlFor="faceUp">Can start face up: </label>
+                <select
+                    name="faceUp"
+                    id="faceUp"
+                    value={cardState.faceUp}
+                    onChange={(e) => { dispatchCardState(updateFaceUp(e.target.value)) }}
+                >
+                    <option value={true}>true</option>
+                    <option value={false}>false</option>
+                </select>
+
             </div>
 
             <div>
@@ -242,7 +273,16 @@ const NewCard = ({ saveNewCard, cardNumber }) => {
                         dispatchCardState(updateEffectText(e.target.value))
                     }}
                 />
-
+                <label htmlFor="hasEffect"> Has Effect: </label>
+                <select
+                    name="hasEffect"
+                    id="hasEffect"
+                    value={cardState.hasEffect}
+                    onChange={(e) => { dispatchCardState(updateHasEffect(e.target.value)) }}
+                >
+                    <option value={true}>true</option>
+                    <option value={false}>false</option>
+                </select>
             </div>
 
             <div>
@@ -290,6 +330,20 @@ const NewCard = ({ saveNewCard, cardNumber }) => {
                     <option value={false}>false</option>
                 </select>
 
+            </div>
+            <div>
+
+                <label htmlFor="flippable">   Flippable: </label>
+                <select
+                    name="flippable"
+                    id="flippable"
+                    value={cardState.flippable}
+                    onChange={(e) => { dispatchCardState(updateFlippable(e.target.value)) }}
+                >
+                    <option value={true}>true</option>
+                    <option value={false}>false</option>
+                </select>
+
                 <label htmlFor="boss">   Boss: </label>
                 <select
                     name="boss"
@@ -312,6 +366,17 @@ const NewCard = ({ saveNewCard, cardNumber }) => {
                     <option value={false}>false</option>
                 </select>
 
+                <label htmlFor="counters">  Counters: </label>
+                <input
+                    id="counters"
+                    name="counters"
+                    type='number'
+
+                    value={cardState.counters}
+                    onChange={(e) => {
+                        dispatchCardState(updateCounters(e.target.value))
+                    }}
+                />
             </div>
             <button
                 onClick={() => {

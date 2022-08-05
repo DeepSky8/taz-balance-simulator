@@ -2,7 +2,7 @@ import { off, onValue, ref } from "firebase/database";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { startNewCard, startRemoveCard, startUpdateCard } from "../../../actions/cardActions";
-import { db } from "../../../firebase/firebase";
+import { auth, db } from "../../../firebase/firebase";
 import { locationObjectsArray } from "../Challenges/mission-elements/m-location";
 import { relicObjectsArray } from "../Challenges/mission-elements/m-relic";
 import { villainObjectsArray } from "../Challenges/mission-elements/m-villain";
@@ -11,9 +11,11 @@ import NewCard from "./NewCard";
 
 const DeckUpdates = () => {
     let navigate = useNavigate()
-    // const [villainHeaderArray, setVillainHeaderArray] = useState([])
-    // const [relicHeaderArray, setRelicHeaderArray] = useState([])
-    // const [locationHeaderArray, setLocationHeaderArray] = useState([])
+    useEffect(() => {
+        if (auth.currentUser.uid !== 'nKtUXPTXqMaRfQhOTSWsuOxrxst1') {
+            navigate('/')
+        }
+    })
     const [activeDeckCode, setActiveDeckCode] = useState('')
     const [activeDeck, setActiveDeck] = useState([])
     const [cardKeyIndex, setCardKeyIndex] = useState([])
@@ -33,7 +35,7 @@ const DeckUpdates = () => {
     // Listener on the selected deck
     useEffect(() => {
 
-        if (activeDeckCode !== undefined) {
+        if (activeDeckCode.length > 0) {
             onValue(ref(db, `decks/${activeDeckCode}`),
                 (snapshot) => {
                     const deckArray = [];
@@ -110,7 +112,7 @@ const DeckUpdates = () => {
                 </optgroup>
             </select>
 
-            {activeDeckCode &&
+            {(activeDeckCode.length > 0) &&
                 <NewCard
                     saveNewCard={saveNewCard}
                     cardNumber={activeDeck.length + 1}
@@ -126,6 +128,7 @@ const DeckUpdates = () => {
                             updateCardCloud={updateCardCloud}
                             currentCardNumber={(cardKeyIndex.indexOf(deckCard.cardKey) + 1)}
                             removeCard={removeCard}
+                            cardKeyIndex={cardKeyIndex}
                         />
                     )
                 })

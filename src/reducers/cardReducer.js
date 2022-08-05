@@ -1,5 +1,6 @@
 const defaultCardState = {
     cardKey: '',
+    pairedWith: '',
     cardNumber: 0,
     nameFlavor: '',
     cardName: '',
@@ -9,6 +10,7 @@ const defaultCardState = {
     locationModifier: 0,
     loot: 0,
     health: 1,
+    faceUp: true,
 
     monster: false,
     spooky: false,
@@ -19,6 +21,7 @@ const defaultCardState = {
     storyBonus: 0,
     storyPrompt: '',
     effectText: '',
+    hasEffect: false,
 
     completed: false,
     autoComplete: false,
@@ -28,6 +31,7 @@ const defaultCardState = {
     gerblin: false,
     failedAttempts: 0,
     counters: 0,
+    flippable: true,
 
     boss: false,
     finale: false
@@ -53,6 +57,11 @@ const cardReducer = (state, action) => {
             return {
                 ...state,
                 cardKey: action.cardKey
+            }
+        case 'UPDATE_PAIRED_WITH':
+            return {
+                ...state,
+                pairedWith: action.pairedWith
             }
         case 'UPDATE_NAME_FLAVOR':
             return {
@@ -93,6 +102,11 @@ const cardReducer = (state, action) => {
             return {
                 ...state,
                 health: action.health
+            }
+        case 'UPDATE_FACE_UP':
+            return {
+                ...state,
+                faceUp: action.faceUp === 'true' ? true : false
             }
         case 'UPDATE_MONSTER':
             return {
@@ -141,6 +155,11 @@ const cardReducer = (state, action) => {
                 ...state,
                 effectText: action.effectText
             }
+        case 'UPDATE_HAS_EFFECT':
+            return {
+                ...state,
+                hasEffect: action.hasEffect === 'true' ? true : false
+            }
         case 'UPDATE_AUTO_COMPLETE':
             return {
                 ...state,
@@ -161,6 +180,11 @@ const cardReducer = (state, action) => {
                 ...state,
                 gerblin: action.gerblin === 'true' ? true : false
             }
+        case 'UPDATE_FLIPPABLE':
+            return {
+                ...state,
+                flippable: action.flippable === 'true' ? true : false
+            }
         case 'UPDATE_BOSS':
             return {
                 ...state,
@@ -170,6 +194,11 @@ const cardReducer = (state, action) => {
             return {
                 ...state,
                 finale: action.finale === 'true' ? true : false
+            }
+        case 'UPDATE_COUNTERS':
+            return {
+                ...state,
+                counters: action.counters
             }
         default:
             return state

@@ -22,6 +22,11 @@ export const setCardKey = (cardKey) => ({
     cardKey
 })
 
+export const updatePairedWith = (pairedWith) => ({
+    type: 'UPDATE_PAIRED_WITH',
+    pairedWith
+})
+
 export const updateNameFlavor = (nameFlavor) => ({
     type: 'UPDATE_NAME_FLAVOR',
     nameFlavor
@@ -60,6 +65,11 @@ export const updateLoot = (loot) => ({
 export const updateHealth = (health) => ({
     type: 'UPDATE_HEALTH',
     health
+})
+
+export const updateFaceUp = (faceUp) => ({
+    type: 'UPDATE_FACE_UP',
+    faceUp
 })
 
 export const updateMonster = (monster) => ({
@@ -107,6 +117,11 @@ export const updateEffectText = (effectText) => ({
     effectText
 })
 
+export const updateHasEffect = (hasEffect) => ({
+    type: 'UPDATE_HAS_EFFECT',
+    hasEffect
+})
+
 export const updateAutoComplete = (autoComplete) => ({
     type: 'UPDATE_AUTO_COMPLETE',
     autoComplete
@@ -127,6 +142,11 @@ export const updateGerblin = (gerblin) => ({
     gerblin
 })
 
+export const updateFlippable = (flippable) => ({
+    type: 'UPDATE_FLIPPABLE',
+    flippable
+})
+
 export const updateBoss = (boss) => ({
     type: 'UPDATE_BOSS',
     boss
@@ -137,11 +157,20 @@ export const updateFinale = (finale) => ({
     finale
 })
 
+export const updateCounters = (counters) => ({ 
+    type: 'UPDATE_COUNTERS',
+    counters
+})
+
 // Cloud Actions
 
 export const startUpdateCard = (activeDeckCode, cardData, cardKey) => {
     const updates = {}
+
     updates['decks/' + activeDeckCode + '/' + cardKey] = { ...cardData, cardKey }
+    if (cardData.pairedWith.length > 0) {
+        updates['decks/' + activeDeckCode + '/' + cardData.pairedWith + '/pairedWith'] = cardKey
+    }
     update(ref(db), updates)
         .catch((error) => {
             console.log('Did not update card: ', error)
