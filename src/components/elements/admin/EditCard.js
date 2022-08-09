@@ -1,6 +1,7 @@
 import React, { useEffect, useReducer, useState } from "react";
 import {
     updateAutoComplete,
+    updateAutoDamage,
     updateAutoDefeat,
     updateAutoDiscard,
     updateBoss,
@@ -402,7 +403,19 @@ const EditCard = ({ deckCard, updateCardCloud, currentCardNumber, removeCard, ca
                             <option value={false}>false</option>
                         </select>
 
-                        <label htmlFor="requiresToken"> Requires Token: </label>
+                        <label htmlFor="autoDamage">    Auto Damage: </label>
+                        <select
+                            name="autoDamage"
+                            id="autoDamage"
+                            value={cardState.autoDamage}
+                            onChange={(e) => { dispatchCardState(updateAutoDamage(e.target.value)) }}
+                            onBlur={() => { saveChange() }}
+                        >
+                            <option value={true}>true</option>
+                            <option value={false}>false</option>
+                        </select>
+
+                        <label htmlFor="requiresToken"> Req Token: </label>
                         <select
                             name="requiresToken"
                             id="requiresToken"
@@ -414,24 +427,12 @@ const EditCard = ({ deckCard, updateCardCloud, currentCardNumber, removeCard, ca
                             <option value={false}>false</option>
                         </select>
 
-                        <label htmlFor="requiresReroll">    Requires Reroll: </label>
+                        <label htmlFor="requiresReroll">    Req Reroll: </label>
                         <select
                             name="requiresReroll"
                             id="requiresReroll"
                             value={cardState.requiresReroll}
                             onChange={(e) => { dispatchCardState(updateRequiresReroll(e.target.value)) }}
-                            onBlur={() => { saveChange() }}
-                        >
-                            <option value={true}>true</option>
-                            <option value={false}>false</option>
-                        </select>
-
-                        <label htmlFor="gerblin">   Gerblin: </label>
-                        <select
-                            name="gerblin"
-                            id="gerblin"
-                            value={cardState.gerblin}
-                            onChange={(e) => { dispatchCardState(updateGerblin(e.target.value)) }}
                             onBlur={() => { saveChange() }}
                         >
                             <option value={true}>true</option>
@@ -514,6 +515,18 @@ const EditCard = ({ deckCard, updateCardCloud, currentCardNumber, removeCard, ca
                     </div>
 
                     <div>
+
+                        <label htmlFor="gerblin">   Gerblin: </label>
+                        <select
+                            name="gerblin"
+                            id="gerblin"
+                            value={cardState.gerblin}
+                            onChange={(e) => { dispatchCardState(updateGerblin(e.target.value)) }}
+                            onBlur={() => { saveChange() }}
+                        >
+                            <option value={true}>true</option>
+                            <option value={false}>false</option>
+                        </select>
 
                         <label htmlFor="flippable">   Flippable: </label>
                         <select

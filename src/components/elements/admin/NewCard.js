@@ -2,6 +2,7 @@ import React, { useReducer } from "react";
 import {
     resetCard,
     updateAutoComplete,
+    updateAutoDamage,
     updateAutoDefeat,
     updateAutoDiscard,
     updateBoss,
@@ -319,14 +320,25 @@ const NewCard = ({ saveNewCard, cardNumber }) => {
                 <select
                     name="autoDiscard"
                     id="autoDiscard"
-                    value={cardState.autoComplete}
+                    value={cardState.autoDiscard}
                     onChange={(e) => { dispatchCardState(updateAutoDiscard(e.target.value)) }}
                 >
                     <option value={true}>true</option>
                     <option value={false}>false</option>
                 </select>
 
-                <label htmlFor="requiresToken"> Requires Token: </label>
+                <label htmlFor="autoDamage">    Auto Damage: </label>
+                <select
+                    name="autoDamage"
+                    id="autoDamage"
+                    value={cardState.autoDamage}
+                    onChange={(e) => { dispatchCardState(updateAutoDamage(e.target.value)) }}
+                >
+                    <option value={true}>true</option>
+                    <option value={false}>false</option>
+                </select>
+
+                <label htmlFor="requiresToken"> Req Token: </label>
                 <select
                     name="requiresToken"
                     id="requiresToken"
@@ -337,23 +349,12 @@ const NewCard = ({ saveNewCard, cardNumber }) => {
                     <option value={false}>false</option>
                 </select>
 
-                <label htmlFor="requiresReroll">    Requires Reroll: </label>
+                <label htmlFor="requiresReroll">    Req Reroll: </label>
                 <select
                     name="requiresReroll"
                     id="requiresReroll"
                     value={cardState.requiresReroll}
                     onChange={(e) => { dispatchCardState(updateRequiresReroll(e.target.value)) }}
-                >
-                    <option value={true}>true</option>
-                    <option value={false}>false</option>
-                </select>
-
-                <label htmlFor="gerblin">   Gerblin: </label>
-                <select
-                    name="gerblin"
-                    id="gerblin"
-                    value={cardState.gerblin}
-                    onChange={(e) => { dispatchCardState(updateGerblin(e.target.value)) }}
                 >
                     <option value={true}>true</option>
                     <option value={false}>false</option>
@@ -430,6 +431,17 @@ const NewCard = ({ saveNewCard, cardNumber }) => {
 
             <div>
 
+                <label htmlFor="gerblin">   Gerblin: </label>
+                <select
+                    name="gerblin"
+                    id="gerblin"
+                    value={cardState.gerblin}
+                    onChange={(e) => { dispatchCardState(updateGerblin(e.target.value)) }}
+                >
+                    <option value={true}>true</option>
+                    <option value={false}>false</option>
+                </select>
+
                 <label htmlFor="flippable">   Flippable: </label>
                 <select
                     name="flippable"
@@ -474,6 +486,7 @@ const NewCard = ({ saveNewCard, cardNumber }) => {
                         dispatchCardState(updateCounters(e.target.value))
                     }}
                 />
+
             </div>
             <button
                 onClick={() => {

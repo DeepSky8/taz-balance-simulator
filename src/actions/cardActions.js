@@ -137,6 +137,11 @@ export const updateAutoDiscard = (autoDiscard) => ({
     autoDiscard
 })
 
+export const updateAutoDamage = (autoDamage) => ({
+    type: 'UPDATE_AUTO_DAMAGE',
+    autoDamage
+})
+
 export const updateRequiresToken = (requiresToken) => ({
     type: 'UPDATE_REQUIRES_TOKEN',
     requiresToken

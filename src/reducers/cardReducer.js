@@ -27,6 +27,7 @@ const defaultCardState = {
     autoComplete: false,
     autoDefeat: false,
     autoDiscard: false,
+    autoDamage: false,
     kostcoDiscard: false,
     requiresToken: false,
     requiresReroll: false,
@@ -115,7 +116,8 @@ const cardReducer = (state, action) => {
         case 'UPDATE_FACE_UP':
             return {
                 ...state,
-                faceUp: action.faceUp === 'true' ? true : false
+                faceUp: action.faceUp === 'true' ? true : false,
+                finale: action.faceUp === 'true' ? false : state.finale
             }
         case 'UPDATE_MONSTER':
             return {
@@ -191,6 +193,11 @@ const cardReducer = (state, action) => {
                 autoComplete: action.autoDiscard === 'true' ? true : state.autoComplete,
                 autoDefeat: action.autoDiscard === 'true' ? false : state.autoDefeat
             }
+        case 'UPDATE_AUTO_DAMAGE':
+            return {
+                ...state,
+                autoDamage: action.autoDamage
+            }
         case 'UPDATE_REQUIRES_TOKEN':
             return {
                 ...state,
@@ -255,12 +262,15 @@ const cardReducer = (state, action) => {
         case 'UPDATE_BOSS':
             return {
                 ...state,
-                boss: action.boss === 'true' ? true : false
+                boss: action.boss === 'true' ? true : false,
+                flippable: action.boss === 'true' ? false : state.flippable
             }
         case 'UPDATE_FINALE':
             return {
                 ...state,
-                finale: action.finale === 'true' ? true : false
+                finale: action.finale === 'true' ? true : false,
+                flippable: action.finale === 'true' ? false : state.flippable,
+                faceUp: action.finale === 'true' ? false : state.faceUp
             }
         case 'UPDATE_COUNTERS':
             return {
