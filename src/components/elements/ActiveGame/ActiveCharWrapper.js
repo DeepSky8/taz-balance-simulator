@@ -14,7 +14,7 @@ const ActiveCharWrapper = ({ gameState, activeCharacter, localCharacter, resetSt
                 setActionBarText(myCharacter + currentActiveChar + activeCharacter.charName)
                 break;
             case 'BRIEF':
-                setActionBarText(missionBriefBy + activeCharacter.charName + myCharacter)
+                setActionBarText(myCharacter + missionBriefBy + activeCharacter.charName)
                 break;
             // case 'BACKSTORY':
             //     setActionBarText(createBackstory)

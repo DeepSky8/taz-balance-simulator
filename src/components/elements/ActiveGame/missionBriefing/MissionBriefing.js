@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { startUpdateGameStage, startUpdatePrompt } from "../../../../actions/gameActions";
 import challengeTransformer from "../../../functions/challengeTransformer";
 import flavorTransformer from "../../../functions/flavorTransformer";
+import incrementStage from "../../../functions/incrementStage";
 import { locationObjectsArray } from "../../Challenges/mission-elements/m-location";
 import { relicObjectsArray } from "../../Challenges/mission-elements/m-relic";
 import { villainObjectsArray } from "../../Challenges/mission-elements/m-villain";
@@ -14,7 +15,7 @@ const MissionBriefing = ({ gameState }) => {
     const villainIntro = "Today you're up against a dangerous foe:"
     const relicIntro = `It is vital that your team secure ${relic.challengeName}:`
     const locationIntro = "Don't let appearances fool you; this location is extremly dangerous:"
-    const {villainFlavor, relicFlavor, locationFlavor} = flavorTransformer(villain, relic, location)
+    const { villainFlavor, relicFlavor, locationFlavor } = flavorTransformer(villain, relic, location)
 
 
     // Monitor the briefingStage, and update the 
@@ -24,7 +25,7 @@ const MissionBriefing = ({ gameState }) => {
             startUpdateGameStage(
                 gameState.static.host,
                 gameState.static.key,
-                'CHALLENGES'
+                incrementStage(gameState.active.gameStage)
             )
         }
     }, [gameState.backstory.briefingStage])

@@ -110,7 +110,7 @@ const charReducer = (state, action) => {
                 ...state,
                 bardInstrument: action.bardInstrument
             }
-        case 'SET_BARD_ASSIST_MUSIC_SKILL':
+        case 'SET_BARD_MUSIC_SKILL':
             return {
                 ...state,
                 bardMusicSkill: action.bardMusicSkill

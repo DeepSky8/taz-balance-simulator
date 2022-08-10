@@ -1,4 +1,4 @@
-import { startMarkTurnComplete, startUpdateAssistTokens, startUpdateTurnStage } from "../../actions/gameActions"
+import { startMarkTurnComplete, startUpdateAssistTokens, startUpdateGameStage, startUpdateTurnStage } from "../../actions/gameActions"
 import { auth } from "../../firebase/firebase";
 import incrementTurn from "./incrementTurn";
 
@@ -6,6 +6,10 @@ import incrementTurn from "./incrementTurn";
 
 const clickForNext = ({ gameState, character }) => {
     const assistScenes = ['PRE_ASSIST_SCENE', 'POST_ASSIST_SCENE']
+
+    const reloadPage = () => {
+        window.location.reload()
+    }
 
     const turnIncrement = (stage = incrementTurn(gameState.currentTurn.turnStage)) => {
         startUpdateTurnStage(
@@ -33,8 +37,12 @@ const clickForNext = ({ gameState, character }) => {
                 break;
             case 'BRIEF':
                 break;
+            case 'TRANSPORT':
+                break;
             case 'CHALLENGES':
                 switch (gameState.currentTurn.turnStage) {
+                    case 'DESCRIBE':
+                        turnIncrement()
                     case 'CHALLENGE':
                         if (character.charKostco && character.charKostco.length > 0) {
                             turnIncrement()
@@ -114,6 +122,7 @@ const clickForNext = ({ gameState, character }) => {
                 break;
             default:
                 console.log('hit default on clickForNext, pls fix');
+                reloadPage()
         }
     } else if (
         // If the game is on pre or post assist scene stage

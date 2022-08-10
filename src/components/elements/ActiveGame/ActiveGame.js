@@ -2,10 +2,13 @@ import React, { useEffect, useReducer, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { off, onValue, ref } from "firebase/database";
 import {
+    clearPlayerList,
     startNewRound,
     startRESETActionTokens,
     startSetActivePlayer,
+    startUpdateBriefingStage,
     startUpdateGameStage,
+    startUpdatePlayerList,
     startUpdateTurnStage,
     updateActionTokenList,
     updateActiveTokensList,
@@ -28,6 +31,8 @@ import incrementStage from "../../functions/incrementStage";
 import MissionBriefing from "./missionBriefing/MissionBriefing";
 import Playing from "./playing/Playing";
 import PassTurn from './turnStep/PassTurn';
+import BriefingComplete from "./missionBriefing/BriefingComplete";
+import incrementTurn from "../../functions/incrementTurn";
 
 const ActiveGame = ({ }) => {
     let navigate = useNavigate()
@@ -38,6 +43,35 @@ const ActiveGame = ({ }) => {
     const [gameState, dispatchGameState] = useReducer(gameReducer, defaultGameState)
     const [localCharObject, dispatchLocalCharObject] = useState({})
 
+    // State guards
+    // If no backstory state exists, set it to 'VILLAIN'
+    useEffect(() => {
+        if (gameState.active.gameStage === undefined) {
+            startUpdateGameStage(
+                gameState.static.host,
+                gameState.static.key,
+                'INTRO'
+            )
+        }
+
+
+        if (gameState.backstory.briefingStage === undefined) {
+            startUpdateBriefingStage(
+                gameState.static.host,
+                gameState.static.key,
+                'VILLAIN'
+            )
+        }
+
+        if (gameState.currentTurn.turnStage === undefined) {
+            startUpdateTurnStage(
+                gameState.static.host,
+                gameState.static.key,
+                'CHALLENGE'
+            )
+        }
+
+    }, [gameState])
 
     // User listener, updated a single time:
     // Current Game: host and key
@@ -100,6 +134,7 @@ const ActiveGame = ({ }) => {
                     snapshot.forEach((player) => {
                         playerList.push(player.val())
                     })
+                    dispatchGameState(clearPlayerList())
                     dispatchGameState(updatePlayerList(playerList))
                 } else {
 
@@ -323,9 +358,16 @@ const ActiveGame = ({ }) => {
             case 'BRIEF':
                 navigate('missionBriefing')
                 break;
-            // case 'BACKSTORY':
-            //     navigate('backstory')
-            //     break;
+            case 'TRANSPORT':
+                navigate('transport')
+                setTimeout(() => {
+                    startUpdateGameStage(
+                        gameState.static.host,
+                        gameState.static.key,
+                        incrementStage(gameState.active.gameStage)
+                    )
+                }, 8000)
+                break;
             case 'CHALLENGES':
                 navigate('playing')
                 break;
@@ -350,7 +392,7 @@ const ActiveGame = ({ }) => {
     }
 
     const resetTurnStage = () => {
-        startUpdateTurnStage(currentGameID.host, currentGameID.key, 'CHALLENGE')
+        startUpdateTurnStage(currentGameID.host, currentGameID.key, incrementTurn('default'))
     }
 
     const resetActionTokens = () => {
@@ -406,14 +448,17 @@ const ActiveGame = ({ }) => {
                     }
                 />
                 <Route
+                    path="transport"
+                    element={
+                        <BriefingComplete />
+                    }
+                />
+                <Route
                     path="playing"
                     element={
-                        <div>
-                            <Playing
-                                gameState={gameState}
-                            />
-
-                        </div>
+                        <Playing
+                            gameState={gameState}
+                        />
                     }
                 />
                 <Route

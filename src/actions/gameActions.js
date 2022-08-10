@@ -158,6 +158,15 @@ export const startJoinActiveGame = (uid, gameID, currentCharacterID, classCode, 
         })
 }
 
+export const startUpdatePlayerList = (uid, gameID, updatedPlayerList) => {
+    const updates = {}
+    updates['savedGames/' + uid + '/' + gameID + '/playerList'] = updatedPlayerList
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not update player list, error: ', error)
+        })
+}
+
 export const startReadyCheck = (uid, gameID) => {
     const updates = {}
     updates['gameSetup/' + gameID + '/readyCheck/' + uid] = uid
@@ -386,7 +395,7 @@ export const startCLEARActionTokens = (uid, key) => {
 // Action Tokens
 
 // Challenge Actions
-export const startSetVillainDeck = (uid, key, villainDeck) => { 
+export const startSetVillainDeck = (uid, key, villainDeck) => {
     const updates = {};
     updates['savedGames/' + uid + '/' + key + '/villainDeck'] = villainDeck;
     update(ref(db), updates)
@@ -395,7 +404,7 @@ export const startSetVillainDeck = (uid, key, villainDeck) => {
         })
 }
 
-export const startSetRelicDeck = (uid, key, relicDeck) => { 
+export const startSetRelicDeck = (uid, key, relicDeck) => {
     const updates = {};
     updates['savedGames/' + uid + '/' + key + '/relicDeck'] = relicDeck;
     update(ref(db), updates)
@@ -404,7 +413,7 @@ export const startSetRelicDeck = (uid, key, relicDeck) => {
         })
 }
 
-export const startSetLocationDeck = (uid, key, locationDeck) => { 
+export const startSetLocationDeck = (uid, key, locationDeck) => {
     const updates = {};
     updates['savedGames/' + uid + '/' + key + '/locationDeck'] = locationDeck;
     update(ref(db), updates)

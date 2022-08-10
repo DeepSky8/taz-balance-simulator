@@ -9,7 +9,7 @@ import {
 import { startSetJoining } from "../../../actions/userActions";
 import { auth } from "../../../firebase/firebase";
 
-const StartGame = ({ userState, gameState, dispatchGameState }) => {
+const StartGame = ({ userState, gameState, dispatchGameState, charState }) => {
     const addPartyMembers = 'Please gather like-minded adventurers to join you on this ... quest ... mission ... thing.'
     const dangerousAlone = "It's dangerous to go alone!"
     const change2PlayerTeamComp = 'In two-player mode, please only select from the Rogue, Wizard, and Warrior classes.'
@@ -187,7 +187,6 @@ const StartGame = ({ userState, gameState, dispatchGameState }) => {
                 startReadyCheck(auth.currentUser.uid, userState.gameID)
                 // then check whether a key exists for this game (previously saved)
                 if (gameState.static.key === null || gameState.static.key === undefined) {
-                    console.log('gameState.static.key === null', gameState.static.key)
                     // and create a key for a new game
                     // as well as creating the rest of the game data
                     const teamHealth = healthCalc(gameState.playerList.length + 1)
@@ -198,7 +197,9 @@ const StartGame = ({ userState, gameState, dispatchGameState }) => {
                         userState.gameID,
                         [{
                             uid: auth.currentUser.uid,
-                            currentCharacterID: userState.currentCharacterID
+                            currentCharacterID: userState.currentCharacterID,
+                            charName: charState.charName,
+                            classCode: charState.classCode
                         }].concat(gameState.playerList),
                         {
                             codeVillain: gameState.static.codeVillain,
@@ -208,15 +209,17 @@ const StartGame = ({ userState, gameState, dispatchGameState }) => {
                         teamHealth
                     )
                 } else {
-                    console.log('gameState.static.key !== null', gameState.static.key)
+
                     // If the game was previously saved, join it
                     startSavedGame(
                         auth.currentUser.uid,
                         userState.gameID,
-                        gameState.singles.key,
+                        gameState.static.key,
                         [{
                             uid: auth.currentUser.uid,
-                            currentCharacterID: userState.currentCharacterID
+                            currentCharacterID: userState.currentCharacterID,
+                            charName: charState.charName,
+                            classCode: charState.classCode
                         }].concat(gameState.playerList)
                     )
                 }

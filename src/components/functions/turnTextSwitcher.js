@@ -8,12 +8,14 @@ const thanksPlaying = 'Thanks for playing!'
 const villainBrief = 'Villain Briefing';
 const relicBrief = 'Relic Briefing';
 const locationBrief = 'Location Briefing';
+const transportBrief = 'Please keep your arms and legs inside the cannon at all times'
 
 // turnStage text
 const engageChallenge = "Select a challenge";
 const useItems = 'Do you want to use an item?';
 const tellStory = 'Complete the story prompt for additional strength';
 const askAssist = 'You may request assistance from your team';
+const describeScene = `Based on the three active Challenges, what's happening right now?`
 const setScene = 'Set the scene; what will you try to do?';
 const assistScene = `, how do you help?`;
 const rollDice = 'Click here to roll the die!';
@@ -39,8 +41,12 @@ const turnTextSwitcher = (gameStage, briefingStage, turnStage, character, active
                 default:
                     return missionBriefing;
             }
+        case 'TRANSPORT':
+            return transportBrief;
         case 'CHALLENGES':
             switch (turnStage) {
+                case 'DESCRIBE':
+                    return describeScene
                 case 'CHALLENGE':
                     return engageChallenge;
                 case 'ITEMS':

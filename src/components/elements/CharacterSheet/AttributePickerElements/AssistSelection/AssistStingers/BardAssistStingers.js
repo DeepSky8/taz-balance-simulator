@@ -24,7 +24,7 @@ const BardAssistStingers = ({ charState, dispatchCharState }) => (
                     value={charState.bardMusicSkill}
                     type="text"
                     placeholder="Do you shred?"
-                    maxLength={shortDescription}
+                    maxLength={mediumDescription}
                     onChange={(e) => {
                         dispatchCharState(
                             setBardMusicSkill(

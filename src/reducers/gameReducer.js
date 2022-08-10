@@ -207,13 +207,18 @@ const gameReducer = (state, action) => {
             return {
                 ...defaultGameState,
                 ...state,
-                backstory: action.backstory
+                backstory: {
+                    ...state.backstory,
+                    ...action.backstory
+                }
             }
         case 'UPDATE_CURRENT_TURN':
             return {
                 ...defaultGameState,
                 ...state,
-                currentTurn: action.currentTurn
+                currentTurn: {
+                    ...state.currentTurn,
+                    ...action.currentTurn}
             }
         case 'UPDATE_ACTION_TOKENS':
             return {

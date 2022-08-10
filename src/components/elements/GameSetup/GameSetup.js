@@ -291,8 +291,6 @@ export const GameSetup = ({ }) => {
 
     }, [charState.classCode, userState.gameID])
 
-
-
     return (
         <div>
             <AuthWrapper />
@@ -346,6 +344,7 @@ export const GameSetup = ({ }) => {
                 userState={userState}
                 gameState={gameState}
                 dispatchGameState={dispatchGameState}
+                charState={charState}
             />
         </div>
     )
