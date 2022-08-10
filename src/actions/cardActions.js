@@ -152,6 +152,16 @@ export const updateRequiresReroll = (requiresReroll) => ({
     requiresReroll
 })
 
+export const updateAdvantage = (advantage) => ({ 
+    type: 'UPDATE_ADVANTAGE',
+    advantage
+})
+
+export const updateDisadvantage = (disadvantage) => ({ 
+    type: 'UPDATE_DISADVANTAGE',
+    disadvantage
+})
+
 export const updateGerblin = (gerblin) => ({
     type: 'UPDATE_GERBLIN',
     gerblin
@@ -177,7 +187,7 @@ export const updateFlipOnDiscard = (flipOnDiscard) => ({
     flipOnDiscard
 })
 
-export const updateFlipOnFail = (flipOnFail) => ({ 
+export const updateFlipOnFail = (flipOnFail) => ({
     type: 'UPDATE_FLIP_ON_FAIL',
     flipOnFail
 })

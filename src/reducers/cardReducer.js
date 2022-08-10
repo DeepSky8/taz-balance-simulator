@@ -41,6 +41,8 @@ const defaultCardState = {
 
     failedAttempts: 0,
     counters: 0,
+    advantage: false,
+    disadvantage: false,
     flippable: true,
 
     boss: false,
@@ -207,6 +209,20 @@ const cardReducer = (state, action) => {
             return {
                 ...state,
                 requiresReroll: action.requiresReroll === 'true' ? true : false
+            }
+        case 'UPDATE_ADVANTAGE':
+            return {
+                ...state,
+                advantage: action.advantage === 'true' ? true : false,
+                disadvantage: action.advantage === 'true' ? false : state.disadvantage,
+                requiresReroll: action.advantage === 'true' ? true : state.requiresReroll,
+            }
+        case 'UPDATE_DISADVANTAGE':
+            return {
+                ...state,
+                disadvantage: action.disadvantage === 'true' ? true : false,
+                advantage: action.disadvantage === 'true' ? false : state.advantage,
+                requiresReroll: action.disadvantage === 'true' ? true : state.requiresReroll,
             }
         case 'UPDATE_GERBLIN':
             return {

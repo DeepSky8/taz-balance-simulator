@@ -1,6 +1,7 @@
 import React, { useReducer } from "react";
 import {
     resetCard,
+    updateAdvantage,
     updateAutoComplete,
     updateAutoDamage,
     updateAutoDefeat,
@@ -10,6 +11,7 @@ import {
     updateCardNumber,
     updateCounters,
     updateDifficulty,
+    updateDisadvantage,
     updateDoubleAssist,
     updateEffectText,
     updateFaceUp,
@@ -480,12 +482,34 @@ const NewCard = ({ saveNewCard, cardNumber }) => {
                     id="counters"
                     name="counters"
                     type='number'
-
+                    style={{ width: 3 + 'em' }}
                     value={cardState.counters}
                     onChange={(e) => {
                         dispatchCardState(updateCounters(e.target.value))
                     }}
                 />
+
+                <label htmlFor="advantage">   Advantage: </label>
+                <select
+                    name="advantage"
+                    id="advantage"
+                    value={cardState.advantage}
+                    onChange={(e) => { dispatchCardState(updateAdvantage(e.target.value)) }}
+                >
+                    <option value={true}>true</option>
+                    <option value={false}>false</option>
+                </select>
+
+                <label htmlFor="disadvantage">   Disadvantage: </label>
+                <select
+                    name="disadvantage"
+                    id="disadvantage"
+                    value={cardState.disadvantage}
+                    onChange={(e) => { dispatchCardState(updateDisadvantage(e.target.value)) }}
+                >
+                    <option value={true}>true</option>
+                    <option value={false}>false</option>
+                </select>
 
             </div>
             <button
