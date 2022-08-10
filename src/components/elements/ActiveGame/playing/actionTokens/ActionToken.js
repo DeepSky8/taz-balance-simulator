@@ -31,16 +31,16 @@ const ActionToken = ({ player, tokenArray, activeTokenArray, spendToken, unspend
 
 
     return (
-        <div>
-            <div>
+        <span>
+            <span>
                 <button
                     disabled={!hasToken}
                     onClick={spendToken}
                 >
                     {player.charName}{hasTokenText}
                 </button>
-            </div>
-            <div>
+            </span>
+            <span>
                 {tokenSpentNow &&
                     <button
                         onClick={unspendToken}
@@ -48,8 +48,8 @@ const ActionToken = ({ player, tokenArray, activeTokenArray, spendToken, unspend
                         Unspend Action Token
                     </button>
                 }
-            </div>
-        </div>
+            </span>
+        </span>
 
     )
 }

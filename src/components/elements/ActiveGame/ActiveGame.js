@@ -8,7 +8,6 @@ import {
     startSetActivePlayer,
     startUpdateBriefingStage,
     startUpdateGameStage,
-    startUpdatePlayerList,
     startUpdateTurnStage,
     updateActionTokenList,
     updateActiveTokensList,
@@ -33,6 +32,7 @@ import Playing from "./playing/Playing";
 import PassTurn from './turnStep/PassTurn';
 import BriefingComplete from "./missionBriefing/BriefingComplete";
 import incrementTurn from "../../functions/incrementTurn";
+import { briefingStages } from "../../functions/briefingStages";
 
 const ActiveGame = ({ }) => {
     let navigate = useNavigate()
@@ -44,30 +44,31 @@ const ActiveGame = ({ }) => {
     const [localCharObject, dispatchLocalCharObject] = useState({})
 
     // State guards
-    // If no backstory state exists, set it to 'VILLAIN'
     useEffect(() => {
+        // If no gameStage exists, set it to the default
         if (gameState.active.gameStage === undefined) {
             startUpdateGameStage(
                 gameState.static.host,
                 gameState.static.key,
-                'INTRO'
+                incrementStage('default')
             )
         }
 
-
+        // If no backstory state exists, set it to the first one
         if (gameState.backstory.briefingStage === undefined) {
             startUpdateBriefingStage(
                 gameState.static.host,
                 gameState.static.key,
-                'VILLAIN'
+                briefingStages[0]
             )
         }
 
+        // If no turnStage exists, set it to the default
         if (gameState.currentTurn.turnStage === undefined) {
             startUpdateTurnStage(
                 gameState.static.host,
                 gameState.static.key,
-                'CHALLENGE'
+                incrementTurn('default')
             )
         }
 

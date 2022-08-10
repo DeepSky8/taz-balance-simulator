@@ -44,6 +44,7 @@ const defaultCardState = {
     advantage: false,
     disadvantage: false,
     flippable: true,
+    randomize: false,
 
     boss: false,
     finale: false
@@ -274,6 +275,11 @@ const cardReducer = (state, action) => {
             return {
                 ...state,
                 flippable: action.flippable === 'true' ? true : false
+            }
+        case 'UPDATE_RANDOMIZE':
+            return {
+                ...state,
+                randomize: action.randomize === 'true' ? true : false
             }
         case 'UPDATE_BOSS':
             return {

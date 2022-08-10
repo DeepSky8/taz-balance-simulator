@@ -158,7 +158,7 @@ export const startJoinActiveGame = (uid, gameID, currentCharacterID, classCode, 
         })
 }
 
-export const startUpdatePlayerList = (uid, gameID, updatedPlayerList) => {
+const startUpdatePlayerList = (uid, gameID, updatedPlayerList) => {
     const updates = {}
     updates['savedGames/' + uid + '/' + gameID + '/playerList'] = updatedPlayerList
     update(ref(db), updates)

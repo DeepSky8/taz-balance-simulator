@@ -32,6 +32,7 @@ import {
     updateNameFlavor,
     updateNoAssist,
     updatePairedWith,
+    updateRandomize,
     updateRelicModifier,
     updateRequiresReroll,
     updateRequiresToken,
@@ -60,6 +61,18 @@ const NewCard = ({ saveNewCard, cardNumber }) => {
                         dispatchCardState(updatePairedWith(e.target.value))
                     }}
                 />
+
+                <label htmlFor="randomize">  Randomize: </label>
+                <select
+                    name="randomize"
+                    id="randomize"
+                    value={cardState.randomize}
+                    onChange={(e) => { dispatchCardState(updateRandomize(e.target.value)) }}
+                >
+                    <option value={true}>true</option>
+                    <option value={false}>false</option>
+                </select>
+
             </div>
 
             <div>

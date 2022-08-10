@@ -79,7 +79,7 @@ const ActionTokens = ({ gameState }) => {
     }
 
     return (
-        <div>
+        <span>
             {gameState.playerList.map((player) => {
                 return (
                     <ActionToken
@@ -92,7 +92,7 @@ const ActionTokens = ({ gameState }) => {
                     />
                 )
             })}
-        </div>
+        </span>
     )
 }
 

@@ -152,12 +152,12 @@ export const updateRequiresReroll = (requiresReroll) => ({
     requiresReroll
 })
 
-export const updateAdvantage = (advantage) => ({ 
+export const updateAdvantage = (advantage) => ({
     type: 'UPDATE_ADVANTAGE',
     advantage
 })
 
-export const updateDisadvantage = (disadvantage) => ({ 
+export const updateDisadvantage = (disadvantage) => ({
     type: 'UPDATE_DISADVANTAGE',
     disadvantage
 })
@@ -195,6 +195,11 @@ export const updateFlipOnFail = (flipOnFail) => ({
 export const updateFlippable = (flippable) => ({
     type: 'UPDATE_FLIPPABLE',
     flippable
+})
+
+export const updateRandomize = (randomize) => ({
+    type: 'UPDATE_RANDOMIZE',
+    randomize
 })
 
 export const updateBoss = (boss) => ({

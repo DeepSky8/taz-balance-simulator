@@ -43,6 +43,7 @@ const clickForNext = ({ gameState, character }) => {
                 switch (gameState.currentTurn.turnStage) {
                     case 'DESCRIBE':
                         turnIncrement()
+                        break;
                     case 'CHALLENGE':
                         if (character.charKostco && character.charKostco.length > 0) {
                             turnIncrement()

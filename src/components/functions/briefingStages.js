@@ -17,4 +17,4 @@ const prevDeck = (stage) => {
     return briefingStages[prevStage]
 }
 
-export { nextDeck, prevDeck }
+export { nextDeck, prevDeck, briefingStages }

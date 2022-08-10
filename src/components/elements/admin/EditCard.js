@@ -32,6 +32,7 @@ import {
     updateNameFlavor,
     updateNoAssist,
     updatePairedWith,
+    updateRandomize,
     updateRelicModifier,
     updateRequiresReroll,
     updateRequiresToken,
@@ -232,6 +233,18 @@ const EditCard = ({ deckCard, updateCardCloud, currentCardNumber, removeCard, ca
                             id="faceUp"
                             value={cardState.faceUp}
                             onChange={(e) => { dispatchCardState(updateFaceUp(e.target.value)) }}
+                            onBlur={() => { saveChange() }}
+                        >
+                            <option value={true}>true</option>
+                            <option value={false}>false</option>
+                        </select>
+
+                        <label htmlFor="randomize">  Randomize: </label>
+                        <select
+                            name="randomize"
+                            id="randomize"
+                            value={cardState.randomize}
+                            onChange={(e) => { dispatchCardState(updateRandomize(e.target.value)) }}
                             onBlur={() => { saveChange() }}
                         >
                             <option value={true}>true</option>

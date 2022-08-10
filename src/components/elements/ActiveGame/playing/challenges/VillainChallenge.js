@@ -3,9 +3,9 @@ import React from "react";
 const VillainChallenge = ({ gameState }) => {
 
     return (
-        <div>
-            Villain Challenge
-        </div>
+        <span>
+            Challenge Difficulty
+        </span>
     )
 }
 

@@ -1,14 +1,17 @@
 import React from "react";
 import ActionTokens from "./actionTokens/ActionTokens";
+import ChallengeFrame from "./challenges/ChallengeFrame";
 
 const Playing = ({ gameState }) => {
 
 
     return (
         <div>
-            <p>Team Health: </p>
-            <p>{gameState.active.teamHealth}</p>
+            <span>Team Health: {gameState.active.teamHealth}</span>
             <ActionTokens
+                gameState={gameState}
+            />
+            <ChallengeFrame
                 gameState={gameState}
             />
         </div>
@@ -16,3 +19,5 @@ const Playing = ({ gameState }) => {
 }
 
 export default Playing
+
+//style={{ align: 'right' }}
