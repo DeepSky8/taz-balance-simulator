@@ -47,22 +47,10 @@ const ActiveGame = ({ }) => {
     const introStages = ['INTRO', 'BRIEF', 'BACKSTORY']
     const uncompleted = 'uncompleted'
     const completed = 'completed'
-    // const [currentGameID, dispatchCurrentGameID] = useState({})
-    // const [localCharID, dispatchLocalCharID] = useState('')
     const [localCharObject, dispatchLocalCharObject] = useState({})
     const [activeCharacterObject, dispatchActiveCharacterObject] = useState({})
     const [cloudState, dispatchCloudState] = useReducer(cloudReducer, defaultCloudState)
     const [localState, dispatchLocalState] = useReducer(localReducer, defaultLocalState)
-    // const [deckUncompletedVillain, setUncompletedVillain] = useState([])
-    // const [deckCompletedVillain, setCompletedVillain] = useState([])
-    // const [deckUncompletedRelic, setUncompletedRelic] = useState([])
-    // const [deckCompletedRelic, setCompletedRelic] = useState([])
-    // const [deckUncompletedLocation, setUncompletedLocation] = useState([])
-    // const [deckCompletedLocation, setCompletedLocation] = useState([])
-
-    // useEffect(() => {
-    //     console.log('localState', localState)
-    // }, [localState])
 
     // State guards
     useEffect(() => {
@@ -574,23 +562,23 @@ const ActiveGame = ({ }) => {
         }
     }, [cloudState.active.gameStage])
 
-    // Testing tools
-    const resetStages = () => {
-        startUpdateGameStage(localState.hostKey, 'INTRO')
-    }
+    // // Testing tools
+    // const resetStages = () => {
+    //     startUpdateGameStage(localState.hostKey, 'INTRO')
+    // }
 
-    const stepStage = () => {
-        startUpdateGameStage(localState.hostKey, incrementStage(cloudState.active.gameStage))
-    }
+    // const stepStage = () => {
+    //     startUpdateGameStage(localState.hostKey, incrementStage(cloudState.active.gameStage))
+    // }
 
-    const resetTurnStage = () => {
-        startUpdateTurnStage(localState.hostKey, incrementTurn('default'))
-    }
+    // const resetTurnStage = () => {
+    //     startUpdateTurnStage(localState.hostKey, incrementTurn('default'))
+    // }
 
-    const resetActionTokens = () => {
-        startRESETActionTokens(localState.hostKey, cloudState.playerList)
-    }
-    // Testing tools
+    // const resetActionTokens = () => {
+    //     startRESETActionTokens(localState.hostKey, cloudState.playerList)
+    // }
+    // // Testing tools
 
     // useEffect(() => {
     //     console.log('host', localState.hostKey.split('/', 1))
@@ -607,78 +595,12 @@ const ActiveGame = ({ }) => {
 
     return (
         <div>
-            <AuthWrapper />
-            <ActiveCharWrapper
+            <ActiveGameRouter
                 cloudState={cloudState}
-                activeCharacter={activeCharacterObject}
-                localCharacter={localCharObject}
-                resetStages={resetStages}
-                stepStage={stepStage}
-                resetTurnStage={resetTurnStage}
-                resetActionTokens={resetActionTokens}
+                localState={localState}
+                localCharObject={localCharObject}
+                activeCharacterObject={activeCharacterObject}
             />
-            <PassTurn
-                cloudState={cloudState}
-                character={activeCharacterObject}
-            />
-
-            <Routes>
-                <Route
-                    path="introductions"
-                    element={
-                        <div>
-                            <IntroDescription />
-                            <IntroCharacter
-                                character={activeCharacterObject}
-                                ready={cloudState.ready}
-                            />
-                        </div>
-                    }
-                />
-                <Route
-                    path="missionBriefing/*"
-                    element={
-                        <MissionBriefing
-                            cloudState={cloudState}
-                        />
-                    }
-                />
-                <Route
-                    path="backstory"
-                    element={
-                        <div>
-                            backstory
-                        </div>
-                    }
-                />
-                <Route
-                    path="transport"
-                    element={
-                        <BriefingComplete />
-                    }
-                />
-                <Route
-                    path="playing"
-                    element={
-                        <Playing
-                            cloudState={cloudState}
-
-                        >
-
-
-
-                        </Playing>
-                    }
-                />
-                <Route
-                    path="summary"
-                    element={
-                        <div>
-                            summary
-                        </div>
-                    }
-                />
-            </Routes>
             <div>
                 <p> - break - </p>
                 <div>Villain Code: {cloudState.static.codeVillain}</div>
@@ -703,6 +625,82 @@ const ActiveGame = ({ }) => {
 
 export { ActiveGame as default }
 
+
+
+
+
+// <AuthWrapper />
+//             <ActiveCharWrapper
+//                 cloudState={cloudState}
+//                 activeCharacter={activeCharacterObject}
+//                 localCharacter={localCharObject}
+//                 resetStages={resetStages}
+//                 stepStage={stepStage}
+//                 resetTurnStage={resetTurnStage}
+//                 resetActionTokens={resetActionTokens}
+//             />
+//             <PassTurn
+//                 cloudState={cloudState}
+//                 character={activeCharacterObject}
+//             />
+
+//             <Routes>
+//                 <Route
+//                     path="introductions"
+//                     element={
+//                         <div>
+//                             <IntroDescription />
+//                             <IntroCharacter
+//                                 character={activeCharacterObject}
+//                                 ready={cloudState.ready}
+//                             />
+//                         </div>
+//                     }
+//                 />
+//                 <Route
+//                     path="missionBriefing/*"
+//                     element={
+//                         <MissionBriefing
+//                             cloudState={cloudState}
+//                         />
+//                     }
+//                 />
+//                 <Route
+//                     path="backstory"
+//                     element={
+//                         <div>
+//                             backstory
+//                         </div>
+//                     }
+//                 />
+//                 <Route
+//                     path="transport"
+//                     element={
+//                         <BriefingComplete />
+//                     }
+//                 />
+//                 <Route
+//                     path="playing"
+//                     element={
+//                         <Playing
+//                             cloudState={cloudState}
+
+//                         >
+
+
+
+//                         </Playing>
+//                     }
+//                 />
+//                 <Route
+//                     path="summary"
+//                     element={
+//                         <div>
+//                             summary
+//                         </div>
+//                     }
+//                 />
+//             </Routes>
 
 // <ChallengeFrame>
 // <VillainChallenge />
