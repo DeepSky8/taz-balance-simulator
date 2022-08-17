@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { off, onValue, ref } from "firebase/database";
 
-import { startRemoveSavedGame, startLoadSavedGame } from "../../../../actions/gameActions";
+import { startRemoveSavedGame, startLoadSavedGame } from "../../../../actions/cloudActions";
 import { auth, db } from "../../../../firebase/firebase";
 import SavedGame from "./SavedGame";
 

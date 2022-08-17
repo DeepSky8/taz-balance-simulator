@@ -5,7 +5,7 @@ import {
     startNewGame,
     startStopReadyCheck,
     updateReadyStatus
-} from "../../../actions/gameActions";
+} from "../../../actions/cloudActions";
 import { startSetJoining } from "../../../actions/userActions";
 import { auth } from "../../../firebase/firebase";
 

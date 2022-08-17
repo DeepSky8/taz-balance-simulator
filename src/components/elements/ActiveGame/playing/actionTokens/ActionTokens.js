@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { startSpendActionToken, startSpendAssistToken, startUNspendActionToken, startUNspendAssistToken } from "../../../../../actions/gameActions";
+import { startSpendActionToken, startSpendAssistToken, startUNspendActionToken, startUNspendAssistToken } from "../../../../../actions/cloudActions";
 import { auth } from "../../../../../firebase/firebase";
 import ActionToken from "./ActionToken";
 

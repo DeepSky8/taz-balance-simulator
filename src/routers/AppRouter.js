@@ -12,7 +12,9 @@ import { RefreshHelper } from "../components/elements/admin/RefreshHelper";
 import GameSetup from "../components/elements/GameSetup/GameSetup";
 import CharacterSheet from "../components/elements/CharacterSheet/CharacterSheet";
 import ActiveGame from "../components/elements/ActiveGame/ActiveGame";
+// import ActiveGameRouter from "./ActiveGameRouter";
 import DeckUpdates from "../components/elements/admin/DeckUpdates";
+import DeckDuplicate from "../components/elements/admin/DeckDuplicate";
 export const history = createBrowserHistory();
 
 
@@ -31,7 +33,8 @@ const AppRouter = () => {
                     <Route path="/activeGame/*" element={<ActiveGame />} />
                     <Route path="/signIn" element={<FirebaseSignIn />} />
                     <Route path='/refreshHelper' element={<RefreshHelper />} />
-                    <Route path='/deckUpdates/*' element={<DeckUpdates />} />
+                    <Route path='/deckUpdates' element={<DeckUpdates />} />
+                    <Route path='/deckDuplicate' element={<DeckDuplicate />} />
                     <Route path="termsofservice" element={<Tos />} />
                     <Route path="privacypolicy" element={<PrivacyPolicy />} />
 
@@ -48,3 +51,4 @@ const AppRouter = () => {
 }
 
 export default AppRouter;
+

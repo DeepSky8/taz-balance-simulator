@@ -18,7 +18,7 @@ const shuffle = (array) => {
   return array;
 }
 
-const cardPicker = () => Math.random() < 0.5 ? 0 : 1
+const cardPicker = () => Math.random() < 0.5 ? -1 : 1
 
 
 export { shuffle, cardPicker }

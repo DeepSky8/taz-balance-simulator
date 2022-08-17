@@ -1,13 +1,21 @@
-import React from "react";
-import VillainChallenge from "./VillainChallenge";
+// import React from "react";
 
-const ChallengeFrame = ({ gameState }) => {
+// const ChallengeFrame = ({ cloudState, children }) => {
 
-    return (
-        <div>
-            <VillainChallenge gameState={gameState} />
-        </div>
-    )
-}
+//     return (
+//         <div>
+//             {children}
+//         </div>
+//     )
+// }
 
-export default ChallengeFrame
+// export default ChallengeFrame
+
+            // deckUncompletedRelic={deckUncompletedRelic}
+            // deckUncompletedLocation={deckUncompletedLocation}
+
+
+            // <VillainChallenge 
+            // gameState={gameState} 
+            // deckUncompletedVillain={deckUncompletedVillain}
+            // />

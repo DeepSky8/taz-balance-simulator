@@ -18,7 +18,7 @@ import {
     startSetVillainDeck,
     startSetRelicDeck,
     startSetLocationDeck,
-} from "../../../actions/gameActions";
+} from "../../../actions/cloudActions";
 import CharacterChallengeNavBar from "./CharacterChallengeNavBar";
 import PlayingAs from "./PlayingAs";
 import {
@@ -29,7 +29,7 @@ import {
 import CharacterSelect from "./CharacterSelect/CharacterSelect";
 import { setCharState, setNoCurrentChar } from "../../../actions/charActions";
 import { charReducer, defaultCharState } from "../../../reducers/charReducer";
-import { defaultGameState, gameReducer } from "../../../reducers/gameReducer";
+import { defaultCloudState, cloudReducer } from "../../../reducers/cloudReducer";
 import { defaultUserProfile, userReducer } from "../../../reducers/userReducer";
 import NewLoadWrapper from "../Challenges/NewLoadWrapper";
 import RestOfParty from "./Party/RestOfParty";
@@ -48,7 +48,7 @@ export const GameSetup = ({ }) => {
     const [charArray, setCharArray] = useState([])
     const [savedGameArray, setSavedGameArray] = useState([])
     const [charState, dispatchCharState] = useReducer(charReducer, defaultCharState)
-    const [gameState, dispatchGameState] = useReducer(gameReducer, defaultGameState)
+    const [cloudState, dispatchCloudState] = useReducer(cloudReducer, defaultCloudState)
     // Ongoing listeners:
     // User Account
     // gameList Array
@@ -144,13 +144,13 @@ export const GameSetup = ({ }) => {
 
                     if (snapshot.exists()) {
                         // If the game information exists, copy it to local
-                        dispatchGameState(updateGameStatic(snapshot.val()))
+                        dispatchCloudState(updateGameStatic(snapshot.val()))
                     } else {
                         // If the game information does not exist,
-                        if (gameState.static.key === null) {
+                        if (cloudState.static.key === null) {
                             // check for a game key.
                             // Without a key, clear the local state
-                            dispatchGameState(clearGameState())
+                            dispatchCloudState(clearGameState())
                             // then close the listener
                             off(ref(db, 'gameSetup/' + userState.gameID + '/static'))
                         }
@@ -162,7 +162,7 @@ export const GameSetup = ({ }) => {
                 (snapshot) => {
                     if (snapshot.exists()) {
                         // If the game information exists, copy it to local
-                        dispatchGameState(updateGameActive(snapshot.val()))
+                        dispatchCloudState(updateGameActive(snapshot.val()))
                         // console.log('gameState singles update: ', snapshot.val())
                     }
                 })
@@ -178,11 +178,11 @@ export const GameSetup = ({ }) => {
                         })
                         const otherPlayers = playerList.filter(player => player.uid !== auth.currentUser.uid)
                         if (playerList.length > 0) {
-                            dispatchGameState(updatePlayerList(otherPlayers))
+                            dispatchCloudState(updatePlayerList(otherPlayers))
                         }
                     }
                     else {
-                        dispatchGameState(clearPlayerList())
+                        dispatchCloudState(clearPlayerList())
                         off(ref(db, 'gameSetup/' + userState.gameID + '/playerList'))
                     }
 
@@ -196,10 +196,10 @@ export const GameSetup = ({ }) => {
                         snapshot.forEach((playerclass) => {
                             updatedClassArray.push(playerclass.val())
                         })
-                        dispatchGameState(updateClassList(updatedClassArray))
+                        dispatchCloudState(updateClassList(updatedClassArray))
 
                     } else {
-                        dispatchGameState(clearClassList())
+                        dispatchCloudState(clearClassList())
                         off(ref(db, 'gameSetup/' + userState.gameID + '/classStorage'))
                     }
                 })
@@ -213,26 +213,26 @@ export const GameSetup = ({ }) => {
                             updatedReadyList.push(readyPlayer.val())
                         })
                         // Update local state with the list of ready players
-                        dispatchGameState(updateReadyList(updatedReadyList))
+                        dispatchCloudState(updateReadyList(updatedReadyList))
                         // If this player is in the list, 
                         // update local state to reflect
                         if (updatedReadyList.includes(auth.currentUser.uid)) {
-                            dispatchGameState(updateReadyStatus(true))
+                            dispatchCloudState(updateReadyStatus(true))
                         } else {
                             // otherwise set this player's ready status to false
-                            dispatchGameState(updateReadyStatus(false))
+                            dispatchCloudState(updateReadyStatus(false))
                         }
                     } else {
                         // if there are no ready players, clear the ready list locally
-                        dispatchGameState(clearReadyList())
+                        dispatchCloudState(clearReadyList())
                         // clear the current player's ready status
-                        dispatchGameState(updateReadyStatus(false))
+                        dispatchCloudState(updateReadyStatus(false))
                     }
 
                 })
 
         } else {
-            dispatchGameState(clearGameState())
+            dispatchCloudState(clearGameState())
         }
 
         return () => {
@@ -254,21 +254,21 @@ export const GameSetup = ({ }) => {
         // navigate to the Introductions screen on the ActiveGame
         // as the game has begun
 
-        if (gameState.static.key !== null &&
-            gameState.readyList.length === (gameState.playerList.length + 1) &&
-            gameState.active.ready) {
+        if (cloudState.static.key !== null &&
+            cloudState.readyList.length === (cloudState.playerList.length + 1) &&
+            cloudState.active.ready) {
 
             startRecordCurrentGame(
                 auth.currentUser.uid,
-                gameState.static.key,
-                gameState.static.host
+                cloudState.static.key,
+                cloudState.static.host
             )
 
             navigate('/activeGame/introductions')
-            startRemoveGameCode(auth.currentUser.uid, gameState.static.gameID)
+            startRemoveGameCode(auth.currentUser.uid, cloudState.static.gameID)
         }
 
-    }, [gameState.static.key, gameState.readyList, gameState.active.ready])
+    }, [cloudState.static.key, cloudState.readyList, cloudState.active.ready])
 
 
 
@@ -296,11 +296,11 @@ export const GameSetup = ({ }) => {
             <AuthWrapper />
             <JoiningHosting
                 userState={userState}
-                dispatchGameState={dispatchGameState}
+                dispatchGameState={dispatchCloudState}
                 gameArray={gameArray}
             />
             <ChallengeDisplay
-                gameState={gameState}
+                gameState={cloudState}
             />
             <PlayingAs
                 userState={userState}
@@ -328,7 +328,7 @@ export const GameSetup = ({ }) => {
                     element={
                         <NewLoadWrapper
                             userState={userState}
-                            gameState={gameState}
+                            gameState={cloudState}
                             savedGameArray={savedGameArray}
                         />
                     } />
@@ -336,14 +336,14 @@ export const GameSetup = ({ }) => {
                     path='restOfParty'
                     element={
                         <RestOfParty
-                            gameState={gameState}
+                            gameState={cloudState}
                         />
                     } />
             </Routes>
             <StartGame
                 userState={userState}
-                gameState={gameState}
-                dispatchGameState={dispatchGameState}
+                gameState={cloudState}
+                dispatchGameState={dispatchCloudState}
                 charState={charState}
             />
         </div>

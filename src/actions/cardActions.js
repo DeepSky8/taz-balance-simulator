@@ -245,3 +245,12 @@ export const startRemoveCard = (activeDeckCode, cardKey) => {
             console.log('Did not remove card: ', error)
         })
 }
+
+export const startAddDeckItem = (deckCode, deckItem) => {
+    const updates = {}
+    updates['challenges/' + deckCode + '/' + deckItem.cardKey] = deckItem
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not create new challenge record: ', error)
+        })
+}

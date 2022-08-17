@@ -2,13 +2,14 @@ import React, { useEffect, useReducer, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { off, onValue, ref } from "firebase/database";
 import {
-    clearPlayerList,
     startNewRound,
     startRESETActionTokens,
     startSetActivePlayer,
+    startSyncCard,
     startUpdateBriefingStage,
     startUpdateGameStage,
     startUpdateTurnStage,
+    startUploadDeckCard,
     updateActionTokenList,
     updateActiveTokensList,
     updateAssistTokensList,
@@ -19,9 +20,9 @@ import {
     updatePlayerList,
     updateReadyList,
     updateReadyStatus,
-} from "../../../actions/gameActions";
+} from "../../../actions/cloudActions";
 import { auth, db } from "../../../firebase/firebase";
-import { defaultGameState, gameReducer } from "../../../reducers/gameReducer";
+import { defaultCloudState, cloudReducer } from "../../../reducers/cloudReducer";
 import AuthWrapper from "../../Authentication/AuthWrapper";
 import ActiveCharWrapper from "./ActiveCharWrapper";
 import IntroDescription from "./introductions/IntroDescription";
@@ -33,55 +34,79 @@ import PassTurn from './turnStep/PassTurn';
 import BriefingComplete from "./missionBriefing/BriefingComplete";
 import incrementTurn from "../../functions/incrementTurn";
 import { briefingStages } from "../../functions/briefingStages";
+import challengeDeck from "../../functions/challengeDeck";
+import ChallengeFrame from "./playing/challenges/ChallengeFrame";
+import VillainChallenge from "./playing/challenges/VillainChallenge";
+import ActiveGameRouter from "../../../routers/ActiveGameRouter";
+import { defaultLocalState, localReducer } from "../../../reducers/localReducer";
+import { updateCompletedLocation, updateCompletedRelic, updateCompletedVillain, updateCurrentCharacterID, updateCurrentGameID, updateUncompletedLocation, updateUncompletedRelic, updateUncompletedVillain } from "../../../actions/localActions";
 
 const ActiveGame = ({ }) => {
     let navigate = useNavigate()
+
     const introStages = ['INTRO', 'BRIEF', 'BACKSTORY']
-    const [currentGameID, dispatchCurrentGameID] = useState({})
-    const [localCharID, dispatchLocalCharID] = useState('')
-    const [activeCharacterObject, dispatchActiveCharacterObject] = useState({})
-    const [gameState, dispatchGameState] = useReducer(gameReducer, defaultGameState)
+    const uncompleted = 'uncompleted'
+    const completed = 'completed'
+    // const [currentGameID, dispatchCurrentGameID] = useState({})
+    // const [localCharID, dispatchLocalCharID] = useState('')
     const [localCharObject, dispatchLocalCharObject] = useState({})
+    const [activeCharacterObject, dispatchActiveCharacterObject] = useState({})
+    const [cloudState, dispatchCloudState] = useReducer(cloudReducer, defaultCloudState)
+    const [localState, dispatchLocalState] = useReducer(localReducer, defaultLocalState)
+    // const [deckUncompletedVillain, setUncompletedVillain] = useState([])
+    // const [deckCompletedVillain, setCompletedVillain] = useState([])
+    // const [deckUncompletedRelic, setUncompletedRelic] = useState([])
+    // const [deckCompletedRelic, setCompletedRelic] = useState([])
+    // const [deckUncompletedLocation, setUncompletedLocation] = useState([])
+    // const [deckCompletedLocation, setCompletedLocation] = useState([])
+
+    // useEffect(() => {
+    //     console.log('localState', localState)
+    // }, [localState])
 
     // State guards
     useEffect(() => {
-        // If no gameStage exists, set it to the default
-        if (gameState.active.gameStage === undefined) {
-            startUpdateGameStage(
-                gameState.static.host,
-                gameState.static.key,
-                incrementStage('default')
-            )
-        }
+        // If the current user is the game host
+        if (auth.currentUser.uid === localState.hostKey.split('/', 1)) {
 
-        // If no backstory state exists, set it to the first one
-        if (gameState.backstory.briefingStage === undefined) {
-            startUpdateBriefingStage(
-                gameState.static.host,
-                gameState.static.key,
-                briefingStages[0]
-            )
-        }
+            // If no gameStage exists, set it to the default
+            if (cloudState.active.gameStage === undefined) {
+                startUpdateGameStage(
+                    cloudState.static.host,
+                    cloudState.static.key,
+                    incrementStage('default')
+                )
+            }
 
-        // If no turnStage exists, set it to the default
-        if (gameState.currentTurn.turnStage === undefined) {
-            startUpdateTurnStage(
-                gameState.static.host,
-                gameState.static.key,
-                incrementTurn('default')
-            )
-        }
+            // If no backstory state exists, set it to the first one
+            if (cloudState.backstory.briefingStage === undefined) {
+                startUpdateBriefingStage(
+                    cloudState.static.host,
+                    cloudState.static.key,
+                    briefingStages[0]
+                )
+            }
 
-    }, [gameState])
+            // If no turnStage exists, set it to the default
+            if (cloudState.currentTurn.turnStage === undefined) {
+                startUpdateTurnStage(
+                    cloudState.static.host,
+                    cloudState.static.key,
+                    incrementTurn('default')
+                )
+            }
+
+        }
+    }, [cloudState])
 
     // User listener, updated a single time:
     // Current Game: host and key
-    // Current Character ID (localCharID)
+    // Current Character ID (localState.currentCharacterID)
     useEffect(() => {
         onValue(ref(db, 'users/' + auth.currentUser.uid + '/currentGame'),
             (snapshot) => {
                 if (snapshot.exists()) {
-                    dispatchCurrentGameID(snapshot.val())
+                    dispatchLocalState(updateCurrentGameID(snapshot.val()))
                 } else {
                     navigate('/')
                 }
@@ -92,7 +117,7 @@ const ActiveGame = ({ }) => {
         onValue(ref(db, 'users/' + auth.currentUser.uid + '/currentCharacterID'),
             (snapshot) => {
                 if (snapshot.exists()) {
-                    dispatchLocalCharID(snapshot.val())
+                    dispatchLocalState(updateCurrentCharacterID(snapshot.val()))
                 } else {
                     navigate('/gameSetup')
                 }
@@ -105,18 +130,185 @@ const ActiveGame = ({ }) => {
         }
     }, [])
 
-    // GameState listeners, monitoring most game elements and updating local gameState
+    // Challenge deck listeners
+    useEffect(() => {
+        // Uncomplete Villain challenge listener
+        onValue(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeVillain + '/uncompleted'),
+            (snapshot) => {
+                if (snapshot.exists()) {
+                    const tempUncompleteCards = [];
+                    snapshot.forEach((card) => {
+                        tempUncompleteCards.push(card.val())
+                    })
+                    dispatchLocalState(updateUncompletedVillain(tempUncompleteCards))
+                    // If no uncomplete Villain challenge deck exists
+                    // the Host of the game creates a deck and uploads it
+                } else if (auth.currentUser.uid === localState.hostKey.split('/', 1).toString()) {
+                    onValue(ref(db, 'challenges/' + cloudState.static.codeVillain),
+                        (snapshot) => {
+                            if (snapshot.exists()) {
+                                const uncombinedChallengesArray = [];
+                                snapshot.forEach((cardFace) => {
+                                    uncombinedChallengesArray.push(cardFace.val())
+                                })
+
+                                const combinedChallengesArray = challengeDeck(
+                                    cloudState.static.codeVillain,
+                                    uncombinedChallengesArray
+                                )
+
+                                combinedChallengesArray.forEach((card) => {
+                                    startUploadDeckCard(
+                                        localState.hostKey,
+                                        cloudState.static.codeVillain,
+                                        uncompleted,
+                                        card
+                                    )
+                                })
+                            }
+                        }, {
+                        onlyOnce: true
+                    })
+                }
+            })
+        // Complete Villain challenge listener
+        onValue(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeVillain + '/completed'),
+            (snapshot) => {
+                if (snapshot.exists()) {
+                    const tempCompleteCards = [];
+                    snapshot.forEach((card) => {
+                        tempCompleteCards.push(card.val())
+                    })
+                    dispatchLocalState(updateCompletedVillain(tempCompleteCards))
+                }
+            })
+        // Uncomplete Relic challenge listener
+        onValue(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeRelic + '/uncompleted'),
+            (snapshot) => {
+
+                if (snapshot.exists()) {
+                    const tempUncompleteCards = [];
+                    snapshot.forEach((card) => {
+                        tempUncompleteCards.push(card.val())
+                    })
+                    dispatchLocalState(updateUncompletedRelic(tempUncompleteCards))
+                } else if (auth.currentUser.uid === localState.hostKey.split('/', 1).toString()) {
+                    onValue(ref(db, 'challenges/' + cloudState.static.codeRelic),
+                        (snapshot) => {
+
+                            if (snapshot.exists()) {
+                                const uncombinedChallengesArray = [];
+                                snapshot.forEach((cardFace) => {
+                                    uncombinedChallengesArray.push(cardFace.val())
+                                })
+
+                                const combinedChallengesArray = challengeDeck(
+                                    cloudState.static.codeRelic,
+                                    uncombinedChallengesArray
+                                )
+
+                                combinedChallengesArray.forEach((card) => {
+                                    startUploadDeckCard(
+                                        localState.hostKey,
+                                        cloudState.static.codeRelic,
+                                        uncompleted,
+                                        card
+                                    )
+                                })
+                            }
+                        }, {
+                        onlyOnce: true
+                    })
+                }
+            })
+        // Complete Relic challenge listener
+        onValue(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeRelic + '/completed'),
+            (snapshot) => {
+                if (snapshot.exists()) {
+                    const tempCompleteCards = [];
+                    snapshot.forEach((card) => {
+                        tempCompleteCards.push(card.val())
+                    })
+                    dispatchLocalState(updateCompletedRelic(tempCompleteCards))
+                }
+            })
+        // Uncomplete Location challenge listener
+        onValue(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeLocation + '/uncompleted'),
+            (snapshot) => {
+                if (snapshot.exists()) {
+                    const tempUncompleteCards = [];
+                    snapshot.forEach((card) => {
+                        tempUncompleteCards.push(card.val())
+                    })
+                    dispatchLocalState(updateUncompletedLocation(tempUncompleteCards))
+                } else if (auth.currentUser.uid === localState.hostKey.split('/', 1).toString()) {
+                    onValue(ref(db, 'challenges/' + cloudState.static.codeLocation),
+                        (snapshot) => {
+                            if (snapshot.exists()) {
+                                const uncombinedChallengesArray = [];
+                                snapshot.forEach((cardFace) => {
+                                    uncombinedChallengesArray.push(cardFace.val())
+                                })
+
+                                const combinedChallengesArray = challengeDeck(
+                                    cloudState.static.codeLocation,
+                                    uncombinedChallengesArray
+                                )
+
+                                combinedChallengesArray.forEach((card) => {
+                                    startUploadDeckCard(
+                                        localState.hostKey,
+                                        cloudState.static.codeLocation,
+                                        uncompleted,
+                                        card
+                                    )
+                                })
+                            }
+                        }, {
+                        onlyOnce: true
+                    })
+                }
+            })
+        // Complete Location challenge listener
+        onValue(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeLocation + '/completed'),
+            (snapshot) => {
+                if (snapshot.exists()) {
+                    const tempCompleteCards = [];
+                    snapshot.forEach((card) => {
+                        tempCompleteCards.push(card.val())
+                    })
+                    dispatchLocalState(updateCompletedLocation(tempCompleteCards))
+                }
+            })
+
+        return () => {
+            off(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeVillain + '/uncompleted'))
+            off(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeVillain + '/completed'))
+            off(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeRelic + '/uncompleted'))
+            off(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeRelic + '/completed'))
+            off(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeLocation + '/uncompleted'))
+            off(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeLocation + '/completed'))
+            if (auth.currentUser.uid === localState.hostKey.split('/', 1)) {
+                off(ref(db, 'challenges/' + cloudState.static.codeVillain))
+                off(ref(db, 'challenges/' + cloudState.static.codeRelic))
+                off(ref(db, 'challenges/' + cloudState.static.codeLocation))
+            }
+        }
+
+    }, [localState.hostKey, cloudState.static])
+
+    // CloudState listeners
     // Updated a single time: static, playerList
     // Not updated: classList
     useEffect(() => {
         // Single-time Static listener
-        onValue(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/static'),
+        onValue(ref(db, 'savedGames/' + localState.hostKey + '/static'),
             (snapshot) => {
                 if (snapshot.exists()) {
-                    // If gameState static items exists at this address, sync the local gameState
-                    dispatchGameState(updateGameStatic(snapshot.val()))
+                    // If cloudState static items exists at this address, sync the local cloudState
+                    dispatchCloudState(updateGameStatic(snapshot.val()))
                 } else if (auth.currentUser.uid !== null) {
-                    // If a gamestate doesn't exist, but there IS a user signed in
+                    // If a cloudState doesn't exist, but there IS a user signed in
                     // navigate to the gameSetup
                     navigate('/gameSetup')
                 } else {
@@ -128,15 +320,14 @@ const ActiveGame = ({ }) => {
         })
 
         // Single-time playerList listener
-        onValue(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/playerList'),
+        onValue(ref(db, 'savedGames/' + localState.hostKey + '/playerList'),
             (snapshot) => {
                 if (snapshot.exists()) {
                     const playerList = [];
                     snapshot.forEach((player) => {
                         playerList.push(player.val())
                     })
-                    dispatchGameState(clearPlayerList())
-                    dispatchGameState(updatePlayerList(playerList))
+                    dispatchCloudState(updatePlayerList(playerList))
                 } else {
 
                 }
@@ -145,13 +336,13 @@ const ActiveGame = ({ }) => {
         })
 
         // Ongoing Active listener
-        onValue(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/active'),
+        onValue(ref(db, 'savedGames/' + localState.hostKey + '/active'),
             (snapshot) => {
                 if (snapshot.exists()) {
-                    // If gameState progress object exists at this address, sync the local gameState
-                    dispatchGameState(updateGameActive(snapshot.val()))
+                    // If cloudState progress object exists at this address, sync the local cloudState
+                    dispatchCloudState(updateGameActive(snapshot.val()))
                 } else if (auth.currentUser.uid !== null) {
-                    // If a gamestate doesn't exist, but there IS a user signed in
+                    // If a cloudState doesn't exist, but there IS a user signed in
                     // navigate to the gameSetup
                     navigate('/gameSetup')
                 } else {
@@ -161,7 +352,7 @@ const ActiveGame = ({ }) => {
             })
 
         // Ongoing readyList listener
-        onValue(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/readyList'),
+        onValue(ref(db, 'savedGames/' + localState.hostKey + '/readyList'),
             (snapshot) => {
                 const readyList = []
                 if (snapshot.exists()) {
@@ -170,31 +361,31 @@ const ActiveGame = ({ }) => {
                     })
                 }
                 // else {
-                //     dispatchGameState(clearActivePlayer())
+                //     dispatchCloudState(clearActivePlayer())
                 // }
-                dispatchGameState(updateReadyList(readyList))
+                dispatchCloudState(updateReadyList(readyList))
             })
 
         // Ongoing backstory listener
-        onValue(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/backstory'),
+        onValue(ref(db, 'savedGames/' + localState.hostKey + '/backstory'),
             (snapshot) => {
                 if (snapshot.exists()) {
-                    dispatchGameState(updateBackstory(snapshot.val()))
+                    dispatchCloudState(updateBackstory(snapshot.val()))
                 }
 
             })
 
         // Ongoing currentTurn listener
-        onValue(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/currentTurn'),
+        onValue(ref(db, 'savedGames/' + localState.hostKey + '/currentTurn'),
             (snapshot) => {
                 if (snapshot.exists()) {
-                    dispatchGameState(updateCurrentTurn(snapshot.val()))
+                    dispatchCloudState(updateCurrentTurn(snapshot.val()))
                 }
 
             })
 
         // Ongoing hasActionToken listener
-        onValue(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/hasActionToken'),
+        onValue(ref(db, 'savedGames/' + localState.hostKey + '/hasActionToken'),
             (snapshot) => {
                 const actionTokenList = []
                 if (snapshot.exists()) {
@@ -202,11 +393,11 @@ const ActiveGame = ({ }) => {
                         actionTokenList.push(hasTokenPlayer.val())
                     })
                 }
-                dispatchGameState(updateActionTokenList(actionTokenList))
+                dispatchCloudState(updateActionTokenList(actionTokenList))
             })
 
         // Ongoing activeActionTokens listener
-        onValue(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/activeActionTokens'),
+        onValue(ref(db, 'savedGames/' + localState.hostKey + '/activeActionTokens'),
             (snapshot) => {
                 const actionTokenList = []
                 if (snapshot.exists()) {
@@ -214,11 +405,11 @@ const ActiveGame = ({ }) => {
                         actionTokenList.push(activeTokenPlayer.val())
                     })
                 }
-                dispatchGameState(updateActiveTokensList(actionTokenList))
+                dispatchCloudState(updateActiveTokensList(actionTokenList))
             })
 
         // Ongoing activeAssistTokens listener
-        onValue(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/activeAssistTokens'),
+        onValue(ref(db, 'savedGames/' + localState.hostKey + '/activeAssistTokens'),
             (snapshot) => {
                 const assistTokenList = []
                 if (snapshot.exists()) {
@@ -226,28 +417,28 @@ const ActiveGame = ({ }) => {
                         assistTokenList.push(assistTokenPlayer.val())
                     })
                 }
-                dispatchGameState(updateAssistTokensList(assistTokenList))
+                dispatchCloudState(updateAssistTokensList(assistTokenList))
             })
 
         return () => {
-            off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/static'))
-            off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/active'))
-            off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/playerList'))
-            off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/readyList'))
-            off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/backstory'))
-            off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/currentTurn'))
-            off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/hasActionToken'))
-            off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/activeActionTokens'))
-            off(ref(db, 'savedGames/' + currentGameID.host + '/' + currentGameID.key + '/activeAssistTokens'))
+            off(ref(db, 'savedGames/' + localState.hostKey + '/static'))
+            off(ref(db, 'savedGames/' + localState.hostKey + '/active'))
+            off(ref(db, 'savedGames/' + localState.hostKey + '/playerList'))
+            off(ref(db, 'savedGames/' + localState.hostKey + '/readyList'))
+            off(ref(db, 'savedGames/' + localState.hostKey + '/backstory'))
+            off(ref(db, 'savedGames/' + localState.hostKey + '/currentTurn'))
+            off(ref(db, 'savedGames/' + localState.hostKey + '/hasActionToken'))
+            off(ref(db, 'savedGames/' + localState.hostKey + '/activeActionTokens'))
+            off(ref(db, 'savedGames/' + localState.hostKey + '/activeAssistTokens'))
 
         }
 
-    }, [currentGameID])
+    }, [localState.hostKey])
 
     // Ongoing local character listener
     useEffect(() => {
-        if (localCharID !== '') {
-            onValue(ref(db, 'characters/' + auth.currentUser.uid + '/' + localCharID),
+        if (localState.currentCharacterID !== '') {
+            onValue(ref(db, 'characters/' + auth.currentUser.uid + '/' + localState.currentCharacterID),
                 (snapshot) => {
                     if (snapshot.exists()) {
                         dispatchLocalCharObject(snapshot.val())
@@ -256,11 +447,11 @@ const ActiveGame = ({ }) => {
         }
 
         return () => {
-            if (localCharID !== '') {
-                off(ref(db, 'characters/' + auth.currentUser.uid + '/' + localCharID))
+            if (localState.currentCharacterID !== '') {
+                off(ref(db, 'characters/' + auth.currentUser.uid + '/' + localState.currentCharacterID))
             }
         }
-    }, [localCharID])
+    }, [localState.currentCharacterID])
 
     // Compares the UIDs on the readyList with the list of players in the game
     // The next player in the playerList who isn't on the readyList is set as the activePlayer
@@ -268,32 +459,32 @@ const ActiveGame = ({ }) => {
     // and updates the cloud with Ready state True, 
     useEffect(() => {
         const remainingPlayers = []
-        gameState.playerList.forEach(player => {
-            if (!gameState.readyList.includes(player.uid)) {
+        cloudState.playerList.forEach(player => {
+            if (!cloudState.readyList.includes(player.uid)) {
                 remainingPlayers.push(player)
             }
         })
         if (remainingPlayers.length > 0) {
-            startSetActivePlayer(gameState.static.host, gameState.static.key, remainingPlayers[0].uid, remainingPlayers[0].currentCharacterID)
+            startSetActivePlayer(cloudState.static.host, cloudState.static.key, remainingPlayers[0].uid, remainingPlayers[0].currentCharacterID)
         }
-        if ((gameState.playerList.length !== 0) &&
-            (gameState.playerList.length === gameState.readyList.length)
+        if ((cloudState.playerList.length !== 0) &&
+            (cloudState.playerList.length === cloudState.readyList.length)
         ) {
-            startNewRound(currentGameID.host, currentGameID.key)
-            startRESETActionTokens(currentGameID.host, currentGameID.key, gameState.playerList)
-            dispatchGameState(updateReadyStatus(true))
+            startNewRound(localState.hostKey)
+            startRESETActionTokens(localState.hostKey, cloudState.playerList)
+            dispatchCloudState(updateReadyStatus(true))
         }
-    }, [gameState.readyList])
+    }, [cloudState.readyList])
 
-    // Listener for remote activePlayer on gameState
+    // Listener for remote activePlayer on cloudState
     useEffect(() => {
-        if (gameState.active.activeUID &&
-            (gameState.active.activeUID !== auth.currentUser.uid)
+        if (cloudState.active.activeUID &&
+            (cloudState.active.activeUID !== auth.currentUser.uid)
         ) {
             dispatchActiveCharacterObject({})
             // If the current Active Player is not the local player, 
             // establish a listener for the duration of their turn
-            onValue(ref(db, 'characters/' + gameState.active.activeUID + '/' + gameState.active.activeCharID),
+            onValue(ref(db, 'characters/' + cloudState.active.activeUID + '/' + cloudState.active.activeCharID),
                 (snapshot) => {
                     if (snapshot.exists()) {
                         dispatchActiveCharacterObject(snapshot.val())
@@ -302,28 +493,28 @@ const ActiveGame = ({ }) => {
         }
 
         return () => {
-            if (gameState.active.activeUID && gameState.active.activeUID !== auth.currentUser.uid) {
-                gameState.playerList.forEach((player) => {
+            if (cloudState.active.activeUID && cloudState.active.activeUID !== auth.currentUser.uid) {
+                cloudState.playerList.forEach((player) => {
                     off(ref(db, 'characters/' + player.uid + '/' + player.currentCharacterID))
                 })
             }
         }
-    }, [gameState.active.activeUID])
+    }, [cloudState.active.activeUID])
 
     // If activePlayer is the local player
     // mirror the localChar state into the activeCharacterObject
     useEffect(() => {
-        if (gameState.active.activeCharID &&
-            (gameState.active.activeCharID === localCharID)
+        if (cloudState.active.activeCharID &&
+            (cloudState.active.activeCharID === localState.currentCharacterID)
         ) {
             dispatchActiveCharacterObject(localCharObject)
         }
 
-    }, [gameState.active, localCharObject, localCharID])
+    }, [cloudState.active, localCharObject, localState.currentCharacterID])
 
     const incrementGameStage = () => {
-        startUpdateGameStage(currentGameID.host, currentGameID.key, incrementStage(gameState.active.gameStage))
-        dispatchGameState(updateReadyStatus(false))
+        startUpdateGameStage(localState.hostKey, incrementStage(cloudState.active.gameStage))
+        dispatchCloudState(updateReadyStatus(false))
     }
 
     // Triggered by Ready state and team health changes
@@ -331,28 +522,28 @@ const ActiveGame = ({ }) => {
     // and advance it when appropriate
     useEffect(() => {
         if (
-            (introStages.includes(gameState.active.gameStage)) &&
-            gameState.active.ready
+            (introStages.includes(cloudState.active.gameStage)) &&
+            cloudState.active.ready
         ) {
             incrementGameStage()
         } else if (
-            (gameState.active.teamHealth === 0) &&
-            gameState.active.ready
+            (cloudState.active.teamHealth === 0) &&
+            cloudState.active.ready
         ) {
             incrementGameStage()
         } else if (
-            ((gameState.active.progressRelic > 10) &&
-                (gameState.active.progressVillain > 10 || gameState.active.progressLocation > 10))
+            ((cloudState.active.progressRelic > 10) &&
+                (cloudState.active.progressVillain > 10 || cloudState.active.progressLocation > 10))
         ) {
             incrementGameStage()
         }
 
-    }, [gameState.active.ready, gameState.active.teamHealth])
+    }, [cloudState.active.ready, cloudState.active.teamHealth])
 
     // Navigate to activeGame pages
     // based on game stages completed
     useEffect(() => {
-        switch (gameState.active.gameStage) {
+        switch (cloudState.active.gameStage) {
             case 'INTRO':
                 navigate('introductions')
                 break;
@@ -363,9 +554,9 @@ const ActiveGame = ({ }) => {
                 navigate('transport')
                 setTimeout(() => {
                     startUpdateGameStage(
-                        gameState.static.host,
-                        gameState.static.key,
-                        incrementStage(gameState.active.gameStage)
+                        cloudState.static.host,
+                        cloudState.static.key,
+                        incrementStage(cloudState.active.gameStage)
                     )
                 }, 8000)
                 break;
@@ -381,32 +572,44 @@ const ActiveGame = ({ }) => {
             default:
                 break;
         }
-    }, [gameState.active.gameStage])
+    }, [cloudState.active.gameStage])
 
     // Testing tools
     const resetStages = () => {
-        startUpdateGameStage(currentGameID.host, currentGameID.key, 'INTRO')
+        startUpdateGameStage(localState.hostKey, 'INTRO')
     }
 
     const stepStage = () => {
-        startUpdateGameStage(currentGameID.host, currentGameID.key, incrementStage(gameState.active.gameStage))
+        startUpdateGameStage(localState.hostKey, incrementStage(cloudState.active.gameStage))
     }
 
     const resetTurnStage = () => {
-        startUpdateTurnStage(currentGameID.host, currentGameID.key, incrementTurn('default'))
+        startUpdateTurnStage(localState.hostKey, incrementTurn('default'))
     }
 
     const resetActionTokens = () => {
-        startRESETActionTokens(currentGameID.host, currentGameID.key, gameState.playerList)
+        startRESETActionTokens(localState.hostKey, cloudState.playerList)
     }
     // Testing tools
 
+    // useEffect(() => {
+    //     console.log('host', localState.hostKey.split('/', 1))
+
+    // })
+
+    // return (
+    //     <div>
+    //         <ActiveGameRouter
+    //             cloudState={cloudState}
+    //         />
+    //     </div>
+    // )
 
     return (
         <div>
             <AuthWrapper />
             <ActiveCharWrapper
-                gameState={gameState}
+                cloudState={cloudState}
                 activeCharacter={activeCharacterObject}
                 localCharacter={localCharObject}
                 resetStages={resetStages}
@@ -415,7 +618,7 @@ const ActiveGame = ({ }) => {
                 resetActionTokens={resetActionTokens}
             />
             <PassTurn
-                gameState={gameState}
+                cloudState={cloudState}
                 character={activeCharacterObject}
             />
 
@@ -427,7 +630,7 @@ const ActiveGame = ({ }) => {
                             <IntroDescription />
                             <IntroCharacter
                                 character={activeCharacterObject}
-                                ready={gameState.ready}
+                                ready={cloudState.ready}
                             />
                         </div>
                     }
@@ -436,7 +639,7 @@ const ActiveGame = ({ }) => {
                     path="missionBriefing/*"
                     element={
                         <MissionBriefing
-                            gameState={gameState}
+                            cloudState={cloudState}
                         />
                     }
                 />
@@ -458,8 +661,13 @@ const ActiveGame = ({ }) => {
                     path="playing"
                     element={
                         <Playing
-                            gameState={gameState}
-                        />
+                            cloudState={cloudState}
+
+                        >
+
+
+
+                        </Playing>
                     }
                 />
                 <Route
@@ -473,21 +681,21 @@ const ActiveGame = ({ }) => {
             </Routes>
             <div>
                 <p> - break - </p>
-                <div>Villain Code: {gameState.static.codeVillain}</div>
-                <div>Relic Code: {gameState.static.codeRelic}</div>
-                <div>Location Code: {gameState.static.codeLocation}</div>
-                <div>Game Stage: {gameState.active.gameStage}</div>
-                <div>Turn Stage: {gameState.currentTurn.turnStage}</div>
-                <div>Briefing Stage: {gameState.backstory.briefingStage}</div>
-                <div>Host: {gameState.static.host}</div>
-                <div>Key: {gameState.static.key}</div>
-                <div>Surprises: {gameState.surprises}</div>
-                <div>Villain Progress: {gameState.active.progressVillain}</div>
-                <div>Relic Progress: {gameState.active.progressRelic}</div>
-                <div>Location Progress: {gameState.active.progressLocation}</div>
-                <div>Ready state: {gameState.active.ready && gameState.active.ready ? 'true' : 'false'}</div>
-                <div>Team Health: {gameState.active.teamHealth}</div>
-                <div>Active Character: {gameState.active.activeUID && gameState.active.activeCharID}</div>
+                <div>Villain Code: {cloudState.static.codeVillain}</div>
+                <div>Relic Code: {cloudState.static.codeRelic}</div>
+                <div>Location Code: {cloudState.static.codeLocation}</div>
+                <div>Game Stage: {cloudState.active.gameStage}</div>
+                <div>Turn Stage: {cloudState.currentTurn.turnStage}</div>
+                <div>Briefing Stage: {cloudState.backstory.briefingStage}</div>
+                <div>Host: {cloudState.static.host}</div>
+                <div>Key: {cloudState.static.key}</div>
+                <div>Surprises: {cloudState.surprises}</div>
+                <div>Villain Progress: {cloudState.active.progressVillain}</div>
+                <div>Relic Progress: {cloudState.active.progressRelic}</div>
+                <div>Location Progress: {cloudState.active.progressLocation}</div>
+                <div>Ready state: {cloudState.active.ready && cloudState.active.ready ? 'true' : 'false'}</div>
+                <div>Team Health: {cloudState.active.teamHealth}</div>
+                <div>Active Character: {cloudState.active.activeUID && cloudState.active.activeCharID}</div>
             </div>
         </div>
     )
@@ -496,6 +704,14 @@ const ActiveGame = ({ }) => {
 export { ActiveGame as default }
 
 
+// <ChallengeFrame>
+// <VillainChallenge />
+// </ChallengeFrame>
+
+
+// deckUncompletedVillain={deckUncompletedVillain}
+// deckUncompletedRelic={deckUncompletedRelic}
+// deckUncompletedLocation={deckUncompletedLocation}
 
 
 
@@ -504,20 +720,16 @@ export { ActiveGame as default }
 
 
 
-
-
-
-
-// {gameState.classStorage.forEach((classNumber) => {
+// {cloudState.classStorage.forEach((classNumber) => {
 //     <div>Class Storage: {classNumber} </div>
 // })}
 
 
 
-            // {gameState.playerList &&
-            //     gameState.playerList.forEach((playerObject) => {
+            // {cloudState.playerList &&
+            //     cloudState.playerList.forEach((playerObject) => {
             //         return (<div>Team Player Object: {playerObject.currentCharacterID}, {playerObject.uid}</div>)
             //     })
             // }
 
-// {gameState.readyList && playerObject.currentCharacterID}, {gameState.readyList && playerObject.uid}
+// {cloudState.readyList && playerObject.currentCharacterID}, {cloudState.readyList && playerObject.uid}

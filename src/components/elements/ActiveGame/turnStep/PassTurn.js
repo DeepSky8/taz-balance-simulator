@@ -6,51 +6,51 @@ import NextDeck from './NextDeck';
 import PrevDeck from './PrevDeck';
 // import
 
-const PassTurn = ({ gameState, character }) => {
+const PassTurn = ({ cloudState, character }) => {
     const [stepText, setStepText] = useState('Select a challenge to engage')
     const [activeAssistPlayer, setActiveAssistPlayer] = useState('Friend')
 
     useEffect(() => {
-        if (gameState.activeAssistTokens.length > 0) {
-            setActiveAssistPlayer(gameState.activeAssistTokens[0].charName)
+        if (cloudState.activeAssistTokens.length > 0) {
+            setActiveAssistPlayer(cloudState.activeAssistTokens[0].charName)
         } else {
             setActiveAssistPlayer('Friend')
         }
-    }, [gameState.activeAssistTokens])
+    }, [cloudState.activeAssistTokens])
 
 
     useEffect(() => {
         setStepText(
             turnTextSwitcher(
-                gameState.active.gameStage,
-                gameState.backstory.briefingStage,
-                gameState.currentTurn.turnStage,
+                cloudState.active.gameStage,
+                cloudState.backstory.briefingStage,
+                cloudState.currentTurn.turnStage,
                 character,
                 activeAssistPlayer)
         )
     }, [
-        gameState.active.gameStage,
-        gameState.backstory.briefingStage,
-        gameState.currentTurn.turnStage,
-        gameState.active.activePlayer,
+        cloudState.active.gameStage,
+        cloudState.backstory.briefingStage,
+        cloudState.currentTurn.turnStage,
+        cloudState.active.activePlayer,
         character
     ])
 
     return (
         <div>
-            {gameState.active.gameStage === 'BRIEF' &&
-                gameState.static.host === auth.currentUser.uid &&
-                <PrevDeck gameState={gameState} />}
+            {cloudState.active.gameStage === 'BRIEF' &&
+                cloudState.static.host === auth.currentUser.uid &&
+                <PrevDeck gameState={cloudState} />}
 
             <button
-                onClick={() => { clickForNext({ gameState, character }) }}
+                onClick={() => { clickForNext({ gameState: cloudState, character }) }}
             >
                 {stepText}
             </button>
 
-            {gameState.active.gameStage === 'BRIEF' &&
-                gameState.static.host === auth.currentUser.uid &&
-                <NextDeck gameState={gameState} />}
+            {cloudState.active.gameStage === 'BRIEF' &&
+                cloudState.static.host === auth.currentUser.uid &&
+                <NextDeck gameState={cloudState} />}
         </div>
     )
 }

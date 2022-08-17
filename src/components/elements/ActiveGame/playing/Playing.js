@@ -2,18 +2,16 @@ import React from "react";
 import ActionTokens from "./actionTokens/ActionTokens";
 import ChallengeFrame from "./challenges/ChallengeFrame";
 
-const Playing = ({ gameState }) => {
+const Playing = ({ cloudState, children }) => {
 
 
     return (
         <div>
-            <span>Team Health: {gameState.active.teamHealth}</span>
+            <span>Team Health: {cloudState.active.teamHealth}</span>
             <ActionTokens
-                gameState={gameState}
+                gameState={cloudState}
             />
-            <ChallengeFrame
-                gameState={gameState}
-            />
+
         </div>
     )
 }
@@ -21,3 +19,10 @@ const Playing = ({ gameState }) => {
 export default Playing
 
 //style={{ align: 'right' }}
+
+// <ChallengeFrame
+// gameState={gameState}
+// deckUncompletedVillain={deckUncompletedVillain}
+// deckUncompletedRelic={deckUncompletedRelic}
+// deckUncompletedLocation={deckUncompletedLocation}
+// />

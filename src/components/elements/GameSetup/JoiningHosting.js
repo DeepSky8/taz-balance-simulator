@@ -13,7 +13,7 @@ import {
     startExitActiveGame,
 } from '../../../actions/joiningActions';
 import { auth } from "../../../firebase/firebase";
-import { clearPlayerList, startRemoveGameCode } from "../../../actions/gameActions";
+import { clearPlayerList, startRemoveGameCode } from "../../../actions/cloudActions";
 
 const JoiningHosting = ({ userState, dispatchGameState, gameArray }) => {
 

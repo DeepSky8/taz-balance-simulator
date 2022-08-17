@@ -1,5 +1,5 @@
 import React from "react";
-import { startUpdateBriefingStage } from "../../../../actions/gameActions";
+import { startUpdateBriefingStage } from "../../../../actions/cloudActions";
 import { prevDeck } from "../../../functions/briefingStages";
 
 const PrevDeck = ({ gameState }) => {

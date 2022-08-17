@@ -1,7 +1,14 @@
 const defaultCardState = {
+    // deck creation flags
+    cardNumber: 0,
     cardKey: '',
     pairedWith: '',
-    cardNumber: 0,
+    randomize: false,
+    faceUp: true,
+    boss: false,
+    finale: false,
+
+    // card display elements
     nameFlavor: '',
     cardName: '',
     difficulty: 0,
@@ -9,8 +16,7 @@ const defaultCardState = {
     relicModifier: 0,
     locationModifier: 0,
     loot: 0,
-    health: 1,
-    faceUp: true,
+    health: 0,
 
     monster: false,
     spooky: false,
@@ -21,13 +27,15 @@ const defaultCardState = {
     storyBonus: 0,
     storyPrompt: '',
     effectText: '',
-    hasEffect: false,
 
+    // card effect elements
+    hasEffect: false,
     completed: false,
     autoComplete: false,
     autoDefeat: false,
     autoDiscard: false,
     autoDamage: false,
+
     kostcoDiscard: false,
     requiresToken: false,
     requiresReroll: false,
@@ -44,10 +52,6 @@ const defaultCardState = {
     advantage: false,
     disadvantage: false,
     flippable: true,
-    randomize: false,
-
-    boss: false,
-    finale: false
 }
 
 const cardReducer = (state, action) => {

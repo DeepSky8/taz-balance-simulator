@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const ActiveCharWrapper = ({ gameState, activeCharacter, localCharacter, resetStages, stepStage, resetTurnStage, resetActionTokens }) => {
+const ActiveCharWrapper = ({ cloudState, activeCharacter, localCharacter, resetStages, stepStage, resetTurnStage, resetActionTokens }) => {
     const currentActiveChar = 'Active Character: '
     const [actionBarText, setActionBarText] = useState(currentActiveChar)
     const missionBriefBy = "Today's briefing conducted by "
@@ -9,7 +9,7 @@ const ActiveCharWrapper = ({ gameState, activeCharacter, localCharacter, resetSt
     const myCharacter = `Playing as ${localCharacter.charName} || `
 
     useEffect(() => {
-        switch (gameState.active.gameStage) {
+        switch (cloudState.active.gameStage) {
             case 'INTRO':
                 setActionBarText(myCharacter + currentActiveChar + activeCharacter.charName)
                 break;
@@ -29,7 +29,7 @@ const ActiveCharWrapper = ({ gameState, activeCharacter, localCharacter, resetSt
                 setActionBarText(currentActiveChar)
                 break;
         }
-    }, [gameState.active.gameStage, activeCharacter])
+    }, [cloudState.active.gameStage, activeCharacter])
 
     return (
         <div>

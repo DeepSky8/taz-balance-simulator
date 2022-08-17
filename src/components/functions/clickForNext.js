@@ -1,4 +1,4 @@
-import { startMarkTurnComplete, startUpdateAssistTokens, startUpdateGameStage, startUpdateTurnStage } from "../../actions/gameActions"
+import { startMarkTurnComplete, startUpdateAssistTokens, startUpdateGameStage, startUpdateTurnStage } from "../../actions/cloudActions"
 import { auth } from "../../firebase/firebase";
 import incrementTurn from "./incrementTurn";
 
