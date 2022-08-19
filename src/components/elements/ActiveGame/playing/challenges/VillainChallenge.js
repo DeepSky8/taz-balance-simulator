@@ -10,12 +10,12 @@ const VillainChallenge = ({ villain, modifier, challengePicked }) => {
         <span>
 
             <span>
-                <h1>
-                    <button
-                        onClick={() => { challengePicked() }}
-                    >{difficulty}</button>
 
-                </h1>
+                <button
+                    onClick={() => { challengePicked() }}
+                >{difficulty}</button>
+
+
                 {villain.relicModifier > 0 && '   +'}{villain.relicModifier > 0 && villain.relicModifier}
             </span>
             <p>
@@ -36,9 +36,9 @@ const VillainChallenge = ({ villain, modifier, challengePicked }) => {
             </span>
 
             <div>
-                {villain.storyBonus && 'Story +1:'}
+                {villain.storyBonus.length > 0 && 'Story +1: '}
                 {villain.storyPrompt && villain.storyPrompt}
-                {villain.effectText && '---'}
+                <p>{(villain.effectText.length > 0 && villain.storyPrompt.length > 0) && '---'}</p>
                 {villain.effectText && villain.effectText}
             </div>
 

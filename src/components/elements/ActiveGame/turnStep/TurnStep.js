@@ -6,7 +6,7 @@ import NextDeck from './NextDeck';
 import PrevDeck from './PrevDeck';
 // import
 
-const PassTurn = ({ cloudState, character }) => {
+const TurnStep = ({ cloudState, localState, character }) => {
     const [stepText, setStepText] = useState('Select a challenge to engage')
     const [activeAssistPlayer, setActiveAssistPlayer] = useState('Friend')
 
@@ -22,19 +22,12 @@ const PassTurn = ({ cloudState, character }) => {
     useEffect(() => {
         setStepText(
             turnTextSwitcher(
-                cloudState.active.gameStage,
-                cloudState.backstory.briefingStage,
-                cloudState.currentTurn.turnStage,
+                cloudState,
+                localState,
                 character,
                 activeAssistPlayer)
         )
-    }, [
-        cloudState.active.gameStage,
-        cloudState.backstory.briefingStage,
-        cloudState.currentTurn.turnStage,
-        cloudState.active.activePlayer,
-        character
-    ])
+    }, [cloudState, character])
 
     return (
         <div>
@@ -43,7 +36,7 @@ const PassTurn = ({ cloudState, character }) => {
                 <PrevDeck gameState={cloudState} />}
 
             <button
-                onClick={() => { clickForNext({ gameState: cloudState, character }) }}
+                onClick={() => { clickForNext({ cloudState, localState, character }) }}
             >
                 {stepText}
             </button>
@@ -55,4 +48,4 @@ const PassTurn = ({ cloudState, character }) => {
     )
 }
 
-export default PassTurn
+export default TurnStep

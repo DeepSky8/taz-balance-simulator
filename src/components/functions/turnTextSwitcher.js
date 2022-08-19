@@ -12,6 +12,7 @@ const transportBrief = 'Please keep your arms and legs inside the cannon at all 
 
 // turnStage text
 const engageChallenge = "Select a challenge";
+const challengeSelected = " is challenging "
 const useItems = 'Do you want to use an item?';
 const tellStory = 'Complete the story prompt for additional strength';
 const askAssist = 'You may request assistance from your team';
@@ -24,14 +25,14 @@ const kostco = 'Time to shop at Fantasy Kostco!';
 const passTheTurn = 'Click here to pass the turn, ';
 const reload = 'Please reload the game';
 
-const turnTextSwitcher = (gameStage, briefingStage, turnStage, character, activeAssistPlayer) => {
+const turnTextSwitcher = (cloudState, localState, character, activeAssistPlayer) => {
 
     // console.log('stages: ', gameStage, briefingStage, turnStage)
-    switch (gameStage) {
+    switch (cloudState.active.gameStage) {
         case 'INTRO':
             return introChar + character.charName + clickToPassTurn;
         case 'BRIEF':
-            switch (briefingStage) {
+            switch (cloudState.backstory.briefingStage) {
                 case 'VILLAIN':
                     return villainBrief;
                 case 'RELIC':
@@ -44,11 +45,18 @@ const turnTextSwitcher = (gameStage, briefingStage, turnStage, character, active
         case 'TRANSPORT':
             return transportBrief;
         case 'CHALLENGES':
-            switch (turnStage) {
+            switch (cloudState.currentTurn.turnStage) {
                 case 'DESCRIBE':
                     return describeScene
                 case 'CHALLENGE':
-                    return engageChallenge;
+                    const selector = cloudState.currentTurn.selectedChallenge
+                    if (selector === '') {
+                        return engageChallenge;
+                    } else if (selector !== '') {
+                        // const cardName = cloudState.currentTurn[selector][cloudState.currentTurn[selector].visible].cardName
+                        const cardName = localState.currentChallenge.cardName
+                        return character.charName + challengeSelected + cardName;
+                    }
                 case 'ITEMS':
                     return useItems;
                 case 'STORY':

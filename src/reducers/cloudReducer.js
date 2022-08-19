@@ -1,3 +1,5 @@
+import { defaultCardState } from "./cardReducer"
+
 const defaultCloudState = {
     static: {
         codeVillain: null,
@@ -27,8 +29,33 @@ const defaultCloudState = {
         locationTwo: '',
     },
     currentTurn: {
-        turnStage: 'CHALLENGE',
-        selectedChallenge: ''
+        turnStage: 'default',
+        selectedChallenge: '',
+        // selectedChallenge contains text 'villain' or 'relic' or 'location' or ''
+        villain: {
+            back: defaultCardState,
+            challengeKey: '',
+            completed: false,
+            front: defaultCardState,
+            visible: 'front'
+            // visible contains text 'front' or 'back'
+        },
+        relic: {
+            back: defaultCardState,
+            challengeKey: '',
+            completed: false,
+            front: defaultCardState,
+            visible: 'front'
+            // visible contains text 'front' or 'back'
+        },
+        location: {
+            back: defaultCardState,
+            challengeKey: '',
+            completed: false,
+            front: defaultCardState,
+            visible: 'front'
+            // visible contains text 'front' or 'back'
+        }
     },
     classList: [
         // digit representing classCode
@@ -219,7 +246,8 @@ const cloudReducer = (state, action) => {
                 ...state,
                 currentTurn: {
                     ...state.currentTurn,
-                    ...action.currentTurn}
+                    ...action.currentTurn
+                }
             }
         case 'UPDATE_ACTION_TOKENS':
             return {
@@ -239,12 +267,12 @@ const cloudReducer = (state, action) => {
                 ...state,
                 activeActionTokens: action.activeActionTokens
             }
-            case 'UPDATE_ASSIST_TOKENS':
-                return {
-                    ...defaultCloudState,
-                    ...state,
-                    activeAssistTokens: action.activeAssistTokens
-                }
+        case 'UPDATE_ASSIST_TOKENS':
+            return {
+                ...defaultCloudState,
+                ...state,
+                activeAssistTokens: action.activeAssistTokens
+            }
         default:
             return state
     }

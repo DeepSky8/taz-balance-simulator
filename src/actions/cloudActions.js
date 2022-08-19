@@ -241,9 +241,10 @@ export const startNewGame = (uid, gameID, playerList, challengesObject, teamHeal
         })
 }
 
-export const startMarkTurnComplete = (uid, key, readyList) => {
+export const startMarkTurnComplete = (hostKey, readyList) => {
     const updates = {};
-    updates['savedGames/' + uid + '/' + key + '/readyList'] = { ...readyList };
+    updates['savedGames/' + hostKey + '/readyList'] = { ...readyList };
+    updates['savedGames/' + hostKey + '/currentTurn/selectedChallenge'] = '';
     update(ref(db), updates)
         .catch((error) => {
             console.log('Error when marking turn complete:', error)
@@ -443,11 +444,38 @@ export const startSyncCard = (uid, key, deckCode, unComplete, deckItem) => {
         })
 }
 
-export const startPickActiveChallenge = (hostKey, codeKey) => { 
+export const startPickActiveChallenge = (hostKey, codeKey) => {
     const updates = {}
     updates['savedGames/' + hostKey + '/currentTurn/selectedChallenge'] = codeKey
     update(ref(db), updates)
         .catch((error) => {
             console.log('Did not set active Challenge in cloud: ', error)
+        })
+}
+
+export const startUpdateActiveVillain = (hostKey, villain) => {
+    const updates = {}
+    updates['savedGames/' + hostKey + '/currentTurn/villain'] = villain
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not set active Villain in cloud: ', error)
+        })
+}
+
+export const startUpdateActiveRelic = (hostKey, relic) => {
+    const updates = {}
+    updates['savedGames/' + hostKey + '/currentTurn/relic'] = relic
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not set active Relic in cloud: ', error)
+        })
+}
+
+export const startUpdateActiveLocation = (hostKey, location) => {
+    const updates = {}
+    updates['savedGames/' + hostKey + '/currentTurn/location'] = location
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not set active location in cloud: ', error)
         })
 }

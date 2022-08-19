@@ -9,12 +9,12 @@ const LocationChallenge = ({ location, modifier, challengePicked }) => {
 
             <span>
                 {location.relicModifier > 0 && '   +'}{location.relicModifier > 0 && location.relicModifier}
-                <h1>
-                    <button
-                        onClick={() => { challengePicked() }}
-                    >{difficulty}</button>
 
-                </h1>
+                <button
+                    onClick={() => { challengePicked() }}
+                >{difficulty}</button>
+
+
             </span>
             <p>
                 {location.nameFlavor}
@@ -34,9 +34,9 @@ const LocationChallenge = ({ location, modifier, challengePicked }) => {
             </span>
 
             <div>
-                {location.storyBonus && 'Story +1: '}
-                {location.storyPrompt && location.storyPrompt}
-                {location.effectText && '---'}
+                {location.storyBonus.length > 0 && 'Story +1: '}
+                {location.storyPrompt.length > 0 && location.storyPrompt}
+                <p>{(location.effectText.length > 0 && location.storyPrompt.length > 0) && '---'}</p>
                 {location.effectText && location.effectText}
             </div>
 

@@ -1,5 +1,5 @@
-export const updateCurrentGameID = (hostKey) => ({
-    type: 'UPDATE_GAME_ID',
+export const updateHostKey = (hostKey) => ({
+    type: 'UPDATE_HOSTKEY',
     hostKey
 })
 
@@ -8,32 +8,11 @@ export const updateCurrentCharacterID = (currentCharacterID) => ({
     currentCharacterID
 })
 
-export const updateUncompletedVillain = (uncompletedVillain) => ({
-    type: 'UPDATE_UNCOMPLETED_VILLAIN',
-    uncompletedVillain
+export const updateCurrentChallenge = (currentChallenge) => ({
+    type: 'UPDATE_CURRENT_CHALLENGE',
+    currentChallenge
 })
 
-export const updateCompletedVillain = (completedVillain) => ({
-    type: 'UPDATE_COMPLETED_VILLAIN',
-    completedVillain
-})
-
-export const updateUncompletedRelic = (uncompletedRelic) => ({
-    type: 'UPDATE_UNCOMPLETED_RELIC',
-    uncompletedRelic
-})
-
-export const updateCompletedRelic = (completedRelic) => ({
-    type: 'UPDATE_COMPLETED_RELIC',
-    completedRelic
-})
-
-export const updateUncompletedLocation = (uncompletedLocation) => ({
-    type: 'UPDATE_UNCOMPLETED_LOCATION',
-    uncompletedLocation
-})
-
-export const updateCompletedLocation = (completedLocation) => ({
-    type: 'UPDATE_COMPLETED_LOCATION',
-    completedLocation
+export const clearCurrentChallenge = () => ({
+    type: 'CLEAR_CURRENT_CHALLENGE'
 })

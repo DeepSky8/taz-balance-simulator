@@ -4,34 +4,33 @@ import incrementTurn from "./incrementTurn";
 
 
 
-const clickForNext = ({ gameState, character }) => {
+const clickForNext = ({ cloudState, localState, character }) => {
     const assistScenes = ['PRE_ASSIST_SCENE', 'POST_ASSIST_SCENE']
 
     const reloadPage = () => {
         window.location.reload()
     }
 
-    const turnIncrement = (stage = incrementTurn(gameState.currentTurn.turnStage)) => {
+    const turnIncrement = (stage = incrementTurn(cloudState.currentTurn.turnStage)) => {
+        // console.log('stage', stage)
         startUpdateTurnStage(
-            gameState.static.host,
-            gameState.static.key,
+            localState.hostKey,
             stage
         )
     }
 
     const passTheTurn = () => {
         startMarkTurnComplete(
-            gameState.static.host,
-            gameState.static.key,
-            [gameState.active.activeUID].concat(
-                gameState.readyList
+            localState.hostKey,
+            [cloudState.active.activeUID].concat(
+                cloudState.readyList
             ))
         turnIncrement()
     }
 
 
-    if (auth.currentUser.uid === gameState.active.activeUID) {
-        switch (gameState.active.gameStage) {
+    if (auth.currentUser.uid === cloudState.active.activeUID) {
+        switch (cloudState.active.gameStage) {
             case 'INTRO':
                 passTheTurn()
                 break;
@@ -40,14 +39,14 @@ const clickForNext = ({ gameState, character }) => {
             case 'TRANSPORT':
                 break;
             case 'CHALLENGES':
-                switch (gameState.currentTurn.turnStage) {
+                switch (cloudState.currentTurn.turnStage) {
                     case 'DESCRIBE':
                         turnIncrement()
                         break;
                     case 'CHALLENGE':
                         if (character.charKostco && character.charKostco.length > 0) {
                             turnIncrement()
-                        } else if (gameState.currentTurn.storyPrompt) {
+                        } else if (localState.currentChallenge.storyBonus > 0) {
                             turnIncrement('STORY')
                         } else {
                             turnIncrement('PREASSIST')
@@ -70,7 +69,7 @@ const clickForNext = ({ gameState, character }) => {
                         turnIncrement()
                         break;
                     case 'SCENE':
-                        if (gameState.activeAssistTokens.length > 0) {
+                        if (cloudState.activeAssistTokens.length > 0) {
                             turnIncrement()
                         } else {
                             turnIncrement('ROLL')
@@ -78,7 +77,7 @@ const clickForNext = ({ gameState, character }) => {
                         console.log('Player set the scene')
                         break;
                     case 'PRE_ASSIST_SCENE':
-                        if (gameState.activeAssistTokens.length === 0) {
+                        if (cloudState.activeAssistTokens.length === 0) {
                             turnIncrement()
                         }
 
@@ -131,14 +130,14 @@ const clickForNext = ({ gameState, character }) => {
         // the player at the beginning of the assist token array
         // can click the button to indicate that they have told
         // how they are attempting to assist the current active player
-        assistScenes.includes(gameState.currentTurn.turnStage) &&
-        gameState.activeAssistTokens.length > 0) {
+        assistScenes.includes(cloudState.currentTurn.turnStage) &&
+        cloudState.activeAssistTokens.length > 0) {
 
         console.log('Assist player(s) tell how they helped')
-        const updatedActiveAssistTokens = gameState.activeAssistTokens.slice(1)
+        const updatedActiveAssistTokens = cloudState.activeAssistTokens.slice(1)
         startUpdateAssistTokens(
-            gameState.static.host,
-            gameState.static.key,
+            cloudState.static.host,
+            cloudState.static.key,
             updatedActiveAssistTokens
         )
         if (updatedActiveAssistTokens.length === 0) {

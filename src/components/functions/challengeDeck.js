@@ -122,7 +122,6 @@ const challengeDeck = (challengeCode, protoCardArray) => {
 
         // After pairing up all the regular cards, put the final card on the end of the array
         tempPairedProtoCards.push(finalCard)
-        console.log(tempPairedProtoCards)
 
         const tempSortedProtoCards = tempPairedProtoCards.sort((a, b) => (a.front.cardNumber - b.front.cardNumber))
 

@@ -13,12 +13,12 @@ const RelicChallenge = ({ relic, modifierVillain, modifierLocation, challengePic
 
             <span>
                 {relic.villainModifier > 0 && '   +'}{relic.villainModifier > 0 && relic.villainModifier}
-                <h1>
-                    <button
-                        onClick={() => { challengePicked() }}
-                    >{difficulty}</button>
 
-                </h1>
+                <button
+                    onClick={() => { challengePicked() }}
+                >{difficulty}</button>
+
+
                 {relic.locationModifier > 0 && '   +'}{relic.locationModifier > 0 && relic.locationModifier}
             </span>
             <p>
@@ -39,9 +39,9 @@ const RelicChallenge = ({ relic, modifierVillain, modifierLocation, challengePic
             </span>
 
             <div>
-                {relic.storyBonus > 0 && 'Story +1:'}
-                {relic.storyPrompt && relic.storyPrompt}
-                {relic.effectText && '---'}
+                {relic.storyBonus.length > 0 && 'Story +1: '}
+                {relic.storyPrompt.length > 0 && relic.storyPrompt}
+                <p>{(relic.effectText.length > 0 && relic.storyPrompt.length > 0) && '---'}</p>
                 {relic.effectText && relic.effectText}
             </div>
 

@@ -1,12 +1,13 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { updateCard } from "../../../../../actions/cardActions";
 import { startPickActiveChallenge } from "../../../../../actions/cloudActions";
+import { auth } from "../../../../../firebase/firebase";
 import { cardReducer, defaultCardState } from "../../../../../reducers/cardReducer";
 import LocationChallenge from "./LocationChallenge";
 import RelicChallenge from "./RelicChallenge";
 import VillainChallenge from "./VillainChallenge";
 
-const ChallengeFrame = ({ cloudState, challengeState }) => {
+const ChallengeFrame = ({ cloudState, localState }) => {
     const [villain, dispatchVillain] = useReducer(cardReducer, defaultCardState)
     const [villainModifier, setVillainModifier] = useState(0)
     const [relic, dispatchRelic] = useReducer(cardReducer, defaultCardState)
@@ -16,39 +17,42 @@ const ChallengeFrame = ({ cloudState, challengeState }) => {
     const [locationModifier, setLocationModifier] = useState(0)
 
     useEffect(() => {
-        const activeCard = challengeState.deckVillain.uncompleted[0]
-        if (activeCard) {
-            const activeSide = activeCard[activeCard.visible]
-            dispatchVillain(updateCard(activeSide))
+        const activeCard = cloudState.currentTurn.villain
+        const activeSide = activeCard[activeCard.visible]
+        dispatchVillain(updateCard(activeSide))
+        if (activeSide) {
             setRelicModifierVillain(activeSide.relicModifier)
         }
-    }, [challengeState.deckVillain])
+    }, [cloudState.currentTurn.villain])
 
     useEffect(() => {
-        const activeCard = challengeState.deckRelic.uncompleted[0]
-        if (activeCard) {
-            const activeSide = activeCard[activeCard.visible]
-            dispatchRelic(updateCard(activeSide))
+        const activeCard = cloudState.currentTurn.relic
+        const activeSide = activeCard[activeCard.visible]
+        dispatchRelic(updateCard(activeSide))
+        if (activeSide) {
             setVillainModifier(activeSide.villainModifier)
             setLocationModifier(activeSide.locationModifier)
         }
-    }, [challengeState.deckRelic])
+    }, [cloudState.currentTurn.relic])
 
     useEffect(() => {
-        const activeCard = challengeState.deckLocation.uncompleted[0]
-        if (activeCard) {
-            const activeSide = activeCard[activeCard.visible]
-            dispatchLocation(updateCard(activeSide))
+        const activeCard = cloudState.currentTurn.location
+        const activeSide = activeCard[activeCard.visible]
+        dispatchLocation(updateCard(activeSide))
+        if (activeSide) {
             setRelicModifierLocation(activeSide.relicModifier)
         }
-    }, [challengeState.deckLocation])
+    }, [cloudState.currentTurn.location])
 
-    useEffect(()=>{
+    // useEffect(()=>{
 
-    },[cloudState.selectedChallenge])
+    // },[cloudState.selectedChallenge])
 
-    const challengePicked = (cardKey) => { 
-        startPickActiveChallenge(challengeState.hostKey, cardKey)
+    const challengePicked = (text) => {
+        if (auth.currentUser.uid === cloudState.active.activeUID && cloudState.currentTurn.turnStage === 'CHALLENGE') {
+            startPickActiveChallenge(localState.hostKey, text)
+        }
+
     }
 
     return (
@@ -56,18 +60,18 @@ const ChallengeFrame = ({ cloudState, challengeState }) => {
             <VillainChallenge
                 villain={villain}
                 modifier={villainModifier}
-                challengePicked={()=>{challengePicked(villain.cardKey)}}
+                challengePicked={() => { challengePicked('villain') }}
             />
             <RelicChallenge
                 relic={relic}
                 modifierVillain={relicModifierVillain}
                 modifierLocation={relicModifierLocation}
-                challengePicked={()=>{challengePicked(relic.cardKey)}}
+                challengePicked={() => { challengePicked('relic') }}
             />
             <LocationChallenge
                 location={location}
                 modifier={locationModifier}
-                challengePicked={()=>{challengePicked(location.cardKey)}}
+                challengePicked={() => { challengePicked('location') }}
             />
         </div>
     )
@@ -75,11 +79,3 @@ const ChallengeFrame = ({ cloudState, challengeState }) => {
 
 export default ChallengeFrame
 
-            // deckUncompletedRelic={deckUncompletedRelic}
-            // deckUncompletedLocation={deckUncompletedLocation}
-
-
-            // <VillainChallenge 
-            // gameState={gameState} 
-            // deckUncompletedVillain={deckUncompletedVillain}
-            // />

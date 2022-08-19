@@ -9,32 +9,32 @@ import BriefingComplete from "../components/elements/ActiveGame/missionBriefing/
 import MissionBriefing from "../components/elements/ActiveGame/missionBriefing/MissionBriefing";
 import ChallengeFrame from "../components/elements/ActiveGame/playing/challenges/ChallengeFrame";
 import Playing from "../components/elements/ActiveGame/playing/Playing";
-import PassTurn from "../components/elements/ActiveGame/turnStep/PassTurn";
+import TurnStep from "../components/elements/ActiveGame/turnStep/TurnStep";
 import incrementStage from "../components/functions/incrementStage";
 import incrementTurn from "../components/functions/incrementTurn";
 
 const ActiveGameRouter = ({
     cloudState,
-    challengeState,
+    localState,
     localCharObject,
     activeCharacterObject
 }) => {
 
     // Testing tools
     const resetStages = () => {
-        startUpdateGameStage(challengeState.hostKey, 'INTRO')
+        startUpdateGameStage(localState.hostKey, 'INTRO')
     }
 
     const stepStage = () => {
-        startUpdateGameStage(challengeState.hostKey, incrementStage(cloudState.active.gameStage))
+        startUpdateGameStage(localState.hostKey, incrementStage(cloudState.active.gameStage))
     }
 
     const resetTurnStage = () => {
-        startUpdateTurnStage(challengeState.hostKey, incrementTurn('default'))
+        startUpdateTurnStage(localState.hostKey, incrementTurn('default'))
     }
 
     const resetActionTokens = () => {
-        startRESETActionTokens(challengeState.hostKey, cloudState.playerList)
+        startRESETActionTokens(localState.hostKey, cloudState.playerList)
     }
     // Testing tools
     return (
@@ -49,8 +49,9 @@ const ActiveGameRouter = ({
                 resetTurnStage={resetTurnStage}
                 resetActionTokens={resetActionTokens}
             />
-            <PassTurn
+            <TurnStep
                 cloudState={cloudState}
+                localState={localState}
                 character={activeCharacterObject}
             />
 
@@ -98,7 +99,7 @@ const ActiveGameRouter = ({
                         >
                             <ChallengeFrame
                                 cloudState={cloudState}
-                                challengeState={challengeState}
+                                localState={localState}
                             />
                         </Playing>
                     }
@@ -118,3 +119,4 @@ const ActiveGameRouter = ({
 }
 
 export default ActiveGameRouter
+
