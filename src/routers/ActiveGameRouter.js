@@ -8,7 +8,6 @@ import IntroDescription from "../components/elements/ActiveGame/introductions/In
 import BriefingComplete from "../components/elements/ActiveGame/missionBriefing/BriefingComplete";
 import MissionBriefing from "../components/elements/ActiveGame/missionBriefing/MissionBriefing";
 import ChallengeFrame from "../components/elements/ActiveGame/playing/challenges/ChallengeFrame";
-import VillainChallenge from "../components/elements/ActiveGame/playing/challenges/VillainChallenge";
 import Playing from "../components/elements/ActiveGame/playing/Playing";
 import PassTurn from "../components/elements/ActiveGame/turnStep/PassTurn";
 import incrementStage from "../components/functions/incrementStage";
@@ -16,26 +15,26 @@ import incrementTurn from "../components/functions/incrementTurn";
 
 const ActiveGameRouter = ({
     cloudState,
-    localState,
+    challengeState,
     localCharObject,
     activeCharacterObject
 }) => {
 
     // Testing tools
     const resetStages = () => {
-        startUpdateGameStage(localState.hostKey, 'INTRO')
+        startUpdateGameStage(challengeState.hostKey, 'INTRO')
     }
 
     const stepStage = () => {
-        startUpdateGameStage(localState.hostKey, incrementStage(cloudState.active.gameStage))
+        startUpdateGameStage(challengeState.hostKey, incrementStage(cloudState.active.gameStage))
     }
 
     const resetTurnStage = () => {
-        startUpdateTurnStage(localState.hostKey, incrementTurn('default'))
+        startUpdateTurnStage(challengeState.hostKey, incrementTurn('default'))
     }
 
     const resetActionTokens = () => {
-        startRESETActionTokens(localState.hostKey, cloudState.playerList)
+        startRESETActionTokens(challengeState.hostKey, cloudState.playerList)
     }
     // Testing tools
     return (
@@ -97,9 +96,10 @@ const ActiveGameRouter = ({
                             cloudState={cloudState}
 
                         >
-
-
-
+                            <ChallengeFrame
+                                cloudState={cloudState}
+                                challengeState={challengeState}
+                            />
                         </Playing>
                     }
                 />

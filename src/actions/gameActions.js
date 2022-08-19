@@ -1,4 +1,4 @@
-import { child, push, ref, remove, update } from "firebase/database";
+import { push, ref, remove, update } from "firebase/database";
 import { db } from "../firebase/firebase";
 
 // Local Actions
@@ -158,15 +158,6 @@ export const startJoinActiveGame = (uid, gameID, currentCharacterID, classCode, 
         })
 }
 
-const startUpdatePlayerList = (uid, gameID, updatedPlayerList) => {
-    const updates = {}
-    updates['savedGames/' + uid + '/' + gameID + '/playerList'] = updatedPlayerList
-    update(ref(db), updates)
-        .catch((error) => {
-            console.log('Did not update player list, error: ', error)
-        })
-}
-
 export const startReadyCheck = (uid, gameID) => {
     const updates = {}
     updates['gameSetup/' + gameID + '/readyCheck/' + uid] = uid
@@ -250,9 +241,9 @@ export const startMarkTurnComplete = (uid, key, readyList) => {
         })
 }
 
-export const startNewRound = (hostKey) => {
+export const startNewRound = (uid, key) => {
     const updates = {};
-    updates['savedGames/' + hostKey + '/readyList'] = null;
+    updates['savedGames/' + uid + '/' + key + '/readyList'] = null;
     update(ref(db), updates)
         .catch((error) => {
             console.log('Error when starting new round:', error)
@@ -278,9 +269,9 @@ export const startSetReadyFalse = (uid, key) => {
         })
 }
 
-export const startUpdateGameStage = (hostKey, gameStage) => {
+export const startUpdateGameStage = (uid, key, gameStage) => {
     const updates = {};
-    updates['savedGames/' + hostKey + '/active/gameStage'] = gameStage;
+    updates['savedGames/' + uid + '/' + key + '/active/gameStage'] = gameStage;
     update(ref(db), updates)
         .catch((error) => {
             console.log('Error updating game stages:', error)
@@ -305,10 +296,10 @@ export const startUpdatePrompt = (uid, key, deck, number, updateText) => {
         })
 }
 
-export const startUpdateTurnStage = (hostKey, turnStage) => {
+export const startUpdateTurnStage = (uid, key, turnStage) => {
     const updates = {};
-    updates['savedGames/' + hostKey + `/currentTurn/turnStage`] = turnStage;
-    updates['savedGames/' + hostKey + `/activeActionTokens`] = null;
+    updates['savedGames/' + uid + '/' + key + `/currentTurn/turnStage`] = turnStage;
+    updates['savedGames/' + uid + '/' + key + `/activeActionTokens`] = null;
     update(ref(db), updates)
         .catch((error) => {
             console.log(`Error updating turnStage:`, error)
@@ -373,11 +364,11 @@ export const startUpdateAssistTokens = (uid, key, updatedActiveAssistTokens) => 
         })
 }
 
-export const startRESETActionTokens = (hostKey, playerList) => {
+export const startRESETActionTokens = (uid, key, playerList) => {
     const updates = {};
-    updates['savedGames/' + hostKey + '/hasActionToken'] = playerList;
-    updates['savedGames/' + hostKey + '/activeActionTokens'] = null;
-    updates['savedGames/' + hostKey + '/activeAssistTokens'] = null;
+    updates['savedGames/' + uid + '/' + key + '/hasActionToken'] = playerList;
+    updates['savedGames/' + uid + '/' + key + '/activeActionTokens'] = null;
+    updates['savedGames/' + uid + '/' + key + '/activeAssistTokens'] = null;
     update(ref(db), updates)
         .catch((error) => {
             console.log('Error when setting action tokens available:', error)
@@ -395,7 +386,7 @@ export const startCLEARActionTokens = (uid, key) => {
 // Action Tokens
 
 // Challenge Actions
-export const startSetVillainDeck = (uid, key, villainDeck) => {
+export const startSetVillainDeck = (uid, key, villainDeck) => { 
     const updates = {};
     updates['savedGames/' + uid + '/' + key + '/villainDeck'] = villainDeck;
     update(ref(db), updates)
@@ -404,7 +395,7 @@ export const startSetVillainDeck = (uid, key, villainDeck) => {
         })
 }
 
-export const startSetRelicDeck = (uid, key, relicDeck) => {
+export const startSetRelicDeck = (uid, key, relicDeck) => { 
     const updates = {};
     updates['savedGames/' + uid + '/' + key + '/relicDeck'] = relicDeck;
     update(ref(db), updates)
@@ -413,7 +404,7 @@ export const startSetRelicDeck = (uid, key, relicDeck) => {
         })
 }
 
-export const startSetLocationDeck = (uid, key, locationDeck) => {
+export const startSetLocationDeck = (uid, key, locationDeck) => { 
     const updates = {};
     updates['savedGames/' + uid + '/' + key + '/locationDeck'] = locationDeck;
     update(ref(db), updates)
@@ -423,31 +414,3 @@ export const startSetLocationDeck = (uid, key, locationDeck) => {
 }
 
 // Challenge Actions
-
-export const startUploadDeckCard = (hostKey, deckCode, unComplete, card) => {
-    const newKey = push(child(ref(db), 'savedGames/' + hostKey + '/challenges/' + deckCode + '/' + unComplete)).key
-    const updates = {}
-    updates['savedGames/' + hostKey + '/challenges/' + deckCode + '/' + unComplete + '/' + newKey] = { ...card, challengeKey: newKey }
-    update(ref(db), updates)
-        .catch((error) => {
-            console.log('Did not upload card to cloud: ', error)
-        })
-}
-
-export const startSyncCard = (uid, key, deckCode, unComplete, deckItem) => {
-    const updates = {}
-    updates['savedGames/' + uid + '/' + key + '/challenges/' + deckCode + '/' + unComplete + '/' + deckItem.cardKey] = deckItem
-    update(ref(db), updates)
-        .catch((error) => {
-            console.log('Did not sync card to cloud: ', error)
-        })
-}
-
-export const startPickActiveChallenge = (hostKey, codeKey) => { 
-    const updates = {}
-    updates['savedGames/' + hostKey + '/currentTurn/selectedChallenge'] = codeKey
-    update(ref(db), updates)
-        .catch((error) => {
-            console.log('Did not set active Challenge in cloud: ', error)
-        })
-}

@@ -1,35 +1,59 @@
-const defaultLocalState = {
+const defaultChallengeState = {
     currentCharacterID: '',
     // The hostKey reducer concats two strings with a separating /, which serves as a drop-in
     // when accessing the savedGame in Firebase
     hostKey: '',
     deckVillain: {
         uncompleted: [
-            // {}
+            // {back}
+            // challengeKey
+            // completed: boolean
+            // {front}
+            // visible: 'front' or 'back'
         ],
         completed: [
-            // {}    
+            // {back}
+            // challengeKey
+            // completed: boolean
+            // {front}
+            // visible: 'front' or 'back'
         ]
     },
     deckRelic: {
         uncompleted: [
-            // {}
+            // {back}
+            // challengeKey
+            // completed: boolean
+            // {front}
+            // visible: 'front' or 'back'        
         ],
         completed: [
-            // {}    
+            // {back}
+            // challengeKey
+            // completed: boolean
+            // {front}
+            // visible: 'front' or 'back'        
         ]
     },
     deckLocation: {
         uncompleted: [
-            // {}
+            // {back}
+            // challengeKey
+            // completed: boolean
+            // {front}
+            // visible: 'front' or 'back'
         ],
         completed: [
-            // {}    
+            // {back}
+            // challengeKey
+            // completed: boolean
+            // {front}
+            // visible: 'front' or 'back'
         ]
     },
 }
 
-const localReducer = (state, action) => {
+const challengeReducer = (state, action) => {
     switch (action.type) {
         case 'UPDATE_GAME_ID':
             return {
@@ -96,4 +120,4 @@ const localReducer = (state, action) => {
     }
 }
 
-export { defaultLocalState, localReducer }
+export { defaultChallengeState, challengeReducer }

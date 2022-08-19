@@ -10,24 +10,24 @@ import {
     startSetRelic,
     startSetVillain
 } from "../../../actions/challengeSelectActions";
-import { challengeSelectReducer, defaultChallengeState } from "../../../reducers/challengeSelectReducer";
 import ChallengeOptionsList from "./ChallengeOptionsList";
 import { villainObjectsArray } from "./mission-elements/m-villain";
 import { relicObjectsArray } from "./mission-elements/m-relic";
 import { locationObjectsArray } from "./mission-elements/m-location";
 import challengeTransformer from "../../functions/challengeTransformer";
+import {challengeSelectReducer, defaultChallengeSelectState} from "../../../reducers/challengeSelectReducer";
 
 const ChallengeSelect = ({ gameState, userState, toggleGameType, gameTypeButtonText, savedGameArray }) => {
-    const [challengeState, dispatchChallengeState] = useReducer(challengeSelectReducer, defaultChallengeState)
+    const [challengeSelectState, dispatchChallengeSelectState] = useReducer(challengeSelectReducer, defaultChallengeSelectState)
 
     const toggleVillainDisplay = () => {
-        dispatchChallengeState(toggleVillain())
+        dispatchChallengeSelectState(toggleVillain())
     }
     const toggleRelicDisplay = () => {
-        dispatchChallengeState(toggleRelic())
+        dispatchChallengeSelectState(toggleRelic())
     }
     const toggleLocationDisplay = () => {
-        dispatchChallengeState(toggleLocation())
+        dispatchChallengeSelectState(toggleLocation())
     }
 
     const villainDispatch = (challengeCode) => {
@@ -52,19 +52,19 @@ const ChallengeSelect = ({ gameState, userState, toggleGameType, gameTypeButtonT
     // When updated (via listener) with challenge codes
     // this useEffect updates challengeState to display
     useEffect(() => {
-        dispatchChallengeState(
+        dispatchChallengeSelectState(
             setReceivedVillainObject(
                 challengeTransformer(
                     villainObjectsArray,
                     gameState.static.codeVillain
                 )))
-        dispatchChallengeState(
+        dispatchChallengeSelectState(
             setReceivedRelicObject(
                 challengeTransformer(
                     relicObjectsArray,
                     gameState.static.codeRelic
                 )))
-        dispatchChallengeState(
+        dispatchChallengeSelectState(
             setReceivedLocationObject(
                 challengeTransformer(
                     locationObjectsArray,
@@ -80,14 +80,14 @@ const ChallengeSelect = ({ gameState, userState, toggleGameType, gameTypeButtonT
                 <div>
                     Battle
                     <button onClick={toggleVillainDisplay}>
-                        {challengeState.selectedVillainObject.challengeName}
+                        {challengeSelectState.selectedVillainObject.challengeName}
                     </button>
                     to reclaim
                     <button onClick={toggleRelicDisplay}>
-                        {challengeState.selectedRelicObject.challengeName}
+                        {challengeSelectState.selectedRelicObject.challengeName}
                     </button>
 
-                    {challengeState.selectedLocationObject.challengeCode === 3
+                    {challengeSelectState.selectedLocationObject.challengeCode === 3
                         ?
                         'on'
                         :
@@ -95,7 +95,7 @@ const ChallengeSelect = ({ gameState, userState, toggleGameType, gameTypeButtonT
                     }
 
                     <button onClick={toggleLocationDisplay}>
-                        {challengeState.selectedLocationObject.challengeName}
+                        {challengeSelectState.selectedLocationObject.challengeName}
                     </button>
                 </div>
             }
@@ -104,42 +104,42 @@ const ChallengeSelect = ({ gameState, userState, toggleGameType, gameTypeButtonT
                 <div>
                     Your party will battle
                     <button onClick={toggleVillainDisplay}>
-                        {challengeState.selectedVillainObject.challengeName}
+                        {challengeSelectState.selectedVillainObject.challengeName}
                     </button>
                     to reclaim
                     <button onClick={toggleRelicDisplay}>
-                        {challengeState.selectedRelicObject.challengeName}
+                        {challengeSelectState.selectedRelicObject.challengeName}
                     </button>
 
-                    {challengeState.selectedLocationObject.challengeCode === 3 ?
+                    {challengeSelectState.selectedLocationObject.challengeCode === 3 ?
                         'on'
                         :
                         'in'
                     }
 
                     <button onClick={toggleLocationDisplay}>
-                        {challengeState.selectedLocationObject.challengeName}
+                        {challengeSelectState.selectedLocationObject.challengeName}
                     </button>
                 </div>
             }
 
 
             <div>
-                {challengeState.villainDisplayed &&
+                {challengeSelectState.villainDisplayed &&
                     <ChallengeOptionsList
                         challengeObjectArray={villainObjectsArray}
                         challengeDispatch={villainDispatch}
                         joining={userState.joiningGame}
                     />}
 
-                {challengeState.relicDisplayed &&
+                {challengeSelectState.relicDisplayed &&
                     <ChallengeOptionsList
                         challengeObjectArray={relicObjectsArray}
                         challengeDispatch={relicDispatch}
                         joining={userState.joiningGame}
                     />}
 
-                {challengeState.locationDisplayed &&
+                {challengeSelectState.locationDisplayed &&
                     <ChallengeOptionsList
                         challengeObjectArray={locationObjectsArray}
                         challengeDispatch={locationDispatch}

@@ -1,4 +1,4 @@
-const defaultCloudState = {
+const defaultGameState = {
     static: {
         codeVillain: null,
         codeRelic: null,
@@ -28,7 +28,6 @@ const defaultCloudState = {
     },
     currentTurn: {
         turnStage: 'CHALLENGE',
-        selectedChallenge: ''
     },
     classList: [
         // digit representing classCode
@@ -71,11 +70,11 @@ const defaultCloudState = {
     ]
 }
 
-const cloudReducer = (state, action) => {
+const gameReducer = (state, action) => {
     switch (action.type) {
         case 'UPDATE_GAME_STATIC':
             return {
-                ...defaultCloudState,
+                ...defaultGameState,
                 ...state,
                 static: {
                     ...action.staticData
@@ -83,7 +82,7 @@ const cloudReducer = (state, action) => {
             }
         case 'UPDATE_GAME_ACTIVE':
             return {
-                ...defaultCloudState,
+                ...defaultGameState,
                 ...state,
                 active: {
                     ...action.activeData,
@@ -91,12 +90,12 @@ const cloudReducer = (state, action) => {
             }
         case 'UPDATE_GAME_STATE_FULL':
             return {
-                ...defaultCloudState,
+                ...defaultGameState,
                 ...action.currentActiveGameFull
             }
         case 'CLEAR_GAME_STATE':
             return {
-                ...defaultCloudState
+                ...defaultGameState
             }
         case 'UPDATE_CHALLENGES_OBJECT':
             return {
@@ -206,42 +205,37 @@ const cloudReducer = (state, action) => {
             }
         case 'UPDATE_BACKSTORY':
             return {
-                ...defaultCloudState,
+                ...defaultGameState,
                 ...state,
-                backstory: {
-                    ...state.backstory,
-                    ...action.backstory
-                }
+                backstory: action.backstory
             }
         case 'UPDATE_CURRENT_TURN':
             return {
-                ...defaultCloudState,
+                ...defaultGameState,
                 ...state,
-                currentTurn: {
-                    ...state.currentTurn,
-                    ...action.currentTurn}
+                currentTurn: action.currentTurn
             }
         case 'UPDATE_ACTION_TOKENS':
             return {
-                ...defaultCloudState,
+                ...defaultGameState,
                 ...state,
                 hasActionToken: action.hasActionToken
             }
         case 'CLEAR_ACTION_TOKENS':
             return {
-                ...defaultCloudState,
+                ...defaultGameState,
                 ...state,
                 hasActionToken: []
             }
         case 'UPDATE_ACTIVE_TOKENS':
             return {
-                ...defaultCloudState,
+                ...defaultGameState,
                 ...state,
                 activeActionTokens: action.activeActionTokens
             }
             case 'UPDATE_ASSIST_TOKENS':
                 return {
-                    ...defaultCloudState,
+                    ...defaultGameState,
                     ...state,
                     activeAssistTokens: action.activeAssistTokens
                 }
@@ -250,4 +244,4 @@ const cloudReducer = (state, action) => {
     }
 }
 
-export { defaultCloudState, cloudReducer }
+export { defaultGameState, gameReducer }

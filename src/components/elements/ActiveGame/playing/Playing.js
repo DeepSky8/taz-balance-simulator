@@ -11,7 +11,7 @@ const Playing = ({ cloudState, children }) => {
             <ActionTokens
                 gameState={cloudState}
             />
-
+            {children}
         </div>
     )
 }

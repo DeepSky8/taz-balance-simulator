@@ -1,4 +1,4 @@
-const defaultChallengeState = {
+const defaultChallengeSelectState = {
     villainDisplayed: false,
     relicDisplayed: false,
     locationDisplayed: false,
@@ -176,4 +176,4 @@ const challengeSelectReducer = (state, action) => {
     }
 }
 
-export { defaultChallengeState, challengeSelectReducer }
+export { defaultChallengeSelectState, challengeSelectReducer }
