@@ -6,7 +6,7 @@ import NextDeck from './NextDeck';
 import PrevDeck from './PrevDeck';
 // import
 
-const TurnStep = ({ cloudState, localState, character }) => {
+const TurnStep = ({ cloudState, localState }) => {
     const [stepText, setStepText] = useState('Select a challenge to engage')
     const [activeAssistPlayer, setActiveAssistPlayer] = useState('Friend')
 
@@ -24,10 +24,9 @@ const TurnStep = ({ cloudState, localState, character }) => {
             turnTextSwitcher(
                 cloudState,
                 localState,
-                character,
                 activeAssistPlayer)
         )
-    }, [cloudState, character])
+    }, [cloudState, localState.activeCharacter])
 
     return (
         <div>
@@ -36,7 +35,7 @@ const TurnStep = ({ cloudState, localState, character }) => {
                 <PrevDeck gameState={cloudState} />}
 
             <button
-                onClick={() => { clickForNext({ cloudState, localState, character }) }}
+                onClick={() => { clickForNext({ cloudState, localState }) }}
             >
                 {stepText}
             </button>

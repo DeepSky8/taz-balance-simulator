@@ -16,8 +16,6 @@ import incrementTurn from "../components/functions/incrementTurn";
 const ActiveGameRouter = ({
     cloudState,
     localState,
-    localCharObject,
-    activeCharacterObject
 }) => {
 
     // Testing tools
@@ -42,8 +40,8 @@ const ActiveGameRouter = ({
             <AuthWrapper />
             <ActiveCharWrapper
                 cloudState={cloudState}
-                activeCharacter={activeCharacterObject}
-                localCharacter={localCharObject}
+                activeCharacter={localState.activeCharacter}
+                localCharacter={localState.localCharacter}
                 resetStages={resetStages}
                 stepStage={stepStage}
                 resetTurnStage={resetTurnStage}
@@ -52,7 +50,6 @@ const ActiveGameRouter = ({
             <TurnStep
                 cloudState={cloudState}
                 localState={localState}
-                character={activeCharacterObject}
             />
 
             <Routes>
@@ -62,7 +59,7 @@ const ActiveGameRouter = ({
                         <div>
                             <IntroDescription />
                             <IntroCharacter
-                                character={activeCharacterObject}
+                                character={localState.activeCharacter}
                                 ready={cloudState.ready}
                             />
                         </div>

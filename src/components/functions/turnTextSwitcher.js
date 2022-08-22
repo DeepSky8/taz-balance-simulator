@@ -25,12 +25,12 @@ const kostco = 'Time to shop at Fantasy Kostco!';
 const passTheTurn = 'Click here to pass the turn, ';
 const reload = 'Please reload the game';
 
-const turnTextSwitcher = (cloudState, localState, character, activeAssistPlayer) => {
+const turnTextSwitcher = (cloudState, localState, activeAssistPlayer) => {
 
     // console.log('stages: ', gameStage, briefingStage, turnStage)
     switch (cloudState.active.gameStage) {
         case 'INTRO':
-            return introChar + character.charName + clickToPassTurn;
+            return introChar + localState.activeCharacter.charName + clickToPassTurn;
         case 'BRIEF':
             switch (cloudState.backstory.briefingStage) {
                 case 'VILLAIN':
@@ -55,7 +55,7 @@ const turnTextSwitcher = (cloudState, localState, character, activeAssistPlayer)
                     } else if (selector !== '') {
                         // const cardName = cloudState.currentTurn[selector][cloudState.currentTurn[selector].visible].cardName
                         const cardName = localState.currentChallenge.cardName
-                        return character.charName + challengeSelected + cardName;
+                        return localState.activeCharacter.charName + challengeSelected + cardName;
                     }
                 case 'ITEMS':
                     return useItems;
@@ -78,7 +78,7 @@ const turnTextSwitcher = (cloudState, localState, character, activeAssistPlayer)
                 case 'KOSTCO':
                     return kostco;
                 case 'PASS':
-                    return passTheTurn + character.charName;
+                    return passTheTurn + localState.activeCharacter.charName;
             }
             break;
         case 'END':

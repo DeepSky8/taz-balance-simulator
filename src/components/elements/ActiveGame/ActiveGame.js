@@ -26,23 +26,31 @@ import {
 } from "../../../actions/cloudActions";
 import { auth, db } from "../../../firebase/firebase";
 import { defaultCloudState, cloudReducer } from "../../../reducers/cloudReducer";
-import AuthWrapper from "../../Authentication/AuthWrapper";
-import ActiveCharWrapper from "./ActiveCharWrapper";
-import IntroDescription from "./introductions/IntroDescription";
-import IntroCharacter from './introductions/IntroCharacter';
+// import AuthWrapper from "../../Authentication/AuthWrapper";
+// import ActiveCharWrapper from "./ActiveCharWrapper";
+// import IntroDescription from "./introductions/IntroDescription";
+// import IntroCharacter from './introductions/IntroCharacter';
 import incrementStage from "../../functions/incrementStage";
-import MissionBriefing from "./missionBriefing/MissionBriefing";
-import Playing from "./playing/Playing";
-import TurnStep from './turnStep/TurnStep';
-import BriefingComplete from "./missionBriefing/BriefingComplete";
+// import MissionBriefing from "./missionBriefing/MissionBriefing";
+// import Playing from "./playing/Playing";
+// import TurnStep from './turnStep/TurnStep';
+// import BriefingComplete from "./missionBriefing/BriefingComplete";
 import incrementTurn from "../../functions/incrementTurn";
 import { briefingStages } from "../../functions/briefingStages";
 import challengeDeck from "../../functions/challengeDeck";
-import ChallengeFrame from "./playing/challenges/ChallengeFrame";
-import VillainChallenge from "./playing/challenges/VillainChallenge";
+// import ChallengeFrame from "./playing/challenges/ChallengeFrame";
+// import VillainChallenge from "./playing/challenges/VillainChallenge";
 import ActiveGameRouter from "../../../routers/ActiveGameRouter";
-import { clearCurrentChallenge, updateCompletedLocation, updateCompletedRelic, updateCompletedVillain, updateCurrentChallenge, updateCurrentCharacterID, updateHostKey, updateUncompletedLocation, updateUncompletedRelic, updateUncompletedVillain } from "../../../actions/localActions";
-import { defaultLocalState, localStateReducer } from "../../../reducers/localState";
+import { 
+    clearActiveCharacter,
+    clearCurrentChallenge, 
+    updateActiveCharacter, 
+    updateCurrentChallenge, 
+    updateCurrentCharacterID, 
+    updateHostKey,
+    updateLocalCharacter,  
+} from "../../../actions/localActions";
+import { defaultLocalState, localStateReducer } from "../../../reducers/localReducer";
 
 const ActiveGame = ({ }) => {
     let navigate = useNavigate()
@@ -50,8 +58,6 @@ const ActiveGame = ({ }) => {
     const introStages = ['INTRO', 'BRIEF', 'BACKSTORY']
     const uncompleted = 'uncompleted'
     const completed = 'completed'
-    const [localCharObject, dispatchLocalCharObject] = useState({})
-    const [activeCharacterObject, dispatchActiveCharacterObject] = useState({})
     const [cloudState, dispatchCloudState] = useReducer(cloudReducer, defaultCloudState)
     const [localState, dispatchLocalState] = useReducer(localStateReducer, defaultLocalState)
 
@@ -441,7 +447,8 @@ const ActiveGame = ({ }) => {
             onValue(ref(db, 'characters/' + auth.currentUser.uid + '/' + localState.currentCharacterID),
                 (snapshot) => {
                     if (snapshot.exists()) {
-                        dispatchLocalCharObject(snapshot.val())
+                        // dispatchLocalCharObject(snapshot.val())
+                        dispatchLocalState(updateLocalCharacter(snapshot.val()))
                     }
                 })
         }
@@ -481,13 +488,16 @@ const ActiveGame = ({ }) => {
         if (cloudState.active.activeUID &&
             (cloudState.active.activeUID !== auth.currentUser.uid)
         ) {
-            dispatchActiveCharacterObject({})
+            // dispatchActiveCharacterObject({})
+            dispatchLocalState(clearActiveCharacter())
+
             // If the current Active Player is not the local player, 
             // establish a listener for the duration of their turn
             onValue(ref(db, 'characters/' + cloudState.active.activeUID + '/' + cloudState.active.activeCharID),
                 (snapshot) => {
                     if (snapshot.exists()) {
-                        dispatchActiveCharacterObject(snapshot.val())
+                        // dispatchActiveCharacterObject(snapshot.val())
+                        dispatchLocalState(updateActiveCharacter(snapshot.val()))
                     }
                 })
         }
@@ -507,10 +517,12 @@ const ActiveGame = ({ }) => {
         if (cloudState.active.activeCharID &&
             (cloudState.active.activeCharID === localState.currentCharacterID)
         ) {
-            dispatchActiveCharacterObject(localCharObject)
+            // dispatchActiveCharacterObject(localCharObject)
+            dispatchLocalState(clearActiveCharacter())
+            dispatchLocalState(updateActiveCharacter(localState.localCharacter))
         }
 
-    }, [cloudState.active, localCharObject, localState.currentCharacterID])
+    }, [cloudState.active.activeCharID, localState.currentCharacterID])
 
     const incrementGameStage = () => {
         startUpdateGameStage(localState.hostKey, incrementStage(cloudState.active.gameStage))
@@ -622,8 +634,6 @@ const ActiveGame = ({ }) => {
             <ActiveGameRouter
                 cloudState={cloudState}
                 localState={localState}
-                localCharObject={localCharObject}
-                activeCharacterObject={activeCharacterObject}
             />
 
         </div>

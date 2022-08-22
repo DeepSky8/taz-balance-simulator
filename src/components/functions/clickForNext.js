@@ -1,10 +1,10 @@
-import { startMarkTurnComplete, startUpdateAssistTokens, startUpdateGameStage, startUpdateTurnStage } from "../../actions/cloudActions"
+import { startMarkTurnComplete, startUpdateAssistTokens, startUpdateTurnStage } from "../../actions/cloudActions"
 import { auth } from "../../firebase/firebase";
 import incrementTurn from "./incrementTurn";
 
 
 
-const clickForNext = ({ cloudState, localState, character }) => {
+const clickForNext = ({ cloudState, localState }) => {
     const assistScenes = ['PRE_ASSIST_SCENE', 'POST_ASSIST_SCENE']
 
     const reloadPage = () => {
@@ -44,7 +44,7 @@ const clickForNext = ({ cloudState, localState, character }) => {
                         turnIncrement()
                         break;
                     case 'CHALLENGE':
-                        if (character.charKostco && character.charKostco.length > 0) {
+                        if (localState.activeCharacter.charKostco && localState.activeCharacter.charKostco.length > 0) {
                             turnIncrement()
                         } else if (localState.currentChallenge.storyBonus > 0) {
                             turnIncrement('STORY')
