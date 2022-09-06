@@ -15,6 +15,7 @@ import RollDiceButton from "../components/elements/ActiveGame/playing/rollDice/R
 import StrengthFrame from "../components/elements/ActiveGame/playing/StrengthFrame";
 import TeamHealth from "../components/elements/ActiveGame/playing/TeamHealth";
 import TurnStep from "../components/elements/ActiveGame/turnStep/TurnStep";
+import TESTFEATURES from "../components/elements/admin/TESTFEATURES";
 import incrementStage from "../components/functions/incrementStage";
 import incrementTurn from "../components/functions/incrementTurn";
 
@@ -35,7 +36,7 @@ const ActiveGameRouter = ({
     const resetTurnStage = () => {
         startUpdateTurnStage(localState.hostKey, incrementTurn('default'))
         startResetTurnElements(localState.hostKey)
-        
+
     }
 
     const resetActionTokens = () => {
@@ -50,10 +51,6 @@ const ActiveGameRouter = ({
                 cloudState={cloudState}
                 activeCharacter={localState.activeCharacter}
                 localCharacter={localState.localCharacter}
-                resetStages={resetStages}
-                stepStage={stepStage}
-                resetTurnStage={resetTurnStage}
-                resetActionTokens={resetActionTokens}
             />
             <TurnStep
                 cloudState={cloudState}
@@ -128,7 +125,14 @@ const ActiveGameRouter = ({
                     }
                 />
             </Routes>
-
+            <TESTFEATURES
+                resetStages={resetStages}
+                stepStage={stepStage}
+                resetTurnStage={resetTurnStage}
+                resetActionTokens={resetActionTokens}
+                hostKey={localState.hostKey}
+                currentStage={cloudState.currentTurn.turnStage}
+            />
         </div>
     )
 }

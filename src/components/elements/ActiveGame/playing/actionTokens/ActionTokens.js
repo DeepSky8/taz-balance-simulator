@@ -89,6 +89,7 @@ const ActionTokens = ({ cloudState }) => {
                         activeTokenArray={cloudState.activeActionTokens}
                         spendToken={() => { spendToken(player.uid) }}
                         unspendToken={() => { unspendToken(player.uid) }}
+                        stage={cloudState.currentTurn.turnStage}
                     />
                 )
             })}

@@ -1,9 +1,23 @@
 import React, { useEffect, useState } from "react";
+import { stats } from "../../../CharacterSheet/classes/charInfo";
 
-const ActionToken = ({ player, tokenArray, activeTokenArray, spendToken, unspendToken }) => {
+const ActionToken = ({ player, stage, tokenArray, activeTokenArray, spendToken, unspendToken }) => {
     const [hasToken, setHasToken] = useState(false)
     const [tokenSpentNow, setTokenSpentNow] = useState(false)
+    const postAssistArray = [
+        'POSTASSIST',
+        'POST_ASSIST_SCENE',
+        'EVALUATETWO',
+        'DESCRIBE',
+        'KOSTCO',
+        'PASS'
+    ]
+
     const hasTokenText = (hasToken ? ' action token' : ' token spent')
+    const preAssistValue = stats[player.classCode].preAssist
+    const postAssistValue = stats[player.classCode].postAssist
+
+    const [assistValue, setAssistValue] = useState(preAssistValue)
 
     // Is the player UID recorded in one of the player objects
     // in the provided array: returns boolean
@@ -28,7 +42,18 @@ const ActionToken = ({ player, tokenArray, activeTokenArray, spendToken, unspend
         setTokenSpentNow(matcher(player, activeTokenArray))
     }, [activeTokenArray, player])
 
-
+    // When the stage updates, check whether the roll has already occurred
+    // if it has, update the assist values. Maintain the new values until 
+    // the next turn
+    useEffect(() => {
+        setAssistValue(
+            postAssistArray.includes(stage)
+                ?
+                postAssistValue
+                :
+                preAssistValue
+        )
+    }, [stage])
 
     return (
         <span>
@@ -37,7 +62,7 @@ const ActionToken = ({ player, tokenArray, activeTokenArray, spendToken, unspend
                     disabled={!hasToken}
                     onClick={spendToken}
                 >
-                    {player.charName}{hasTokenText}
+                    {player.charName}{hasTokenText}: +{assistValue}
                 </button>
             </span>
             <span>

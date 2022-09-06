@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const ActiveCharWrapper = ({ cloudState, activeCharacter, localCharacter, resetStages, stepStage, resetTurnStage, resetActionTokens }) => {
+const ActiveCharWrapper = ({ cloudState, activeCharacter, localCharacter }) => {
     const currentActiveChar = 'Active Character: '
     const [actionBarText, setActionBarText] = useState(currentActiveChar)
     const missionBriefBy = "Today's briefing conducted by "
@@ -34,18 +34,7 @@ const ActiveCharWrapper = ({ cloudState, activeCharacter, localCharacter, resetS
     return (
         <div>
             {actionBarText}
-            <div>
-                <button
-                    onClick={() => { resetStages() }}
-                >-Reset Stages-</button>
-                <button
-                    onClick={() => { stepStage() }}
-                >-Step Stage-</button>
-                <button
-                    onClick={() => { resetTurnStage() }}
-                >-Reset Turn-</button>
-                <button onClick={() => { resetActionTokens() }}>-Reset Action Tokens-</button>
-            </div>
+
         </div>
     )
 }

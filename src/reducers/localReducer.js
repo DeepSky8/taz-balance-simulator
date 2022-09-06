@@ -17,9 +17,11 @@ const defaultLocalState = {
         // toolCode: 7,
         // assistCode: 7,
         // charNotes: '',
+        // lootPoints: 0,
         // charKostco: [{}],
         // displayChars: true,
         // questCount: 0,
+
         // humanBardBand: '',
         // robotBardCreator: '',
         // robotBardVisual: '',

@@ -18,12 +18,14 @@ const incrementTurn = (stage) => {
         case 'ROLLONE':
             return 'ROLLTWO';
         case 'ROLLTWO':
-            return 'EVALUATE';
-        case 'EVALUATE':
+            return 'EVALUATEONE';
+        case 'EVALUATEONE':
             return 'POSTASSIST';
         case 'POSTASSIST':
             return 'POST_ASSIST_SCENE';
         case 'POST_ASSIST_SCENE':
+            return 'EVALUATETWO';
+        case 'EVALUATETWO':
             return 'DESCRIBE';
         case 'DESCRIBE':
             return 'KOSTCO';

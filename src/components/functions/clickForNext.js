@@ -1,13 +1,11 @@
-import { startAddStoryBonus, startMarkTurnComplete, startSaveDiceRoll, startToggleRollAnimation, startUpdateAssistBonus, startUpdateAssistTokens, startUpdateTurnStage } from "../../actions/cloudActions"
+import { updateLoot } from "../../actions/cardActions";
+import { startAddStoryBonus, startMarkTurnComplete, startSaveDiceRoll, startToggleRollAnimation, startUpdateAssistBonus, startUpdateAssistTokens, startUpdateLootPoints, startUpdateTeamHealth, startUpdateTurnStage } from "../../actions/cloudActions"
 import { auth } from "../../firebase/firebase";
 import { stats } from "../elements/CharacterSheet/classes/charInfo";
 import diceRoll from "./diceRoll";
 import incrementTurn from "./incrementTurn";
 
-
-
 const clickForNext = ({ cloudState, localState }) => {
-    const assistScenes = ['PRE_ASSIST_SCENE', 'POST_ASSIST_SCENE']
 
     const reloadPage = () => {
         window.location.reload()
@@ -18,20 +16,30 @@ const clickForNext = ({ cloudState, localState }) => {
     }
 
     const addAssistBonus = (assistingCharacter, stage) => {
-        console.log('assistingCharacter', assistingCharacter)
-        console.log('stage', stage)
-        console.log('strength', cloudState.strength)
         const currentAssist = cloudState.strength.assist ? cloudState.strength.assist : 0
         const additionalAssistBonus = stats[assistingCharacter.classCode][stage]
         const newAssist = currentAssist + additionalAssistBonus
-        console.log('currentAssist', currentAssist)
-        console.log('additionalAssistBonus', additionalAssistBonus)
-        console.log('newAssist', newAssist)
         startUpdateAssistBonus(localState.hostKey, newAssist)
 
     }
 
+    const updateLoot = () => {
+        const currentLoot = localState.activeCharacter.lootPoints
+        const newLoot = localState.currentChallenge.loot
+        const updatedLoot = currentLoot + newLoot
+        startUpdateLootPoints(
+            cloudState.active.activeUID,
+            cloudState.active.activeCharID,
+            updatedLoot
+        )
+    }
 
+    const updateHealth = () => {
+        const currentHealth = cloudState.active.teamHealth
+        const removeHealth = localState.currentChallenge.teamHealth
+        const updatedHealth = currentHealth - removeHealth
+        startUpdateTeamHealth(localState.hostKey, updatedHealth)
+    }
 
     const removeFirstActiveAssistToken = () => {
         const removeAssist = cloudState.activeAssistTokens.splice(0, 1)
@@ -134,16 +142,16 @@ const clickForNext = ({ cloudState, localState }) => {
                         ) {
                             turnIncrement()
                         } else {
-                            turnIncrement('EVALUATE')
+                            turnIncrement('EVALUATEONE')
                         }
                         break;
                     case 'ROLLTWO':
                         rollDice('rollTwo')
                         turnIncrement()
                         break;
-                    case 'EVALUATE':
-                        if ((cloudState.strength.total >=
-                            cloudState.currentTurn.difficulty) ||
+                    case 'EVALUATEONE':
+                        if ((cloudState.strength.total >= cloudState.currentTurn.difficulty) ||
+                            (cloudState.strength.assist > 0) ||
                             (localState.currentChallenge.noAssist)
                         ) {
                             turnIncrement('DESCRIBE')
@@ -152,24 +160,34 @@ const clickForNext = ({ cloudState, localState }) => {
                         }
                         break;
                     case 'POSTASSIST':
-
-                        console.log('someone may have spent action token')
-                        console.log('need to know if yes, so that player tells POST_ASSIST_SCENE')
                         turnIncrement()
                         break;
                     case 'POST_ASSIST_SCENE':
-                        console.log('Assist player(s) tell how they helped')
-                        console.log('need an array of assist players, cycle through them')
-                        console.log('this onClick event should display the next player name')
-                        console.log('until there are no further assist players in the array')
-                        console.log('then go to the next stage')
+                        if (cloudState.activeAssistTokens.length === 0) {
+                            turnIncrement()
+                        } else {
+                            addAssistBonus(cloudState.activeAssistTokens[0], 'postAssist')
+                            removeFirstActiveAssistToken()
+                            if (cloudState.activeAssistTokens.length === 0) {
+                                turnIncrement()
+                            }
+                        }
+
+                        break;
+                    case 'EVALUATETWO':
+                        if (cloudState.strength.total >= cloudState.currentTurn.difficulty) {
+                            updateLoot()
+                        } else {
+                            updateHealth()
+                        }
                         turnIncrement()
                         break;
                     case 'DESCRIBE':
-                        console.log('triumph or failure was described')
-                        console.log('if loot points for this character are higher than 3')
-                        console.log("then incrementTurn(), otherwise incrementTurn('PASS')")
-                        turnIncrement()
+                        if (localState.activeCharacter.lootPoints >= 3) {
+                            turnIncrement()
+                        } else {
+                            turnIncrement('PASS')
+                        }
                         break;
                     case 'KOSTCO':
                         console.log('received KOSTCO card (two cards if Rogue)')

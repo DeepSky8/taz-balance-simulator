@@ -23,7 +23,8 @@ const assistScene = `, how do you help?`;
 const rollDice = 'Click here to roll the die!';
 const rollAgain = 'Roll again; you have '
 const clickProceed = 'Click to proceed'
-const describeAction = 'Based on your roll, what happens?';
+const describeSuccess = 'Describe your success!'
+const describeFailure = 'Describe how this attempt failed.'
 const kostco = 'Time to shop at Fantasy Kostco!';
 const passTheTurn = 'Click here to pass the turn, ';
 const reload = 'Please reload the game';
@@ -81,14 +82,20 @@ const turnTextSwitcher = (cloudState, localState, activeAssistPlayer) => {
                         return rollAgain + disAdvan
                     }
                     break;
-                case 'EVALUATE':
+                case 'EVALUATEONE':
                     return clickProceed
                 case 'POSTASSIST':
                     return askAssist;
                 case 'POST_ASSIST_SCENE':
                     return activeAssistPlayer + assistScene;
+                case 'EVALUATETWO':
+                    return clickProceed
                 case 'DESCRIBE':
-                    return describeAction;
+                    if(cloudState.strength.total >= cloudState.currentTurn.difficulty){
+                        return describeSuccess
+                    } else {
+                        return describeFailure
+                    }
                 case 'KOSTCO':
                     return kostco;
                 case 'PASS':

@@ -325,7 +325,7 @@ export const startUpdateTurnStage = (hostKey, turnStage) => {
         })
 }
 
-export const startResetTurnElements = (hostKey) => { 
+export const startResetTurnElements = (hostKey) => {
     const updates = {};
     updates['savedGames/' + hostKey + `/currentTurn/selectedChallenge`] = '';
     updates['savedGames/' + hostKey + `/currentTurn/difficulty`] = 0;
@@ -585,6 +585,24 @@ export const startToggleRollAnimation = (hostKey, toggle) => {
     updates['savedGames/' + hostKey + '/currentTurn/showRoll'] = toggle
     update(ref(db), updates)
         .catch((error) => {
-            console.log('Did not start Roll animation: ', error)
+            console.log('Did not toggle Roll animation: ', error)
+        })
+}
+
+export const startUpdateLootPoints = (activePlayer, activeCharacter, newLootTotal) => {
+    const updates = {}
+    updates['characters/' + activePlayer + '/' + activeCharacter + '/lootPoints'] = newLootTotal
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not update Loot Points: ', error)
+        })
+}
+
+export const startUpdateTeamHealth = (hostKey, newHealthTotal) => {
+    const updates = {}
+    updates['savedGames/' + hostKey + '/active/teamHealth'] = newHealthTotal
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not update health total: ', error)
         })
 }
