@@ -4,10 +4,9 @@ import clickForNext from "../../../functions/clickForNext";
 import turnTextSwitcher from "../../../functions/turnTextSwitcher";
 import NextDeck from './NextDeck';
 import PrevDeck from './PrevDeck';
-// import
 
 const TurnStep = ({ cloudState, localState }) => {
-    const [stepText, setStepText] = useState('Select a challenge to engage')
+    const [stepText, setStepText] = useState('Welcome to TAZ Balance!')
     const [activeAssistPlayer, setActiveAssistPlayer] = useState('Friend')
 
     useEffect(() => {
@@ -26,7 +25,12 @@ const TurnStep = ({ cloudState, localState }) => {
                 localState,
                 activeAssistPlayer)
         )
-    }, [cloudState, localState.activeCharacter])
+    }, [
+        localState.activeCharacter,
+        localState.currentChallenge,
+        cloudState.currentTurn.turnStage,
+        cloudState.currentTurn.selectedChallenge
+    ])
 
     return (
         <div>

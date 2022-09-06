@@ -3,7 +3,7 @@ import { startSpendActionToken, startSpendAssistToken, startUNspendActionToken, 
 import { auth } from "../../../../../firebase/firebase";
 import ActionToken from "./ActionToken";
 
-const ActionTokens = ({ gameState }) => {
+const ActionTokens = ({ cloudState }) => {
     const [isAssistToken, setIsAssistToken] = useState(false)
     const assistStages = ['PREASSIST', 'POSTASSIST']
 
@@ -12,40 +12,40 @@ const ActionTokens = ({ gameState }) => {
     // so that the assistance can be described by the assisting player
     // in a special turnStage
     useEffect(() => {
-        if (assistStages.includes(gameState.currentTurn.turnStage)) {
+        if (assistStages.includes(cloudState.currentTurn.turnStage)) {
             setIsAssistToken(true)
         } else {
             setIsAssistToken(false)
         }
-    }, [gameState.currentTurn.turnStage])
+    }, [cloudState.currentTurn.turnStage])
 
     const actuallySpendIt = (playerUID) => {
-        const updatedHasActionToken = gameState.hasActionToken.filter((player) => {
+        const updatedHasActionToken = cloudState.hasActionToken.filter((player) => {
             return player.uid !== playerUID
         })
-        const spentActionToken = gameState.hasActionToken.filter((player) => {
+        const spentActionToken = cloudState.hasActionToken.filter((player) => {
             return player.uid === playerUID
         })
         startSpendActionToken(
-            gameState.static.host,
-            gameState.static.key,
+            cloudState.static.host,
+            cloudState.static.key,
             updatedHasActionToken,
-            spentActionToken.concat(gameState.activeActionTokens)
+            spentActionToken.concat(cloudState.activeActionTokens)
         )
         if (isAssistToken) {
             startSpendAssistToken(
-                gameState.static.host,
-                gameState.static.key,
-                spentActionToken.concat(gameState.activeAssistTokens)
+                cloudState.static.host,
+                cloudState.static.key,
+                spentActionToken.concat(cloudState.activeAssistTokens)
             )
         }
     }
 
     const spendToken = (playerUID) => {
         if (playerUID === auth.currentUser.uid) {
-            if (playerUID !== gameState.active.activeUID && isAssistToken) {
+            if (playerUID !== cloudState.active.activeUID && isAssistToken) {
                 actuallySpendIt(playerUID)
-            } else if (playerUID === gameState.active.activeUID && !isAssistToken) {
+            } else if (playerUID === cloudState.active.activeUID && !isAssistToken) {
                 actuallySpendIt(playerUID)
             }
         }
@@ -53,25 +53,25 @@ const ActionTokens = ({ gameState }) => {
 
     const unspendToken = (playerUID) => {
         if (playerUID === auth.currentUser.uid) {
-            const unspendThisToken = gameState.playerList.filter((player) => {
+            const unspendThisToken = cloudState.playerList.filter((player) => {
                 return player.uid === playerUID
             })
-            const newSpentActionTokensArray = gameState.activeActionTokens.filter((player) => {
+            const newSpentActionTokensArray = cloudState.activeActionTokens.filter((player) => {
                 return player.uid !== playerUID
             })
             startUNspendActionToken(
-                gameState.static.host,
-                gameState.static.key,
-                unspendThisToken.concat(gameState.hasActionToken),
+                cloudState.static.host,
+                cloudState.static.key,
+                unspendThisToken.concat(cloudState.hasActionToken),
                 newSpentActionTokensArray
             )
             if (isAssistToken) {
-                const newSpentAssistTokensArray = gameState.activeAssistTokens.filter((player) => {
+                const newSpentAssistTokensArray = cloudState.activeAssistTokens.filter((player) => {
                     return player.uid !== playerUID
                 })
                 startUNspendAssistToken(
-                    gameState.static.host,
-                    gameState.static.key,
+                    cloudState.static.host,
+                    cloudState.static.key,
                     newSpentAssistTokensArray
                 )
             }
@@ -80,13 +80,13 @@ const ActionTokens = ({ gameState }) => {
 
     return (
         <span>
-            {gameState.playerList.map((player) => {
+            {cloudState.playerList.map((player) => {
                 return (
                     <ActionToken
                         key={player.uid}
                         player={player}
-                        tokenArray={gameState.hasActionToken}
-                        activeTokenArray={gameState.activeActionTokens}
+                        tokenArray={cloudState.hasActionToken}
+                        activeTokenArray={cloudState.activeActionTokens}
                         spendToken={() => { spendToken(player.uid) }}
                         unspendToken={() => { unspendToken(player.uid) }}
                     />

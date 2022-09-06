@@ -6,6 +6,7 @@ import double_assist from '../../../../../gameImages/double_assist.jpg';
 import no_assist from '../../../../../gameImages/no_assist.jpg';
 import diamond from '../../../../../gameImages/diamond.jpg';
 import heart from '../../../../../gameImages/heart.jpg';
+import dice_roll from '../../../../../gameImages/dice_roll.gif';
 
 export const images = {
     monster,
@@ -15,5 +16,6 @@ export const images = {
     double_assist,
     no_assist,
     diamond,
-    heart
+    heart,
+    dice_roll
 }

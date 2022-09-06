@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { updateCard } from "../../../../../actions/cardActions";
-import { startPickActiveChallenge } from "../../../../../actions/cloudActions";
+import { startPickActiveChallenge, startSetCurrentDifficulty } from "../../../../../actions/cloudActions";
 import { auth } from "../../../../../firebase/firebase";
 import { cardReducer, defaultCardState } from "../../../../../reducers/cardReducer";
 import LocationChallenge from "./LocationChallenge";
@@ -48,9 +48,12 @@ const ChallengeFrame = ({ cloudState, localState }) => {
 
     // },[cloudState.selectedChallenge])
 
-    const challengePicked = (text) => {
-        if (auth.currentUser.uid === cloudState.active.activeUID && cloudState.currentTurn.turnStage === 'CHALLENGE') {
+    const challengePicked = (text, difficulty, modifier) => {
+        if (auth.currentUser.uid === cloudState.active.activeUID &&
+            cloudState.currentTurn.turnStage === 'CHALLENGE') {
+            const totalDifficulty = parseInt(difficulty) + parseInt(modifier)
             startPickActiveChallenge(localState.hostKey, text)
+            startSetCurrentDifficulty(localState.hostKey, totalDifficulty)
         }
 
     }
@@ -60,18 +63,21 @@ const ChallengeFrame = ({ cloudState, localState }) => {
             <VillainChallenge
                 villain={villain}
                 modifier={villainModifier}
-                challengePicked={() => { challengePicked('villain') }}
+                stage={cloudState.currentTurn.turnStage}
+                challengePicked={() => { challengePicked('villain', villain.difficulty, villainModifier) }}
             />
             <RelicChallenge
                 relic={relic}
                 modifierVillain={relicModifierVillain}
                 modifierLocation={relicModifierLocation}
-                challengePicked={() => { challengePicked('relic') }}
+                stage={cloudState.currentTurn.turnStage}
+                challengePicked={() => { challengePicked('relic', relic.difficulty, (relicModifierVillain + relicModifierLocation)) }}
             />
             <LocationChallenge
                 location={location}
                 modifier={locationModifier}
-                challengePicked={() => { challengePicked('location') }}
+                stage={cloudState.currentTurn.turnStage}
+                challengePicked={() => { challengePicked('location', location.difficulty, locationModifier) }}
             />
         </div>
     )

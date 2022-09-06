@@ -1,7 +1,7 @@
 
 const incrementTurn = (stage) => {
     switch (stage) {
-        case 'DESCRIBE':
+        case 'DESCRIBEONE':
             return 'CHALLENGE'
         case 'CHALLENGE':
             return 'ITEMS';
@@ -14,8 +14,12 @@ const incrementTurn = (stage) => {
         case 'SCENE':
             return 'PRE_ASSIST_SCENE';
         case 'PRE_ASSIST_SCENE':
-            return 'ROLL';
-        case 'ROLL':
+            return 'ROLLONE';
+        case 'ROLLONE':
+            return 'ROLLTWO';
+        case 'ROLLTWO':
+            return 'EVALUATE';
+        case 'EVALUATE':
             return 'POSTASSIST';
         case 'POSTASSIST':
             return 'POST_ASSIST_SCENE';

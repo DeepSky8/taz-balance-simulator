@@ -1,5 +1,7 @@
-import { startMarkTurnComplete, startUpdateAssistTokens, startUpdateTurnStage } from "../../actions/cloudActions"
+import { startAddStoryBonus, startMarkTurnComplete, startSaveDiceRoll, startToggleRollAnimation, startUpdateAssistBonus, startUpdateAssistTokens, startUpdateTurnStage } from "../../actions/cloudActions"
 import { auth } from "../../firebase/firebase";
+import { stats } from "../elements/CharacterSheet/classes/charInfo";
+import diceRoll from "./diceRoll";
 import incrementTurn from "./incrementTurn";
 
 
@@ -11,12 +13,46 @@ const clickForNext = ({ cloudState, localState }) => {
         window.location.reload()
     }
 
+    const addStoryStrength = (storyBonus) => {
+        startAddStoryBonus(localState.hostKey, parseInt(storyBonus))
+    }
+
+    const addAssistBonus = (assistingCharacter, stage) => {
+        console.log('assistingCharacter', assistingCharacter)
+        console.log('stage', stage)
+        console.log('strength', cloudState.strength)
+        const currentAssist = cloudState.strength.assist ? cloudState.strength.assist : 0
+        const additionalAssistBonus = stats[assistingCharacter.classCode][stage]
+        const newAssist = currentAssist + additionalAssistBonus
+        console.log('currentAssist', currentAssist)
+        console.log('additionalAssistBonus', additionalAssistBonus)
+        console.log('newAssist', newAssist)
+        startUpdateAssistBonus(localState.hostKey, newAssist)
+
+    }
+
+
+
+    const removeFirstActiveAssistToken = () => {
+        const removeAssist = cloudState.activeAssistTokens.splice(0, 1)
+        const updatedAssistArray = cloudState.activeAssistTokens.filter(
+            ({ currentCharacterID }) => {
+                return currentCharacterID !== removeAssist.currentCharacterID
+            })
+
+
+        startUpdateAssistTokens(localState.hostKey, updatedAssistArray)
+    }
+
+    const rollDice = (rollLocation) => {
+        const newRoll = diceRoll()
+        startSaveDiceRoll(localState.hostKey, rollLocation, newRoll)
+        setTimeout(() => { startToggleRollAnimation(localState.hostKey, true) }, 0)
+        setTimeout(() => { startToggleRollAnimation(localState.hostKey, false) }, 5000)
+    }
+
     const turnIncrement = (stage = incrementTurn(cloudState.currentTurn.turnStage)) => {
-        // console.log('stage', stage)
-        startUpdateTurnStage(
-            localState.hostKey,
-            stage
-        )
+        startUpdateTurnStage(localState.hostKey, stage)
     }
 
     const passTheTurn = () => {
@@ -40,56 +76,83 @@ const clickForNext = ({ cloudState, localState }) => {
                 break;
             case 'CHALLENGES':
                 switch (cloudState.currentTurn.turnStage) {
-                    case 'DESCRIBE':
+                    case 'DESCRIBEONE':
                         turnIncrement()
                         break;
                     case 'CHALLENGE':
-                        if (localState.activeCharacter.charKostco && localState.activeCharacter.charKostco.length > 0) {
-                            turnIncrement()
-                        } else if (localState.currentChallenge.storyBonus > 0) {
-                            turnIncrement('STORY')
-                        } else {
-                            turnIncrement('PREASSIST')
+                        if (cloudState.currentTurn.selectedChallenge !== '') {
+                            if (localState.activeCharacter.charKostco &&
+                                localState.activeCharacter.charKostco.length > 0) {
+                                turnIncrement()
+                            } else if (localState.currentChallenge.storyBonus > 0) {
+                                turnIncrement('STORY')
+                            } else if (localState.currentChallenge.noAssist) {
+                                turnIncrement('SCENE')
+                            } else {
+                                turnIncrement('PREASSIST')
+                            }
                         }
                         break;
                     case 'ITEMS':
                         console.log('did things with items')
-                        console.log('did the selected challenge have a story prompt?')
-                        console.log('if yes, turnIncrement()')
-                        console.log("if no, turnIncrement('PREASSIST')")
-                        turnIncrement()
+                        if (localState.currentChallenge.storyBonus > 0) {
+                            turnIncrement()
+                        } else {
+                            turnIncrement('PREASSIST')
+                        }
                         break;
                     case 'STORY':
-                        console.log('told the story')
+                        addStoryStrength(localState.currentChallenge.storyBonus)
                         turnIncrement()
                         break;
                     case 'PREASSIST':
-                        console.log('someone may have spent action token')
-                        console.log('need to know if yes, so that player tells PRE_ASSIST_SCENE')
                         turnIncrement()
                         break;
                     case 'SCENE':
                         if (cloudState.activeAssistTokens.length > 0) {
                             turnIncrement()
                         } else {
-                            turnIncrement('ROLL')
+                            turnIncrement('ROLLONE')
                         }
-                        console.log('Player set the scene')
                         break;
                     case 'PRE_ASSIST_SCENE':
                         if (cloudState.activeAssistTokens.length === 0) {
                             turnIncrement()
+                        } else {
+                            addAssistBonus(cloudState.activeAssistTokens[0], 'preAssist')
+                            removeFirstActiveAssistToken()
+                            if (cloudState.activeAssistTokens.length === 0) {
+                                turnIncrement()
+                            }
                         }
 
                         break;
-                    case 'ROLL':
-                        console.log('really need to find a rolling dice animation')
-                        console.log('add roll to strength')
-                        console.log('if strength is lower than challenge number, turnIncrement()')
-                        console.log("otherwise turnIncrement('DESCRIBE')")
+                    case 'ROLLONE':
+                        rollDice('rollOne')
+                        if (localState.currentChallenge.advantage ||
+                            localState.currentChallenge.disadvantage
+                        ) {
+                            turnIncrement()
+                        } else {
+                            turnIncrement('EVALUATE')
+                        }
+                        break;
+                    case 'ROLLTWO':
+                        rollDice('rollTwo')
                         turnIncrement()
                         break;
+                    case 'EVALUATE':
+                        if ((cloudState.strength.total >=
+                            cloudState.currentTurn.difficulty) ||
+                            (localState.currentChallenge.noAssist)
+                        ) {
+                            turnIncrement('DESCRIBE')
+                        } else {
+                            turnIncrement()
+                        }
+                        break;
                     case 'POSTASSIST':
+
                         console.log('someone may have spent action token')
                         console.log('need to know if yes, so that player tells POST_ASSIST_SCENE')
                         turnIncrement()
@@ -116,6 +179,9 @@ const clickForNext = ({ cloudState, localState }) => {
                         break;
                     case 'PASS':
                         passTheTurn()
+                        break;
+                    default:
+                        break;
                 }
                 break;
             case 'END':
@@ -124,26 +190,23 @@ const clickForNext = ({ cloudState, localState }) => {
                 console.log('hit default on clickForNext, pls fix');
                 reloadPage()
         }
-    } else if (
-        // If the game is on pre or post assist scene stage
-        // and at least one player is left in the assist token array
-        // the player at the beginning of the assist token array
-        // can click the button to indicate that they have told
-        // how they are attempting to assist the current active player
-        assistScenes.includes(cloudState.currentTurn.turnStage) &&
-        cloudState.activeAssistTokens.length > 0) {
-
-        console.log('Assist player(s) tell how they helped')
-        const updatedActiveAssistTokens = cloudState.activeAssistTokens.slice(1)
-        startUpdateAssistTokens(
-            cloudState.static.host,
-            cloudState.static.key,
-            updatedActiveAssistTokens
-        )
-        if (updatedActiveAssistTokens.length === 0) {
-            turnIncrement()
-        }
     }
+    //  else if (
+    //     // If the game is on pre or post assist scene stage
+    //     // and at least one player is left in the assist token array
+    //     // the player at the beginning of the assist token array
+    //     // can click the button to indicate that they have told
+    //     // how they are attempting to assist the current active player
+    //     assistScenes.includes(cloudState.currentTurn.turnStage) &&
+    //     cloudState.activeAssistTokens.length > 0) {
+
+    //     console.log('Assist player(s) tell how they helped')
+    //     const updatedActiveAssistTokens = cloudState.activeAssistTokens.slice(1)
+    //     updateActiveAssistTokens(updatedActiveAssistTokens)
+    //     if (updatedActiveAssistTokens.length === 0) {
+    //         turnIncrement()
+    //     }
+    // }
 
 
 

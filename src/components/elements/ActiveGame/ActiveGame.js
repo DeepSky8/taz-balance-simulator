@@ -1,15 +1,15 @@
-import React, { useEffect, useReducer, useState } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import React, { useEffect, useReducer } from "react";
+import { useNavigate } from "react-router-dom";
 import { off, onValue, ref } from "firebase/database";
 import {
     startNewRound,
     startRESETActionTokens,
     startSetActivePlayer,
-    startSyncCard,
     startUpdateActiveLocation,
     startUpdateActiveRelic,
     startUpdateActiveVillain,
     startUpdateBriefingStage,
+    startUpdateTotalStrength,
     startUpdateGameStage,
     startUpdateTurnStage,
     startUploadDeckCard,
@@ -23,36 +23,32 @@ import {
     updatePlayerList,
     updateReadyList,
     updateReadyStatus,
+    updateStrength,
+    clearStrength,
+    startSetCharacterStrength,
+    startAddStoryBonus,
 } from "../../../actions/cloudActions";
 import { auth, db } from "../../../firebase/firebase";
 import { defaultCloudState, cloudReducer } from "../../../reducers/cloudReducer";
-// import AuthWrapper from "../../Authentication/AuthWrapper";
-// import ActiveCharWrapper from "./ActiveCharWrapper";
-// import IntroDescription from "./introductions/IntroDescription";
-// import IntroCharacter from './introductions/IntroCharacter';
 import incrementStage from "../../functions/incrementStage";
-// import MissionBriefing from "./missionBriefing/MissionBriefing";
-// import Playing from "./playing/Playing";
-// import TurnStep from './turnStep/TurnStep';
-// import BriefingComplete from "./missionBriefing/BriefingComplete";
 import incrementTurn from "../../functions/incrementTurn";
 import { briefingStages } from "../../functions/briefingStages";
 import challengeDeck from "../../functions/challengeDeck";
-// import ChallengeFrame from "./playing/challenges/ChallengeFrame";
-// import VillainChallenge from "./playing/challenges/VillainChallenge";
 import ActiveGameRouter from "../../../routers/ActiveGameRouter";
-import { 
+import {
     clearActiveCharacter,
-    clearCurrentChallenge, 
-    updateActiveCharacter, 
-    updateCurrentChallenge, 
-    updateCurrentCharacterID, 
+    clearCurrentChallenge,
+    updateActiveCharacter,
+    updateCurrentChallenge,
+    updateLocalCharacterID,
     updateHostKey,
-    updateLocalCharacter,  
+    updateLocalCharacter,
 } from "../../../actions/localActions";
 import { defaultLocalState, localStateReducer } from "../../../reducers/localReducer";
+import { stats } from "../CharacterSheet/classes/charInfo";
+import { isCompositeComponent } from "react-dom/test-utils";
 
-const ActiveGame = ({ }) => {
+const ActiveGame = () => {
     let navigate = useNavigate()
 
     const introStages = ['INTRO', 'BRIEF', 'BACKSTORY']
@@ -99,7 +95,7 @@ const ActiveGame = ({ }) => {
 
     // User listener, updated a single time:
     // Current Game: host and key
-    // Current Character ID (localState.currentCharacterID)
+    // Current Character ID (localState.localCharacterID from User.currentCharacterID)
     useEffect(() => {
         onValue(ref(db, 'users/' + auth.currentUser.uid + '/currentGame'),
             (snapshot) => {
@@ -115,7 +111,7 @@ const ActiveGame = ({ }) => {
         onValue(ref(db, 'users/' + auth.currentUser.uid + '/currentCharacterID'),
             (snapshot) => {
                 if (snapshot.exists()) {
-                    dispatchLocalState(updateCurrentCharacterID(snapshot.val()))
+                    dispatchLocalState(updateLocalCharacterID(snapshot.val()))
                 } else {
                     navigate('/gameSetup')
                 }
@@ -426,6 +422,18 @@ const ActiveGame = ({ }) => {
                 dispatchCloudState(updateAssistTokensList(assistTokenList))
             })
 
+        // Ongoing Strength listener
+        onValue(ref(db, 'savedGames/' + localState.hostKey + '/strength'),
+            (snapshot) => {
+
+                if (snapshot.exists()) {
+                    dispatchCloudState(updateStrength(snapshot.val()))
+                } else {
+                    dispatchCloudState(clearStrength())
+                }
+
+            })
+
         return () => {
             off(ref(db, 'savedGames/' + localState.hostKey + '/static'))
             off(ref(db, 'savedGames/' + localState.hostKey + '/active'))
@@ -436,29 +444,30 @@ const ActiveGame = ({ }) => {
             off(ref(db, 'savedGames/' + localState.hostKey + '/hasActionToken'))
             off(ref(db, 'savedGames/' + localState.hostKey + '/activeActionTokens'))
             off(ref(db, 'savedGames/' + localState.hostKey + '/activeAssistTokens'))
-
+            off(ref(db, 'savedGames/' + localState.hostKey + '/strength'))
         }
 
     }, [localState.hostKey])
 
     // Ongoing local character listener
     useEffect(() => {
-        if (localState.currentCharacterID !== '') {
-            onValue(ref(db, 'characters/' + auth.currentUser.uid + '/' + localState.currentCharacterID),
+        if (localState.localCharacterID !== '') {
+            onValue(ref(db, 'characters/' + auth.currentUser.uid + '/' + localState.localCharacterID),
                 (snapshot) => {
                     if (snapshot.exists()) {
                         // dispatchLocalCharObject(snapshot.val())
+
                         dispatchLocalState(updateLocalCharacter(snapshot.val()))
                     }
                 })
         }
 
         return () => {
-            if (localState.currentCharacterID !== '') {
-                off(ref(db, 'characters/' + auth.currentUser.uid + '/' + localState.currentCharacterID))
+            if (localState.localCharacterID !== '') {
+                off(ref(db, 'characters/' + auth.currentUser.uid + '/' + localState.localCharacterID))
             }
         }
-    }, [localState.currentCharacterID])
+    }, [localState.localCharacterID])
 
     // Compares the UIDs on the readyList with the list of players in the game
     // The next player in the playerList who isn't on the readyList is set as the activePlayer
@@ -472,13 +481,14 @@ const ActiveGame = ({ }) => {
             }
         })
         if (remainingPlayers.length > 0) {
-            startSetActivePlayer(cloudState.static.host, cloudState.static.key, remainingPlayers[0].uid, remainingPlayers[0].currentCharacterID)
+            startSetActivePlayer(localState.hostKey, remainingPlayers[0].uid, remainingPlayers[0].currentCharacterID)
         }
         if ((cloudState.playerList.length !== 0) &&
             (cloudState.playerList.length === cloudState.readyList.length)
         ) {
             startNewRound(localState.hostKey)
             startRESETActionTokens(localState.hostKey, cloudState.playerList)
+            // Dispatches locally only
             dispatchCloudState(updateReadyStatus(true))
         }
     }, [cloudState.readyList])
@@ -515,14 +525,92 @@ const ActiveGame = ({ }) => {
     // mirror the localChar state into the activeCharacterObject
     useEffect(() => {
         if (cloudState.active.activeCharID &&
-            (cloudState.active.activeCharID === localState.currentCharacterID)
+            (cloudState.active.activeCharID === localState.localCharacterID)
         ) {
             // dispatchActiveCharacterObject(localCharObject)
             dispatchLocalState(clearActiveCharacter())
             dispatchLocalState(updateActiveCharacter(localState.localCharacter))
         }
 
-    }, [cloudState.active.activeCharID, localState.currentCharacterID])
+    }, [cloudState.active.activeCharID, localState.localCharacterID, localState.localCharacter])
+
+    const calcDisAdvantage = (advantage, disadvantage, rollOne, rollTwo) => {
+        let rollResult = 0
+        if (rollOne) { rollResult = rollOne }
+        if (advantage && rollTwo) {
+            rollResult = (rollOne > rollTwo ? rollOne : rollTwo)
+        }
+        if (disadvantage && rollTwo) {
+            rollResult = (rollOne < rollTwo ? rollOne : rollTwo)
+        }
+        return rollResult
+    }
+
+    // Calculate current active player strength 
+    // taking into effect current challenge, 
+    // any effects that add to strength,
+    // and dice rolls
+    // and send to cloud
+    useEffect(() => {
+        if (auth.currentUser.uid === cloudState.active.activeUID) {
+
+            // Does the current challenge have any specific challenge types?
+            const currentChallengeTypes = [];
+            if (localState.currentChallenge.monster) { currentChallengeTypes.push('Monster') }
+            if (localState.currentChallenge.spooky) { currentChallengeTypes.push('Spooky') }
+            if (localState.currentChallenge.magic) { currentChallengeTypes.push('Magic') }
+            if (localState.currentChallenge.trap) { currentChallengeTypes.push('Trap') }
+
+            // Get the strength info from the active character
+            let baseStrength = 0;
+            let specialStrength = 0;
+            let specialTarget = '';
+            if (localState.activeCharacter.charName) {
+                baseStrength = stats[localState.activeCharacter.classCode].strength;
+                specialStrength = stats[localState.activeCharacter.classCode].specialStrength;
+                specialTarget = stats[localState.activeCharacter.classCode].specialTarget
+            }
+
+            // If the active character is extra strong against the current challenge
+            // use their special strength instead of base strength
+            const characterStrength = currentChallengeTypes.includes(specialTarget) ?
+                (specialStrength)
+                :
+                (baseStrength);
+
+            // Destructure current assistive strength elements
+            // and total them up
+            const { assist, ongoingItem, singleUseItem, story } = cloudState.strength
+            const totalAddStrength = assist + ongoingItem + singleUseItem + story
+
+            // Destructure the roll data, as well as whether the current challenge requires
+            // advantage/disadvantage
+            const { rollOne, rollTwo } = cloudState.currentTurn
+            const { advantage, disadvantage } = localState.currentChallenge
+
+            // Based on dis/advantage and the presence/lack of rolls, 
+            // calculate the final roll result
+            const rollResult = calcDisAdvantage(advantage, disadvantage, rollOne, rollTwo)
+
+            // Total everything together and send it to the cloud
+            const totalUpdatedStrength = characterStrength + totalAddStrength + rollResult
+
+
+            if (localState.hostKey) {
+                startSetCharacterStrength(localState.hostKey, characterStrength)
+                startUpdateTotalStrength(localState.hostKey, totalUpdatedStrength)
+
+            }
+        }
+    },
+        [
+            localState.currentChallenge,
+            localState.activeCharacter,
+            cloudState.strength,
+            cloudState.currentTurn.rollOne,
+            cloudState.currentTurn.rollTwo
+        ])
+
 
     const incrementGameStage = () => {
         startUpdateGameStage(localState.hostKey, incrementStage(cloudState.active.gameStage))
@@ -620,14 +708,6 @@ const ActiveGame = ({ }) => {
     //     console.log('host', localState.hostKey.split('/', 1))
 
     // })
-
-    // return (
-    //     <div>
-    //         <ActiveGameRouter
-    //             cloudState={cloudState}
-    //         />
-    //     </div>
-    // )
 
     return (
         <div>

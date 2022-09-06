@@ -3,7 +3,7 @@ import { updateCard } from "../../../../../actions/cardActions";
 import { cardReducer, defaultCardState } from "../../../../../reducers/cardReducer";
 import { images } from "./imageInfo";
 
-const RelicChallenge = ({ relic, modifierVillain, modifierLocation, challengePicked }) => {
+const RelicChallenge = ({ relic, modifierVillain, modifierLocation, stage, challengePicked }) => {
 
 
     const difficulty = parseInt(relic.difficulty) + parseInt(modifierVillain) + parseInt(modifierLocation)
@@ -14,9 +14,11 @@ const RelicChallenge = ({ relic, modifierVillain, modifierLocation, challengePic
             <span>
                 {relic.villainModifier > 0 && '   +'}{relic.villainModifier > 0 && relic.villainModifier}
 
-                <button
+                {stage === 'CHALLENGE' && <button
                     onClick={() => { challengePicked() }}
-                >{difficulty}</button>
+                >{difficulty}</button>}
+
+                {stage !== 'CHALLENGE' && <span>{'  ' + difficulty + '  '}</span>}
 
 
                 {relic.locationModifier > 0 && '   +'}{relic.locationModifier > 0 && relic.locationModifier}

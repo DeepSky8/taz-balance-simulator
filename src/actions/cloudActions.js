@@ -120,6 +120,15 @@ export const updateAssistTokensList = (activeAssistTokens) => ({
     activeAssistTokens
 })
 
+export const updateStrength = (strength) => ({
+    type: 'UPDATE_STRENGTH',
+    strength
+})
+
+export const clearStrength = () => ({
+    type: 'CLEAR_STRENGTH'
+})
+
 // Cloud Actions
 
 export const startGetKey = (uid) => {
@@ -316,10 +325,24 @@ export const startUpdateTurnStage = (hostKey, turnStage) => {
         })
 }
 
-export const startSetActivePlayer = (uid, key, activeUID, activeCharID) => {
+export const startResetTurnElements = (hostKey) => { 
     const updates = {};
-    updates['savedGames/' + uid + '/' + key + `/active/activeUID`] = activeUID;
-    updates['savedGames/' + uid + '/' + key + `/active/activeCharID`] = activeCharID;
+    updates['savedGames/' + hostKey + `/currentTurn/selectedChallenge`] = '';
+    updates['savedGames/' + hostKey + `/currentTurn/difficulty`] = 0;
+    updates['savedGames/' + hostKey + `/currentTurn/rollOne`] = null;
+    updates['savedGames/' + hostKey + `/currentTurn/rollTwo`] = null;
+    updates['savedGames/' + hostKey + `/currentTurn/turnStage`] = 'DESCRIBEONE';
+    updates['savedGames/' + hostKey + `/strength`] = null;
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log(`Error resetting turn elements:`, error)
+        })
+}
+
+export const startSetActivePlayer = (hostKey, activeUID, activeCharID) => {
+    const updates = {};
+    updates['savedGames/' + hostKey + `/active/activeUID`] = activeUID;
+    updates['savedGames/' + hostKey + `/active/activeCharID`] = activeCharID;
     update(ref(db), updates)
         .catch((error) => {
             console.log(`Error updating turnStage:`, error)
@@ -365,9 +388,9 @@ export const startUNspendAssistToken = (uid, key, updatedActiveAssistTokens) => 
         })
 }
 
-export const startUpdateAssistTokens = (uid, key, updatedActiveAssistTokens) => {
+export const startUpdateAssistTokens = (hostKey, updatedActiveAssistTokens) => {
     const updates = {};
-    updates['savedGames/' + uid + '/' + key + `/activeAssistTokens`] = updatedActiveAssistTokens;
+    updates['savedGames/' + hostKey + `/activeAssistTokens`] = updatedActiveAssistTokens;
     update(ref(db), updates)
         .catch((error) => {
             console.log(`Error updating assist token array:`, error)
@@ -444,12 +467,21 @@ export const startSyncCard = (uid, key, deckCode, unComplete, deckItem) => {
         })
 }
 
-export const startPickActiveChallenge = (hostKey, codeKey) => {
+export const startPickActiveChallenge = (hostKey, text) => {
     const updates = {}
-    updates['savedGames/' + hostKey + '/currentTurn/selectedChallenge'] = codeKey
+    updates['savedGames/' + hostKey + '/currentTurn/selectedChallenge'] = text
     update(ref(db), updates)
         .catch((error) => {
             console.log('Did not set active Challenge in cloud: ', error)
+        })
+}
+
+export const startSetCurrentDifficulty = (hostKey, difficulty) => {
+    const updates = {}
+    updates['savedGames/' + hostKey + '/currentTurn/difficulty'] = difficulty
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not set current difficulty in cloud: ', error)
         })
 }
 
@@ -477,5 +509,82 @@ export const startUpdateActiveLocation = (hostKey, location) => {
     update(ref(db), updates)
         .catch((error) => {
             console.log('Did not set active location in cloud: ', error)
+        })
+}
+
+
+// Strength
+export const startSetCharacterStrength = (hostKey, strength) => {
+    const updates = {}
+    updates['savedGames/' + hostKey + '/strength/character'] = strength
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not set character Strength: ', error)
+        })
+}
+
+export const startAddStoryBonus = (hostKey, storyBonus) => {
+    const updates = {}
+    updates['savedGames/' + hostKey + '/strength/story'] = storyBonus
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not add story bonus Strength: ', error)
+        })
+}
+
+export const startUpdateAssistBonus = (hostKey, assist) => {
+    const updates = {}
+    updates['savedGames/' + hostKey + '/strength/assist'] = assist
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not update assist bonus Strength: ', error)
+        })
+}
+
+export const startUpdateSingleUseItemBonus = (hostKey, itemStrength) => {
+    const updates = {}
+    updates['savedGames/' + hostKey + '/strength/singleUseItem'] = itemStrength
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not update single use item Strength: ', error)
+        })
+}
+
+export const startUpdateOngoingItemBonus = (hostKey, itemStrength) => {
+    const updates = {}
+    updates['savedGames/' + hostKey + '/strength/ongoingItem'] = itemStrength
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not update ongoing item Strength: ', error)
+        })
+}
+
+
+export const startUpdateTotalStrength = (hostKey, strength) => {
+    const updates = {}
+    updates['savedGames/' + hostKey + '/strength/total'] = strength
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not update total Strength: ', error)
+        })
+}
+
+// Strength
+
+export const startSaveDiceRoll = (hostKey, rollLocation, newRoll) => {
+    const updates = {}
+    updates['savedGames/' + hostKey + '/currentTurn/' + rollLocation] = newRoll
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not save Roll: ', error)
+        })
+}
+
+export const startToggleRollAnimation = (hostKey, toggle) => {
+    const updates = {}
+    updates['savedGames/' + hostKey + '/currentTurn/showRoll'] = toggle
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not start Roll animation: ', error)
         })
 }

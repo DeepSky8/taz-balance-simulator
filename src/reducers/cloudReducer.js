@@ -29,9 +29,13 @@ const defaultCloudState = {
         locationTwo: '',
     },
     currentTurn: {
+        difficulty: 0,
         turnStage: 'default',
         selectedChallenge: '',
         // selectedChallenge contains text 'villain' or 'relic' or 'location' or ''
+        showRoll: false,
+        rollOne: null,
+        rollTwo: null,
         villain: {
             back: defaultCardState,
             challengeKey: '',
@@ -72,6 +76,15 @@ const defaultCloudState = {
         // uid
     ],
     surprises: [],
+    strength: {
+        assist: 0,
+        character: 0,
+        ongoingItem: 0,
+        rollResult: 0,
+        singleUseItem: 0,
+        story: 0,
+        total: 0
+    },
     hasActionToken: [
         //{
         // uid
@@ -245,7 +258,7 @@ const cloudReducer = (state, action) => {
                 ...defaultCloudState,
                 ...state,
                 currentTurn: {
-                    ...state.currentTurn,
+                    // ...state.currentTurn,
                     ...action.currentTurn
                 }
             }
@@ -272,6 +285,28 @@ const cloudReducer = (state, action) => {
                 ...defaultCloudState,
                 ...state,
                 activeAssistTokens: action.activeAssistTokens
+            }
+        case 'UPDATE_STRENGTH':
+            return {
+                ...defaultCloudState,
+                ...state,
+                strength: {
+                    ...state.strength,
+                    ...action.strength
+                }
+            }
+        case 'CLEAR_STRENGTH':
+            return {
+                ...defaultCloudState,
+                ...state,
+                strength: {
+                    character: 0,
+                    story: 0,
+                    assist: 0,
+                    singleUseItem: 0,
+                    ongoingItem: 0,
+                    total: 0
+                }
             }
         default:
             return state

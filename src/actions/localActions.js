@@ -3,9 +3,14 @@ export const updateHostKey = (hostKey) => ({
     hostKey
 })
 
-export const updateCurrentCharacterID = (currentCharacterID) => ({
-    type: 'UPDATE_CURRENT_CHARACTER_ID',
-    currentCharacterID
+export const updateLocalCharacterID = (localCharacterID) => ({
+    type: 'UPDATE_LOCAL_CHARACTER_ID',
+    localCharacterID
+})
+
+export const updateActiveCharacterID = (activeCharacterID) => ({
+    type: 'UPDATE_ACTIVE_CHARACTER_ID',
+    activeCharacterID
 })
 
 export const updateLocalCharacter = (localCharacter) => ({
@@ -18,7 +23,7 @@ export const updateActiveCharacter = (activeCharacter) => ({
     activeCharacter
 })
 
-export const clearActiveCharacter = () => ({ 
+export const clearActiveCharacter = () => ({
     type: 'CLEAR_ACTIVE_CHARACTER'
 })
 
@@ -30,3 +35,7 @@ export const updateCurrentChallenge = (currentChallenge) => ({
 export const clearCurrentChallenge = () => ({
     type: 'CLEAR_CURRENT_CHALLENGE'
 })
+
+// export const resetLocalReducer = () => ({ 
+//     type: 'RESET_REDUCER'
+// })

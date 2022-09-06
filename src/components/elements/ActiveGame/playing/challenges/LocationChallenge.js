@@ -1,7 +1,7 @@
 import React from "react";
 import { images } from "./imageInfo";
 
-const LocationChallenge = ({ location, modifier, challengePicked }) => {
+const LocationChallenge = ({ location, modifier, stage, challengePicked }) => {
     const difficulty = parseInt(location.difficulty) + parseInt(modifier)
 
     return (
@@ -10,9 +10,11 @@ const LocationChallenge = ({ location, modifier, challengePicked }) => {
             <span>
                 {location.relicModifier > 0 && '   +'}{location.relicModifier > 0 && location.relicModifier}
 
-                <button
+                {stage === 'CHALLENGE' && <button
                     onClick={() => { challengePicked() }}
-                >{difficulty}</button>
+                >{difficulty}</button>}
+
+                {stage !== 'CHALLENGE' && <span>{'  ' + difficulty}</span>}
 
 
             </span>

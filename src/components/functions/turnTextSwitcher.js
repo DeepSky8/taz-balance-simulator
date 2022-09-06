@@ -17,9 +17,12 @@ const useItems = 'Do you want to use an item?';
 const tellStory = 'Complete the story prompt for additional strength';
 const askAssist = 'You may request assistance from your team';
 const describeScene = `Based on the three active Challenges, what's happening right now?`
-const setScene = 'Set the scene; what will you try to do?';
+const setScene1 = 'Set the scene; what will ';
+const setScene2 = ' try to do?';
 const assistScene = `, how do you help?`;
 const rollDice = 'Click here to roll the die!';
+const rollAgain = 'Roll again; you have '
+const clickProceed = 'Click to proceed'
 const describeAction = 'Based on your roll, what happens?';
 const kostco = 'Time to shop at Fantasy Kostco!';
 const passTheTurn = 'Click here to pass the turn, ';
@@ -46,7 +49,7 @@ const turnTextSwitcher = (cloudState, localState, activeAssistPlayer) => {
             return transportBrief;
         case 'CHALLENGES':
             switch (cloudState.currentTurn.turnStage) {
-                case 'DESCRIBE':
+                case 'DESCRIBEONE':
                     return describeScene
                 case 'CHALLENGE':
                     const selector = cloudState.currentTurn.selectedChallenge
@@ -57,18 +60,29 @@ const turnTextSwitcher = (cloudState, localState, activeAssistPlayer) => {
                         const cardName = localState.currentChallenge.cardName
                         return localState.activeCharacter.charName + challengeSelected + cardName;
                     }
+                    break;
                 case 'ITEMS':
                     return useItems;
+
                 case 'STORY':
                     return tellStory;
                 case 'PREASSIST':
                     return askAssist;
                 case 'SCENE':
-                    return setScene;
+                    return setScene1 + localState.activeCharacter.charName + setScene2;
                 case 'PRE_ASSIST_SCENE':
                     return activeAssistPlayer + assistScene;
-                case 'ROLL':
-                    return rollDice;
+                case 'ROLLONE':
+                    return rollDice
+                case 'ROLLTWO':
+                    if (localState.currentChallenge.advantage ||
+                        localState.currentChallenge.disadvantage) {
+                        const disAdvan = localState.currentChallenge.advantage ? 'advantage!' : 'disadvantage.'
+                        return rollAgain + disAdvan
+                    }
+                    break;
+                case 'EVALUATE':
+                    return clickProceed
                 case 'POSTASSIST':
                     return askAssist;
                 case 'POST_ASSIST_SCENE':

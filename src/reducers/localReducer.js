@@ -49,6 +49,7 @@ const defaultLocalState = {
         // wizardAssistFame: '',
         // wizardAssistFameHelps: '',
     },
+    activeCharacterID: '',
     activeCharacter: {
         ...defaultCharState
     },
@@ -117,20 +118,25 @@ const localStateReducer = (state, action) => {
                 ...state,
                 hostKey: action.hostKey.host + '/' + action.hostKey.key
             }
-        case 'UPDATE_CURRENT_CHARACTER_ID':
+        case 'UPDATE_LOCAL_CHARACTER_ID':
             return {
                 ...state,
-                currentCharacterID: action.currentCharacterID
+                localCharacterID: action.localCharacterID
+            }
+        case 'UPDATE_ACTIVE_CHARACTER_ID':
+            return {
+                ...state,
+                activeCharacterID: action.activeCharacterID
             }
         case 'UPDATE_LOCAL_CHARACTER':
             return {
                 ...state,
-                localCharacter: action.localCharacter
+                localCharacter: { ...action.localCharacter }
             }
         case 'UPDATE_ACTIVE_CHARACTER':
             return {
                 ...state,
-                activeCharacter: action.activeCharacter
+                activeCharacter: { ...action.activeCharacter }
             }
         case 'CLEAR_ACTIVE_CHARACTER':
             return {
@@ -140,13 +146,17 @@ const localStateReducer = (state, action) => {
         case 'UPDATE_CURRENT_CHALLENGE':
             return {
                 ...state,
-                currentChallenge: action.currentChallenge
+                currentChallenge: { ...action.currentChallenge }
             }
         case 'CLEAR_CURRENT_CHALLENGE':
             return {
                 ...state,
                 currentChallenge: {}
             }
+        // case 'RESET_REDUCER':
+        //     return {
+
+        //     }
         default:
             return {
                 ...state

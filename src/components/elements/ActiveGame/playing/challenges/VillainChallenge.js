@@ -3,7 +3,7 @@ import { updateCard } from "../../../../../actions/cardActions";
 import { cardReducer, defaultCardState } from "../../../../../reducers/cardReducer";
 import { images } from "./imageInfo";
 
-const VillainChallenge = ({ villain, modifier, challengePicked }) => {
+const VillainChallenge = ({ villain, modifier, stage, challengePicked }) => {
     const difficulty = parseInt(villain.difficulty) + parseInt(modifier)
 
     return (
@@ -11,9 +11,11 @@ const VillainChallenge = ({ villain, modifier, challengePicked }) => {
 
             <span>
 
-                <button
+                {stage === 'CHALLENGE' && <button
                     onClick={() => { challengePicked() }}
-                >{difficulty}</button>
+                >{difficulty}</button>}
+
+                {stage !== 'CHALLENGE' && <span>{difficulty + '  '}</span>}
 
 
                 {villain.relicModifier > 0 && '   +'}{villain.relicModifier > 0 && villain.relicModifier}
