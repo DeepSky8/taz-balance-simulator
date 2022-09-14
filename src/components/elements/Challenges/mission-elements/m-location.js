@@ -47,6 +47,24 @@ const locationObjectsArray = [
         promptFlavor4: ` to a cargo car on this train, and you have to reclaim it before the train reaches the end of the line.`,
         prompt1: `What is the name of this fantasy train?`,
         prompt2: `Where is it going?`,
+    },
+    {
+        challengeName: 'The Carnival',
+        challengeCode: 'l4',
+        challengeFlavor: "The Carnival boasts an astonishing array of fried foods, overpriced drinks, and exotic entertainment. Can you find the Relic before losing all your money playing 'Whack-A-Gerblin'?",
+        promptFlavor1: "The Carnival boasts an astonishing array of fried foods, overpriced drinks, and exotic entertainment. Can you find ",
+        promptFlavor2: "before losing all your money playing 'Whack-A-Gerblin'?",
+        prompt1: `What's an interesting detail about the Carnival?`,
+        prompt2: `What is the Carnival called?`,
+    },
+    {
+        challengeName: 'The Race',
+        challengeCode: 'l5',
+        challengeFlavor: "You have to join this battlewagon race to catch the Villain -- and if the race ends, they escape!",
+        promptFlavor1: 'You have to join this battlewagon race to catch ',
+        promptFlavor2: ' -- and if the race ends, they escape!',
+        prompt1: `What does your battlewagon look like?`,
+        prompt2: `Where is the race?`,
     }
 ]
 

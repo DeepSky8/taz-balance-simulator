@@ -54,7 +54,60 @@ const villainObjectsArray = [
         promptFlavor2: '.',
         prompt1: 'Are these villains working together, or are they independent?',
         prompt2: 'Do they have a cool team name?'
-    }
+    },
+    {
+        challengeName: 'The Crew',
+        challengeCode: 'v5',
+        challengeFlavor: 'The Crew are a bunch of bullies with matching outfits and a shared love of battlewagons and inappropriate calendars.',
+        promptFlavor1: 'The Crew are a bunch of bullies with matching outfits and a shared love of battlewagons and inappropriate calendars.',
+        promptFlavor2: '.',
+        prompt1: "What's the distinctive theme of the Crew?",
+        prompt2: 'What do they call themselves?'
+    },
+    {
+        challengeName: 'The Giant',
+        challengeCode: 'v6',
+        challengeFlavor: "The Giant is a big problem ... because they're a giant, get it? To find the Relic, you must make your way through the Giant's home, which is filled with enormous threats!",
+        promptFlavor1: "The Giant is a big problem ... because they're a giant, get it? To find ",
+        promptFlavor2: ", you must make your way through the Giant's home, which is filled with enormous threats!",
+        prompt1: "What does the Giant look like?",
+        prompt2: "What's their name?"
+    },
+]
+
+const uniqueVillains = [
+// Band of Rogues
+
+// When you defeat this challenge, return it to the deck. 
+// (three cards later, take Finale into account)
+'-N96iFu7Onl7Vexblr7R',
+
+// If you fail to defeat this challenge, it will show up elsewhere.
+// (card says top of the challenge deck to the left)
+'-N96jp2fy4SEKdWBDY-3',
+
+// Each player asks the player to their left a question; 
+// you get +1 strength for each correct answer!
+'-N96k3ixG_0q9YeEVdx_',
+
+// Legion's Difficulty is increased by 2 
+// for each additional Spooky challenge in play.
+'-N96kJ5fZhwkSxYnxDEv',
+
+// If you fail to defeat this challenge, 
+// return another challenge to play.
+'-N96mASuKgqoyie_emui',
+
+// When you defeat this challenge, you lose 3 health (to a minimum of 1)
+'-N96mfmE7qSnZNAZtdZU',
+
+// This challenge starts with two difficulty reduction counters. 
+// Defeat it to remove a difficulty reduction counter. 
+// This challenge remains in play until you defeat it 
+// without any difficulty reduction counters remaining.
+'-N96nGVXYaaNzR4YfqSw',
+
+
 ]
 
 // const villainTitleArray = [

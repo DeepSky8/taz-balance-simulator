@@ -73,14 +73,14 @@ const cardCreator = (protoCard) => {
 const extractFinalCard = (challengeArray) => {
     let front;
     let back;
-    const restOfProtoCards = []
+    const workingArray = []
     challengeArray.forEach((protoCard) => {
         if (protoCard.boss) {
             front = protoCard
         } else if (protoCard.finale) {
             back = protoCard
         } else {
-            restOfProtoCards.push(protoCard)
+            workingArray.push(protoCard)
         }
     })
 
@@ -89,21 +89,19 @@ const extractFinalCard = (challengeArray) => {
         back
     }
 
-    return { finalCard, restOfProtoCards }
+    return { finalCard, workingArray }
 }
 
 
 const challengeDeck = (challengeCode, protoCardArray) => {
     const newDeck = [];
     const protoDeck = [];
-    const numericalDecks = ['v0', 'v2', 'v3', 'v4', 'l0', 'l1', 'l2', 'l3']
-    const randomDecks = ['v1', 'r0', 'r1', 'r2', 'r3']
+    const numericalDecks = ['v0', 'v2', 'v3', 'v4', 'v5', 'v6', 'l0', 'l1', 'l2', 'l3', 'l4', 'l5']
+    const randomDecks = ['v1', 'r0', 'r1', 'r2', 'r3', 'r4', 'r5']
 
     // Method finds the challenges marked Boss and Finale, pairs them in an object
     // and returns that object as well as the remaining challenges in an array
-    const extract = extractFinalCard(protoCardArray)
-    const workingArray = extract.restOfProtoCards;
-    const finalCard = extract.finalCard
+    const { finalCard, workingArray } = extractFinalCard(protoCardArray)
 
     // Two basic deck creation processes
     if (numericalDecks.includes(challengeCode)) {
@@ -112,15 +110,17 @@ const challengeDeck = (challengeCode, protoCardArray) => {
         // use this process
         const tempPairedProtoCards = [];
 
-        // cardMatcher find the cards that are paired (via cardKey and pairedWith fields)
+        // cardMatcher finds the cards that are paired 
+        // (via cardKey and pairedWith fields)
         // and places the paired protoCards in an array
-        const results = cardMatcher(workingArray)
+        const pairedCards = cardMatcher(workingArray)
 
-        results.finalMatchedPairs.forEach((pairedObject) => {
+        pairedCards.finalMatchedPairs.forEach((pairedObject) => {
             tempPairedProtoCards.push(cardCombiner(pairedObject.protoCardToMatch, pairedObject.matchedProtoCard))
         })
 
-        // After pairing up all the regular cards, put the final card on the end of the array
+        // After pairing up all the regular cards, 
+        // put the final card on the end of the array
         tempPairedProtoCards.push(finalCard)
 
         const tempSortedProtoCards = tempPairedProtoCards.sort((a, b) => (a.front.cardNumber - b.front.cardNumber))
@@ -183,14 +183,20 @@ export default challengeDeck
 // v2-The Dark Lord - numerical order
 // v3-The Dragon - numerical order
 // v4-The Band of Rogues - numerical order
+// v5-The Crew - numerical order
+// v6-The Giant - numerical order
 
 // r0-The Ring - randomized, face up
 // r1-The Idol - randomized, face up
 // r2-The Hoard - randomized, face up
 // r3-The Staff - randomized, face up
+// r4-The Sash - randomized, face up
+// r5-The Sword - randomized, face up
 
 // l0-The Cave - numerical order
 // l1-The Temple - numerical order
 // l2-The Tomb - numerical order
 // l3-The Train - numerical order
+// l4-The Carnival - numerical order
+// l5-The Race - numerical order
 

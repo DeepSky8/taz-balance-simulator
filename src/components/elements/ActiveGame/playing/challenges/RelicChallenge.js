@@ -35,7 +35,7 @@ const RelicChallenge = ({ relic, modifierVillain, modifierLocation, stage, chall
                 {relic.spooky && <img src={images.spooky} alt="Spooky Challenge" />}
                 {relic.magic && <img src={images.magic} alt="Magic Challenge" />}
                 {relic.trap && <img src={images.trap} alt="Trap Challenge" />}
-                {relic.noAssist && <img src={images.no_assist} alt="No Assist Challenge" />}
+                {relic.noAssist && <img src={images.noAssist} alt="No Assist Challenge" />}
                 {relic.doubleAssist && <img src={images.double_assist} alt="Double Assist Challenge" />}
 
             </span>

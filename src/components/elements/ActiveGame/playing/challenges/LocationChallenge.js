@@ -30,7 +30,7 @@ const LocationChallenge = ({ location, modifier, stage, challengePicked }) => {
                 {location.spooky && <img src={images.spooky} alt="Spooky Challenge" />}
                 {location.magic && <img src={images.magic} alt="Magic Challenge" />}
                 {location.trap && <img src={images.trap} alt="Trap Challenge" />}
-                {location.noAssist && <img src={images.no_assist} alt="No Assist Challenge" />}
+                {location.noAssist && <img src={images.noAssist} alt="No Assist Challenge" />}
                 {location.doubleAssist && <img src={images.double_assist} alt="Double Assist Challenge" />}
 
             </span>

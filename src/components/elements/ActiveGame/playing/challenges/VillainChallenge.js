@@ -32,7 +32,7 @@ const VillainChallenge = ({ villain, modifier, stage, challengePicked }) => {
                 {villain.spooky && <img src={images.spooky} alt="Spooky Challenge" />}
                 {villain.magic && <img src={images.magic} alt="Magic Challenge" />}
                 {villain.trap && <img src={images.trap} alt="Trap Challenge" />}
-                {villain.noAssist && <img src={images.no_assist} alt="No Assist Challenge" />}
+                {villain.noAssist && <img src={images.noAssist} alt="No Assist Challenge" />}
                 {villain.doubleAssist && <img src={images.double_assist} alt="Double Assist Challenge" />}
 
             </span>

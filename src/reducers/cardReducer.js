@@ -24,34 +24,76 @@ const defaultCardState = {
     trap: false,
     noAssist: false,
     doubleAssist: false,
+    noRoll: false,
+    chance: false,
     storyBonus: 0,
     storyPrompt: '',
+    italicText: '',
     effectText: '',
 
     // card effect elements
     hasEffect: false,
     completed: false,
-    autoComplete: false,
-    autoDefeat: false,
-    autoDiscard: false,
-    autoDamage: false,
-
-    kostcoDiscard: false,
-    requiresToken: false,
     requiresReroll: false,
+    advantage: false,
+    disadvantage: false,
+
+    discardSurprise: false,
+    requiresToken: false,
+
+    reencounterGerblin: false,
+
+    kostCoEffect: false,
+    discardKostCoDefeat: false,
+    discardKostCoDraw: false,
+    discardKostCoStrength: false,
+    discardKostCoStrengthBonus: 0,
+
+    specialType: false,
     gerblin: false,
+    crew: false,
+    giant: false,
 
     flipEffect: false,
     flipTarget: '',
     flipOnDefeat: false,
     flipOnDiscard: false,
     flipOnFail: false,
-
-    failedAttempts: 0,
-    counters: 0,
-    advantage: false,
-    disadvantage: false,
+    flipInsteadOfDefeat: false,
     flippable: true,
+
+    autoComplete: false,
+    autoDefeat: false,
+    autoDiscard: true,
+    autoDamage: false,
+
+    modifyEffect: false,
+    modifyMonster: 0,
+    modifySpooky: 0,
+    modifyMagic: 0,
+    modifyTrap: 0,
+
+    gainLifeEffect: false,
+    gainLifeDefeat: 0,
+    gainLifeDiscard: 0,
+    gainLifeReveal: 0,
+
+    loseLootEffect: false,
+    loseLootOnFail: false,
+    loseLootOnReveal: false,
+    loseLootOnDefeat: false,
+    loseLootOnDiscard: false,
+    reduceKostCoCost: false,
+    spendLootForEffect: false,
+    loseLootPoints: 0,
+
+    counterEffect: false,
+    counters: 0,
+    defeatZeroCounters: false,
+    failingAddsCounters: false,
+    failingRemovesCounters: false,
+    failCounterNumber: 0,
+    failedAttempts: 0,
 }
 
 const cardReducer = (state, action) => {
@@ -158,6 +200,18 @@ const cardReducer = (state, action) => {
                 doubleAssist: action.doubleAssist === 'true' ? true : false,
                 noAssist: action.doubleAssist === 'true' ? false : state.noAssist
             }
+        case 'UPDATE_NO_ROLL':
+            return {
+                ...state,
+                noRoll: action.noRoll === 'true' ? true : false,
+                chance: action.noRoll === 'true' ? false : state.chance
+            }
+        case 'UPDATE_CHANCE':
+            return {
+                ...state,
+                chance: action.chance === 'true' ? true : false,
+                noRoll: action.chance === 'true' ? false : state.noRoll
+            }
         case 'UPDATE_STORY_BONUS':
             return {
                 ...state,
@@ -167,6 +221,11 @@ const cardReducer = (state, action) => {
             return {
                 ...state,
                 storyPrompt: action.storyPrompt
+            }
+        case 'UPDATE_ITALIC_TEXT':
+            return {
+                ...state,
+                italicText: action.italicText
             }
         case 'UPDATE_EFFECT_TEXT':
             return {
@@ -183,8 +242,8 @@ const cardReducer = (state, action) => {
                 ...state,
                 autoComplete: action.autoComplete === 'true' ? true : false,
                 autoDefeat: action.autoComplete === 'true' ? state.autoDefeat : false,
-                autoDiscard: action.autoComplete === 'true' ? state.autoDiscard : false
-
+                autoDiscard: action.autoComplete === 'true' ? state.autoDiscard : false,
+                autoDamage: action.autoComplete === 'true' ? state.autoDamage : false,
             }
         case 'UPDATE_AUTO_DEFEAT':
             return {
@@ -205,6 +264,62 @@ const cardReducer = (state, action) => {
                 ...state,
                 autoDamage: action.autoDamage
             }
+        case 'UPDATE_KOSTCO_EFFECT':
+            return {
+                ...state,
+                kostCoEffect: action.kostCoEffect === 'true' ? true : false,
+                discardKostCoDefeat: action.kostCoEffect === 'true' ? state.discardKostCoDefeat : false,
+                discardKostCoDraw: action.kostCoEffect === 'true' ? state.discardKostCoDraw : false,
+                discardKostCoStrength: action.kostCoEffect === 'true' ? state.discardKostCoStrength : false,
+                discardKostCoStrengthBonus: action.kostCoEffect === 'true' ? state.discardKostCoStrengthBonus : 0,
+            }
+        case 'UPDATE_DISCARD_KOSTCO_DEFEAT':
+            return {
+                ...state,
+                discardKostCoDefeat: action.discardKostCoDefeat === 'true' ? true : false,
+                kostCoEffect: action.discardKostCoDefeat === 'true' ? true : state.kostCoEffect,
+                discardKostCoDraw: action.discardKostCoDefeat === 'true' ? false : state.discardKostCoDraw,
+                discardSurprise: action.discardKostCoDefeat === 'true' ? false : state.discardSurprise,
+                discardKostCoStrength: action.discardKostCoDefeat === 'true' ? false : state.discardKostCoStrength,
+                discardKostCoStrengthBonus: action.discardKostCoDefeat === 'true' ? false : state.discardKostCoStrengthBonus,
+            }
+        case 'UPDATE_DISCARD_KOSTCO_DRAW':
+            return {
+                ...state,
+                discardKostCoDraw: action.discardKostCoDraw === 'true' ? true : false,
+                kostCoEffect: action.discardKostCoDraw === 'true' ? true : state.kostCoEffect,
+
+                discardKostCoDefeat: action.discardKostCoDraw === 'true' ? false : state.discardKostCoDefeat,
+                discardSurprise: action.discardKostCoDraw === 'true' ? false : state.discardSurprise,
+                discardKostCoStrength: action.discardKostCoDraw === 'true' ? false : state.discardKostCoStrength,
+                discardKostCoStrengthBonus: action.discardKostCoDraw === 'true' ? false : state.discardKostCoStrengthBonus,
+            }
+        case 'UPDATE_DISCARD_KOSTCO_STRENGTH':
+            return {
+                ...state,
+                discardKostCoStrength: action.discardKostCoStrength === 'true' ? true : false,
+                kostCoEffect: action.discardKostCoStrength === 'true' ? true : state.kostCoEffect,
+
+                discardKostCoDefeat: action.discardKostCoStrength === 'true' ? false : state.discardKostCoDefeat,
+                discardSurprise: action.discardKostCoStrength === 'true' ? false : state.discardSurprise,
+                discardKostCoStrengthBonus: action.discardKostCoStrength === 'true' ? 2 : 0,
+            }
+        case 'UPDATE_DISCARD_KOSTCO_STRENGTH_BONUS':
+            return {
+                ...state,
+                discardKostCoStrengthBonus: action.discardKostCoStrengthBonus,
+                discardKostCoStrength: action.discardKostCoStrengthBonus > 0 ? true : false,
+                kostCoEffect: action.discardKostCoStrengthBonus > 0 ? true : state.kostCoEffect,
+
+                discardKostCoDefeat: action.discardKostCoStrengthBonus > 0 ? false : state.discardKostCoDefeat,
+                discardSurprise: action.discardKostCoStrengthBonus > 0 ? false : state.discardSurprise,
+
+            }
+        case 'UPDATE_DISCARD_SURPRISE':
+            return {
+                ...state,
+                discardSurprise: action.discardSurprise === 'true' ? true : false,
+            }
         case 'UPDATE_REQUIRES_TOKEN':
             return {
                 ...state,
@@ -213,7 +328,14 @@ const cardReducer = (state, action) => {
         case 'UPDATE_REQUIRES_REROLL':
             return {
                 ...state,
-                requiresReroll: action.requiresReroll === 'true' ? true : false
+                requiresReroll: action.requiresReroll === 'true' ? true : false,
+                advantage: action.requiresReroll === 'true' ? state.advantage : false,
+                disadvantage: action.requiresReroll === 'true' ? state.disadvantage : false,
+            }
+        case 'REENCOUNTER_GERBLIN':
+            return {
+                ...state,
+                reencounterGerblin: action.reencounterGerblin === 'true' ? true : false
             }
         case 'UPDATE_ADVANTAGE':
             return {
@@ -229,10 +351,37 @@ const cardReducer = (state, action) => {
                 advantage: action.disadvantage === 'true' ? false : state.advantage,
                 requiresReroll: action.disadvantage === 'true' ? true : state.requiresReroll,
             }
+        case 'SPECIAL_TYPE':
+            return {
+                ...state,
+                specialType: action.specialType === 'true' ? true : false,
+                gerblin: action.specialType === 'true' ? state.gerblin : false,
+                crew: action.specialType === 'true' ? state.crew : false,
+                giant: action.specialType === 'true' ? state.giant : false,
+            }
         case 'UPDATE_GERBLIN':
             return {
                 ...state,
-                gerblin: action.gerblin === 'true' ? true : false
+                gerblin: action.gerblin === 'true' ? true : false,
+                crew: action.gerblin === 'true' ? false : state.crew,
+                giant: action.gerblin === 'true' ? false : state.giant,
+                specialType: action.gerblin === 'true' ? true : state.specialType
+            }
+        case 'UPDATE_CREW':
+            return {
+                ...state,
+                crew: action.crew === 'true' ? true : false,
+                gerblin: action.crew === 'true' ? false : state.gerblin,
+                giant: action.crew === 'true' ? false : state.giant,
+                specialType: action.crew === 'true' ? true : state.specialType
+            }
+        case 'UPDATE_GIANT':
+            return {
+                ...state,
+                giant: action.giant === 'true' ? true : false,
+                crew: action.giant === 'true' ? false : state.crew,
+                gerblin: action.giant === 'true' ? false : state.gerblin,
+                specialType: action.giant === 'true' ? true : state.specialType
             }
         case 'UPDATE_FLIP_EFFECT':
             return {
@@ -275,6 +424,15 @@ const cardReducer = (state, action) => {
                 flipOnDefeat: action.flipOnDefeat === 'true' ? false : state.flipOnDefeat,
 
             }
+        case 'UPDATE_FLIP_INSTEAD_DEFEAT':
+            return {
+                ...state,
+                flipInsteadOfDefeat: action.flipInsteadOfDefeat === 'true' ? true : false,
+                flipEffect: action.flipInsteadOfDefeat === 'true' ? true : state.flipEffect,
+                flipOnDiscard: action.flipOnFail === 'true' ? false : state.flipOnDiscard,
+                flipOnDefeat: action.flipOnDefeat === 'true' ? false : state.flipOnDefeat,
+                flipOnFail: action.flipOnDiscard === 'true' ? false : state.flipOnFail,
+            }
         case 'UPDATE_FLIPPABLE':
             return {
                 ...state,
@@ -289,19 +447,194 @@ const cardReducer = (state, action) => {
             return {
                 ...state,
                 boss: action.boss === 'true' ? true : false,
-                flippable: action.boss === 'true' ? false : state.flippable
+                finale: action.boss === 'true' ? false : state.finale,
+                flippable: action.boss === 'true' ? false : state.flippable,
+                faceUp: action.boss === 'true' ? true : state.faceUp,
+                randomize: action.boss === 'true' ? false : state.randomize,
             }
         case 'UPDATE_FINALE':
             return {
                 ...state,
                 finale: action.finale === 'true' ? true : false,
                 flippable: action.finale === 'true' ? false : state.flippable,
-                faceUp: action.finale === 'true' ? false : state.faceUp
+                faceUp: action.finale === 'true' ? false : state.faceUp,
+                boss: action.finale === 'true' ? false : state.boss,
+                randomize: action.finale === 'true' ? false : state.randomize,
+            }
+        case 'COUNTER_EFFECT':
+            return {
+                ...state,
+                counterEffect: action.counterEffect === 'true' ? true : false,
+                counters: action.counterEffect === 'true' ? state.counters : 0,
+                defeatZeroCounters: action.counterEffect === 'true' ? state.defeatZeroCounters : false,
+                failingAddsCounters: action.counterEffect === 'true' ? state.failingAddsCounters : false,
+                failCounterNumber: action.counterEffect === 'true' ? state.failCounterNumber : 0,
             }
         case 'UPDATE_COUNTERS':
             return {
                 ...state,
                 counters: action.counters
+            }
+        case 'DEFEAT_ZERO_COUNTERS':
+            return {
+                ...state,
+                defeatZeroCounters: action.defeatZeroCounters === 'true' ? true : false,
+                failingAddsCounters: action.defeatZeroCounters === 'true' ? false : state.failingAddsCounters
+            }
+        case 'FAILING_ADDS_COUNTERS':
+            return {
+                ...state,
+                failingAddsCounters: action.failingAddsCounters === 'true' ? true : false,
+                defeatZeroCounters: action.failingAddsCounters === 'true' ? false : state.defeatZeroCounters,
+                failingRemovesCounters: action.failingAddsCounters === 'true' ? false : state.failingRemovesCounters,
+            }
+        case 'FAILING_REMOVES_COUNTERS':
+            return {
+                ...state,
+                failingRemovesCounters: action.failingRemovesCounters === 'true' ? true : false,
+                defeatZeroCounters: action.failingRemovesCounters === 'true' ? false : state.defeatZeroCounters,
+                failingAddsCounters: action.failingRemovesCounters === 'true' ? false : state.failingAddsCounters,
+
+            }
+        case 'FAIL_COUNTER_NUMBER':
+            return {
+                ...state,
+                failCounterNumber: action.failCounterNumber
+            }
+        case 'MODIFY_EFFECT':
+            return {
+                ...state,
+                modifyEffect: action.modifyEffect === 'true' ? true : false,
+                modifyMonster: action.modifyEffect === 'true' ? state.modifyMonster : 0,
+                modifySpooky: action.modifyEffect === 'true' ? state.modifySpooky : 0,
+                modifyMagic: action.modifyEffect === 'true' ? state.modifyMagic : 0,
+                modifyTrap: action.modifyEffect === 'true' ? state.modifyTrap : 0,
+            }
+        case 'MODIFY_MONSTER':
+            return {
+                ...state,
+                modifyMonster: action.modifyMonster
+            }
+        case 'MODIFY_SPOOKY':
+            return {
+                ...state,
+                modifySpooky: action.modifySpooky
+            }
+        case 'MODIFY_MAGIC':
+            return {
+                ...state,
+                modifyMagic: action.modifyMagic
+            }
+        case 'MODIFY_TRAP':
+            return {
+                ...state,
+                modifyTrap: action.modifyTrap
+            }
+        case 'GAIN_LIFE_EFFECT':
+            return {
+                ...state,
+                gainLifeEffect: action.gainLifeEffect === 'true' ? true : false,
+                gainLifeDefeat: action.gainLifeEffect === 'true' ? state.gainLifeDefeat : 0,
+                gainLifeDiscard: action.gainLifeEffect === 'true' ? state.gainLifeDiscard : 0,
+                gainLifeReveal: action.gainLifeEffect === 'true' ? state.gainLifeReveal : 0,
+            }
+        case 'GAIN_LIFE_DEFEAT':
+            return {
+                ...state,
+                gainLifeDefeat: action.gainLifeDefeat
+            }
+        case 'GAIN_LIFE_DISCARD':
+            return {
+                ...state,
+                gainLifeDiscard: action.gainLifeDiscard
+            }
+        case 'GAIN_LIFE_REVEAL':
+            return {
+                ...state,
+                gainLifeReveal: action.gainLifeReveal
+            }
+        case 'LOSE_LOOT_EFFECT':
+            return {
+                ...state,
+                loseLootEffect: action.loseLootEffect === 'true' ? true : false,
+                loseLootOnFail: action.loseLootEffect === 'true' ? state.loseLootOnFail : false,
+                loseLootOnReveal: action.loseLootEffect === 'true' ? state.loseLootOnReveal : false,
+                loseLootOnDefeat: action.loseLootEffect === 'true' ? state.loseLootOnDefeat : false,
+                loseLootOnDiscard: action.loseLootEffect === 'true' ? state.loseLootOnDiscard : false,
+                reduceKostCoCost: action.loseLootEffect === 'true' ? state.reduceKostCoCost : false,
+                spendLootForEffect: action.loseLootEffect === 'true' ? state.spendLootForEffect : false,
+                loseLootPoints: action.loseLootEffect === 'true' ? state.loseLootPoints : 0
+            }
+        case 'LOSE_LOOT_ON_FAIL':
+            return {
+                ...state,
+                loseLootOnFail: action.loseLootOnFail === 'true' ? true : false,
+                loseLootEffect: action.loseLootOnFail === 'true' ? true : state.loseLootEffect,
+
+                loseLootOnReveal: action.loseLootOnFail === 'true' ? false : state.loseLootOnReveal,
+                loseLootOnDefeat: action.loseLootOnFail === 'true' ? false : state.loseLootOnDefeat,
+                loseLootOnDiscard: action.loseLootOnFail === 'true' ? false : state.loseLootOnDiscard,
+                reduceKostCoCost: action.loseLootOnFail === 'true' ? false : state.reduceKostCoCost,
+                spendLootForEffect: action.loseLootOnFail === 'true' ? false : state.spendLootForEffect,
+            }
+        case 'LOSE_LOOT_ON_REVEAL':
+            return {
+                ...state,
+                loseLootOnReveal: action.loseLootOnReveal === 'true' ? true : false,
+                loseLootEffect: action.loseLootOnReveal === 'true' ? true : state.loseLootEffect,
+                loseLootOnFail: action.loseLootOnReveal === 'true' ? false : state.loseLootOnFail,
+                loseLootOnDefeat: action.loseLootOnReveal === 'true' ? false : state.loseLootOnDefeat,
+                loseLootOnDiscard: action.loseLootOnReveal === 'true' ? false : state.loseLootOnDiscard,
+                reduceKostCoCost: action.loseLootOnReveal === 'true' ? false : state.reduceKostCoCost,
+                spendLootForEffect: action.loseLootOnReveal === 'true' ? false : state.spendLootForEffect,
+            }
+        case 'LOSE_LOOT_ON_DEFEAT':
+            return {
+                ...state,
+                loseLootOnDefeat: action.loseLootOnDefeat === 'true' ? true : false,
+                loseLootEffect: action.loseLootOnDefeat === 'true' ? true : state.loseLootEffect,
+                loseLootOnReveal: action.loseLootOnDefeat === 'true' ? false : state.loseLootOnReveal,
+                loseLootOnFail: action.loseLootOnDefeat === 'true' ? false : state.loseLootOnFail,
+                loseLootOnDiscard: action.loseLootOnDefeat === 'true' ? false : state.loseLootOnDiscard,
+                reduceKostCoCost: action.loseLootOnDefeat === 'true' ? false : state.reduceKostCoCost,
+                spendLootForEffect: action.loseLootOnDefeat === 'true' ? false : state.spendLootForEffect,
+            }
+        case 'LOSE_LOOT_ON_DEFEAT':
+            return {
+                ...state,
+                loseLootOnDiscard: action.loseLootOnDiscard === 'true' ? true : false,
+                loseLootEffect: action.loseLootOnDiscard === 'true' ? true : state.loseLootEffect,
+                loseLootOnDefeat: action.loseLootOnDiscard === 'true' ? false : state.loseLootOnDefeat,
+                loseLootOnReveal: action.loseLootOnDiscard === 'true' ? false : state.loseLootOnReveal,
+                loseLootOnFail: action.loseLootOnDiscard === 'true' ? false : state.loseLootOnFail,
+                reduceKostCoCost: action.loseLootOnDiscard === 'true' ? false : state.reduceKostCoCost,
+                spendLootForEffect: action.loseLootOnDiscard === 'true' ? false : state.spendLootForEffect,
+            }
+        case 'REDUCE_KOSTCO_COST':
+            return {
+                ...state,
+                reduceKostCoCost: action.reduceKostCoCost === 'true' ? true : false,
+                loseLootEffect: action.reduceKostCoCost === 'true' ? true : state.loseLootEffect,
+                loseLootOnDiscard: action.reduceKostCoCost === 'true' ? false : state.loseLootOnDiscard,
+                loseLootOnDefeat: action.reduceKostCoCost === 'true' ? false : state.loseLootOnDefeat,
+                loseLootOnReveal: action.reduceKostCoCost === 'true' ? false : state.loseLootOnReveal,
+                loseLootOnFail: action.reduceKostCoCost === 'true' ? false : state.loseLootOnFail,
+            }
+        case 'SPEND_LOOT_FOR_EFFECT':
+            return {
+                ...state,
+                spendLootForEffect: action.spendLootForEffect === 'true' ? true : false,
+                loseLootEffect: action.spendLootForEffect === 'true' ? true : state.loseLootEffect,
+                reduceKostCoCost: action.spendLootForEffect === 'true' ? false : state.reduceKostCoCost,
+                loseLootOnDiscard: action.spendLootForEffect === 'true' ? false : state.loseLootOnDiscard,
+                loseLootOnDefeat: action.spendLootForEffect === 'true' ? false : state.loseLootOnDefeat,
+                loseLootOnReveal: action.spendLootForEffect === 'true' ? false : state.loseLootOnReveal,
+                loseLootOnFail: action.spendLootForEffect === 'true' ? false : state.loseLootOnFail,
+            }
+        case 'LOSE_LOOT_POINTS':
+            return {
+                ...state,
+                loseLootPoints: action.loseLootPoints
             }
         default:
             return state

@@ -36,7 +36,7 @@ const DeckUpdates = () => {
     useEffect(() => {
 
         if (activeDeckCode.length > 0) {
-            onValue(ref(db, `decks/${activeDeckCode}`),
+            onValue(ref(db, `challenges/${activeDeckCode}`),
                 (snapshot) => {
                     const deckArray = [];
                     const cardKeyArray = [];
@@ -59,7 +59,7 @@ const DeckUpdates = () => {
         }
 
         return (() => {
-            off(ref(db, `decks/${activeDeckCode}`))
+            off(ref(db, `challenges/${activeDeckCode}`))
         })
 
     }, [activeDeckCode])
@@ -70,16 +70,16 @@ const DeckUpdates = () => {
             <select
                 name="challengeDeckMenu"
                 id="challengeDeckMenu"
-                defaultValue='--Please select a deck--'
+                defaultValue='--Please select a challenge--'
                 onChange={(e) => { setActiveDeckCode(e.target.value) }}
             >
-                <option disabled>--Please select a deck--</option>
+                <option disabled>--Please select a challenge--</option>
                 <optgroup label="Villains">
                     {villainObjectsArray.map((headerObject) => {
                         return (
                             <option
                                 key={headerObject.challengeCode}
-                                value={headerObject.challengeCode + '-' + headerObject.challengeName}
+                                value={headerObject.challengeCode}
                             >
                                 {headerObject.challengeName}
                             </option>
@@ -91,7 +91,7 @@ const DeckUpdates = () => {
                         return (
                             <option
                                 key={headerObject.challengeCode}
-                                value={headerObject.challengeCode + '-' + headerObject.challengeName}
+                                value={headerObject.challengeCode}
                             >
                                 {headerObject.challengeName}
                             </option>
@@ -103,7 +103,7 @@ const DeckUpdates = () => {
                         return (
                             <option
                                 key={headerObject.challengeCode}
-                                value={headerObject.challengeCode + '-' + headerObject.challengeName}
+                                value={headerObject.challengeCode}
                             >
                                 {headerObject.challengeName}
                             </option>

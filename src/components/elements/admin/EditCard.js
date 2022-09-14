@@ -1,5 +1,8 @@
 import React, { useEffect, useReducer, useState } from "react";
 import {
+    defeatZeroCounters,
+    failingAddsCounters,
+    failingRemovesCounters,
     updateAdvantage,
     updateAutoComplete,
     updateAutoDamage,
@@ -9,33 +12,66 @@ import {
     updateCard,
     updateCardName,
     updateCardNumber,
+    updateChance,
+    updateCounterEffect,
     updateCounters,
+    updateCrew,
     updateDifficulty,
     updateDisadvantage,
+    updateDiscardKostCoDefeat,
+    updateDiscardKostCoDraw,
+    updateDiscardKostCoStrength,
+    updateDiscardKostCoStrengthBonus,
+    updateDiscardSurprise,
     updateDoubleAssist,
     updateEffectText,
     updateFaceUp,
+    updateFailCounterNumber,
     updateFinale,
     updateFlipEffect,
+    updateFlipInsteadDefeat,
     updateFlipOnDefeat,
     updateFlipOnDiscard,
     updateFlipOnFail,
     updateFlippable,
     updateFlipTarget,
+    updateGainLifeDefeat,
+    updateGainLifeDiscard,
+    updateGainLifeEffect,
+    updateGainLifeReveal,
     updateGerblin,
+    updateGiant,
     updateHasEffect,
     updateHealth,
+    updateItalicText,
+    updateKostCoEffect,
     updateLocationModifier,
     updateLoot,
+    updateLoseLootEffect,
+    updateLoseLootOnDefeat,
+    updateLoseLootOnDiscard,
+    updateLoseLootOnFail,
+    updateLoseLootOnReveal,
+    updateLoseLootPoints,
     updateMagic,
+    updateModifyEffect,
+    updateModifyMagic,
+    updateModifyMonster,
+    updateModifySpooky,
+    updateModifyTrap,
     updateMonster,
     updateNameFlavor,
     updateNoAssist,
+    updateNoRoll,
     updatePairedWith,
     updateRandomize,
+    updateReduceKostCoCost,
+    updateReencounterGerblin,
     updateRelicModifier,
     updateRequiresReroll,
     updateRequiresToken,
+    updateSpecialType,
+    updateSpendLootForEffect,
     updateSpooky,
     updateStoryBonus,
     updateStoryPrompt,
@@ -43,6 +79,7 @@ import {
     updateVillainModifier
 } from "../../../actions/cardActions";
 import { cardReducer, defaultCardState } from "../../../reducers/cardReducer";
+import { images } from '../ActiveGame/playing/challenges/imageInfo'
 
 const EditCard = ({ deckCard, updateCardCloud, currentCardNumber, removeCard, cardKeyIndex }) => {
     const [cardState, dispatchCardState] = useReducer(cardReducer, defaultCardState)
@@ -185,6 +222,7 @@ const EditCard = ({ deckCard, updateCardCloud, currentCardNumber, removeCard, ca
                             onChange={(e) => {
                                 dispatchCardState(updateRelicModifier(e.target.value))
                             }}
+                            onBlur={() => { saveChange() }}
                         />
 
                         <label htmlFor="locationModifier">Location Modifier: </label>
@@ -197,6 +235,7 @@ const EditCard = ({ deckCard, updateCardCloud, currentCardNumber, removeCard, ca
                             onChange={(e) => {
                                 dispatchCardState(updateLocationModifier(e.target.value))
                             }}
+                            onBlur={() => { saveChange() }}
                         />
                     </div>
 
@@ -233,6 +272,18 @@ const EditCard = ({ deckCard, updateCardCloud, currentCardNumber, removeCard, ca
                             id="faceUp"
                             value={cardState.faceUp}
                             onChange={(e) => { dispatchCardState(updateFaceUp(e.target.value)) }}
+                            onBlur={() => { saveChange() }}
+                        >
+                            <option value={true}>true</option>
+                            <option value={false}>false</option>
+                        </select>
+
+                        <label htmlFor="flippable">   Flippable: </label>
+                        <select
+                            name="flippable"
+                            id="flippable"
+                            value={cardState.flippable}
+                            onChange={(e) => { dispatchCardState(updateFlippable(e.target.value)) }}
                             onBlur={() => { saveChange() }}
                         >
                             <option value={true}>true</option>
@@ -325,6 +376,32 @@ const EditCard = ({ deckCard, updateCardCloud, currentCardNumber, removeCard, ca
                             <option value={false}>false</option>
                         </select>
 
+                        <label htmlFor="noRoll">  No Roll: </label>
+                        <select
+                            name="noRoll"
+                            id="noRoll"
+                            value={cardState.noRoll}
+                            onChange={(e) => { dispatchCardState(updateNoRoll(e.target.value)) }}
+                            onBlur={() => { saveChange() }}
+
+                        >
+                            <option value={true}>true</option>
+                            <option value={false}>false</option>
+                        </select>
+
+                        <label htmlFor="chance">  Chance: </label>
+                        <select
+                            name="chance"
+                            id="chance"
+                            value={cardState.chance}
+                            onChange={(e) => { dispatchCardState(updateChance(e.target.value)) }}
+                            onBlur={() => { saveChange() }}
+
+                        >
+                            <option value={true}>true</option>
+                            <option value={false}>false</option>
+                        </select>
+
                     </div>
 
                     <div>
@@ -333,7 +410,7 @@ const EditCard = ({ deckCard, updateCardCloud, currentCardNumber, removeCard, ca
                             id="storyBonus"
                             name="storyBonus"
                             type='number'
-
+                            style={{ width: 3 + 'em' }}
                             value={cardState.storyBonus}
                             onChange={(e) => {
                                 dispatchCardState(updateStoryBonus(e.target.value))
@@ -341,32 +418,84 @@ const EditCard = ({ deckCard, updateCardCloud, currentCardNumber, removeCard, ca
                             onBlur={() => { saveChange() }}
                         />
 
-                        <label htmlFor="storyPrompt">Story Prompt: </label>
-                        <input
-                            id="storyPrompt"
-                            name="storyPrompt"
-                            type='text'
-                            placeholder="What's this haunted skull's cruelest insult?"
-                            value={cardState.storyPrompt}
-                            onChange={(e) => {
-                                dispatchCardState(updateStoryPrompt(e.target.value))
-                            }}
-                            onBlur={() => { saveChange() }}
-                        />
+                        {cardState.storyPrompt.length > 0 &&
+                            <span>
+                                <label htmlFor="storyPrompt">Story Prompt: </label>
+                                <textarea
+                                    id="storyPrompt"
+                                    name="storyPrompt"
+                                    type='text'
+                                    placeholder="What's this haunted skull's cruelest insult?"
+                                    rows="4"
+                                    cols="40"
+                                    value={cardState.storyPrompt}
+                                    onChange={(e) => {
+                                        dispatchCardState(updateStoryPrompt(e.target.value))
+                                    }}
+                                    onBlur={() => { saveChange() }}
+                                />
+                            </span>
+                        }
 
-                        <label htmlFor="effectText">Effect Text: </label>
-                        <input
-                            id="effectText"
-                            name="effectText"
-                            type='text'
-                            placeholder="Effect text goes here"
-                            value={cardState.effectText}
-                            onChange={(e) => {
-                                dispatchCardState(updateEffectText(e.target.value))
-                            }}
-                            onBlur={() => { saveChange() }}
-                        />
+                        {cardState.storyPrompt.length === 0 &&
+                            <span>
+                                <label htmlFor="storyPrompt">Story Prompt: </label>
+                                <input
+                                    id="storyPrompt"
+                                    name="storyPrompt"
+                                    type='text'
+                                    placeholder="What's this haunted skull's cruelest insult?"
+                                    // rows="4"
+                                    // cols="40"
+                                    value={cardState.storyPrompt}
+                                    onChange={(e) => {
+                                        dispatchCardState(updateStoryPrompt(e.target.value))
+                                    }}
+                                    onBlur={() => { saveChange() }}
+                                />
+                            </span>
+                        }
 
+                        {cardState.italicText.length > 0 &&
+                            <span>
+                                <label htmlFor="italicText">    Italic Text: </label>
+                                <textarea
+                                    id="italicText"
+                                    name="italicText"
+                                    type='text'
+                                    placeholder="It's incredibly cutting"
+                                    rows="4"
+                                    cols="40"
+                                    value={cardState.italicText}
+                                    onChange={(e) => {
+                                        dispatchCardState(updateItalicText(e.target.value))
+                                    }}
+                                    onBlur={() => { saveChange() }}
+                                />
+                            </span>
+                        }
+
+                        {cardState.italicText.length === 0 &&
+                            <span>
+                                <label htmlFor="italicText">    Italic Text: </label>
+                                <input
+                                    id="italicText"
+                                    name="italicText"
+                                    type='text'
+                                    placeholder="It's incredibly cutting"
+                                    // rows="4"
+                                    // cols="40"
+                                    value={cardState.italicText}
+                                    onChange={(e) => {
+                                        dispatchCardState(updateItalicText(e.target.value))
+                                    }}
+                                    onBlur={() => { saveChange() }}
+                                />
+                            </span>
+                        }
+                    </div>
+
+                    <div>
                         <label htmlFor="hasEffect"> Has Effect: </label>
                         <select
                             name="hasEffect"
@@ -379,56 +508,47 @@ const EditCard = ({ deckCard, updateCardCloud, currentCardNumber, removeCard, ca
                             <option value={false}>false</option>
                         </select>
 
+                        {!cardState.hasEffect &&
+                            <span>
+                                <label htmlFor="effectText">Effect Text: </label>
+                                <input
+                                    id="effectText"
+                                    name="effectText"
+                                    type='text'
+                                    placeholder="Effect text goes here"
+                                    value={cardState.effectText}
+                                    onChange={(e) => {
+                                        dispatchCardState(updateEffectText(e.target.value))
+                                    }}
+                                    onBlur={() => { saveChange() }}
+                                />
+                            </span>
+                        }
+
+                        {cardState.hasEffect &&
+                            <span>
+                                <label htmlFor="effectText">Effect Text: </label>
+                                <textarea
+                                    id="effectText"
+                                    name="effectText"
+                                    type='text'
+                                    placeholder="Effect text goes here"
+                                    rows="4"
+                                    cols="40"
+                                    value={cardState.effectText}
+                                    onChange={(e) => {
+                                        dispatchCardState(updateEffectText(e.target.value))
+                                    }}
+                                    onBlur={() => { saveChange() }}
+                                />
+                            </span>
+                        }
+
+
+
                     </div>
 
                     <div>
-                        <label htmlFor="autoComplete">Auto Complete: </label>
-                        <select
-                            name="autoComplete"
-                            id="autoComplete"
-                            value={cardState.autoComplete}
-                            onChange={(e) => { dispatchCardState(updateAutoComplete(e.target.value)) }}
-                            onBlur={() => { saveChange() }}
-                        >
-                            <option value={true}>true</option>
-                            <option value={false}>false</option>
-                        </select>
-
-                        <label htmlFor="autoDefeat">Auto Defeat: </label>
-                        <select
-                            name="autoDefeat"
-                            id="autoDefeat"
-                            value={cardState.autoDefeat}
-                            onChange={(e) => { dispatchCardState(updateAutoDefeat(e.target.value)) }}
-                            onBlur={() => { saveChange() }}
-                        >
-                            <option value={true}>true</option>
-                            <option value={false}>false</option>
-                        </select>
-
-                        <label htmlFor="autoDiscard">Auto Discard: </label>
-                        <select
-                            name="autoDiscard"
-                            id="autoDiscard"
-                            value={cardState.autoDiscard}
-                            onChange={(e) => { dispatchCardState(updateAutoDiscard(e.target.value)) }}
-                            onBlur={() => { saveChange() }}
-                        >
-                            <option value={true}>true</option>
-                            <option value={false}>false</option>
-                        </select>
-
-                        <label htmlFor="autoDamage">    Auto Damage: </label>
-                        <select
-                            name="autoDamage"
-                            id="autoDamage"
-                            value={cardState.autoDamage}
-                            onChange={(e) => { dispatchCardState(updateAutoDamage(e.target.value)) }}
-                            onBlur={() => { saveChange() }}
-                        >
-                            <option value={true}>true</option>
-                            <option value={false}>false</option>
-                        </select>
 
                         <label htmlFor="requiresToken"> Req Token: </label>
                         <select
@@ -442,6 +562,7 @@ const EditCard = ({ deckCard, updateCardCloud, currentCardNumber, removeCard, ca
                             <option value={false}>false</option>
                         </select>
 
+
                         <label htmlFor="requiresReroll">    Req Reroll: </label>
                         <select
                             name="requiresReroll"
@@ -454,9 +575,218 @@ const EditCard = ({ deckCard, updateCardCloud, currentCardNumber, removeCard, ca
                             <option value={false}>false</option>
                         </select>
 
+                        {cardState.requiresReroll &&
+                            <span>
+                                <label htmlFor="advantage">   Advantage: </label>
+                                <select
+                                    name="advantage"
+                                    id="advantage"
+                                    value={cardState.advantage}
+                                    onChange={(e) => { dispatchCardState(updateAdvantage(e.target.value)) }}
+                                    onBlur={() => { saveChange() }}
+                                >
+                                    <option value={true}>true</option>
+                                    <option value={false}>false</option>
+                                </select>
+
+                                <label htmlFor="disadvantage">   Disadvantage: </label>
+                                <select
+                                    name="disadvantage"
+                                    id="disadvantage"
+                                    value={cardState.disadvantage}
+                                    onChange={(e) => { dispatchCardState(updateDisadvantage(e.target.value)) }}
+                                    onBlur={() => { saveChange() }}
+                                >
+                                    <option value={true}>true</option>
+                                    <option value={false}>false</option>
+                                </select>
+                            </span>
+                        }
+                    </div>
+
+                    <div>
+                        <label htmlFor="discardSurprise">    Discard Surprise card to defeat: </label>
+                        <select
+                            name="discardSurprise"
+                            id="discardSurprise"
+                            value={cardState.discardSurprise}
+                            onChange={(e) => { dispatchCardState(updateDiscardSurprise(e.target.value)) }}
+                            onBlur={() => { saveChange() }}
+                        >
+                            <option value={true}>true</option>
+                            <option value={false}>false</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label htmlFor="reencounterGerblin">    Reencounter Gerblin: </label>
+                        <select
+                            name="reencounterGerblin"
+                            id="reencounterGerblin"
+                            value={cardState.reencounterGerblin}
+                            onChange={(e) => { dispatchCardState(updateReencounterGerblin(e.target.value)) }}
+                            onBlur={() => { saveChange() }}
+                        >
+                            <option value={true}>true</option>
+                            <option value={false}>false</option>
+                        </select>
+                    </div>
+
+                    <div>
+
+                        <label htmlFor="kostCoEffect">    KostCo Effect: </label>
+                        <select
+                            name="kostCoEffect"
+                            id="kostCoEffect"
+                            value={cardState.kostCoEffect}
+                            onChange={(e) => { dispatchCardState(updateKostCoEffect(e.target.value)) }}
+                            onBlur={() => { saveChange() }}
+                        >
+                            <option value={true}>true</option>
+                            <option value={false}>false</option>
+                        </select>
+
+
+                        {cardState.kostCoEffect &&
+                            <span>
+                                <label htmlFor="discardKostCoDefeat">    Discard Kostco card to defeat: </label>
+                                <select
+                                    name="discardKostCoDefeat"
+                                    id="discardKostCoDefeat"
+                                    value={cardState.discardKostCoDefeat}
+                                    onChange={(e) => { dispatchCardState(updateDiscardKostCoDefeat(e.target.value)) }}
+                                    onBlur={() => { saveChange() }}
+                                >
+                                    <option value={true}>true</option>
+                                    <option value={false}>false</option>
+                                </select>
+
+                                <label htmlFor="discardKostCoDraw">    On Defeat, Discard Kostco card to draw: </label>
+                                <select
+                                    name="discardKostCoDraw"
+                                    id="discardKostCoDraw"
+                                    value={cardState.discardKostCoDraw}
+                                    onChange={(e) => { dispatchCardState(updateDiscardKostCoDraw(e.target.value)) }}
+                                    onBlur={() => { saveChange() }}
+
+                                >
+                                    <option value={true}>true</option>
+                                    <option value={false}>false</option>
+                                </select>
+                                <div>
+
+                                    <label htmlFor="discardKostCoStrength">    Pre Roll, Discard KostCo card to add Strength: </label>
+                                    <select
+                                        name="discardKostCoStrength"
+                                        id="discardKostCoStrength"
+                                        value={cardState.discardKostCoStrength}
+                                        onChange={(e) => { dispatchCardState(updateDiscardKostCoStrength(e.target.value)) }}
+                                        onBlur={() => { saveChange() }}
+
+                                    >
+                                        <option value={true}>true</option>
+                                        <option value={false}>false</option>
+                                    </select>
+
+                                    <label htmlFor="discardKostCoStrengthBonus">    Add Strength: </label>
+                                    <input
+                                        id="discardKostCoStrengthBonus"
+                                        name="discardKostCoStrengthBonus"
+                                        type='number'
+                                        style={{ width: 3 + 'em' }}
+                                        value={cardState.discardKostCoStrengthBonus}
+                                        onChange={(e) => {
+                                            dispatchCardState(updateDiscardKostCoStrengthBonus(e.target.value))
+                                        }}
+                                        onBlur={() => { saveChange() }}
+                                    />
+                                </div>
+                            </span>
+                        }
+
+
 
                     </div>
 
+                    <div>
+                        <label htmlFor="specialType">   Special Type: </label>
+                        <select
+                            name="specialType"
+                            id="specialType"
+                            value={cardState.specialType}
+                            onChange={(e) => { dispatchCardState(updateSpecialType(e.target.value)) }}
+                            onBlur={() => { saveChange() }}
+                        >
+                            <option value={true}>true</option>
+                            <option value={false}>false</option>
+                        </select>
+
+                        {cardState.specialType &&
+                            <span>
+
+                                <label htmlFor="gerblin">   Gerblin: </label>
+                                <select
+                                    name="gerblin"
+                                    id="gerblin"
+                                    value={cardState.gerblin}
+                                    onChange={(e) => { dispatchCardState(updateGerblin(e.target.value)) }}
+                                    onBlur={() => { saveChange() }}
+                                >
+                                    <option value={true}>true</option>
+                                    <option value={false}>false</option>
+                                </select>
+
+                                <label htmlFor="crew">   Crew: </label>
+                                <select
+                                    name="crew"
+                                    id="crew"
+                                    value={cardState.crew}
+                                    onChange={(e) => { dispatchCardState(updateCrew(e.target.value)) }}
+                                    onBlur={() => { saveChange() }}
+                                >
+                                    <option value={true}>true</option>
+                                    <option value={false}>false</option>
+                                </select>
+
+                                <label htmlFor="giant">   Giant: </label>
+                                <select
+                                    name="giant"
+                                    id="giant"
+                                    value={cardState.giant}
+                                    onChange={(e) => { dispatchCardState(updateGiant(e.target.value)) }}
+                                    onBlur={() => { saveChange() }}
+                                >
+                                    <option value={true}>true</option>
+                                    <option value={false}>false</option>
+                                </select>
+
+                                <label htmlFor="boss">   Boss: </label>
+                                <select
+                                    name="boss"
+                                    id="boss"
+                                    value={cardState.boss}
+                                    onChange={(e) => { dispatchCardState(updateBoss(e.target.value)) }}
+                                    onBlur={() => { saveChange() }}
+                                >
+                                    <option value={true}>true</option>
+                                    <option value={false}>false</option>
+                                </select>
+
+                                <label htmlFor="finale">   Finale: </label>
+                                <select
+                                    name="finale"
+                                    id="finale"
+                                    value={cardState.finale}
+                                    onChange={(e) => { dispatchCardState(updateFinale(e.target.value)) }}
+                                    onBlur={() => { saveChange() }}
+                                >
+                                    <option value={true}>true</option>
+                                    <option value={false}>false</option>
+                                </select>
+
+                            </span>
+                        }
+                    </div>
 
                     <div>
                         <label htmlFor="flipEffect">Flip Effect: </label>
@@ -524,6 +854,18 @@ const EditCard = ({ deckCard, updateCardCloud, currentCardNumber, removeCard, ca
                                     <option value={false}>false</option>
                                 </select>
 
+                                <label htmlFor="flipInsteadOfDefeat">    Flip instead of defeat: </label>
+                                <select
+                                    name="flipInsteadOfDefeat"
+                                    id="flipInsteadOfDefeat"
+                                    value={cardState.flipInsteadOfDefeat}
+                                    onChange={(e) => { dispatchCardState(updateFlipInsteadDefeat(e.target.value)) }}
+                                    onBlur={() => { saveChange() }}
+
+                                >
+                                    <option value={true}>true</option>
+                                    <option value={false}>false</option>
+                                </select>
 
                             </span>
                         }
@@ -531,95 +873,397 @@ const EditCard = ({ deckCard, updateCardCloud, currentCardNumber, removeCard, ca
                     </div>
 
                     <div>
-
-                        <label htmlFor="gerblin">   Gerblin: </label>
+                        <label htmlFor="autoComplete">Auto Complete: </label>
                         <select
-                            name="gerblin"
-                            id="gerblin"
-                            value={cardState.gerblin}
-                            onChange={(e) => { dispatchCardState(updateGerblin(e.target.value)) }}
+                            name="autoComplete"
+                            id="autoComplete"
+                            value={cardState.autoComplete}
+                            onChange={(e) => { dispatchCardState(updateAutoComplete(e.target.value)) }}
                             onBlur={() => { saveChange() }}
                         >
                             <option value={true}>true</option>
                             <option value={false}>false</option>
                         </select>
 
-                        <label htmlFor="flippable">   Flippable: </label>
-                        <select
-                            name="flippable"
-                            id="flippable"
-                            value={cardState.flippable}
-                            onChange={(e) => { dispatchCardState(updateFlippable(e.target.value)) }}
-                            onBlur={() => { saveChange() }}
-                        >
-                            <option value={true}>true</option>
-                            <option value={false}>false</option>
-                        </select>
+                        {cardState.autoComplete &&
+                            <span>
+                                <label htmlFor="autoDefeat">Auto Defeat: </label>
+                                <select
+                                    name="autoDefeat"
+                                    id="autoDefeat"
+                                    value={cardState.autoDefeat}
+                                    onChange={(e) => { dispatchCardState(updateAutoDefeat(e.target.value)) }}
+                                    onBlur={() => { saveChange() }}
+                                >
+                                    <option value={true}>true</option>
+                                    <option value={false}>false</option>
+                                </select>
 
+                                <label htmlFor="autoDiscard">Auto Discard: </label>
+                                <select
+                                    name="autoDiscard"
+                                    id="autoDiscard"
+                                    value={cardState.autoDiscard}
+                                    onChange={(e) => { dispatchCardState(updateAutoDiscard(e.target.value)) }}
+                                    onBlur={() => { saveChange() }}
+                                >
+                                    <option value={true}>true</option>
+                                    <option value={false}>false</option>
+                                </select>
 
-
-                        <label htmlFor="boss">   Boss: </label>
-                        <select
-                            name="boss"
-                            id="boss"
-                            value={cardState.boss}
-                            onChange={(e) => { dispatchCardState(updateBoss(e.target.value)) }}
-                            onBlur={() => { saveChange() }}
-                        >
-                            <option value={true}>true</option>
-                            <option value={false}>false</option>
-                        </select>
-
-                        <label htmlFor="finale">   Finale: </label>
-                        <select
-                            name="finale"
-                            id="finale"
-                            value={cardState.finale}
-                            onChange={(e) => { dispatchCardState(updateFinale(e.target.value)) }}
-                            onBlur={() => { saveChange() }}
-                        >
-                            <option value={true}>true</option>
-                            <option value={false}>false</option>
-                        </select>
-
-                        <label htmlFor="counters">  Counters: </label>
-                        <input
-                            id="counters"
-                            name="counters"
-                            type='number'
-                            style={{ width: 3 + 'em' }}
-                            value={cardState.counters}
-                            onChange={(e) => {
-                                dispatchCardState(updateCounters(e.target.value))
-                            }}
-                            onBlur={() => { saveChange() }}
-                        />
-
-                        <label htmlFor="advantage">   Advantage: </label>
-                        <select
-                            name="advantage"
-                            id="advantage"
-                            value={cardState.advantage}
-                            onChange={(e) => { dispatchCardState(updateAdvantage(e.target.value)) }}
-                            onBlur={() => { saveChange() }}
-                        >
-                            <option value={true}>true</option>
-                            <option value={false}>false</option>
-                        </select>
-
-                        <label htmlFor="disadvantage">   Disadvantage: </label>
-                        <select
-                            name="disadvantage"
-                            id="disadvantage"
-                            value={cardState.disadvantage}
-                            onChange={(e) => { dispatchCardState(updateDisadvantage(e.target.value)) }}
-                            onBlur={() => { saveChange() }}
-                        >
-                            <option value={true}>true</option>
-                            <option value={false}>false</option>
-                        </select>
+                                <label htmlFor="autoDamage">    Auto Damage: </label>
+                                <select
+                                    name="autoDamage"
+                                    id="autoDamage"
+                                    value={cardState.autoDamage}
+                                    onChange={(e) => { dispatchCardState(updateAutoDamage(e.target.value)) }}
+                                    onBlur={() => { saveChange() }}
+                                >
+                                    <option value={true}>true</option>
+                                    <option value={false}>false</option>
+                                </select>
+                            </span>
+                        }
 
                     </div>
+
+                    <div>
+                        <label htmlFor="modifyEffect">Modify Effect: </label>
+                        <select
+                            name="modifyEffect"
+                            id="modifyEffect"
+                            value={cardState.modifyEffect}
+                            onChange={(e) => { dispatchCardState(updateModifyEffect(e.target.value)) }}
+                            onBlur={() => { saveChange() }}
+                        >
+                            <option value={true}>true</option>
+                            <option value={false}>false</option>
+                        </select>
+
+                        {cardState.modifyEffect &&
+                            <span>
+                                <label htmlFor="modifyMonster">Modify Monster: </label>
+                                <input
+                                    id="modifyMonster"
+                                    name="modifyMonster"
+                                    type='number'
+                                    style={{ width: 3 + 'em' }}
+                                    value={cardState.modifyMonster}
+                                    onChange={(e) => {
+                                        dispatchCardState(updateModifyMonster(e.target.value))
+                                    }}
+                                    onBlur={() => { saveChange() }}
+                                />
+
+                                <label htmlFor="modifySpooky">Modify Spooky: </label>
+                                <input
+                                    id="modifySpooky"
+                                    name="modifySpooky"
+                                    type='number'
+                                    style={{ width: 3 + 'em' }}
+                                    value={cardState.modifySpooky}
+                                    onChange={(e) => {
+                                        dispatchCardState(updateModifySpooky(e.target.value))
+                                    }}
+                                    onBlur={() => { saveChange() }}
+                                />
+
+                                <label htmlFor="modifyMagic">Modify Magic: </label>
+                                <input
+                                    id="modifyMagic"
+                                    name="modifyMagic"
+                                    type='number'
+                                    style={{ width: 3 + 'em' }}
+                                    value={cardState.modifyMagic}
+                                    onChange={(e) => {
+                                        dispatchCardState(updateModifyMagic(e.target.value))
+                                    }}
+                                    onBlur={() => { saveChange() }}
+                                />
+
+                                <label htmlFor="modifyTrap">Modify Trap: </label>
+                                <input
+                                    id="modifyTrap"
+                                    name="modifyTrap"
+                                    type='number'
+                                    style={{ width: 3 + 'em' }}
+                                    value={cardState.modifyTrap}
+                                    onChange={(e) => {
+                                        dispatchCardState(updateModifyTrap(e.target.value))
+                                    }}
+                                    onBlur={() => { saveChange() }}
+                                />
+
+                            </span>
+                        }
+                    </div>
+
+                    <div>
+                        <label htmlFor="gainLifeEffect">Gain Life Effect: </label>
+                        <select
+                            name="gainLifeEffect"
+                            id="gainLifeEffect"
+                            value={cardState.gainLifeEffect}
+                            onChange={(e) => { dispatchCardState(updateGainLifeEffect(e.target.value)) }}
+                            onBlur={() => { saveChange() }}
+                        >
+                            <option value={true}>true</option>
+                            <option value={false}>false</option>
+                        </select>
+
+                        {cardState.gainLifeEffect &&
+                            <span>
+                                <label htmlFor="gainLifeDefeat">Gain Life on Defeat: </label>
+                                <input
+                                    id="gainLifeDefeat"
+                                    name="gainLifeDefeat"
+                                    type='number'
+                                    style={{ width: 3 + 'em' }}
+                                    value={cardState.gainLifeDefeat}
+                                    onChange={(e) => {
+                                        dispatchCardState(updateGainLifeDefeat(e.target.value))
+                                    }}
+                                    onBlur={() => { saveChange() }}
+                                />
+
+                                <label htmlFor="gainLifeDiscard">Gain Life on Discard: </label>
+                                <input
+                                    id="gainLifeDiscard"
+                                    name="gainLifeDiscard"
+                                    type='number'
+                                    style={{ width: 3 + 'em' }}
+                                    value={cardState.gainLifeDiscard}
+                                    onChange={(e) => {
+                                        dispatchCardState(updateGainLifeDiscard(e.target.value))
+                                    }}
+                                    onBlur={() => { saveChange() }}
+                                />
+
+                                <label htmlFor="gainLifeReveal">Gain Life on Reveal: </label>
+                                <input
+                                    id="gainLifeReveal"
+                                    name="gainLifeReveal"
+                                    type='number'
+                                    style={{ width: 3 + 'em' }}
+                                    value={cardState.gainLifeReveal}
+                                    onChange={(e) => {
+                                        dispatchCardState(updateGainLifeReveal(e.target.value))
+                                    }}
+                                    onBlur={() => { saveChange() }}
+                                />
+
+                            </span>
+                        }
+                    </div>
+
+
+                    <div>
+                        <label htmlFor="loseLootEffect">    Loot Effect: </label>
+                        <select
+                            name="loseLootEffect"
+                            id="loseLootEffect"
+                            value={cardState.loseLootEffect}
+                            onChange={(e) => { dispatchCardState(updateLoseLootEffect(e.target.value)) }}
+                            onBlur={() => { saveChange() }}
+
+                        >
+                            <option value={true}>true</option>
+                            <option value={false}>false</option>
+                        </select>
+
+                        {cardState.loseLootEffect &&
+
+                            <span>
+
+                                <label htmlFor="loseLootOnFail">    On Fail: </label>
+                                <select
+                                    name="loseLootOnFail"
+                                    id="loseLootOnFail"
+                                    value={cardState.loseLootOnFail}
+                                    onChange={(e) => { dispatchCardState(updateLoseLootOnFail(e.target.value)) }}
+                                    onBlur={() => { saveChange() }}
+                                >
+                                    <option value={true}>true</option>
+                                    <option value={false}>false</option>
+                                </select>
+
+                                <label htmlFor="loseLootOnReveal">    On Reveal: </label>
+                                <select
+                                    name="loseLootOnReveal"
+                                    id="loseLootOnReveal"
+                                    value={cardState.loseLootOnReveal}
+                                    onChange={(e) => { dispatchCardState(updateLoseLootOnReveal(e.target.value)) }}
+                                    onBlur={() => { saveChange() }}
+                                >
+                                    <option value={true}>true</option>
+                                    <option value={false}>false</option>
+                                </select>
+
+                                <label htmlFor="loseLootOnDefeat">    On Defeat: </label>
+                                <select
+                                    name="loseLootOnDefeat"
+                                    id="loseLootOnDefeat"
+                                    value={cardState.loseLootOnDefeat}
+                                    onChange={(e) => { dispatchCardState(updateLoseLootOnDefeat(e.target.value)) }}
+                                    onBlur={() => { saveChange() }}
+                                >
+                                    <option value={true}>true</option>
+                                    <option value={false}>false</option>
+                                </select>
+
+                                <label htmlFor="loseLootOnDiscard">    On Discard: </label>
+                                <select
+                                    name="loseLootOnDiscard"
+                                    id="loseLootOnDiscard"
+                                    value={cardState.loseLootOnDiscard}
+                                    onChange={(e) => { dispatchCardState(updateLoseLootOnDiscard(e.target.value)) }}
+                                    onBlur={() => { saveChange() }}
+                                >
+                                    <option value={true}>true</option>
+                                    <option value={false}>false</option>
+                                </select>
+
+                                <div>
+
+                                    <label htmlFor="reduceKostCoCost">    Reduce KostCo Cost: </label>
+                                    <select
+                                        name="reduceKostCoCost"
+                                        id="reduceKostCoCost"
+                                        value={cardState.reduceKostCoCost}
+                                        onChange={(e) => { dispatchCardState(updateReduceKostCoCost(e.target.value)) }}
+                                        onBlur={() => { saveChange() }}
+                                    >
+                                        <option value={true}>true</option>
+                                        <option value={false}>false</option>
+                                    </select>
+
+                                    <label htmlFor="spendLootForEffect">    Spend Loot for Effect: </label>
+                                    <select
+                                        name="spendLootForEffect"
+                                        id="spendLootForEffect"
+                                        value={cardState.spendLootForEffect}
+                                        onChange={(e) => { dispatchCardState(updateSpendLootForEffect(e.target.value)) }}
+                                        onBlur={() => { saveChange() }}
+                                    >
+                                        <option value={true}>true</option>
+                                        <option value={false}>false</option>
+                                    </select>
+
+                                    <label htmlFor="loseLootPoints">    Loot points to lose/spend/discount: </label>
+                                    <input
+                                        id="loseLootPoints"
+                                        name="loseLootPoints"
+                                        type='number'
+                                        style={{ width: 3 + 'em' }}
+                                        value={cardState.loseLootPoints}
+                                        onChange={(e) => {
+                                            dispatchCardState(updateLoseLootPoints(e.target.value))
+                                        }}
+                                        onBlur={() => { saveChange() }}
+                                    />
+                                </div>
+                            </span>}
+                    </div>
+
+                    <div>
+
+                        <label htmlFor="counterEffect">Counter Effect: </label>
+                        <select
+                            name="counterEffect"
+                            id="counterEffect"
+                            value={cardState.counterEffect}
+                            onChange={(e) => { dispatchCardState(updateCounterEffect(e.target.value)) }}
+                            onBlur={() => { saveChange() }}
+                        >
+                            <option value={true}>true</option>
+                            <option value={false}>false</option>
+                        </select>
+
+                        {cardState.counterEffect &&
+                            <span>
+                                <span>
+                                    <label htmlFor="defeatZeroCounters">  Defeating removes a counter: </label>
+                                    <select
+                                        name="defeatZeroCounters"
+                                        id="defeatZeroCounters"
+                                        value={cardState.defeatZeroCounters}
+                                        onChange={(e) => {
+                                            dispatchCardState(defeatZeroCounters(e.target.value))
+                                        }}
+                                        onBlur={() => { saveChange() }}
+
+                                    >
+                                        <option value={true}>true</option>
+                                        <option value={false}>false</option>
+                                    </select>
+
+                                    <label htmlFor="counters">  Counters initially present: </label>
+                                    <input
+                                        id="counters"
+                                        name="counters"
+                                        type='number'
+                                        style={{ width: 3 + 'em' }}
+                                        value={cardState.counters}
+                                        onChange={(e) => {
+                                            dispatchCardState(updateCounters(e.target.value))
+                                        }}
+                                        onBlur={() => { saveChange() }}
+                                    />
+
+                                </span>
+                                <div>
+                                    <label htmlFor="failingAddsCounters">  Failing Adds Counters: </label>
+                                    <select
+                                        name="failingAddsCounters"
+                                        id="failingAddsCounters"
+                                        value={cardState.failingAddsCounters}
+                                        onChange={(e) => { dispatchCardState(failingAddsCounters(e.target.value)) }}
+                                        onBlur={() => { saveChange() }}
+                                    >
+                                        <option value={true}>true</option>
+                                        <option value={false}>false</option>
+                                    </select>
+
+                                    <label htmlFor="failingRemovesCounters">  Failing Removes Counters: </label>
+                                    <select
+                                        name="failingRemovesCounters"
+                                        id="failingRemovesCounters"
+                                        value={cardState.failingRemovesCounters}
+                                        onChange={(e) => { dispatchCardState(failingRemovesCounters(e.target.value)) }}
+                                        onBlur={() => { saveChange() }}
+                                    >
+                                        <option value={true}>true</option>
+                                        <option value={false}>false</option>
+                                    </select>
+
+                                    <label htmlFor="failCounterNumber">  Number of counters to add/remove on fail: </label>
+                                    <input
+                                        id="failCounterNumber"
+                                        name="failCounterNumber"
+                                        type='number'
+                                        style={{ width: 3 + 'em' }}
+                                        value={cardState.failCounterNumber}
+                                        onChange={(e) => {
+                                            dispatchCardState(updateFailCounterNumber(e.target.value))
+                                        }}
+                                        onBlur={() => { saveChange() }}
+                                    />
+                                </div>
+                            </span>
+                        }
+                    </div>
+
+                    <div>
+                        {cardState.monster && <img src={images.monster} />}
+                        {cardState.spooky && <img src={images.spooky} />}
+                        {cardState.magic && <img src={images.magic} />}
+                        {cardState.trap && <img src={images.trap} />}
+                        {cardState.noAssist && <img src={images.noAssist} />}
+                        {cardState.doubleAssist && <img src={images.doubleAssist} />}
+                        {cardState.noRoll && <img src={images.noRoll} />}
+                        {cardState.chance && <img src={images.chance} />}
+                    </div>
+
                     <button
                         onClick={() => { removeCard(cardState) }}
                     >Remove Card</button>
