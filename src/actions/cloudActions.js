@@ -448,19 +448,19 @@ export const startSetLocationDeck = (uid, key, locationDeck) => {
 
 // Challenge Actions
 
-export const startUploadDeckCard = (hostKey, deckCode, unComplete, card) => {
-    const newKey = push(child(ref(db), 'savedGames/' + hostKey + '/challenges/' + deckCode + '/' + unComplete)).key
+export const startUploadDeckCard = (hostKey, deckCode, card) => {
+    const newKey = push(child(ref(db), 'savedGames/' + hostKey + '/challenges/' + deckCode)).key
     const updates = {}
-    updates['savedGames/' + hostKey + '/challenges/' + deckCode + '/' + unComplete + '/' + newKey] = { ...card, challengeKey: newKey }
+    updates['savedGames/' + hostKey + '/challenges/' + deckCode + '/' + newKey] = { ...card, challengeKey: newKey }
     update(ref(db), updates)
         .catch((error) => {
             console.log('Did not upload card to cloud: ', error)
         })
 }
 
-export const startSyncCard = (uid, key, deckCode, unComplete, deckItem) => {
+const startSyncCard = (uid, key, deckCode, deckItem) => {
     const updates = {}
-    updates['savedGames/' + uid + '/' + key + '/challenges/' + deckCode + '/' + unComplete + '/' + deckItem.cardKey] = deckItem
+    updates['savedGames/' + uid + '/' + key + '/challenges/' + deckCode + '/' + deckItem.cardKey] = deckItem
     update(ref(db), updates)
         .catch((error) => {
             console.log('Did not sync card to cloud: ', error)
@@ -601,6 +601,15 @@ export const startUpdateLootPoints = (activePlayer, activeCharacter, newLootTota
 export const startUpdateTeamHealth = (hostKey, newHealthTotal) => {
     const updates = {}
     updates['savedGames/' + hostKey + '/active/teamHealth'] = newHealthTotal
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not update health total: ', error)
+        })
+}
+
+export const startCompleteChallenge = (hostKey, code, challengeKey, visible,) => {
+    const updates = {}
+    updates['savedGames/' + hostKey + '/challenges/' + code + '/uncompleted/' + challengeKey + '/completed'] = true
     update(ref(db), updates)
         .catch((error) => {
             console.log('Did not update health total: ', error)

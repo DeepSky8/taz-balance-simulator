@@ -90,7 +90,7 @@ const turnTextSwitcher = (cloudState, localState, activeAssistPlayer) => {
                     return activeAssistPlayer + assistScene;
                 case 'EVALUATETWO':
                     return clickProceed
-                case 'DESCRIBE':
+                case 'DESCRIBETWO':
                     if(cloudState.strength.total >= cloudState.currentTurn.difficulty){
                         return describeSuccess
                     } else {

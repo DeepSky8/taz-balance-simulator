@@ -43,7 +43,8 @@ const cardMatcher = (protoArray, returnArray = []) => {
 
 const cardCombiner = (protoCardA, protoCardB) => {
 
-    const sortedFaceUp = [protoCardA, protoCardB].sort((a, b) => {
+    const sortedFaceUp = [protoCardA, protoCardB]
+    sortedFaceUp.sort((a, b) => {
         if (a.faceUp && b.faceUp) {
             return cardPicker()
         } else if (a.faceUp) {
@@ -52,7 +53,7 @@ const cardCombiner = (protoCardA, protoCardB) => {
             return 1
         }
     })
-
+    
     return {
         front: sortedFaceUp[0],
         back: sortedFaceUp[1]
@@ -146,21 +147,21 @@ const challengeDeck = (challengeCode, protoCardArray) => {
 
         const tempPairedProtoCards = [];
 
-        // cardMatcher find the cards that are paired (via cardKey and pairedWith fields)
+        // cardMatcher finds the cards that are paired (via cardKey and pairedWith fields)
         // and places the paired protoCards in an array
         const results = cardMatcher(tempPairedArray)
         results.finalMatchedPairs.forEach((pairedObject) => {
             tempPairedProtoCards.push(cardCombiner(pairedObject.protoCardToMatch, pairedObject.matchedProtoCard))
         })
 
+
         // Shuffle the unpaired protoCards
         const tempShuffledArray = shuffle(tempRandomArray)
         const tempRandomProtoCards = []
         // Then combine them into cards with a front and back
         while (tempShuffledArray.length > 0) {
-            tempRandomProtoCards.push(cardCombiner(tempShuffledArray.splice(0, 2)))
+            tempRandomProtoCards.push(cardCombiner(...tempShuffledArray.splice(0, 2)))
         }
-
         const almostFullProtoDeck = shuffle(tempPairedProtoCards.concat(tempRandomProtoCards))
         almostFullProtoDeck.forEach((protoCard) => {
             protoDeck.push(protoCard)

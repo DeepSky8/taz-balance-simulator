@@ -26,13 +26,13 @@ const incrementTurn = (stage) => {
         case 'POST_ASSIST_SCENE':
             return 'EVALUATETWO';
         case 'EVALUATETWO':
-            return 'DESCRIBE';
-        case 'DESCRIBE':
+            return 'DESCRIBETWO';
+        case 'DESCRIBETWO':
             return 'KOSTCO';
         case 'KOSTCO':
             return 'PASS';
         default:
-            return 'DESCRIBE';
+            return 'DESCRIBEONE';
     }
 }
 

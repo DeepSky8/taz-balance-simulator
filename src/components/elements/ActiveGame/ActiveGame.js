@@ -52,8 +52,6 @@ const ActiveGame = () => {
     let navigate = useNavigate()
 
     const introStages = ['INTRO', 'BRIEF', 'BACKSTORY']
-    const uncompleted = 'uncompleted'
-    const completed = 'completed'
     const [cloudState, dispatchCloudState] = useReducer(cloudReducer, defaultCloudState)
     const [localState, dispatchLocalState] = useReducer(localStateReducer, defaultLocalState)
 
@@ -126,8 +124,8 @@ const ActiveGame = () => {
 
     // Challenge deck listeners
     useEffect(() => {
-        // Uncomplete Villain challenge listener
-        onValue(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeVillain + '/uncompleted'),
+        // Villain challenge listener
+        onValue(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeVillain),
             (snapshot) => {
                 if (snapshot.exists()) {
                     // console.log('snapshot', snapshot.val())
@@ -160,7 +158,7 @@ const ActiveGame = () => {
                                     startUploadDeckCard(
                                         localState.hostKey,
                                         cloudState.static.codeVillain,
-                                        uncompleted,
+                                        
                                         card
                                     )
                                 })
@@ -170,19 +168,10 @@ const ActiveGame = () => {
                     })
                 }
             })
-        // Complete Villain challenge listener
-        // onValue(ref(db, 'savedGames/' + currentTurn.hostKey + '/challenges/' + cloudState.static.codeVillain + '/completed'),
-        //     (snapshot) => {
-        //         if (snapshot.exists()) {
-        //             const tempCompleteCards = [];
-        //             snapshot.forEach((card) => {
-        //                 tempCompleteCards.push(card.val())
-        //             })
-        //             dispatchCurrentTurn(updateCompletedVillain(tempCompleteCards))
-        //         }
-        //     })
-        // Uncomplete Relic challenge listener
-        onValue(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeRelic + '/uncompleted'),
+
+            
+        // Relic challenge listener
+        onValue(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeRelic),
             (snapshot) => {
 
                 if (snapshot.exists()) {
@@ -211,7 +200,7 @@ const ActiveGame = () => {
                                     startUploadDeckCard(
                                         localState.hostKey,
                                         cloudState.static.codeRelic,
-                                        uncompleted,
+                                        
                                         card
                                     )
                                 })
@@ -221,19 +210,10 @@ const ActiveGame = () => {
                     })
                 }
             })
-        // Complete Relic challenge listener
-        // onValue(ref(db, 'savedGames/' + currentTurn.hostKey + '/challenges/' + cloudState.static.codeRelic + '/completed'),
-        //     (snapshot) => {
-        //         if (snapshot.exists()) {
-        //             const tempCompleteCards = [];
-        //             snapshot.forEach((card) => {
-        //                 tempCompleteCards.push(card.val())
-        //             })
-        //             dispatchCurrentTurn(updateCompletedRelic(tempCompleteCards))
-        //         }
-        //     })
+
+            
         // Uncomplete Location challenge listener
-        onValue(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeLocation + '/uncompleted'),
+        onValue(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeLocation),
             (snapshot) => {
                 if (snapshot.exists()) {
                     const tempUncompleteCards = [];
@@ -260,7 +240,7 @@ const ActiveGame = () => {
                                     startUploadDeckCard(
                                         localState.hostKey,
                                         cloudState.static.codeLocation,
-                                        uncompleted,
+                                        
                                         card
                                     )
                                 })
@@ -270,25 +250,13 @@ const ActiveGame = () => {
                     })
                 }
             })
-        // Complete Location challenge listener
-        // onValue(ref(db, 'savedGames/' + currentTurn.hostKey + '/challenges/' + cloudState.static.codeLocation + '/completed'),
-        //     (snapshot) => {
-        //         if (snapshot.exists()) {
-        //             const tempCompleteCards = [];
-        //             snapshot.forEach((card) => {
-        //                 tempCompleteCards.push(card.val())
-        //             })
-        //             dispatchCurrentTurn(updateCompletedLocation(tempCompleteCards))
-        //         }
-        //     })
+
+            
 
         return () => {
-            off(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeVillain + '/uncompleted'))
-            off(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeVillain + '/completed'))
-            off(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeRelic + '/uncompleted'))
-            off(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeRelic + '/completed'))
-            off(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeLocation + '/uncompleted'))
-            off(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeLocation + '/completed'))
+            off(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeVillain))
+            off(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeRelic))
+            off(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeLocation))
             if (auth.currentUser.uid === localState.hostKey.split('/', 1)) {
                 off(ref(db, 'challenges/' + cloudState.static.codeVillain))
                 off(ref(db, 'challenges/' + cloudState.static.codeRelic))

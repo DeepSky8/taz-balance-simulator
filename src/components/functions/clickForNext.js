@@ -54,9 +54,16 @@ const clickForNext = ({ cloudState, localState }) => {
 
     const rollDice = (rollLocation) => {
         const newRoll = diceRoll()
-        startSaveDiceRoll(localState.hostKey, rollLocation, newRoll)
+
         setTimeout(() => { startToggleRollAnimation(localState.hostKey, true) }, 0)
-        setTimeout(() => { startToggleRollAnimation(localState.hostKey, false) }, 5000)
+        setTimeout(() => {
+            startToggleRollAnimation(localState.hostKey, false);
+            startSaveDiceRoll(localState.hostKey, rollLocation, newRoll);
+        }, 6000)
+    }
+
+    const completeChallenge = () => { 
+
     }
 
     const turnIncrement = (stage = incrementTurn(cloudState.currentTurn.turnStage)) => {
@@ -150,11 +157,15 @@ const clickForNext = ({ cloudState, localState }) => {
                         turnIncrement()
                         break;
                     case 'EVALUATEONE':
-                        if ((cloudState.strength.total >= cloudState.currentTurn.difficulty) ||
-                            (cloudState.strength.assist > 0) ||
+                        if ((cloudState.strength.total >=
+                            cloudState.currentTurn.difficulty)
+                            ||
+                            (cloudState.strength.assist > 0)
+                            ||
                             (localState.currentChallenge.noAssist)
                         ) {
-                            turnIncrement('DESCRIBE')
+                            completeChallenge()
+                            turnIncrement('DESCRIBETWO')
                         } else {
                             turnIncrement()
                         }
@@ -182,7 +193,7 @@ const clickForNext = ({ cloudState, localState }) => {
                         }
                         turnIncrement()
                         break;
-                    case 'DESCRIBE':
+                    case 'DESCRIBETWO':
                         if (localState.activeCharacter.lootPoints >= 3) {
                             turnIncrement()
                         } else {

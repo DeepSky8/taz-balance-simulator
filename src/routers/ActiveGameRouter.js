@@ -103,9 +103,9 @@ const ActiveGameRouter = ({
                             <ActionTokens
                                 cloudState={cloudState}
                             />
-                            <RollDiceAnimation
-                                visible={cloudState.currentTurn.showRoll}
-                            />
+                            {cloudState.currentTurn.showRoll &&
+                                <RollDiceAnimation />
+                            }
                             <ChallengeFrame
                                 cloudState={cloudState}
                                 localState={localState}

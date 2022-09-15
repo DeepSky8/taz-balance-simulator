@@ -15,7 +15,7 @@ const turnStages = [
     'POSTASSIST',
     'POST_ASSIST_SCENE',
     'EVALUATETWO',
-    'DESCRIBE',
+    'DESCRIBETWO',
     'KOSTCO',
     'PASS'
 ]

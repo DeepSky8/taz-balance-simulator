@@ -3,14 +3,18 @@
         opacity: 0;
         transform: translateX(-50%) scale(0) rotateZ(-60deg);
     }
-    100% {
+    50% {
         opacity: 1;
-        transform: translateX(-50%) scale(1) rotateZ(0deg);
+        transform: translateX(-50%) scale(1) rotateZ(90deg);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(-50%) scale(0) rotateZ(180deg);
     }
 }
 
 .diceroll {
-    animation: 2s cubic-bezier(0.25, 0.25, 0.25, 1.25) both fade-in;
+    animation: 5s  both fade-in;
     // display: block;
     position: fixed;
     // font-size: 3vw;
@@ -23,3 +27,9 @@
     top: 30%;
     // transform: translateY(-50%);
 }
+
+// .show {
+//     display: block;
+// }
+
+// cubic-bezier(0.25, 0.25, 0.25, 1.25)
