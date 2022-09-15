@@ -43,6 +43,7 @@ import {
     updateLocalCharacterID,
     updateHostKey,
     updateLocalCharacter,
+    updateCurrentChallengeKey,
 } from "../../../actions/localActions";
 import { defaultLocalState, localStateReducer } from "../../../reducers/localReducer";
 import { stats } from "../CharacterSheet/classes/charInfo";
@@ -131,8 +132,12 @@ const ActiveGame = () => {
                     // console.log('snapshot', snapshot.val())
 
                     const tempUncompleteCards = [];
+
                     snapshot.forEach((card) => {
-                        tempUncompleteCards.push(card.val())
+                        if(!card.val().completed){
+                            tempUncompleteCards.push(card.val())
+                        }
+                        
                     })
                     // dispatchCurrentTurn(updateUncompletedVillain(tempUncompleteCards))
                     startUpdateActiveVillain(localState.hostKey, tempUncompleteCards[0])
@@ -158,7 +163,7 @@ const ActiveGame = () => {
                                     startUploadDeckCard(
                                         localState.hostKey,
                                         cloudState.static.codeVillain,
-                                        
+
                                         card
                                     )
                                 })
@@ -169,7 +174,7 @@ const ActiveGame = () => {
                 }
             })
 
-            
+
         // Relic challenge listener
         onValue(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeRelic),
             (snapshot) => {
@@ -177,7 +182,9 @@ const ActiveGame = () => {
                 if (snapshot.exists()) {
                     const tempUncompleteCards = [];
                     snapshot.forEach((card) => {
-                        tempUncompleteCards.push(card.val())
+                        if(!card.val().completed){
+                            tempUncompleteCards.push(card.val())
+                        }
                     })
                     // dispatchCurrentTurn(updateUncompletedRelic(tempUncompleteCards))
                     startUpdateActiveRelic(localState.hostKey, tempUncompleteCards[0])
@@ -200,7 +207,7 @@ const ActiveGame = () => {
                                     startUploadDeckCard(
                                         localState.hostKey,
                                         cloudState.static.codeRelic,
-                                        
+
                                         card
                                     )
                                 })
@@ -211,14 +218,16 @@ const ActiveGame = () => {
                 }
             })
 
-            
-        // Uncomplete Location challenge listener
+
+        // Location challenge listener
         onValue(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeLocation),
             (snapshot) => {
                 if (snapshot.exists()) {
                     const tempUncompleteCards = [];
                     snapshot.forEach((card) => {
-                        tempUncompleteCards.push(card.val())
+                        if(!card.val().completed){
+                            tempUncompleteCards.push(card.val())
+                        }
                     })
                     // dispatchCurrentTurn(updateUncompletedLocation(tempUncompleteCards))
                     startUpdateActiveLocation(localState.hostKey, tempUncompleteCards[0])
@@ -240,7 +249,7 @@ const ActiveGame = () => {
                                     startUploadDeckCard(
                                         localState.hostKey,
                                         cloudState.static.codeLocation,
-                                        
+
                                         card
                                     )
                                 })
@@ -251,7 +260,7 @@ const ActiveGame = () => {
                 }
             })
 
-            
+
 
         return () => {
             off(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeVillain))
@@ -613,7 +622,28 @@ const ActiveGame = () => {
     // update the locally-stored challenge elements with current face
     useEffect(() => {
         if (cloudState.currentTurn.selectedChallenge !== '') {
-            dispatchLocalState(updateCurrentChallenge(cloudState.currentTurn[cloudState.currentTurn.selectedChallenge][cloudState.currentTurn[cloudState.currentTurn.selectedChallenge].visible]))
+            dispatchLocalState(
+                updateCurrentChallenge(
+                    cloudState.currentTurn
+                    [
+                    cloudState.currentTurn.selectedChallenge
+                    ][
+                    cloudState.currentTurn
+                    [
+                        cloudState.currentTurn.selectedChallenge
+                    ].visible
+                    ]
+                )
+            )
+            dispatchLocalState(
+                updateCurrentChallengeKey(
+                    cloudState.currentTurn
+                    [
+                        cloudState.currentTurn.selectedChallenge
+                    ].challengeKey
+                )
+
+            )
             // console.log('currentChallenge', cloudState.currentTurn[cloudState.currentTurn.selectedChallenge][cloudState.currentTurn[cloudState.currentTurn.selectedChallenge].visible])
         } else {
             dispatchLocalState(clearCurrentChallenge())
@@ -654,29 +684,6 @@ const ActiveGame = () => {
         }
     }, [cloudState.active.gameStage])
 
-    // // Testing tools
-    // const resetStages = () => {
-    //     startUpdateGameStage(localState.hostKey, 'INTRO')
-    // }
-
-    // const stepStage = () => {
-    //     startUpdateGameStage(localState.hostKey, incrementStage(cloudState.active.gameStage))
-    // }
-
-    // const resetTurnStage = () => {
-    //     startUpdateTurnStage(localState.hostKey, incrementTurn('default'))
-    // }
-
-    // const resetActionTokens = () => {
-    //     startRESETActionTokens(localState.hostKey, cloudState.playerList)
-    // }
-    // // Testing tools
-
-    // useEffect(() => {
-    //     console.log('host', localState.hostKey.split('/', 1))
-
-    // })
-
     return (
         <div>
             <ActiveGameRouter
@@ -689,127 +696,3 @@ const ActiveGame = () => {
 }
 
 export { ActiveGame as default }
-
-
-// <div>
-// <p> - break - </p>
-// <div>Villain Code: {cloudState.static.codeVillain}</div>
-// <div>Relic Code: {cloudState.static.codeRelic}</div>
-// <div>Location Code: {cloudState.static.codeLocation}</div>
-// <div>Game Stage: {cloudState.active.gameStage}</div>
-// <div>Turn Stage: {cloudState.currentTurn.turnStage}</div>
-// <div>Briefing Stage: {cloudState.backstory.briefingStage}</div>
-// <div>Host: {cloudState.static.host}</div>
-// <div>Key: {cloudState.static.key}</div>
-// <div>Surprises: {cloudState.surprises}</div>
-// <div>Villain Progress: {cloudState.active.progressVillain}</div>
-// <div>Relic Progress: {cloudState.active.progressRelic}</div>
-// <div>Location Progress: {cloudState.active.progressLocation}</div>
-// <div>Ready state: {cloudState.active.ready && cloudState.active.ready ? 'true' : 'false'}</div>
-// <div>Team Health: {cloudState.active.teamHealth}</div>
-// <div>Active Character: {cloudState.active.activeUID && cloudState.active.activeCharID}</div>
-// </div>
-
-
-// <AuthWrapper />
-//             <ActiveCharWrapper
-//                 cloudState={cloudState}
-//                 activeCharacter={activeCharacterObject}
-//                 localCharacter={localCharObject}
-//                 resetStages={resetStages}
-//                 stepStage={stepStage}
-//                 resetTurnStage={resetTurnStage}
-//                 resetActionTokens={resetActionTokens}
-//             />
-//             <PassTurn
-//                 cloudState={cloudState}
-//                 character={activeCharacterObject}
-//             />
-
-//             <Routes>
-//                 <Route
-//                     path="introductions"
-//                     element={
-//                         <div>
-//                             <IntroDescription />
-//                             <IntroCharacter
-//                                 character={activeCharacterObject}
-//                                 ready={cloudState.ready}
-//                             />
-//                         </div>
-//                     }
-//                 />
-//                 <Route
-//                     path="missionBriefing/*"
-//                     element={
-//                         <MissionBriefing
-//                             cloudState={cloudState}
-//                         />
-//                     }
-//                 />
-//                 <Route
-//                     path="backstory"
-//                     element={
-//                         <div>
-//                             backstory
-//                         </div>
-//                     }
-//                 />
-//                 <Route
-//                     path="transport"
-//                     element={
-//                         <BriefingComplete />
-//                     }
-//                 />
-//                 <Route
-//                     path="playing"
-//                     element={
-//                         <Playing
-//                             cloudState={cloudState}
-
-//                         >
-
-
-
-//                         </Playing>
-//                     }
-//                 />
-//                 <Route
-//                     path="summary"
-//                     element={
-//                         <div>
-//                             summary
-//                         </div>
-//                     }
-//                 />
-//             </Routes>
-
-// <ChallengeFrame>
-// <VillainChallenge />
-// </ChallengeFrame>
-
-
-// deckUncompletedVillain={deckUncompletedVillain}
-// deckUncompletedRelic={deckUncompletedRelic}
-// deckUncompletedLocation={deckUncompletedLocation}
-
-
-
-
-
-
-
-
-// {cloudState.classStorage.forEach((classNumber) => {
-//     <div>Class Storage: {classNumber} </div>
-// })}
-
-
-
-            // {cloudState.playerList &&
-            //     cloudState.playerList.forEach((playerObject) => {
-            //         return (<div>Team Player Object: {playerObject.currentCharacterID}, {playerObject.uid}</div>)
-            //     })
-            // }
-
-// {cloudState.readyList && playerObject.currentCharacterID}, {cloudState.readyList && playerObject.uid}

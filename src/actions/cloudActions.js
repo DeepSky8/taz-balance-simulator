@@ -609,9 +609,10 @@ export const startUpdateTeamHealth = (hostKey, newHealthTotal) => {
 
 export const startCompleteChallenge = (hostKey, code, challengeKey, visible,) => {
     const updates = {}
-    updates['savedGames/' + hostKey + '/challenges/' + code + '/uncompleted/' + challengeKey + '/completed'] = true
+    updates['savedGames/' + hostKey + '/challenges/' + code + '/' + challengeKey + '/completed'] = true
+    updates['savedGames/' + hostKey + '/challenges/' + code + '/' + challengeKey + '/' + visible + '/completed'] = true
     update(ref(db), updates)
         .catch((error) => {
-            console.log('Did not update health total: ', error)
+            console.log('Did not mark challenge as completed: ', error)
         })
 }

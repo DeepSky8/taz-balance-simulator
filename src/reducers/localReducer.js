@@ -55,6 +55,7 @@ const defaultLocalState = {
     activeCharacter: {
         ...defaultCharState
     },
+    currentChallengeKey: '',
     currentChallenge: {
         ...defaultCardState
         // // deck creation flags
@@ -196,6 +197,16 @@ const localStateReducer = (state, action) => {
             return {
                 ...state,
                 currentChallenge: {}
+            }
+        case 'UPDATE_CURRENT_CHALLENGE_KEY':
+            return {
+                ...state,
+                currentChallengeKey: action.currentChallengeKey
+            }
+        case 'CLEAR_CURRENT_CHALLENGE_KEY':
+            return {
+                ...state,
+                currentChallengeKey: ''
             }
         // case 'RESET_REDUCER':
         //     return {

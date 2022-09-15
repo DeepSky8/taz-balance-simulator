@@ -1,5 +1,5 @@
 import { updateLoot } from "../../actions/cardActions";
-import { startAddStoryBonus, startMarkTurnComplete, startSaveDiceRoll, startToggleRollAnimation, startUpdateAssistBonus, startUpdateAssistTokens, startUpdateLootPoints, startUpdateTeamHealth, startUpdateTurnStage } from "../../actions/cloudActions"
+import { startAddStoryBonus, startCompleteChallenge, startMarkTurnComplete, startSaveDiceRoll, startToggleRollAnimation, startUpdateAssistBonus, startUpdateAssistTokens, startUpdateLootPoints, startUpdateTeamHealth, startUpdateTurnStage } from "../../actions/cloudActions"
 import { auth } from "../../firebase/firebase";
 import { stats } from "../elements/CharacterSheet/classes/charInfo";
 import diceRoll from "./diceRoll";
@@ -59,11 +59,31 @@ const clickForNext = ({ cloudState, localState }) => {
         setTimeout(() => {
             startToggleRollAnimation(localState.hostKey, false);
             startSaveDiceRoll(localState.hostKey, rollLocation, newRoll);
-        }, 6000)
+        }, 4000)
     }
 
-    const completeChallenge = () => { 
+    const completeChallenge = () => {
+        const codeChallenge = () => {
+            switch (cloudState.currentTurn.selectedChallenge) {
+                case 'villain':
+                    return 'codeVillain'
+                case 'relic':
+                    return 'codeRelic'
+                case 'location':
+                    return 'codeLocation'
+                default:
+                    console.log('selectedChallenge fell through', cloudState.currentTurn.selectedChallenge)
+            }
+        }
 
+
+        const code = cloudState.static[codeChallenge]
+        startCompleteChallenge(
+            localState.hostKey,
+            code,
+            localState.currentChallengeKey,
+            cloudState.currentTurn.visible
+        )
     }
 
     const turnIncrement = (stage = incrementTurn(cloudState.currentTurn.turnStage)) => {
@@ -157,14 +177,14 @@ const clickForNext = ({ cloudState, localState }) => {
                         turnIncrement()
                         break;
                     case 'EVALUATEONE':
-                        if ((cloudState.strength.total >=
-                            cloudState.currentTurn.difficulty)
-                            ||
+                        if (cloudState.strength.total >=
+                            cloudState.currentTurn.difficulty) {
+                            completeChallenge()
+                        } else if (
                             (cloudState.strength.assist > 0)
                             ||
                             (localState.currentChallenge.noAssist)
                         ) {
-                            completeChallenge()
                             turnIncrement('DESCRIBETWO')
                         } else {
                             turnIncrement()
