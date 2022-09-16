@@ -1,5 +1,5 @@
 import { updateLoot } from "../../actions/cardActions";
-import { startAddStoryBonus, startCompleteChallenge, startMarkTurnComplete, startSaveDiceRoll, startToggleRollAnimation, startUpdateAssistBonus, startUpdateAssistTokens, startUpdateLootPoints, startUpdateTeamHealth, startUpdateTurnStage } from "../../actions/cloudActions"
+import { startAddStoryBonus, startCompleteChallenge, startMarkTurnComplete, startSaveDiceRoll, startToggleRollAnimation, startUpdateAssistBonusOne, startUpdateAssistBonusTwo, startUpdateAssistTokens, startUpdateLootPoints, startUpdateTeamHealth, startUpdateTurnStage } from "../../actions/cloudActions"
 import { auth } from "../../firebase/firebase";
 import { stats } from "../elements/CharacterSheet/classes/charInfo";
 import diceRoll from "./diceRoll";
@@ -16,10 +16,14 @@ const clickForNext = ({ cloudState, localState }) => {
     }
 
     const addAssistBonus = (assistingCharacter, stage) => {
-        const currentAssist = cloudState.strength.assist ? cloudState.strength.assist : 0
-        const additionalAssistBonus = stats[assistingCharacter.classCode][stage]
-        const newAssist = currentAssist + additionalAssistBonus
-        startUpdateAssistBonus(localState.hostKey, newAssist)
+        // const currentAssist = cloudState.strength.assistOne ? cloudState.strength.assistOne : 0
+        const assistBonus = stats[assistingCharacter.classCode][stage]
+        if (cloudState.strength.assistOne > 0) {
+            startUpdateAssistBonusTwo(localState.hostKey, assistBonus)
+        } else {
+            startUpdateAssistBonusOne(localState.hostKey, assistBonus)
+        }
+
 
     }
 
@@ -84,6 +88,13 @@ const clickForNext = ({ cloudState, localState }) => {
             localState.currentChallengeKey,
             cloudState.currentTurn.visible
         )
+    }
+
+    const failChallenge = () => {
+        const currentHealth = cloudState.active.teamHealth
+        const loseHealth = localState.currentChallenge.loseHealth
+        const updatedHealth = currentHealth - loseHealth
+        startUpdateTeamHealth(localState.hostKey, updatedHealth)
     }
 
     const turnIncrement = (stage = incrementTurn(cloudState.currentTurn.turnStage)) => {
@@ -180,13 +191,19 @@ const clickForNext = ({ cloudState, localState }) => {
                         if (cloudState.strength.total >=
                             cloudState.currentTurn.difficulty) {
                             completeChallenge()
-                        } else if (
-                            (cloudState.strength.assist > 0)
-                            ||
-                            (localState.currentChallenge.noAssist)
-                        ) {
                             turnIncrement('DESCRIBETWO')
-                        } else {
+                        } else if (
+                            (localState.currentChallenge.noAssist)
+                            ||
+                            (cloudState.strength.assistTwo > 0)
+                        ) {
+                            failChallenge()
+                            turnIncrement('DESCRIBETWO')
+                        } else if (
+                            (localState.currentChallenge.doubleAssist)
+                            &&
+                            (cloudState.strength.assistTwo === 0)
+                        ) {
                             turnIncrement()
                         }
                         break;

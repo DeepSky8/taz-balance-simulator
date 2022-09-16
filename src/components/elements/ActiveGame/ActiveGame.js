@@ -26,7 +26,6 @@ import {
     updateStrength,
     clearStrength,
     startSetCharacterStrength,
-    startAddStoryBonus,
 } from "../../../actions/cloudActions";
 import { auth, db } from "../../../firebase/firebase";
 import { defaultCloudState, cloudReducer } from "../../../reducers/cloudReducer";
@@ -44,6 +43,12 @@ import {
     updateHostKey,
     updateLocalCharacter,
     updateCurrentChallengeKey,
+    updateUncompletedChallengesVillain,
+    updateCompletedChallengesVillain,
+    updateUncompletedChallengesRelic,
+    updateCompletedChallengesRelic,
+    updateUncompletedChallengesLocation,
+    updateCompletedChallengesLocation,
 } from "../../../actions/localActions";
 import { defaultLocalState, localStateReducer } from "../../../reducers/localReducer";
 import { stats } from "../CharacterSheet/classes/charInfo";
@@ -123,157 +128,7 @@ const ActiveGame = () => {
         }
     }, [])
 
-    // Challenge deck listeners
-    useEffect(() => {
-        // Villain challenge listener
-        onValue(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeVillain),
-            (snapshot) => {
-                if (snapshot.exists()) {
-                    // console.log('snapshot', snapshot.val())
 
-                    const tempUncompleteCards = [];
-
-                    snapshot.forEach((card) => {
-                        if(!card.val().completed){
-                            tempUncompleteCards.push(card.val())
-                        }
-                        
-                    })
-                    // dispatchCurrentTurn(updateUncompletedVillain(tempUncompleteCards))
-                    startUpdateActiveVillain(localState.hostKey, tempUncompleteCards[0])
-
-
-                    // If no uncomplete Villain challenge deck exists
-                    // the Host of the game creates a deck and uploads it
-                } else if (auth.currentUser.uid === localState.hostKey.split('/', 1).toString()) {
-                    onValue(ref(db, 'challenges/' + cloudState.static.codeVillain),
-                        (snapshot) => {
-                            if (snapshot.exists()) {
-                                const uncombinedChallengesArray = [];
-                                snapshot.forEach((cardFace) => {
-                                    uncombinedChallengesArray.push(cardFace.val())
-                                })
-
-                                const combinedChallengesArray = challengeDeck(
-                                    cloudState.static.codeVillain,
-                                    uncombinedChallengesArray
-                                )
-
-                                combinedChallengesArray.forEach((card) => {
-                                    startUploadDeckCard(
-                                        localState.hostKey,
-                                        cloudState.static.codeVillain,
-
-                                        card
-                                    )
-                                })
-                            }
-                        }, {
-                        onlyOnce: true
-                    })
-                }
-            })
-
-
-        // Relic challenge listener
-        onValue(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeRelic),
-            (snapshot) => {
-
-                if (snapshot.exists()) {
-                    const tempUncompleteCards = [];
-                    snapshot.forEach((card) => {
-                        if(!card.val().completed){
-                            tempUncompleteCards.push(card.val())
-                        }
-                    })
-                    // dispatchCurrentTurn(updateUncompletedRelic(tempUncompleteCards))
-                    startUpdateActiveRelic(localState.hostKey, tempUncompleteCards[0])
-                } else if (auth.currentUser.uid === localState.hostKey.split('/', 1).toString()) {
-                    onValue(ref(db, 'challenges/' + cloudState.static.codeRelic),
-                        (snapshot) => {
-
-                            if (snapshot.exists()) {
-                                const uncombinedChallengesArray = [];
-                                snapshot.forEach((cardFace) => {
-                                    uncombinedChallengesArray.push(cardFace.val())
-                                })
-
-                                const combinedChallengesArray = challengeDeck(
-                                    cloudState.static.codeRelic,
-                                    uncombinedChallengesArray
-                                )
-
-                                combinedChallengesArray.forEach((card) => {
-                                    startUploadDeckCard(
-                                        localState.hostKey,
-                                        cloudState.static.codeRelic,
-
-                                        card
-                                    )
-                                })
-                            }
-                        }, {
-                        onlyOnce: true
-                    })
-                }
-            })
-
-
-        // Location challenge listener
-        onValue(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeLocation),
-            (snapshot) => {
-                if (snapshot.exists()) {
-                    const tempUncompleteCards = [];
-                    snapshot.forEach((card) => {
-                        if(!card.val().completed){
-                            tempUncompleteCards.push(card.val())
-                        }
-                    })
-                    // dispatchCurrentTurn(updateUncompletedLocation(tempUncompleteCards))
-                    startUpdateActiveLocation(localState.hostKey, tempUncompleteCards[0])
-                } else if (auth.currentUser.uid === localState.hostKey.split('/', 1).toString()) {
-                    onValue(ref(db, 'challenges/' + cloudState.static.codeLocation),
-                        (snapshot) => {
-                            if (snapshot.exists()) {
-                                const uncombinedChallengesArray = [];
-                                snapshot.forEach((cardFace) => {
-                                    uncombinedChallengesArray.push(cardFace.val())
-                                })
-
-                                const combinedChallengesArray = challengeDeck(
-                                    cloudState.static.codeLocation,
-                                    uncombinedChallengesArray
-                                )
-
-                                combinedChallengesArray.forEach((card) => {
-                                    startUploadDeckCard(
-                                        localState.hostKey,
-                                        cloudState.static.codeLocation,
-
-                                        card
-                                    )
-                                })
-                            }
-                        }, {
-                        onlyOnce: true
-                    })
-                }
-            })
-
-
-
-        return () => {
-            off(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeVillain))
-            off(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeRelic))
-            off(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeLocation))
-            if (auth.currentUser.uid === localState.hostKey.split('/', 1)) {
-                off(ref(db, 'challenges/' + cloudState.static.codeVillain))
-                off(ref(db, 'challenges/' + cloudState.static.codeRelic))
-                off(ref(db, 'challenges/' + cloudState.static.codeLocation))
-            }
-        }
-
-    }, [localState.hostKey, cloudState.static])
 
     // CloudState listeners
     // Updated a single time: static, playerList
@@ -432,8 +287,6 @@ const ActiveGame = () => {
             onValue(ref(db, 'characters/' + auth.currentUser.uid + '/' + localState.localCharacterID),
                 (snapshot) => {
                     if (snapshot.exists()) {
-                        // dispatchLocalCharObject(snapshot.val())
-
                         dispatchLocalState(updateLocalCharacter(snapshot.val()))
                     }
                 })
@@ -475,7 +328,6 @@ const ActiveGame = () => {
         if (cloudState.active.activeUID &&
             (cloudState.active.activeUID !== auth.currentUser.uid)
         ) {
-            // dispatchActiveCharacterObject({})
             dispatchLocalState(clearActiveCharacter())
 
             // If the current Active Player is not the local player, 
@@ -483,7 +335,6 @@ const ActiveGame = () => {
             onValue(ref(db, 'characters/' + cloudState.active.activeUID + '/' + cloudState.active.activeCharID),
                 (snapshot) => {
                     if (snapshot.exists()) {
-                        // dispatchActiveCharacterObject(snapshot.val())
                         dispatchLocalState(updateActiveCharacter(snapshot.val()))
                     }
                 })
@@ -504,7 +355,6 @@ const ActiveGame = () => {
         if (cloudState.active.activeCharID &&
             (cloudState.active.activeCharID === localState.localCharacterID)
         ) {
-            // dispatchActiveCharacterObject(localCharObject)
             dispatchLocalState(clearActiveCharacter())
             dispatchLocalState(updateActiveCharacter(localState.localCharacter))
         }
@@ -557,8 +407,8 @@ const ActiveGame = () => {
 
             // Destructure current assistive strength elements
             // and total them up
-            const { assist, ongoingItem, singleUseItem, story } = cloudState.strength
-            const totalAddStrength = assist + ongoingItem + singleUseItem + story
+            const { assistOne, assistTwo, ongoingItem, singleUseItem, story } = cloudState.strength
+            const totalAddStrength = assistOne + assistTwo + ongoingItem + singleUseItem + story
 
             // Destructure the roll data, as well as whether the current challenge requires
             // advantage/disadvantage
@@ -683,6 +533,180 @@ const ActiveGame = () => {
                 break;
         }
     }, [cloudState.active.gameStage])
+
+
+
+    // Challenge deck listeners
+    useEffect(() => {
+        if (auth.currentUser.uid === localState.hostKey.split('/', 1).toString()) {
+            // Villain challenge listener
+            onValue(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeVillain),
+                (snapshot) => {
+                    if (snapshot.exists()) {
+                        const tempUncompleteCards = [];
+                        const tempCompleteCards = [];
+
+                        snapshot.forEach((card) => {
+                            if (!card.val().completed) {
+                                tempUncompleteCards.push(card.val())
+                            }
+                            if (card.val().completed) {
+                                tempCompleteCards.push(card.val())
+                            }
+                        })
+                        startUpdateActiveVillain(localState.hostKey, tempUncompleteCards[0], tempCompleteCards.length)
+                        dispatchLocalState(updateUncompletedChallengesVillain(tempUncompleteCards))
+                        dispatchLocalState(updateCompletedChallengesVillain(tempCompleteCards))
+
+                        // If no uncomplete Villain challenge deck exists
+                        // the Host of the game creates a deck and uploads it
+                    } else if (auth.currentUser.uid === localState.hostKey.split('/', 1).toString()) {
+                        onValue(ref(db, 'challenges/' + cloudState.static.codeVillain),
+                            (snapshot) => {
+                                if (snapshot.exists()) {
+                                    const uncombinedChallengesArray = [];
+                                    snapshot.forEach((cardFace) => {
+                                        uncombinedChallengesArray.push(cardFace.val())
+                                    })
+
+                                    const combinedChallengesArray = challengeDeck(
+                                        cloudState.static.codeVillain,
+                                        uncombinedChallengesArray
+                                    )
+
+                                    combinedChallengesArray.forEach((card) => {
+                                        startUploadDeckCard(
+                                            localState.hostKey,
+                                            cloudState.static.codeVillain,
+
+                                            card
+                                        )
+                                    })
+                                }
+                            }, {
+                            onlyOnce: true
+                        })
+                    }
+                })
+
+
+            // Relic challenge listener
+            onValue(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeRelic),
+                (snapshot) => {
+
+                    if (snapshot.exists()) {
+                        const tempUncompleteCards = [];
+                        const tempCompleteCards = [];
+
+                        snapshot.forEach((card) => {
+                            if (!card.val().completed) {
+                                tempUncompleteCards.push(card.val())
+                            }
+                            if (card.val().completed) {
+                                tempCompleteCards.push(card.val())
+                            }
+                        })
+                        // dispatchCurrentTurn(updateUncompletedRelic(tempUncompleteCards))
+                        startUpdateActiveRelic(localState.hostKey, tempUncompleteCards[0], tempCompleteCards.length)
+                        dispatchLocalState(updateUncompletedChallengesRelic(tempUncompleteCards))
+                        dispatchLocalState(updateCompletedChallengesRelic(tempCompleteCards))
+                    } else if (auth.currentUser.uid === localState.hostKey.split('/', 1).toString()) {
+                        onValue(ref(db, 'challenges/' + cloudState.static.codeRelic),
+                            (snapshot) => {
+
+                                if (snapshot.exists()) {
+                                    const uncombinedChallengesArray = [];
+                                    snapshot.forEach((cardFace) => {
+                                        uncombinedChallengesArray.push(cardFace.val())
+                                    })
+
+                                    const combinedChallengesArray = challengeDeck(
+                                        cloudState.static.codeRelic,
+                                        uncombinedChallengesArray
+                                    )
+
+                                    combinedChallengesArray.forEach((card) => {
+                                        startUploadDeckCard(
+                                            localState.hostKey,
+                                            cloudState.static.codeRelic,
+
+                                            card
+                                        )
+                                    })
+                                }
+                            }, {
+                            onlyOnce: true
+                        })
+                    }
+                })
+
+
+            // Location challenge listener
+            onValue(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeLocation),
+                (snapshot) => {
+                    if (snapshot.exists()) {
+                        const tempUncompleteCards = [];
+                        const tempCompleteCards = [];
+
+                        snapshot.forEach((card) => {
+                            if (!card.val().completed) {
+                                tempUncompleteCards.push(card.val())
+                            }
+                            if (card.val().completed) {
+                                tempCompleteCards.push(card.val())
+                            }
+                        })
+                        // dispatchCurrentTurn(updateUncompletedLocation(tempUncompleteCards))
+                        startUpdateActiveLocation(localState.hostKey, tempUncompleteCards[0], tempCompleteCards.length)
+                        dispatchLocalState(updateUncompletedChallengesLocation(tempUncompleteCards))
+                        dispatchLocalState(updateCompletedChallengesLocation(tempCompleteCards))
+                    } else if (auth.currentUser.uid === localState.hostKey.split('/', 1).toString()) {
+                        onValue(ref(db, 'challenges/' + cloudState.static.codeLocation),
+                            (snapshot) => {
+                                if (snapshot.exists()) {
+                                    const uncombinedChallengesArray = [];
+                                    snapshot.forEach((cardFace) => {
+                                        uncombinedChallengesArray.push(cardFace.val())
+                                    })
+
+                                    const combinedChallengesArray = challengeDeck(
+                                        cloudState.static.codeLocation,
+                                        uncombinedChallengesArray
+                                    )
+
+                                    combinedChallengesArray.forEach((card) => {
+                                        startUploadDeckCard(
+                                            localState.hostKey,
+                                            cloudState.static.codeLocation,
+
+                                            card
+                                        )
+                                    })
+                                }
+                            }, {
+                            onlyOnce: true
+                        })
+                    }
+                })
+        }
+
+
+        return () => {
+            off(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeVillain))
+            off(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeRelic))
+            off(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeLocation))
+            if (auth.currentUser.uid === localState.hostKey.split('/', 1)) {
+                off(ref(db, 'challenges/' + cloudState.static.codeVillain))
+                off(ref(db, 'challenges/' + cloudState.static.codeRelic))
+                off(ref(db, 'challenges/' + cloudState.static.codeLocation))
+            }
+        }
+
+    }, [localState.hostKey, cloudState.static])
+
+
+
+
 
     return (
         <div>

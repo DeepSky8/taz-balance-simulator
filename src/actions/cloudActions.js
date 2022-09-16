@@ -332,7 +332,16 @@ export const startResetTurnElements = (hostKey) => {
     updates['savedGames/' + hostKey + `/currentTurn/rollOne`] = null;
     updates['savedGames/' + hostKey + `/currentTurn/rollTwo`] = null;
     updates['savedGames/' + hostKey + `/currentTurn/turnStage`] = 'DESCRIBEONE';
-    updates['savedGames/' + hostKey + `/strength`] = null;
+    updates['savedGames/' + hostKey + `/strength`] = {
+        assistOne: 0,
+        assistTwo: 0,
+        character: 0,
+        ongoingItem: 0,
+        rollResult: 0,
+        singleUseItem: 0,
+        story: 0,
+        total: 0
+    };
     update(ref(db), updates)
         .catch((error) => {
             console.log(`Error resetting turn elements:`, error)
@@ -485,27 +494,30 @@ export const startSetCurrentDifficulty = (hostKey, difficulty) => {
         })
 }
 
-export const startUpdateActiveVillain = (hostKey, villain) => {
+export const startUpdateActiveVillain = (hostKey, villain, completeLength) => {
     const updates = {}
     updates['savedGames/' + hostKey + '/currentTurn/villain'] = villain
+    updates['savedGames/' + hostKey + '/active/progressVillain'] = completeLength
     update(ref(db), updates)
         .catch((error) => {
             console.log('Did not set active Villain in cloud: ', error)
         })
 }
 
-export const startUpdateActiveRelic = (hostKey, relic) => {
+export const startUpdateActiveRelic = (hostKey, relic, completeLength) => {
     const updates = {}
     updates['savedGames/' + hostKey + '/currentTurn/relic'] = relic
+    updates['savedGames/' + hostKey + '/active/progressRelic'] = completeLength
     update(ref(db), updates)
         .catch((error) => {
             console.log('Did not set active Relic in cloud: ', error)
         })
 }
 
-export const startUpdateActiveLocation = (hostKey, location) => {
+export const startUpdateActiveLocation = (hostKey, location, completeLength) => {
     const updates = {}
     updates['savedGames/' + hostKey + '/currentTurn/location'] = location
+    updates['savedGames/' + hostKey + '/active/progressLocation'] = completeLength
     update(ref(db), updates)
         .catch((error) => {
             console.log('Did not set active location in cloud: ', error)
@@ -532,12 +544,21 @@ export const startAddStoryBonus = (hostKey, storyBonus) => {
         })
 }
 
-export const startUpdateAssistBonus = (hostKey, assist) => {
+export const startUpdateAssistBonusOne = (hostKey, assist) => {
     const updates = {}
-    updates['savedGames/' + hostKey + '/strength/assist'] = assist
+    updates['savedGames/' + hostKey + '/strength/assistOne'] = assist
     update(ref(db), updates)
         .catch((error) => {
-            console.log('Did not update assist bonus Strength: ', error)
+            console.log('Did not update assistOne with bonus Strength: ', error)
+        })
+}
+
+export const startUpdateAssistBonusTwo = (hostKey, assist) => {
+    const updates = {}
+    updates['savedGames/' + hostKey + '/strength/assistTwo'] = assist
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not update assistTwo with bonus Strength: ', error)
         })
 }
 
@@ -616,3 +637,12 @@ export const startCompleteChallenge = (hostKey, code, challengeKey, visible,) =>
             console.log('Did not mark challenge as completed: ', error)
         })
 }
+
+// export const startFailChallenge = (hostKey, updatedHealth) => {
+//     const updates = {}
+//     updates['savedGames/' + hostKey + '/active/teamHealth'] = updatedHealth
+//     update(ref(db), updates)
+//         .catch((error) => {
+//             console.log('Did not mark challenge as completed: ', error)
+//         })
+// }

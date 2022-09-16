@@ -154,6 +154,12 @@ const defaultLocalState = {
         // failCounterNumber: 0,
         // failedAttempts: 0,
     },
+    completedChallengeArrayVillain: [],
+    uncompletedChallengeArrayVillain: [],
+    completedChallengeArrayRelic: [],
+    uncompletedChallengeArrayRelic: [],
+    completedChallengeArrayLocation: [],
+    uncompletedChallengeArrayLocation: [],
 }
 
 const localStateReducer = (state, action) => {
@@ -176,12 +182,18 @@ const localStateReducer = (state, action) => {
         case 'UPDATE_LOCAL_CHARACTER':
             return {
                 ...state,
-                localCharacter: { ...action.localCharacter }
+                localCharacter: {
+                    ...defaultLocalState.localCharacter,
+                    ...action.localCharacter
+                }
             }
         case 'UPDATE_ACTIVE_CHARACTER':
             return {
                 ...state,
-                activeCharacter: { ...action.activeCharacter }
+                activeCharacter: {
+                    ...defaultLocalState.activeCharacter,
+                    ...action.activeCharacter
+                }
             }
         case 'CLEAR_ACTIVE_CHARACTER':
             return {
@@ -191,12 +203,15 @@ const localStateReducer = (state, action) => {
         case 'UPDATE_CURRENT_CHALLENGE':
             return {
                 ...state,
-                currentChallenge: { ...action.currentChallenge }
+                currentChallenge: {
+                    ...defaultLocalState.currentChallenge,
+                    ...action.currentChallenge
+                }
             }
         case 'CLEAR_CURRENT_CHALLENGE':
             return {
                 ...state,
-                currentChallenge: {}
+                currentChallenge: { ...defaultLocalState.currentChallenge }
             }
         case 'UPDATE_CURRENT_CHALLENGE_KEY':
             return {
@@ -212,6 +227,36 @@ const localStateReducer = (state, action) => {
         //     return {
 
         //     }
+        case 'UPDATE_COMPLETED_CHALLENGES_VILLAIN':
+            return {
+                ...state,
+                completedChallengeArrayVillain: action.completedChallengeArrayVillain
+            }
+        case 'UPDATE_UNCOMPLETED_CHALLENGES_VILLAIN':
+            return {
+                ...state,
+                uncompletedChallengeArrayVillain: action.uncompletedChallengeArrayVillain
+            }
+        case 'UPDATE_COMPLETED_CHALLENGES_RELIC':
+            return {
+                ...state,
+                completedChallengeArrayRelic: action.completedChallengeArrayRelic
+            }
+        case 'UPDATE_UNCOMPLETED_CHALLENGES_RELIC':
+            return {
+                ...state,
+                uncompletedChallengeArrayRelic: action.uncompletedChallengeArrayRelic
+            }
+        case 'UPDATE_COMPLETED_CHALLENGES_LOCATION':
+            return {
+                ...state,
+                completedChallengeArrayLocation: action.completedChallengeArrayLocation
+            }
+        case 'UPDATE_UNCOMPLETED_CHALLENGES_LOCATION':
+            return {
+                ...state,
+                uncompletedChallengeArrayLocation: action.uncompletedChallengeArrayLocation
+            }
         default:
             return {
                 ...state

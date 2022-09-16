@@ -77,7 +77,8 @@ const defaultCloudState = {
     ],
     surprises: [],
     strength: {
-        assist: 0,
+        assistOne: 0,
+        assistTwo: 0,
         character: 0,
         ongoingItem: 0,
         rollResult: 0,
