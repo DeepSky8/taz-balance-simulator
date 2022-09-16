@@ -33,14 +33,15 @@ const VillainChallenge = ({ villain, modifier, stage, challengePicked }) => {
                 {villain.magic && <img src={images.magic} alt="Magic Challenge" />}
                 {villain.trap && <img src={images.trap} alt="Trap Challenge" />}
                 {villain.noAssist && <img src={images.noAssist} alt="No Assist Challenge" />}
-                {villain.doubleAssist && <img src={images.double_assist} alt="Double Assist Challenge" />}
-
+                {villain.doubleAssist && <img src={images.doubleAssist} alt="Double Assist Challenge" />}
+                {villain.noRoll && <img src={images.noRoll} alt="No Roll Challenge" />}
+                {villain.chance && <img src={images.chance} alt="Chance Roll Challenge" />}
             </span>
 
             <div>
-                {villain.storyBonus.length > 0 && 'Story +1: '}
+                {villain.storyBonus > 0 && 'Story +1: '}
                 {villain.storyPrompt && villain.storyPrompt}
-                <p>{(villain.effectText.length > 0 && villain.storyPrompt.length > 0) && '---'}</p>
+                <p>{(villain.effectText > 0 && villain.storyPrompt.length > 0) && '---'}</p>
                 {villain.effectText && villain.effectText}
             </div>
 

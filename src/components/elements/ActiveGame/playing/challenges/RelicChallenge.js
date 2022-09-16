@@ -1,6 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
-import { updateCard } from "../../../../../actions/cardActions";
-import { cardReducer, defaultCardState } from "../../../../../reducers/cardReducer";
+import React from "react";
 import { images } from "./imageInfo";
 
 const RelicChallenge = ({ relic, modifierVillain, modifierLocation, stage, challengePicked }) => {
@@ -36,14 +34,15 @@ const RelicChallenge = ({ relic, modifierVillain, modifierLocation, stage, chall
                 {relic.magic && <img src={images.magic} alt="Magic Challenge" />}
                 {relic.trap && <img src={images.trap} alt="Trap Challenge" />}
                 {relic.noAssist && <img src={images.noAssist} alt="No Assist Challenge" />}
-                {relic.doubleAssist && <img src={images.double_assist} alt="Double Assist Challenge" />}
-
+                {relic.doubleAssist && <img src={images.doubleAssist} alt="Double Assist Challenge" />}
+                {relic.noRoll && <img src={images.noRoll} alt="No Roll Challenge" />}
+                {relic.chance && <img src={images.chance} alt="Chance Roll Challenge" />}
             </span>
 
             <div>
-                {relic.storyBonus.length > 0 && 'Story +1: '}
+                {relic.storyBonus > 0 && 'Story +1: '}
                 {relic.storyPrompt.length > 0 && relic.storyPrompt}
-                <p>{(relic.effectText.length > 0 && relic.storyPrompt.length > 0) && '---'}</p>
+                <p>{(relic.effectText && relic.storyPrompt.length > 0) && '---'}</p>
                 {relic.effectText && relic.effectText}
             </div>
 

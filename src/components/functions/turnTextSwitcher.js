@@ -12,7 +12,7 @@ const transportBrief = 'Please keep your arms and legs inside the cannon at all 
 
 // turnStage text
 const engageChallenge = "Select a challenge";
-const challengeSelected = " is challenging "
+const challengeSelected = " is engaging "
 const useItems = 'Do you want to use an item?';
 const tellStory = 'Complete the story prompt for additional strength';
 const askAssist = 'You may request assistance from your team';
@@ -57,7 +57,6 @@ const turnTextSwitcher = (cloudState, localState, activeAssistPlayer) => {
                     if (selector === '') {
                         return engageChallenge;
                     } else if (selector !== '') {
-                        // const cardName = cloudState.currentTurn[selector][cloudState.currentTurn[selector].visible].cardName
                         const cardName = localState.currentChallenge.cardName
                         return localState.activeCharacter.charName + challengeSelected + cardName;
                     }

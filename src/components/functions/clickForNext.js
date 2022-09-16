@@ -16,7 +16,6 @@ const clickForNext = ({ cloudState, localState }) => {
     }
 
     const addAssistBonus = (assistingCharacter, stage) => {
-        // const currentAssist = cloudState.strength.assistOne ? cloudState.strength.assistOne : 0
         const assistBonus = stats[assistingCharacter.classCode][stage]
         if (cloudState.strength.assistOne > 0) {
             startUpdateAssistBonusTwo(localState.hostKey, assistBonus)
@@ -36,13 +35,6 @@ const clickForNext = ({ cloudState, localState }) => {
             cloudState.active.activeCharID,
             updatedLoot
         )
-    }
-
-    const updateHealth = () => {
-        const currentHealth = cloudState.active.teamHealth
-        const removeHealth = localState.currentChallenge.teamHealth
-        const updatedHealth = currentHealth - removeHealth
-        startUpdateTeamHealth(localState.hostKey, updatedHealth)
     }
 
     const removeFirstActiveAssistToken = () => {
@@ -127,10 +119,15 @@ const clickForNext = ({ cloudState, localState }) => {
                         break;
                     case 'CHALLENGE':
                         if (cloudState.currentTurn.selectedChallenge !== '') {
+
+                            // Need to add code to handle 'Chance' challenges
+
+
                             if (localState.activeCharacter.charKostco &&
                                 localState.activeCharacter.charKostco.length > 0) {
                                 turnIncrement()
                             } else if (localState.currentChallenge.storyBonus > 0) {
+                                console.log(localState.currentChallenge.storyBonus)
                                 turnIncrement('STORY')
                             } else if (localState.currentChallenge.noAssist) {
                                 turnIncrement('SCENE')
@@ -224,9 +221,10 @@ const clickForNext = ({ cloudState, localState }) => {
                         break;
                     case 'EVALUATETWO':
                         if (cloudState.strength.total >= cloudState.currentTurn.difficulty) {
+                            completeChallenge()
                             updateLoot()
                         } else {
-                            updateHealth()
+                            failChallenge()
                         }
                         turnIncrement()
                         break;

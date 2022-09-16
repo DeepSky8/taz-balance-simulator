@@ -31,14 +31,15 @@ const LocationChallenge = ({ location, modifier, stage, challengePicked }) => {
                 {location.magic && <img src={images.magic} alt="Magic Challenge" />}
                 {location.trap && <img src={images.trap} alt="Trap Challenge" />}
                 {location.noAssist && <img src={images.noAssist} alt="No Assist Challenge" />}
-                {location.doubleAssist && <img src={images.double_assist} alt="Double Assist Challenge" />}
-
+                {location.doubleAssist && <img src={images.doubleAssist} alt="Double Assist Challenge" />}
+                {location.noRoll && <img src={images.noRoll} alt="No Roll Challenge" />}
+                {location.chance && <img src={images.chance} alt="Chance Roll Challenge" />}
             </span>
 
             <div>
-                {location.storyBonus.length > 0 && 'Story +1: '}
+                {location.storyBonus > 0 && 'Story +1: '}
                 {location.storyPrompt.length > 0 && location.storyPrompt}
-                <p>{(location.effectText.length > 0 && location.storyPrompt.length > 0) && '---'}</p>
+                <p>{(location.effectText > 0 && location.storyPrompt.length > 0) && '---'}</p>
                 {location.effectText && location.effectText}
             </div>
 

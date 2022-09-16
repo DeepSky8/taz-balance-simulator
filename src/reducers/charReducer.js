@@ -9,7 +9,7 @@ const defaultCharState = {
     assistCode: 7,
     charNotes: '',
     lootPoints: 0,
-    charKostco: [{}],
+    charKostco: [],
     displayChars: true,
     questCount: 0,
 
