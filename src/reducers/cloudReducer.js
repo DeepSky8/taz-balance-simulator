@@ -30,6 +30,9 @@ const defaultCloudState = {
     },
     currentTurn: {
         difficulty: 0,
+        chanceVillain: 0,
+        chanceRelic: 0,
+        chanceLocation: 0,
         turnStage: 'default',
         selectedChallenge: '',
         // selectedChallenge contains text 'villain' or 'relic' or 'location' or ''
@@ -259,7 +262,7 @@ const cloudReducer = (state, action) => {
                 ...defaultCloudState,
                 ...state,
                 currentTurn: {
-                    // ...state.currentTurn,
+                    ...state.currentTurn,
                     ...action.currentTurn
                 }
             }

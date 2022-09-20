@@ -1,10 +1,8 @@
-import React, { useEffect, useReducer, useState } from "react";
-import { updateCard } from "../../../../../actions/cardActions";
-import { cardReducer, defaultCardState } from "../../../../../reducers/cardReducer";
+import React from "react";
 import { images } from "./imageInfo";
 
-const VillainChallenge = ({ villain, modifier, stage, challengePicked }) => {
-    const difficulty = parseInt(villain.difficulty) + parseInt(modifier)
+const VillainChallenge = ({ villain, modifier, stage, challengePicked, chanceRoll }) => {
+    const difficulty = parseInt(villain.difficulty) + parseInt(modifier) + chanceRoll
 
     return (
         <span>

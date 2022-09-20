@@ -26,6 +26,7 @@ import {
     updateStrength,
     clearStrength,
     startSetCharacterStrength,
+    startSetReadyTrue,
 } from "../../../actions/cloudActions";
 import { auth, db } from "../../../firebase/firebase";
 import { defaultCloudState, cloudReducer } from "../../../reducers/cloudReducer";
@@ -52,7 +53,7 @@ import {
 } from "../../../actions/localActions";
 import { defaultLocalState, localStateReducer } from "../../../reducers/localReducer";
 import { stats } from "../CharacterSheet/classes/charInfo";
-import { isCompositeComponent } from "react-dom/test-utils";
+
 
 const ActiveGame = () => {
     let navigate = useNavigate()
@@ -304,23 +305,27 @@ const ActiveGame = () => {
     // If no players are left, clears the readyList array
     // and updates the cloud with Ready state True, 
     useEffect(() => {
-        const remainingPlayers = []
-        cloudState.playerList.forEach(player => {
-            if (!cloudState.readyList.includes(player.uid)) {
-                remainingPlayers.push(player)
+        if (auth.currentUser.uid === localState.hostKey.split('/', 1)) {
+            const remainingPlayers = []
+            cloudState.playerList.forEach(player => {
+                if (!cloudState.readyList.includes(player.uid)) {
+                    remainingPlayers.push(player)
+                }
+            })
+            if (remainingPlayers.length > 0) {
+                startSetActivePlayer(localState.hostKey, remainingPlayers[0].uid, remainingPlayers[0].currentCharacterID)
             }
-        })
-        if (remainingPlayers.length > 0) {
-            startSetActivePlayer(localState.hostKey, remainingPlayers[0].uid, remainingPlayers[0].currentCharacterID)
+            if ((cloudState.playerList.length !== 0) &&
+                (cloudState.playerList.length === cloudState.readyList.length)
+            ) {
+                startNewRound(localState.hostKey)
+                startRESETActionTokens(localState.hostKey, cloudState.playerList)
+                // Dispatches locally only
+                // dispatchCloudState(updateReadyStatus(true))
+                startSetReadyTrue(localState.hostKey)
+            }
         }
-        if ((cloudState.playerList.length !== 0) &&
-            (cloudState.playerList.length === cloudState.readyList.length)
-        ) {
-            startNewRound(localState.hostKey)
-            startRESETActionTokens(localState.hostKey, cloudState.playerList)
-            // Dispatches locally only
-            dispatchCloudState(updateReadyStatus(true))
-        }
+
     }, [cloudState.readyList])
 
     // Listener for remote activePlayer on cloudState
@@ -378,6 +383,7 @@ const ActiveGame = () => {
     // any effects that add to strength,
     // and dice rolls
     // and send to cloud
+    // This effect is run by the active player
     useEffect(() => {
         if (auth.currentUser.uid === cloudState.active.activeUID) {
 
@@ -537,6 +543,8 @@ const ActiveGame = () => {
 
 
     // Challenge deck listeners
+    // This is only run on the host; the active challenges are pushed
+    // to the cloud, as is the deck when deck creation is needed
     useEffect(() => {
         if (auth.currentUser.uid === localState.hostKey.split('/', 1).toString()) {
             // Villain challenge listener

@@ -1,10 +1,8 @@
 import React from "react";
 import { images } from "./imageInfo";
 
-const RelicChallenge = ({ relic, modifierVillain, modifierLocation, stage, challengePicked }) => {
-
-
-    const difficulty = parseInt(relic.difficulty) + parseInt(modifierVillain) + parseInt(modifierLocation)
+const RelicChallenge = ({ relic, modifierVillain, modifierLocation, stage, challengePicked, chanceRoll }) => {
+    const difficulty = parseInt(relic.difficulty) + parseInt(modifierVillain) + parseInt(modifierLocation) + chanceRoll
 
     return (
         <span>

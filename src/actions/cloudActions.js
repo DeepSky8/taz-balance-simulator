@@ -331,6 +331,9 @@ export const startResetTurnElements = (hostKey) => {
     updates['savedGames/' + hostKey + `/currentTurn/difficulty`] = 0;
     updates['savedGames/' + hostKey + `/currentTurn/rollOne`] = null;
     updates['savedGames/' + hostKey + `/currentTurn/rollTwo`] = null;
+    updates['savedGames/' + hostKey + `/currentTurn/chanceVillain`] = 0;
+    updates['savedGames/' + hostKey + `/currentTurn/chanceRelic`] = 0;
+    updates['savedGames/' + hostKey + `/currentTurn/chanceLocation`] = 0;
     updates['savedGames/' + hostKey + `/currentTurn/turnStage`] = 'DESCRIBEONE';
     updates['savedGames/' + hostKey + `/strength`] = {
         assistOne: 0,
@@ -646,3 +649,12 @@ export const startCompleteChallenge = (hostKey, code, challengeKey, visible,) =>
 //             console.log('Did not mark challenge as completed: ', error)
 //         })
 // }
+
+export const startUpdateChanceRoll = (hostKey, type, chanceRoll) => {
+    const updates = {}
+    updates['savedGames/' + hostKey + '/currentTurn/' + type] = chanceRoll
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not update Chance Roll: ', error)
+        })
+}

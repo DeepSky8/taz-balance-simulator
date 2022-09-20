@@ -120,7 +120,7 @@ const clickForNext = ({ cloudState, localState }) => {
                     case 'CHALLENGE':
                         if (cloudState.currentTurn.selectedChallenge !== '') {
 
-                            // Need to add code to handle 'Chance' challenges
+                            
 
 
                             if (localState.activeCharacter.charKostco &&

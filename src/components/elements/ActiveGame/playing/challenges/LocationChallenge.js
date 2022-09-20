@@ -1,8 +1,8 @@
 import React from "react";
 import { images } from "./imageInfo";
 
-const LocationChallenge = ({ location, modifier, stage, challengePicked }) => {
-    const difficulty = parseInt(location.difficulty) + parseInt(modifier)
+const LocationChallenge = ({ location, modifier, stage, challengePicked, chanceRoll }) => {
+    const difficulty = parseInt(location.difficulty) + parseInt(modifier) + chanceRoll
 
     return (
         <span>

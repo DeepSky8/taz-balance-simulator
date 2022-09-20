@@ -1,8 +1,9 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { updateCard } from "../../../../../actions/cardActions";
-import { startPickActiveChallenge, startSetCurrentDifficulty } from "../../../../../actions/cloudActions";
+import { startPickActiveChallenge, startSetCurrentDifficulty, startUpdateChanceRoll } from "../../../../../actions/cloudActions";
 import { auth } from "../../../../../firebase/firebase";
 import { cardReducer, defaultCardState } from "../../../../../reducers/cardReducer";
+import diceRoll from "../../../../functions/diceRoll";
 import LocationChallenge from "./LocationChallenge";
 import RelicChallenge from "./RelicChallenge";
 import VillainChallenge from "./VillainChallenge";
@@ -22,6 +23,11 @@ const ChallengeFrame = ({ cloudState, localState }) => {
         dispatchVillain(updateCard(activeSide))
         if (activeSide) {
             setRelicModifierVillain(activeSide.relicModifier)
+            if (activeSide.chance && 
+                cloudState.currentTurn.chanceVillain === 0 &&
+                (auth.currentUser.uid === localState.hostKey.split('/', 1).toString())) {
+                startUpdateChanceRoll(localState.hostKey, 'chanceVillain', diceRoll('chance'))
+            }
         }
     }, [cloudState.currentTurn.villain])
 
@@ -32,6 +38,11 @@ const ChallengeFrame = ({ cloudState, localState }) => {
         if (activeSide) {
             setVillainModifier(activeSide.villainModifier)
             setLocationModifier(activeSide.locationModifier)
+            if (activeSide.chance && 
+                cloudState.currentTurn.chanceRelic === 0 &&
+                (auth.currentUser.uid === localState.hostKey.split('/', 1).toString())) {
+                startUpdateChanceRoll(localState.hostKey, 'chanceRelic', diceRoll('chance'))
+            }
         }
     }, [cloudState.currentTurn.relic])
 
@@ -41,6 +52,11 @@ const ChallengeFrame = ({ cloudState, localState }) => {
         dispatchLocation(updateCard(activeSide))
         if (activeSide) {
             setRelicModifierLocation(activeSide.relicModifier)
+            if (activeSide.chance && 
+                cloudState.currentTurn.chanceLocation === 0 &&
+                (auth.currentUser.uid === localState.hostKey.split('/', 1).toString())) {
+                startUpdateChanceRoll(localState.hostKey, 'chanceLocation', diceRoll('chance'))
+            }
         }
     }, [cloudState.currentTurn.location])
 
@@ -65,6 +81,7 @@ const ChallengeFrame = ({ cloudState, localState }) => {
                 modifier={villainModifier}
                 stage={cloudState.currentTurn.turnStage}
                 challengePicked={() => { challengePicked('villain', villain.difficulty, villainModifier) }}
+                chanceRoll={cloudState.currentTurn.chanceVillain}
             />
             <RelicChallenge
                 relic={relic}
@@ -72,12 +89,14 @@ const ChallengeFrame = ({ cloudState, localState }) => {
                 modifierLocation={relicModifierLocation}
                 stage={cloudState.currentTurn.turnStage}
                 challengePicked={() => { challengePicked('relic', relic.difficulty, (relicModifierVillain + relicModifierLocation)) }}
+                chanceRoll={cloudState.currentTurn.chanceRelic}
             />
             <LocationChallenge
                 location={location}
                 modifier={locationModifier}
                 stage={cloudState.currentTurn.turnStage}
                 challengePicked={() => { challengePicked('location', location.difficulty, locationModifier) }}
+                chanceRoll={cloudState.currentTurn.chanceLocation}
             />
         </div>
     )

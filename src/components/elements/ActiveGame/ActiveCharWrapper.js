@@ -10,6 +10,7 @@ const ActiveCharWrapper = ({ cloudState, activeCharacter, localCharacter }) => {
     const gameEnded = 'Game Ended'
 
     useEffect(() => {
+
         switch (cloudState.active.gameStage) {
             case 'INTRO':
                 setActionBarText(myCharacter + currentActiveChar + activeCharName)

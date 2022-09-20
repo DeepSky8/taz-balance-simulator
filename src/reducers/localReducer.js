@@ -166,21 +166,25 @@ const localStateReducer = (state, action) => {
     switch (action.type) {
         case 'UPDATE_HOSTKEY':
             return {
+                ...defaultLocalState,
                 ...state,
                 hostKey: action.hostKey.host + '/' + action.hostKey.key
             }
         case 'UPDATE_LOCAL_CHARACTER_ID':
             return {
+                ...defaultLocalState,
                 ...state,
                 localCharacterID: action.localCharacterID
             }
         case 'UPDATE_ACTIVE_CHARACTER_ID':
             return {
+                ...defaultLocalState,
                 ...state,
                 activeCharacterID: action.activeCharacterID
             }
         case 'UPDATE_LOCAL_CHARACTER':
             return {
+                ...defaultLocalState,
                 ...state,
                 localCharacter: {
                     ...defaultLocalState.localCharacter,
@@ -189,6 +193,7 @@ const localStateReducer = (state, action) => {
             }
         case 'UPDATE_ACTIVE_CHARACTER':
             return {
+                ...defaultLocalState,
                 ...state,
                 activeCharacter: {
                     ...defaultLocalState.activeCharacter,
@@ -197,11 +202,15 @@ const localStateReducer = (state, action) => {
             }
         case 'CLEAR_ACTIVE_CHARACTER':
             return {
+                ...defaultLocalState,
                 ...state,
-                activeCharacter: {}
+                activeCharacter: {
+                    ...defaultLocalState.activeCharacter
+                }
             }
         case 'UPDATE_CURRENT_CHALLENGE':
             return {
+                ...defaultLocalState,
                 ...state,
                 currentChallenge: {
                     ...defaultLocalState.currentChallenge,
@@ -210,16 +219,19 @@ const localStateReducer = (state, action) => {
             }
         case 'CLEAR_CURRENT_CHALLENGE':
             return {
+                ...defaultLocalState,
                 ...state,
                 currentChallenge: { ...defaultLocalState.currentChallenge }
             }
         case 'UPDATE_CURRENT_CHALLENGE_KEY':
             return {
+                ...defaultLocalState,
                 ...state,
                 currentChallengeKey: action.currentChallengeKey
             }
         case 'CLEAR_CURRENT_CHALLENGE_KEY':
             return {
+                ...defaultLocalState,
                 ...state,
                 currentChallengeKey: ''
             }
@@ -229,36 +241,43 @@ const localStateReducer = (state, action) => {
         //     }
         case 'UPDATE_COMPLETED_CHALLENGES_VILLAIN':
             return {
+                ...defaultLocalState,
                 ...state,
                 completedChallengeArrayVillain: action.completedChallengeArrayVillain
             }
         case 'UPDATE_UNCOMPLETED_CHALLENGES_VILLAIN':
             return {
+                ...defaultLocalState,
                 ...state,
                 uncompletedChallengeArrayVillain: action.uncompletedChallengeArrayVillain
             }
         case 'UPDATE_COMPLETED_CHALLENGES_RELIC':
             return {
+                ...defaultLocalState,
                 ...state,
                 completedChallengeArrayRelic: action.completedChallengeArrayRelic
             }
         case 'UPDATE_UNCOMPLETED_CHALLENGES_RELIC':
             return {
+                ...defaultLocalState,
                 ...state,
                 uncompletedChallengeArrayRelic: action.uncompletedChallengeArrayRelic
             }
         case 'UPDATE_COMPLETED_CHALLENGES_LOCATION':
             return {
+                ...defaultLocalState,
                 ...state,
                 completedChallengeArrayLocation: action.completedChallengeArrayLocation
             }
         case 'UPDATE_UNCOMPLETED_CHALLENGES_LOCATION':
             return {
+                ...defaultLocalState,
                 ...state,
                 uncompletedChallengeArrayLocation: action.uncompletedChallengeArrayLocation
             }
         default:
             return {
+                ...defaultLocalState,
                 ...state
             }
     }
