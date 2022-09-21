@@ -262,7 +262,7 @@ const cloudReducer = (state, action) => {
                 ...defaultCloudState,
                 ...state,
                 currentTurn: {
-                    ...state.currentTurn,
+                    ...defaultCloudState.currentTurn,
                     ...action.currentTurn
                 }
             }
@@ -295,7 +295,6 @@ const cloudReducer = (state, action) => {
                 ...defaultCloudState,
                 ...state,
                 strength: {
-                    ...state.strength,
                     ...action.strength
                 }
             }

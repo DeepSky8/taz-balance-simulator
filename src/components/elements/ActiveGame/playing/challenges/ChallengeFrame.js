@@ -23,7 +23,7 @@ const ChallengeFrame = ({ cloudState, localState }) => {
         dispatchVillain(updateCard(activeSide))
         if (activeSide) {
             setRelicModifierVillain(activeSide.relicModifier)
-            if (activeSide.chance && 
+            if (activeSide.chance &&
                 cloudState.currentTurn.chanceVillain === 0 &&
                 (auth.currentUser.uid === localState.hostKey.split('/', 1).toString())) {
                 startUpdateChanceRoll(localState.hostKey, 'chanceVillain', diceRoll('chance'))
@@ -38,7 +38,7 @@ const ChallengeFrame = ({ cloudState, localState }) => {
         if (activeSide) {
             setVillainModifier(activeSide.villainModifier)
             setLocationModifier(activeSide.locationModifier)
-            if (activeSide.chance && 
+            if (activeSide.chance &&
                 cloudState.currentTurn.chanceRelic === 0 &&
                 (auth.currentUser.uid === localState.hostKey.split('/', 1).toString())) {
                 startUpdateChanceRoll(localState.hostKey, 'chanceRelic', diceRoll('chance'))
@@ -52,7 +52,7 @@ const ChallengeFrame = ({ cloudState, localState }) => {
         dispatchLocation(updateCard(activeSide))
         if (activeSide) {
             setRelicModifierLocation(activeSide.relicModifier)
-            if (activeSide.chance && 
+            if (activeSide.chance &&
                 cloudState.currentTurn.chanceLocation === 0 &&
                 (auth.currentUser.uid === localState.hostKey.split('/', 1).toString())) {
                 startUpdateChanceRoll(localState.hostKey, 'chanceLocation', diceRoll('chance'))
@@ -60,14 +60,10 @@ const ChallengeFrame = ({ cloudState, localState }) => {
         }
     }, [cloudState.currentTurn.location])
 
-    // useEffect(()=>{
-
-    // },[cloudState.selectedChallenge])
-
-    const challengePicked = (text, difficulty, modifier) => {
+    const challengePicked = (text, difficulty, modifier, chanceRoll) => {
         if (auth.currentUser.uid === cloudState.active.activeUID &&
             cloudState.currentTurn.turnStage === 'CHALLENGE') {
-            const totalDifficulty = parseInt(difficulty) + parseInt(modifier)
+            const totalDifficulty = parseInt(difficulty) + parseInt(modifier) + chanceRoll
             startPickActiveChallenge(localState.hostKey, text)
             startSetCurrentDifficulty(localState.hostKey, totalDifficulty)
         }
@@ -80,7 +76,14 @@ const ChallengeFrame = ({ cloudState, localState }) => {
                 villain={villain}
                 modifier={villainModifier}
                 stage={cloudState.currentTurn.turnStage}
-                challengePicked={() => { challengePicked('villain', villain.difficulty, villainModifier) }}
+                challengePicked={() => {
+                    challengePicked(
+                        'villain',
+                        villain.difficulty,
+                        villainModifier,
+                        cloudState.currentTurn.chanceVillain
+                    )
+                }}
                 chanceRoll={cloudState.currentTurn.chanceVillain}
             />
             <RelicChallenge
@@ -88,14 +91,28 @@ const ChallengeFrame = ({ cloudState, localState }) => {
                 modifierVillain={relicModifierVillain}
                 modifierLocation={relicModifierLocation}
                 stage={cloudState.currentTurn.turnStage}
-                challengePicked={() => { challengePicked('relic', relic.difficulty, (relicModifierVillain + relicModifierLocation)) }}
+                challengePicked={() => {
+                    challengePicked(
+                        'relic',
+                        relic.difficulty,
+                        (parseInt(relicModifierVillain) + parseInt(relicModifierLocation)),
+                        cloudState.currentTurn.chanceRelic
+                    )
+                }}
                 chanceRoll={cloudState.currentTurn.chanceRelic}
             />
             <LocationChallenge
                 location={location}
                 modifier={locationModifier}
                 stage={cloudState.currentTurn.turnStage}
-                challengePicked={() => { challengePicked('location', location.difficulty, locationModifier) }}
+                challengePicked={() => {
+                    challengePicked(
+                        'location',
+                        location.difficulty,
+                        locationModifier,
+                        cloudState.currentTurn.chanceLocation
+                    )
+                }}
                 chanceRoll={cloudState.currentTurn.chanceLocation}
             />
         </div>

@@ -72,8 +72,8 @@ const clickForNext = ({ cloudState, localState }) => {
             }
         }
 
+        const code = cloudState.static[codeChallenge()]
 
-        const code = cloudState.static[codeChallenge]
         startCompleteChallenge(
             localState.hostKey,
             code,
@@ -84,7 +84,7 @@ const clickForNext = ({ cloudState, localState }) => {
 
     const failChallenge = () => {
         const currentHealth = cloudState.active.teamHealth
-        const loseHealth = localState.currentChallenge.loseHealth
+        const loseHealth = localState.currentChallenge.health
         const updatedHealth = currentHealth - loseHealth
         startUpdateTeamHealth(localState.hostKey, updatedHealth)
     }
@@ -94,6 +94,7 @@ const clickForNext = ({ cloudState, localState }) => {
     }
 
     const passTheTurn = () => {
+
         startMarkTurnComplete(
             localState.hostKey,
             [cloudState.active.activeUID].concat(
@@ -120,7 +121,7 @@ const clickForNext = ({ cloudState, localState }) => {
                     case 'CHALLENGE':
                         if (cloudState.currentTurn.selectedChallenge !== '') {
 
-                            
+
 
 
                             if (localState.activeCharacter.charKostco &&
@@ -146,7 +147,11 @@ const clickForNext = ({ cloudState, localState }) => {
                         break;
                     case 'STORY':
                         addStoryStrength(localState.currentChallenge.storyBonus)
-                        turnIncrement()
+                        if (localState.currentChallenge.noAssist) {
+                            turnIncrement('SCENE')
+                        } else {
+                            turnIncrement()
+                        }
                         break;
                     case 'PREASSIST':
                         turnIncrement()
@@ -201,6 +206,8 @@ const clickForNext = ({ cloudState, localState }) => {
                             &&
                             (cloudState.strength.assistTwo === 0)
                         ) {
+                            turnIncrement()
+                        } else if (cloudState.strength.assistOne === 0) {
                             turnIncrement()
                         }
                         break;

@@ -2,7 +2,7 @@ import React, { useEffect, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
 import { off, onValue, ref } from "firebase/database";
 import {
-    startNewRound,
+    startNullReadyList,
     startRESETActionTokens,
     startSetActivePlayer,
     startUpdateActiveLocation,
@@ -53,12 +53,12 @@ import {
 } from "../../../actions/localActions";
 import { defaultLocalState, localStateReducer } from "../../../reducers/localReducer";
 import { stats } from "../CharacterSheet/classes/charInfo";
+import introStages from "./turnStep/turnStepArrays/introStages";
 
 
 const ActiveGame = () => {
     let navigate = useNavigate()
 
-    const introStages = ['INTRO', 'BRIEF', 'BACKSTORY']
     const [cloudState, dispatchCloudState] = useReducer(cloudReducer, defaultCloudState)
     const [localState, dispatchLocalState] = useReducer(localStateReducer, defaultLocalState)
 
@@ -66,7 +66,7 @@ const ActiveGame = () => {
     // State guards
     useEffect(() => {
         // If the current user is the game host
-        if (auth.currentUser.uid === localState.hostKey.split('/', 1)) {
+        if (auth.currentUser.uid === localState.hostKey.split('/', 1).toString()) {
 
             // If no gameStage exists, set it to the default
             if (cloudState.active.gameStage === undefined) {
@@ -305,7 +305,7 @@ const ActiveGame = () => {
     // If no players are left, clears the readyList array
     // and updates the cloud with Ready state True, 
     useEffect(() => {
-        if (auth.currentUser.uid === localState.hostKey.split('/', 1)) {
+        if (auth.currentUser.uid === localState.hostKey.split('/', 1).toString()) {
             const remainingPlayers = []
             cloudState.playerList.forEach(player => {
                 if (!cloudState.readyList.includes(player.uid)) {
@@ -318,7 +318,7 @@ const ActiveGame = () => {
             if ((cloudState.playerList.length !== 0) &&
                 (cloudState.playerList.length === cloudState.readyList.length)
             ) {
-                startNewRound(localState.hostKey)
+                startNullReadyList(localState.hostKey)
                 startRESETActionTokens(localState.hostKey, cloudState.playerList)
                 // Dispatches locally only
                 // dispatchCloudState(updateReadyStatus(true))
@@ -393,6 +393,7 @@ const ActiveGame = () => {
             if (localState.currentChallenge.spooky) { currentChallengeTypes.push('Spooky') }
             if (localState.currentChallenge.magic) { currentChallengeTypes.push('Magic') }
             if (localState.currentChallenge.trap) { currentChallengeTypes.push('Trap') }
+            if (cloudState.currentTurn.selectedChallenge === 'relic') { currentChallengeTypes.push('Relic')}
 
             // Get the strength info from the active character
             let baseStrength = 0;
@@ -703,7 +704,7 @@ const ActiveGame = () => {
             off(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeVillain))
             off(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeRelic))
             off(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeLocation))
-            if (auth.currentUser.uid === localState.hostKey.split('/', 1)) {
+            if (auth.currentUser.uid === localState.hostKey.split('/', 1).toString()) {
                 off(ref(db, 'challenges/' + cloudState.static.codeVillain))
                 off(ref(db, 'challenges/' + cloudState.static.codeRelic))
                 off(ref(db, 'challenges/' + cloudState.static.codeLocation))

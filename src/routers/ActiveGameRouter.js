@@ -102,6 +102,7 @@ const ActiveGameRouter = ({
                             />
                             <ActionTokens
                                 cloudState={cloudState}
+                                localState={localState}
                             />
                             {cloudState.currentTurn.showRoll &&
                                 <RollDiceAnimation />

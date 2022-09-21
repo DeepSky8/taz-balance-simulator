@@ -254,13 +254,31 @@ export const startMarkTurnComplete = (hostKey, readyList) => {
     const updates = {};
     updates['savedGames/' + hostKey + '/readyList'] = { ...readyList };
     updates['savedGames/' + hostKey + '/currentTurn/selectedChallenge'] = '';
+    updates['savedGames/' + hostKey + `/currentTurn/difficulty`] = 0;
+    updates['savedGames/' + hostKey + `/currentTurn/rollOne`] = null;
+    updates['savedGames/' + hostKey + `/currentTurn/rollTwo`] = null;
+    updates['savedGames/' + hostKey + `/currentTurn/chanceVillain`] = 0;
+    updates['savedGames/' + hostKey + `/currentTurn/chanceRelic`] = 0;
+    updates['savedGames/' + hostKey + `/currentTurn/chanceLocation`] = 0;
+    updates['savedGames/' + hostKey + `/currentTurn/turnStage`] = 'DESCRIBEONE';
+    updates['savedGames/' + hostKey + `/strength`] = {
+        assistOne: 0,
+        assistTwo: 0,
+        character: 0,
+        ongoingItem: 0,
+        rollResult: 0,
+        singleUseItem: 0,
+        story: 0,
+        total: 0
+    };
+
     update(ref(db), updates)
         .catch((error) => {
             console.log('Error when marking turn complete:', error)
         })
 }
 
-export const startNewRound = (hostKey) => {
+export const startNullReadyList = (hostKey) => {
     const updates = {};
     updates['savedGames/' + hostKey + '/readyList'] = null;
     update(ref(db), updates)
@@ -270,9 +288,9 @@ export const startNewRound = (hostKey) => {
 }
 
 
-export const startSetReadyTrue = (uid, key) => {
+export const startSetReadyTrue = (hostKey) => {
     const updates = {};
-    updates['savedGames/' + uid + '/' + key + '/active/ready'] = true;
+    updates['savedGames/' + hostKey + '/active/ready'] = true;
     update(ref(db), updates)
         .catch((error) => {
             console.log('Error setting Ready to true:', error)

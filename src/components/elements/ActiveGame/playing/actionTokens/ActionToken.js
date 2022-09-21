@@ -1,38 +1,53 @@
 import React, { useEffect, useState } from "react";
 import { stats } from "../../../CharacterSheet/classes/charInfo";
+import postAssistArray from "../../turnStep/turnStepArrays/postAssistArray";
+import assistStages from "../../turnStep/turnStepArrays/assistStages"
 
-const ActionToken = ({ player, stage, tokenArray, activeTokenArray, spendToken, unspendToken }) => {
+// Is the player UID recorded in one of the player objects
+// in the provided array: returns boolean
+const matcher = (playerObject, array) => {
+    const uidArray = [];
+    array.forEach(character => {
+        uidArray.push(character.uid)
+    });
+    return uidArray.includes(playerObject.uid)
+}
+
+
+
+const ActionToken = ({ 
+    player, 
+    activeUID, 
+    stage, 
+    tokenArray, 
+    activeTokenArray, 
+    spendToken, 
+    unspendToken,
+    doubleAssist,
+    noAssist 
+}) => {
     const [hasToken, setHasToken] = useState(false)
     const [tokenSpentNow, setTokenSpentNow] = useState(false)
-    const postAssistArray = [
-        'POSTASSIST',
-        'POST_ASSIST_SCENE',
-        'EVALUATETWO',
-        'DESCRIBE',
-        'KOSTCO',
-        'PASS'
-    ]
-
-    const hasTokenText = (hasToken ? ' action token' : ' token spent')
     const preAssistValue = stats[player.classCode].preAssist
     const postAssistValue = stats[player.classCode].postAssist
-
     const [assistValue, setAssistValue] = useState(preAssistValue)
+    const unspentToken = matcher(player, tokenArray)
 
-    // Is the player UID recorded in one of the player objects
-    // in the provided array: returns boolean
-    const matcher = (playerObject, array) => {
-        const uidArray = [];
-        array.forEach(character => {
-            uidArray.push(character.uid)
-        });
-        return uidArray.includes(playerObject.uid)
+    const hasTokenText = () => {
+        if(!unspentToken){
+            return ' token spent'
+        } else {
+            return ' action token'
+        }
     }
 
     // Uses matcher function to determine if this player
     // is in the array of spendable-token players
     useEffect(() => {
-        setHasToken(matcher(player, tokenArray))
+        // const unspentToken = matcher(player, tokenArray)
+        const notOwnToken = (activeUID !== player.uid)
+        const assistStage = (assistStages.includes(stage))
+        setHasToken((unspentToken && notOwnToken && assistStage))
     }, [tokenArray, player])
 
     // Uses matcher function to determine if this player
@@ -62,7 +77,7 @@ const ActionToken = ({ player, stage, tokenArray, activeTokenArray, spendToken, 
                     disabled={!hasToken}
                     onClick={spendToken}
                 >
-                    {player.charName}{hasTokenText}: +{assistValue}
+                    {player.charName}{hasTokenText()}: +{assistValue}
                 </button>
             </span>
             <span>

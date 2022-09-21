@@ -31,6 +31,8 @@ const incrementTurn = (stage) => {
             return 'KOSTCO';
         case 'KOSTCO':
             return 'PASS';
+        case 'PASS':
+            return 'DESCRIBEONE'
         default:
             return 'DESCRIBEONE';
     }
