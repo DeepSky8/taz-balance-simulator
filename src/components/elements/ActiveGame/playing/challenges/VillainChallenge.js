@@ -1,51 +1,52 @@
 import React from "react";
 import { images } from "./imageInfo";
 
-const VillainChallenge = ({ villain, modifier, stage, challengePicked, chanceRoll }) => {
-    const difficulty = parseInt(villain.difficulty) + parseInt(modifier) + chanceRoll
-
+const VillainChallenge = ({ challenge, modifier, stage, challengePicked, chanceRoll, activePlayerHasToken }) => {
+    const difficulty = parseInt(challenge.difficulty) + parseInt(modifier) + chanceRoll
+    const requiresToken = (challenge.requiresToken && activePlayerHasToken)
     return (
         <span>
 
             <span>
 
                 {stage === 'CHALLENGE' && <button
+                    disabled={requiresToken}
                     onClick={() => { challengePicked() }}
                 >{difficulty}</button>}
 
                 {stage !== 'CHALLENGE' && <span>{difficulty + '  '}</span>}
 
 
-                {villain.relicModifier > 0 && '   +'}{villain.relicModifier > 0 && villain.relicModifier}
+                {challenge.relicModifier > 0 && '   +'}{challenge.relicModifier > 0 && challenge.relicModifier}
             </span>
             <p>
-                {villain.nameFlavor}
+                {challenge.nameFlavor}
             </p>
             <h3>
-                {villain.cardName}
+                {challenge.cardName}
             </h3>
             <span>
 
-                {villain.monster && <img src={images.monster} alt="Monster Challenge" />}
-                {villain.spooky && <img src={images.spooky} alt="Spooky Challenge" />}
-                {villain.magic && <img src={images.magic} alt="Magic Challenge" />}
-                {villain.trap && <img src={images.trap} alt="Trap Challenge" />}
-                {villain.noAssist && <img src={images.noAssist} alt="No Assist Challenge" />}
-                {villain.doubleAssist && <img src={images.doubleAssist} alt="Double Assist Challenge" />}
-                {villain.noRoll && <img src={images.noRoll} alt="No Roll Challenge" />}
-                {villain.chance && <img src={images.chance} alt="Chance Roll Challenge" />}
+                {challenge.monster && <img src={images.monster} alt="Monster Challenge" />}
+                {challenge.spooky && <img src={images.spooky} alt="Spooky Challenge" />}
+                {challenge.magic && <img src={images.magic} alt="Magic Challenge" />}
+                {challenge.trap && <img src={images.trap} alt="Trap Challenge" />}
+                {challenge.noAssist && <img src={images.noAssist} alt="No Assist Challenge" />}
+                {challenge.doubleAssist && <img src={images.doubleAssist} alt="Double Assist Challenge" />}
+                {challenge.noRoll && <img src={images.noRoll} alt="No Roll Challenge" />}
+                {challenge.chance && <img src={images.chance} alt="Chance Roll Challenge" />}
             </span>
 
             <div>
-                {villain.storyBonus > 0 && 'Story +1: '}
-                {villain.storyPrompt && villain.storyPrompt}
-                <p>{(villain.effectText > 0 && villain.storyPrompt.length > 0) && '---'}</p>
-                {villain.effectText && villain.effectText}
+                {challenge.storyBonus > 0 && 'Story +1: '}
+                {challenge.storyPrompt && challenge.storyPrompt}
+                <p>{(challenge.effectText > 0 && challenge.storyPrompt.length > 0) && '---'}</p>
+                {challenge.effectText && challenge.effectText}
             </div>
 
             <div>
-                {!villain.finale && <img src={images.diamond} alt='Loot points' />} {!villain.finale && ' ' + villain.loot}
-                {!villain.finale && <img src={images.heart} alt='Health points' />} {!villain.finale && ' ' + villain.health}
+                {!challenge.finale && <img src={images.diamond} alt='Loot points' />} {!challenge.finale && ' ' + challenge.loot}
+                {!challenge.finale && <img src={images.heart} alt='Health points' />} {!challenge.finale && ' ' + challenge.health}
             </div>
 
         </span>

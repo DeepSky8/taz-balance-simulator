@@ -16,6 +16,15 @@ const ChallengeFrame = ({ cloudState, localState }) => {
     const [relicModifierLocation, setRelicModifierLocation] = useState(0)
     const [location, dispatchLocation] = useReducer(cardReducer, defaultCardState)
     const [locationModifier, setLocationModifier] = useState(0)
+    const [activePlayerHasToken, setActivePlayerHasToken] = useState(false)
+
+    useEffect(() => {
+        if (cloudState.hasActionToken.length > 0) {
+            setActivePlayerHasToken(cloudState.hasActionToken.filter(token => token.uid === cloudState.active.activeUID).length > 0)
+        } else {
+            setActivePlayerHasToken(false)
+        }
+    }, [cloudState.hasActionToken])
 
     useEffect(() => {
         const activeCard = cloudState.currentTurn.villain
@@ -73,7 +82,7 @@ const ChallengeFrame = ({ cloudState, localState }) => {
     return (
         <div className="container">
             <VillainChallenge
-                villain={villain}
+                challenge={villain}
                 modifier={villainModifier}
                 stage={cloudState.currentTurn.turnStage}
                 challengePicked={() => {
@@ -85,9 +94,10 @@ const ChallengeFrame = ({ cloudState, localState }) => {
                     )
                 }}
                 chanceRoll={cloudState.currentTurn.chanceVillain}
+                activePlayerHasToken={activePlayerHasToken}
             />
             <RelicChallenge
-                relic={relic}
+                challenge={relic}
                 modifierVillain={relicModifierVillain}
                 modifierLocation={relicModifierLocation}
                 stage={cloudState.currentTurn.turnStage}
@@ -100,9 +110,10 @@ const ChallengeFrame = ({ cloudState, localState }) => {
                     )
                 }}
                 chanceRoll={cloudState.currentTurn.chanceRelic}
+                activePlayerHasToken={activePlayerHasToken}
             />
             <LocationChallenge
-                location={location}
+                challenge={location}
                 modifier={locationModifier}
                 stage={cloudState.currentTurn.turnStage}
                 challengePicked={() => {
@@ -114,6 +125,7 @@ const ChallengeFrame = ({ cloudState, localState }) => {
                     )
                 }}
                 chanceRoll={cloudState.currentTurn.chanceLocation}
+                activePlayerHasToken={activePlayerHasToken}
             />
         </div>
     )

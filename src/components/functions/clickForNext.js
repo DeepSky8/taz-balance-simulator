@@ -190,25 +190,47 @@ const clickForNext = ({ cloudState, localState }) => {
                         turnIncrement()
                         break;
                     case 'EVALUATEONE':
-                        if (cloudState.strength.total >=
+                        if (cloudState.strength.total < 0) {
+                            turnIncrement('DESCRIBETWO')
+                        } else if (
+                            // If total strength is greater than or equal to the difficulty of the challenge
+                            cloudState.strength.total >=
                             cloudState.currentTurn.difficulty) {
                             completeChallenge()
                             turnIncrement('DESCRIBETWO')
                         } else if (
+                            // Do action tokens for non active players still exist?
+                            (cloudState.hasActionToken.filter(tokens => tokens.uid !== cloudState.active.activeUID).length > 0)
+                            &&
+                            (
+                                (   // Can this challenge receive assistance, 
+                                    // but has not yet had assistance applied
+                                    (!localState.currentChallenge.noAssist)
+                                    &&
+                                    (cloudState.strength.assistOne === 0)
+                                )
+                                || // OR
+                                (
+                                    // Is this a doubleAssist challenge, 
+                                    // and has not yet had a second assist applied
+                                    (localState.currentChallenge.doubleAssist)
+                                    &&
+                                    (cloudState.strength.assistTwo === 0)
+                                )
+
+                            )
+                        ) {
+                            turnIncrement()
+                        } else if (
+                            // If the total strength does not suffice
+                            // and the challenge is not eligible for assistance
+                            // or no further non active player action tokens exist
                             (localState.currentChallenge.noAssist)
                             ||
-                            (cloudState.strength.assistTwo > 0)
+                            (cloudState.hasActionToken.filter(tokens => tokens.uid !== cloudState.active.activeUID).length === 0)
                         ) {
                             failChallenge()
                             turnIncrement('DESCRIBETWO')
-                        } else if (
-                            (localState.currentChallenge.doubleAssist)
-                            &&
-                            (cloudState.strength.assistTwo === 0)
-                        ) {
-                            turnIncrement()
-                        } else if (cloudState.strength.assistOne === 0) {
-                            turnIncrement()
                         }
                         break;
                     case 'POSTASSIST':

@@ -115,21 +115,23 @@ const ActionTokens = ({ cloudState, localState }) => {
 
     return (
         <span>
-            {cloudState.playerList.map((player) => {
-                return (
-                    <ActionToken
-                        key={player.uid}
-                        player={player}
-                        activeUID={cloudState.active.activeUID}
-                        tokenArray={cloudState.hasActionToken}
-                        activeTokenArray={cloudState.activeActionTokens}
-                        spendToken={() => { spendToken(player.uid) }}
-                        unspendToken={() => { unspendToken(player.uid) }}
-                        stage={cloudState.currentTurn.turnStage}
+            {assistStages.includes(cloudState.currentTurn.turnStage)
+                &&
+                cloudState.playerList.map((player) => {
+                    return (
+                        <ActionToken
+                            key={player.uid}
+                            player={player}
+                            activeUID={cloudState.active.activeUID}
+                            tokenArray={cloudState.hasActionToken}
+                            activeTokenArray={cloudState.activeActionTokens}
+                            spendToken={() => { spendToken(player.uid) }}
+                            unspendToken={() => { unspendToken(player.uid) }}
+                            stage={cloudState.currentTurn.turnStage}
 
-                    />
-                )
-            })}
+                        />
+                    )
+                })}
         </span>
     )
 }

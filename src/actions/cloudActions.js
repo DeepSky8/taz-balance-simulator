@@ -488,15 +488,6 @@ export const startUploadDeckCard = (hostKey, deckCode, card) => {
         })
 }
 
-const startSyncCard = (uid, key, deckCode, deckItem) => {
-    const updates = {}
-    updates['savedGames/' + uid + '/' + key + '/challenges/' + deckCode + '/' + deckItem.cardKey] = deckItem
-    update(ref(db), updates)
-        .catch((error) => {
-            console.log('Did not sync card to cloud: ', error)
-        })
-}
-
 export const startPickActiveChallenge = (hostKey, text) => {
     const updates = {}
     updates['savedGames/' + hostKey + '/currentTurn/selectedChallenge'] = text

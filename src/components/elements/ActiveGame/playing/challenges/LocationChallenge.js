@@ -1,16 +1,18 @@
 import React from "react";
 import { images } from "./imageInfo";
 
-const LocationChallenge = ({ location, modifier, stage, challengePicked, chanceRoll }) => {
-    const difficulty = parseInt(location.difficulty) + parseInt(modifier) + chanceRoll
+const LocationChallenge = ({ challenge, modifier, stage, challengePicked, chanceRoll, activePlayerHasToken }) => {
+    const difficulty = parseInt(challenge.difficulty) + parseInt(modifier) + chanceRoll
+    const requiresToken = (challenge.requiresToken && activePlayerHasToken)
 
     return (
         <span>
 
             <span>
-                {location.relicModifier > 0 && '   +'}{location.relicModifier > 0 && location.relicModifier}
+                {challenge.relicModifier > 0 && '   +'}{challenge.relicModifier > 0 && challenge.relicModifier}
 
                 {stage === 'CHALLENGE' && <button
+                    disabled={requiresToken}
                     onClick={() => { challengePicked() }}
                 >{difficulty}</button>}
 
@@ -19,33 +21,33 @@ const LocationChallenge = ({ location, modifier, stage, challengePicked, chanceR
 
             </span>
             <p>
-                {location.nameFlavor}
+                {challenge.nameFlavor}
             </p>
             <h3>
-                {location.cardName}
+                {challenge.cardName}
             </h3>
             <span>
 
-                {location.monster && <img src={images.monster} alt="Monster Challenge" />}
-                {location.spooky && <img src={images.spooky} alt="Spooky Challenge" />}
-                {location.magic && <img src={images.magic} alt="Magic Challenge" />}
-                {location.trap && <img src={images.trap} alt="Trap Challenge" />}
-                {location.noAssist && <img src={images.noAssist} alt="No Assist Challenge" />}
-                {location.doubleAssist && <img src={images.doubleAssist} alt="Double Assist Challenge" />}
-                {location.noRoll && <img src={images.noRoll} alt="No Roll Challenge" />}
-                {location.chance && <img src={images.chance} alt="Chance Roll Challenge" />}
+                {challenge.monster && <img src={images.monster} alt="Monster Challenge" />}
+                {challenge.spooky && <img src={images.spooky} alt="Spooky Challenge" />}
+                {challenge.magic && <img src={images.magic} alt="Magic Challenge" />}
+                {challenge.trap && <img src={images.trap} alt="Trap Challenge" />}
+                {challenge.noAssist && <img src={images.noAssist} alt="No Assist Challenge" />}
+                {challenge.doubleAssist && <img src={images.doubleAssist} alt="Double Assist Challenge" />}
+                {challenge.noRoll && <img src={images.noRoll} alt="No Roll Challenge" />}
+                {challenge.chance && <img src={images.chance} alt="Chance Roll Challenge" />}
             </span>
 
             <div>
-                {location.storyBonus > 0 && 'Story +1: '}
-                {location.storyPrompt.length > 0 && location.storyPrompt}
-                <p>{(location.effectText > 0 && location.storyPrompt.length > 0) && '---'}</p>
-                {location.effectText && location.effectText}
+                {challenge.storyBonus > 0 && 'Story +1: '}
+                {challenge.storyPrompt.length > 0 && challenge.storyPrompt}
+                <p>{(challenge.effectText > 0 && challenge.storyPrompt.length > 0) && '---'}</p>
+                {challenge.effectText && challenge.effectText}
             </div>
 
             <div>
-                {!location.finale && <img src={images.diamond} alt='Loot points' />} {!location.finale && ' ' + location.loot}
-                {!location.finale && <img src={images.heart} alt='Health points' />} {!location.finale && ' ' + location.health}
+                {!challenge.finale && <img src={images.diamond} alt='Loot points' />} {!challenge.finale && ' ' + challenge.loot}
+                {!challenge.finale && <img src={images.heart} alt='Health points' />} {!challenge.finale && ' ' + challenge.health}
             </div>
 
         </span>
