@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { stats } from "../../../CharacterSheet/classes/charInfo";
 import postAssistArray from "../../turnStep/turnStepArrays/postAssistArray";
-import assistStages from "../../turnStep/turnStepArrays/assistStages"
+import assistStages from "../../turnStep/turnStepArrays/assistStages";
+import challengeItemStages from "../../turnStep/turnStepArrays/challengeItemStages";
+// import tokenStages from "../../turnStep/turnStepArrays/tokenStages";
+
 
 
 const ActionToken = ({
@@ -38,13 +41,19 @@ const ActionToken = ({
         // Is the active player the owner of this token?
         const nonActiveToken = (activeUID !== player.uid)
 
-        // Is this a stage that allows assistance?
-        const assistStage = (assistStages.includes(stage))
+        if (assistStages.includes(stage)) {
+            // Is this an assist stage?
+            // Is this token unspent AND belongs to a non Active Player?
+            // If yes, this token is available to spend during an assist stage
+            setHasToken((tempUnspentToken && nonActiveToken))
+        } else if (challengeItemStages.includes(stage)) {
+            // Is this the Challenge or Item stage?
+            // Is this token unspent AND belongs to the Active Player?
+            // If yes, this token is available to spend to engage a Challenge
+            setHasToken((tempUnspentToken && !nonActiveToken))
+        }
 
-        // Is this token unspent AND belongs to a non Active Player AND is this an assist stage?
-        // If yes, this token is available to spend during an assist stage
-        setHasToken((tempUnspentToken && nonActiveToken && assistStage))
-        console.log('Player', player.charName, 'tempUnspentToken', tempUnspentToken, 'nonActiveToken', nonActiveToken, 'assistStage', assistStage)
+        // console.log('Player', player.charName, 'tempUnspentToken', tempUnspentToken, 'nonActiveToken', nonActiveToken, 'assistStage', assistStage)
     }, [tokenArray, player, activeUID])
 
     // Is this player in the array of players who spent their action token

@@ -80,8 +80,7 @@ const ActiveGame = () => {
             // If no backstory state exists, set it to the first one
             if (cloudState.backstory.briefingStage === undefined) {
                 startUpdateBriefingStage(
-                    cloudState.static.host,
-                    cloudState.static.key,
+                    localState.hostKey,
                     briefingStages[0]
                 )
             }
@@ -393,7 +392,7 @@ const ActiveGame = () => {
             if (localState.currentChallenge.spooky) { currentChallengeTypes.push('Spooky') }
             if (localState.currentChallenge.magic) { currentChallengeTypes.push('Magic') }
             if (localState.currentChallenge.trap) { currentChallengeTypes.push('Trap') }
-            if (cloudState.currentTurn.selectedChallenge === 'relic') { currentChallengeTypes.push('Relic')}
+            if (cloudState.currentTurn.selectedChallenge === 'relic') { currentChallengeTypes.push('Relic') }
 
             // Get the strength info from the active character
             let baseStrength = 0;

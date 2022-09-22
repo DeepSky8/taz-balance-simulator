@@ -186,11 +186,33 @@ export const specialStinger = [
     // Priest
     "At the end of your turn, you may spend your action token to restore 1 Health to the party.",
     // Rogue
-    "If you would draw a Fantasy Kostco card, draw two instead and immediately discard one of them.",
+    "If you would draw a Fantasy KostCo card, draw two instead and immediately discard one of them.",
     // Warrior
     "Before you roll the die to defeat a Challenge, you may spend your action token and suffer 1 team damage to add +2 to your Strength.",
     // Wizard
-    "Before you roll the die to defeat a Monster Challenge, you may spend your action token to add +3 to  your Strength."
+    "Before you roll the die to defeat a Monster Challenge, you may spend your action token to add +3 to your Strength."
+]
+
+export const tokenClassesActionOne = [
+    // Warrior
+    3,
+    // Wizard
+    4
+]
+
+export const tokenClassesActionTwo = [
+    // Priest
+    1
+]
+
+export const tokenClassesKostCo = [
+    // Rogue
+    2
+]
+
+export const tokenClassesReclaim = [
+    // Bard
+    0
 ]
 
 

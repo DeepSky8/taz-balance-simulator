@@ -7,8 +7,7 @@ const NextDeck = ({ gameState }) => {
         <button
             onClick={() => {
                 startUpdateBriefingStage(
-                    gameState.static.host,
-                    gameState.static.key,
+                    gameState.hostKey,
                     nextDeck(
                         gameState.backstory.briefingStage
                     ))

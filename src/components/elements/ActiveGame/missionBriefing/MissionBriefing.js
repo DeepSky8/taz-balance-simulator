@@ -35,8 +35,7 @@ const MissionBriefing = ({ cloudState }) => {
         // const updateText = e.nativeEvent.data
         // console.log('updateText', updateText)
         startUpdatePrompt(
-            cloudState.static.host,
-            cloudState.static.key,
+            cloudState.static.host + '/' + cloudState.static.key,
             cloudState.backstory.briefingStage.toLowerCase(),
             'One',
             updateText
@@ -45,8 +44,7 @@ const MissionBriefing = ({ cloudState }) => {
 
     const updatePromptTwo = (updateText) => {
         startUpdatePrompt(
-            cloudState.static.host,
-            cloudState.static.key,
+            cloudState.static.host + '/' + cloudState.static.key,
             cloudState.backstory.briefingStage.toLowerCase(),
             'Two',
             updateText

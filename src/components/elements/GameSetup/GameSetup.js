@@ -15,9 +15,6 @@ import {
     startRemoveGameCode,
     updateGameStatic,
     updateGameActive,
-    startSetVillainDeck,
-    startSetRelicDeck,
-    startSetLocationDeck,
 } from "../../../actions/cloudActions";
 import CharacterChallengeNavBar from "./CharacterChallengeNavBar";
 import PlayingAs from "./PlayingAs";

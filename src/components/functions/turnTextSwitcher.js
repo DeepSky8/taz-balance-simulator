@@ -28,6 +28,10 @@ const describeFailure = 'Describe how this attempt failed.'
 const kostco = 'Time to shop at Fantasy Kostco!';
 const passTheTurn = 'Click here to pass the turn, ';
 const reload = 'Please reload the game';
+const spendActionToken = 'You may spend your action token '
+const actionOneWizard = 'to increase your strength by 3'
+const actionOneWarrior = 'and one health point to increase your strength by 2'
+const actionTwoPriest = 'to restore one health point to the team'
 
 const turnTextSwitcher = (cloudState, localState, activeAssistPlayer) => {
 
@@ -72,6 +76,15 @@ const turnTextSwitcher = (cloudState, localState, activeAssistPlayer) => {
                     return setScene1 + localState.activeCharacter.charName + setScene2;
                 case 'PRE_ASSIST_SCENE':
                     return activeAssistPlayer + assistScene;
+                case 'ACTIONONE':
+                    const tokenAction = () => {
+                        if (localState.activeCharacter.classCode === 4) {
+                            return actionOneWarrior
+                        } else if (localState.activeCharacter.classCode === 5) {
+                            return actionOneWizard
+                        }
+                    }
+                    return spendActionToken + tokenAction()
                 case 'ROLLONE':
                     return rollDice
                 case 'ROLLTWO':
@@ -90,11 +103,13 @@ const turnTextSwitcher = (cloudState, localState, activeAssistPlayer) => {
                 case 'EVALUATETWO':
                     return clickProceed
                 case 'DESCRIBETWO':
-                    if(cloudState.strength.total >= cloudState.currentTurn.difficulty){
+                    if (cloudState.strength.total >= cloudState.currentTurn.difficulty) {
                         return describeSuccess
                     } else {
                         return describeFailure
                     }
+                case 'ACTIONTWO':
+                    return spendActionToken + actionTwoPriest
                 case 'KOSTCO':
                     return kostco;
                 case 'PASS':

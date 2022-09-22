@@ -14,6 +14,8 @@ const incrementTurn = (stage) => {
         case 'SCENE':
             return 'PRE_ASSIST_SCENE';
         case 'PRE_ASSIST_SCENE':
+            return 'ACTIONONE';
+        case 'ACTIONONE':
             return 'ROLLONE';
         case 'ROLLONE':
             return 'ROLLTWO';
@@ -28,6 +30,8 @@ const incrementTurn = (stage) => {
         case 'EVALUATETWO':
             return 'DESCRIBETWO';
         case 'DESCRIBETWO':
+            return 'ACTIONTWO'
+        case 'ACTIONTWO':
             return 'KOSTCO';
         case 'KOSTCO':
             return 'PASS';

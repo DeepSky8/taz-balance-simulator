@@ -1,7 +1,8 @@
 import { updateLoot } from "../../actions/cardActions";
-import { startAddStoryBonus, startCompleteChallenge, startMarkTurnComplete, startSaveDiceRoll, startToggleRollAnimation, startUpdateAssistBonusOne, startUpdateAssistBonusTwo, startUpdateAssistTokens, startUpdateLootPoints, startUpdateTeamHealth, startUpdateTurnStage } from "../../actions/cloudActions"
+import { startAddStoryBonus, startCompleteChallenge, startMarkTurnComplete, startSaveDiceRoll, startToggleRollAnimation, startUNspendActionToken, startUpdateAssistBonusOne, startUpdateAssistBonusTwo, startUpdateAssistTokens, startUpdateLootPoints, startUpdateTeamHealth, startUpdateTurnStage } from "../../actions/cloudActions"
 import { auth } from "../../firebase/firebase";
-import { stats } from "../elements/CharacterSheet/classes/charInfo";
+import tokenStages from "../elements/ActiveGame/turnStep/turnStepArrays/tokenStages";
+import { stats, tokenClassesActionOne, tokenClassesActionTwo, tokenClassesReclaim } from "../elements/CharacterSheet/classes/charInfo";
 import diceRoll from "./diceRoll";
 import incrementTurn from "./incrementTurn";
 
@@ -95,6 +96,17 @@ const clickForNext = ({ cloudState, localState }) => {
 
     const passTheTurn = () => {
 
+        const bardIndex = cloudState.playerList.indexOf(player => (tokenClassesReclaim.includes(player.classCode)))
+
+        if (bardIndex >= 0) {
+            
+            startUNspendActionToken(
+                localState.hostKey,
+                cloudState.hasActionToken.concat(cloudState.playerList[bardIndex]),
+                []
+            )
+            console.log('refreshed token list', cloudState.hasActionToken.concat(cloudState.playerList[bardIndex]))
+        }
         startMarkTurnComplete(
             localState.hostKey,
             [cloudState.active.activeUID].concat(
@@ -164,16 +176,24 @@ const clickForNext = ({ cloudState, localState }) => {
                         }
                         break;
                     case 'PRE_ASSIST_SCENE':
-                        if (cloudState.activeAssistTokens.length === 0) {
-                            turnIncrement()
-                        } else {
+                        if (cloudState.activeAssistTokens.length > 0) {
                             addAssistBonus(cloudState.activeAssistTokens[0], 'preAssist')
                             removeFirstActiveAssistToken()
-                            if (cloudState.activeAssistTokens.length === 0) {
-                                turnIncrement()
-                            }
+                        }
+                        if (
+                            (cloudState.activeAssistTokens.length === 0)
+                            &&
+                            (tokenClassesActionOne.includes(localState.activeCharacter.classCode))
+                        ) {
+                            turnIncrement()
+                        } else {
+                            turnIncrement('ROLLONE')
                         }
 
+                        break;
+                    case 'ACTIONONE':
+                        console.log('tokenStages array', tokenStages)
+                        turnIncrement()
                         break;
                     case 'ROLLONE':
                         rollDice('rollOne')
@@ -268,6 +288,10 @@ const clickForNext = ({ cloudState, localState }) => {
                         console.log('received KOSTCO card (two cards if Rogue)')
                         console.log('discarded one if Rogue, then decided whether to hold it or give it')
                         console.log('if this results in more than two items, decide which one to discard')
+                        turnIncrement()
+                        break;
+                    case 'ACTIONTWO':
+                        // if(tokenClassesActionTwo.includes(localState.activeCharacter.classCode))
                         turnIncrement()
                         break;
                     case 'PASS':

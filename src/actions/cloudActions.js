@@ -315,18 +315,18 @@ export const startUpdateGameStage = (hostKey, gameStage) => {
         })
 }
 
-export const startUpdateBriefingStage = (uid, key, briefingStage) => {
+export const startUpdateBriefingStage = (hostKey, briefingStage) => {
     const updates = {};
-    updates['savedGames/' + uid + '/' + key + '/backstory/briefingStage'] = briefingStage;
+    updates['savedGames/' + hostKey + '/backstory/briefingStage'] = briefingStage;
     update(ref(db), updates)
         .catch((error) => {
             console.log('Error updating briefing stage:', error)
         })
 }
 
-export const startUpdatePrompt = (uid, key, deck, number, updateText) => {
+export const startUpdatePrompt = (hostKey, deck, number, updateText) => {
     const updates = {};
-    updates['savedGames/' + uid + '/' + key + `/backstory/${deck}${number}`] = updateText;
+    updates['savedGames/' + hostKey + `/backstory/${deck}${number}`] = updateText;
     update(ref(db), updates)
         .catch((error) => {
             console.log(`Error updating ${deck}${number} text:`, error)
@@ -380,38 +380,38 @@ export const startSetActivePlayer = (hostKey, activeUID, activeCharID) => {
 }
 
 // Action Tokens
-export const startSpendActionToken = (uid, key, updatedHasActionToken, activeActionTokens) => {
+export const startSpendActionToken = (hostKey, updatedHasActionToken, activeActionTokens) => {
     const updates = {};
-    updates['savedGames/' + uid + '/' + key + `/hasActionToken`] = updatedHasActionToken;
-    updates['savedGames/' + uid + '/' + key + `/activeActionTokens`] = activeActionTokens;
+    updates['savedGames/' + hostKey + `/hasActionToken`] = updatedHasActionToken;
+    updates['savedGames/' + hostKey + `/activeActionTokens`] = activeActionTokens;
     update(ref(db), updates)
         .catch((error) => {
             console.log(`Error updating hasActionToken:`, error)
         })
 }
 
-export const startSpendAssistToken = (uid, key, activeAssistTokens) => {
+export const startSpendAssistToken = (hostKey, activeAssistTokens) => {
     const updates = {};
-    updates['savedGames/' + uid + '/' + key + `/activeAssistTokens`] = activeAssistTokens;
+    updates['savedGames/' + hostKey + `/activeAssistTokens`] = activeAssistTokens;
     update(ref(db), updates)
         .catch((error) => {
             console.log(`Error updating hasAssistToken:`, error)
         })
 }
 
-export const startUNspendActionToken = (uid, key, updatedHasActionToken, updatedActiveActionTokens) => {
+export const startUNspendActionToken = (hostKey, updatedHasActionToken, updatedActiveActionTokens) => {
     const updates = {};
-    updates['savedGames/' + uid + '/' + key + `/hasActionToken`] = updatedHasActionToken;
-    updates['savedGames/' + uid + '/' + key + `/activeActionTokens`] = updatedActiveActionTokens;
+    updates['savedGames/' + hostKey + `/hasActionToken`] = updatedHasActionToken;
+    updates['savedGames/' + hostKey + `/activeActionTokens`] = updatedActiveActionTokens;
     update(ref(db), updates)
         .catch((error) => {
             console.log(`Error unspending action token:`, error)
         })
 }
 
-export const startUNspendAssistToken = (uid, key, updatedActiveAssistTokens) => {
+export const startUNspendAssistToken = (hostKey, updatedActiveAssistTokens) => {
     const updates = {};
-    updates['savedGames/' + uid + '/' + key + `/activeAssistTokens`] = updatedActiveAssistTokens;
+    updates['savedGames/' + hostKey + `/activeAssistTokens`] = updatedActiveAssistTokens;
     update(ref(db), updates)
         .catch((error) => {
             console.log(`Error unspending assist token:`, error)
@@ -438,9 +438,9 @@ export const startRESETActionTokens = (hostKey, playerList) => {
         })
 }
 
-export const startCLEARActionTokens = (uid, key) => {
+ const startCLEARActionTokens = (hostKey) => {
     const updates = {};
-    updates['savedGames/' + uid + '/' + key + '/activeActionTokens'] = null;
+    updates['savedGames/' + hostKey + '/activeActionTokens'] = null;
     update(ref(db), updates)
         .catch((error) => {
             console.log('Error when clearing active Action Token array:', error)
@@ -449,27 +449,27 @@ export const startCLEARActionTokens = (uid, key) => {
 // Action Tokens
 
 // Challenge Actions
-export const startSetVillainDeck = (uid, key, villainDeck) => {
+ const startSetVillainDeck = (hostKey, villainDeck) => {
     const updates = {};
-    updates['savedGames/' + uid + '/' + key + '/villainDeck'] = villainDeck;
+    updates['savedGames/' + hostKey + '/villainDeck'] = villainDeck;
     update(ref(db), updates)
         .catch((error) => {
             console.log('Error when setting Villain deck:', error)
         })
 }
 
-export const startSetRelicDeck = (uid, key, relicDeck) => {
+ const startSetRelicDeck = (hostKey, relicDeck) => {
     const updates = {};
-    updates['savedGames/' + uid + '/' + key + '/relicDeck'] = relicDeck;
+    updates['savedGames/' + hostKey + '/relicDeck'] = relicDeck;
     update(ref(db), updates)
         .catch((error) => {
             console.log('Error when setting Relic deck:', error)
         })
 }
 
-export const startSetLocationDeck = (uid, key, locationDeck) => {
+ const startSetLocationDeck = (hostKey, locationDeck) => {
     const updates = {};
-    updates['savedGames/' + uid + '/' + key + '/locationDeck'] = locationDeck;
+    updates['savedGames/' + hostKey + '/locationDeck'] = locationDeck;
     update(ref(db), updates)
         .catch((error) => {
             console.log('Error when setting Location deck:', error)

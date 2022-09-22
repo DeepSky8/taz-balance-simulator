@@ -3,46 +3,84 @@ import { startSpendActionToken, startSpendAssistToken, startUNspendActionToken, 
 import { auth } from "../../../../../firebase/firebase";
 import ActionToken from "./ActionToken";
 import assistStages from "../../turnStep/turnStepArrays/assistStages";
+import tokenStages from "../../turnStep/turnStepArrays/tokenStages";
+import challengeItemStages from "../../turnStep/turnStepArrays/challengeItemStages";
 
 const ActionTokens = ({ cloudState, localState }) => {
     const [isAssistToken, setIsAssistToken] = useState(false)
     const [acceptingTokens, setAcceptingTokens] = useState(false)
+    const [displayActionTokens, setDisplayActionTokens] = useState(false)
 
-    // Monitor the turnStage; if an action token is spent
-    // to assist another player, add this action token to a special array
-    // so that the assistance can be described by the assisting player
-    // in a special turnStage
     useEffect(() => {
+        // Monitor the turnStage; if an action token is spent
+        // to assist another player, add this action token to a special array
+        // so that the assistance can be described by the assisting player
+        // in a special turnStage
         if (assistStages.includes(cloudState.currentTurn.turnStage)) {
             setIsAssistToken(true)
         } else {
             setIsAssistToken(false)
         }
-    }, [cloudState.currentTurn.turnStage])
 
-    // If the challenge has a noAssist flag
-    // or if a player has already put in their token
-    // or if it has a doubleAssist flag and _two_ players
-    // have already put in their tokens
-    // do not allow additional assist tokens to be added to the list
-    useEffect(() => {
+        // If the challenge has a noAssist flag
+        // or if a player has already put in their token
+        // or if it has a doubleAssist flag and _two_ players
+        // have already put in their tokens
+        // or if the current Challenge doesn't require a token to engage
+        // do not allow additional assist tokens to be added to the list
         setAcceptingTokens(() => {
-            if (localState.currentChallenge.noAssist) {
+            if (tokenStages.includes(cloudState.currentTurn.turnStage)) {
+                if (localState.currentChallenge.noAssist) {
+                    return false
+                } else if (cloudState.activeAssistTokens.length < 1) {
+                    return true
+                } else if (
+                    (localState.currentChallenge.doubleAssist)
+                    &&
+                    (cloudState.activeAssistTokens.length < 2)
+                ) {
+                    return true
+                } else if (localState.currentChallenge.requiresToken) {
+                    return true
+                } else {
+                    return false
+                }
+            } else {
                 return false
-            } else if (cloudState.activeAssistTokens.length < 1) {
-                return true
-            } else if (
-                (localState.currentChallenge.doubleAssist)
-                &&
-                (cloudState.activeAssistTokens.length < 2)
-            ) {
-                return true
             }
         })
 
     }, [
         localState.currentChallenge,
-        cloudState.activeAssistTokens
+        cloudState.activeAssistTokens,
+        cloudState.currentTurn.turnStage
+    ])
+
+    useEffect(() => {
+        if (
+            (assistStages.includes(cloudState.currentTurn.turnStage))
+            ||
+            (
+                (challengeItemStages.includes(cloudState.currentTurn.turnStage))
+                &&
+                (
+                    cloudState.currentTurn.villain.requiresToken
+                    ||
+                    cloudState.currentTurn.relic.requiresToken
+                    ||
+                    cloudState.currentTurn.location.requiresToken
+                )
+            )
+        ) {
+            setDisplayActionTokens(true)
+        } else {
+            setDisplayActionTokens(false)
+        }
+    }, [
+        cloudState.currentTurn.villain,
+        cloudState.currentTurn.relic,
+        cloudState.currentTurn.location,
+        cloudState.currentTurn.turnStage
     ])
 
     const actuallySpendIt = (playerUID) => {
@@ -53,15 +91,13 @@ const ActionTokens = ({ cloudState, localState }) => {
             return player.uid === playerUID
         })
         startSpendActionToken(
-            cloudState.static.host,
-            cloudState.static.key,
+            localState.hostKey,
             updatedHasActionToken,
             spentActionToken.concat(cloudState.activeActionTokens)
         )
         if (isAssistToken) {
             startSpendAssistToken(
-                cloudState.static.host,
-                cloudState.static.key,
+                localState.hostKey,
                 spentActionToken.concat(cloudState.activeAssistTokens)
             )
         }
@@ -95,8 +131,7 @@ const ActionTokens = ({ cloudState, localState }) => {
                 return player.uid !== playerUID
             })
             startUNspendActionToken(
-                cloudState.static.host,
-                cloudState.static.key,
+                localState.hostKey,
                 unspendThisToken.concat(cloudState.hasActionToken),
                 newSpentActionTokensArray
             )
@@ -105,8 +140,7 @@ const ActionTokens = ({ cloudState, localState }) => {
                     return player.uid !== playerUID
                 })
                 startUNspendAssistToken(
-                    cloudState.static.host,
-                    cloudState.static.key,
+                    localState.hostKey,
                     newSpentAssistTokensArray
                 )
             }
@@ -115,7 +149,7 @@ const ActionTokens = ({ cloudState, localState }) => {
 
     return (
         <span>
-            {assistStages.includes(cloudState.currentTurn.turnStage)
+            {displayActionTokens
                 &&
                 cloudState.playerList.map((player) => {
                     return (
