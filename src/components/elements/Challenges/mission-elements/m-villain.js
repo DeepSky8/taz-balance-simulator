@@ -73,6 +73,15 @@ const villainObjectsArray = [
         prompt1: "What does the Giant look like?",
         prompt2: "What's their name?"
     },
+    {
+        challengeName: 'Villain Test',
+        challengeCode: 'v99',
+        challengeFlavor: "Test Deck Only",
+        promptFlavor1: 'Test Deck Only',
+        promptFlavor2: 'Test Deck Only',
+        prompt1: 'Test Deck Only',
+        prompt2: 'Test Deck Only',
+    }
 ]
 
 const uniqueVillains = [

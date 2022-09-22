@@ -1,24 +1,8 @@
 import React from "react"
 import { startUpdateTurnStage } from "../../../actions/cloudActions"
+import turnStagesArray from "../ActiveGame/turnStep/turnStepArrays/turnStagesArray"
 
-const turnStages = [
-    'DESCRIBEONE',
-    'CHALLENGE',
-    'ITEMS',
-    'STORY',
-    'PREASSIST',
-    'SCENE',
-    'PRE_ASSIST_SCENE',
-    'ROLLONE',
-    'ROLLTWO',
-    'EVALUATEONE',
-    'POSTASSIST',
-    'POST_ASSIST_SCENE',
-    'EVALUATETWO',
-    'DESCRIBETWO',
-    'KOSTCO',
-    'PASS'
-]
+
 
 const TESTFEATURES = ({ currentStage, hostKey, resetStages, stepStage, resetTurnStage, resetActionTokens }) => {
 
@@ -43,7 +27,7 @@ const TESTFEATURES = ({ currentStage, hostKey, resetStages, stepStage, resetTurn
                 value={currentStage}
                 onChange={(e) => { startUpdateTurnStage(hostKey, e.target.value) }}
             >
-                {turnStages.map((stage) => {
+                {turnStagesArray.map((stage) => {
                     return (
                         <option
                             key={stage}

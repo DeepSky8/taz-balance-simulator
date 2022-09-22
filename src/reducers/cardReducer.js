@@ -64,7 +64,7 @@ const defaultCardState = {
 
     autoComplete: false,
     autoDefeat: false,
-    autoDiscard: true,
+    autoDiscard: false,
     autoDamage: false,
 
     modifyEffect: false,

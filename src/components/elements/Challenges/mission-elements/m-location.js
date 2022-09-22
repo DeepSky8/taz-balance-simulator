@@ -65,6 +65,15 @@ const locationObjectsArray = [
         promptFlavor2: ' -- and if the race ends, they escape!',
         prompt1: `What does your battlewagon look like?`,
         prompt2: `Where is the race?`,
+    },
+    {
+        challengeName: 'Location Test',
+        challengeCode: 'l99',
+        challengeFlavor: "Test Deck Only",
+        promptFlavor1: 'Test Deck Only',
+        promptFlavor2: 'Test Deck Only',
+        prompt1: 'Test Deck Only',
+        prompt2: 'Test Deck Only',
     }
 ]
 

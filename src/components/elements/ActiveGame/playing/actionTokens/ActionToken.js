@@ -54,7 +54,7 @@ const ActionToken = ({
         }
 
         // console.log('Player', player.charName, 'tempUnspentToken', tempUnspentToken, 'nonActiveToken', nonActiveToken, 'assistStage', assistStage)
-    }, [tokenArray, player, activeUID])
+    }, [tokenArray, player, activeUID, stage])
 
     // Is this player in the array of players who spent their action token
     // in this turn step? (allows take-backsies)

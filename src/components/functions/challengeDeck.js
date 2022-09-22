@@ -97,8 +97,8 @@ const extractFinalCard = (challengeArray) => {
 const challengeDeck = (challengeCode, protoCardArray) => {
     const newDeck = [];
     const protoDeck = [];
-    const numericalDecks = ['v0', 'v2', 'v3', 'v4', 'v5', 'v6', 'l0', 'l1', 'l2', 'l3', 'l4', 'l5']
-    const randomDecks = ['v1', 'r0', 'r1', 'r2', 'r3', 'r4', 'r5']
+    const numericalDecks = ['v0', 'v2', 'v3', 'v4', 'v5', 'v6', 'l0', 'l1', 'l2', 'l3', 'l4', 'l5', 'l99']
+    const randomDecks = ['v1', 'r0', 'r1', 'r2', 'r3', 'r4', 'r5', 'v99', 'r99']
 
     // Method finds the challenges marked Boss and Finale, pairs them in an object
     // and returns that object as well as the remaining challenges in an array

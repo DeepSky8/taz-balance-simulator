@@ -61,14 +61,15 @@ const ActionTokens = ({ cloudState, localState }) => {
             (assistStages.includes(cloudState.currentTurn.turnStage))
             ||
             (
+                // console.log('fired useEffect in ActionTokens', cloudState.currentTurn.turnStage, )
                 (challengeItemStages.includes(cloudState.currentTurn.turnStage))
                 &&
                 (
-                    cloudState.currentTurn.villain.requiresToken
+                    cloudState.currentTurn.villain[cloudState.currentTurn.villain.visible].requiresToken
                     ||
-                    cloudState.currentTurn.relic.requiresToken
+                    cloudState.currentTurn.relic[cloudState.currentTurn.relic.visible].requiresToken
                     ||
-                    cloudState.currentTurn.location.requiresToken
+                    cloudState.currentTurn.location[cloudState.currentTurn.location.visible].requiresToken
                 )
             )
         ) {

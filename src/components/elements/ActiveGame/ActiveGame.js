@@ -129,7 +129,6 @@ const ActiveGame = () => {
     }, [])
 
 
-
     // CloudState listeners
     // Updated a single time: static, playerList
     // Not updated: classList
@@ -546,6 +545,7 @@ const ActiveGame = () => {
     // This is only run on the host; the active challenges are pushed
     // to the cloud, as is the deck when deck creation is needed
     useEffect(() => {
+        
         if (auth.currentUser.uid === localState.hostKey.split('/', 1).toString()) {
             // Villain challenge listener
             onValue(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeVillain),
@@ -566,9 +566,10 @@ const ActiveGame = () => {
                         dispatchLocalState(updateUncompletedChallengesVillain(tempUncompleteCards))
                         dispatchLocalState(updateCompletedChallengesVillain(tempCompleteCards))
 
-                        // If no uncomplete Villain challenge deck exists
+                        // If no Villain challenge deck exists
                         // the Host of the game creates a deck and uploads it
                     } else if (auth.currentUser.uid === localState.hostKey.split('/', 1).toString()) {
+                        
                         onValue(ref(db, 'challenges/' + cloudState.static.codeVillain),
                             (snapshot) => {
                                 if (snapshot.exists()) {

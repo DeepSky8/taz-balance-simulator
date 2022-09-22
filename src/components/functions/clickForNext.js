@@ -147,7 +147,7 @@ const clickForNext = ({ cloudState, localState }) => {
                                     localState.activeCharacter.charKostco.length > 0)
                                     // If the active character has KostCo card(s), 
                                     // the 'ITEMS' stage will allow them to potentially use activated elementsF
-                                    turnIncrement()
+                                    turnIncrement('ITEMS')
                             } else if (localState.currentChallenge.storyBonus > 0) {
                                 // If there are no items to use, 
                                 // AND if there is a story bonus
@@ -164,7 +164,7 @@ const clickForNext = ({ cloudState, localState }) => {
                                 turnIncrement('PREASSIST')
                             }
                         }
-
+                        // Need to implement code to handle No Assist, No Roll
                         break;
                     case 'ITEMS':
                         console.log('did things with items')
@@ -313,6 +313,7 @@ const clickForNext = ({ cloudState, localState }) => {
                             // And if the character action token is available
                             (cloudState.activeActionTokens.filter(token => token.uid === cloudState.active.activeUID).length > 0)
                         ) {
+                            console.log('tokenClassesActionTwo', tokenClassesActionTwo, localState.activeCharacter.classCode)
                             turnIncrement('ACTIONTWO')
                         } else {
                             turnIncrement('PASS')
@@ -322,7 +323,18 @@ const clickForNext = ({ cloudState, localState }) => {
                         console.log('received KOSTCO card (two cards if Rogue)')
                         console.log('discarded one if Rogue, then decided whether to hold it or give it')
                         console.log('if this results in more than two items, decide which one to discard')
-                        turnIncrement()
+                        if (
+                            // If the character is in the list of characters with an ActionTwo token ability
+                            (tokenClassesActionTwo.includes(localState.activeCharacter.classCode))
+                            &&
+                            // And if the character action token is available
+                            (cloudState.activeActionTokens.filter(token => token.uid === cloudState.active.activeUID).length > 0)
+                        ) {
+                            console.log('tokenClassesActionTwo', tokenClassesActionTwo, localState.activeCharacter.classCode)
+                            turnIncrement('ACTIONTWO')
+                        } else {
+                            turnIncrement('PASS')
+                        }
                         break;
                     case 'ACTIONTWO':
                         turnIncrement()

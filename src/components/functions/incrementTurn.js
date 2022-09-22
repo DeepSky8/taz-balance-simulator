@@ -30,10 +30,10 @@ const incrementTurn = (stage) => {
         case 'EVALUATETWO':
             return 'DESCRIBETWO';
         case 'DESCRIBETWO':
-            return 'ACTIONTWO'
-        case 'ACTIONTWO':
             return 'KOSTCO';
         case 'KOSTCO':
+            return 'ACTIONTWO'
+        case 'ACTIONTWO':
             return 'PASS';
         case 'PASS':
             return 'DESCRIBEONE'

@@ -64,6 +64,15 @@ const relicObjectsArray = [
         promptFlavor2: '',
         prompt1: `What's the name of the Sword?`,
         prompt2: `What will the Villain do with it?`,
+    },
+    {
+        challengeName: 'Relic Test',
+        challengeCode: 'r99',
+        challengeFlavor: "Test Deck Only",
+        promptFlavor1: 'Test Deck Only',
+        promptFlavor2: 'Test Deck Only',
+        prompt1: 'Test Deck Only',
+        prompt2: 'Test Deck Only',
     }
 ]
 
