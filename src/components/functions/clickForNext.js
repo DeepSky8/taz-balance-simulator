@@ -1,8 +1,27 @@
-import { updateLoot } from "../../actions/cardActions";
-import { startAddStoryBonus, startCompleteChallenge, startMarkTurnComplete, startSaveDiceRoll, startToggleRollAnimation, startUNspendActionToken, startUpdateAssistBonusOne, startUpdateAssistBonusTwo, startUpdateAssistTokens, startUpdateLootPoints, startUpdateTeamHealth, startUpdateTurnStage } from "../../actions/cloudActions"
+import {
+    startAddStoryBonus,
+    startCompleteChallenge,
+    startMarkTurnComplete,
+    startSaveDiceRoll,
+    startToggleRollAnimation,
+    startUNspendActionToken,
+    startUpdateAssistBonusOne,
+    startUpdateAssistBonusTwo,
+    startUpdateAssistTokens,
+    startUpdateLootPoints,
+    startUpdateTeamHealth,
+    startUpdateTurnStage
+} from "../../actions/cloudActions"
 import { auth } from "../../firebase/firebase";
+import stepStagesArray from "../elements/ActiveGame/turnStep/turnStepArrays/stepStagesArray";
 import tokenStages from "../elements/ActiveGame/turnStep/turnStepArrays/tokenStages";
-import { stats, tokenClassesActionOne, tokenClassesActionTwo, tokenClassesReclaim } from "../elements/CharacterSheet/classes/charInfo";
+import turnStagesArray from "../elements/ActiveGame/turnStep/turnStepArrays/turnStagesArray";
+import {
+    stats,
+    tokenClassesActionOne,
+    tokenClassesActionTwo,
+    tokenClassesReclaim
+} from "../elements/CharacterSheet/classes/charInfo";
 import diceRoll from "./diceRoll";
 import incrementTurn from "./incrementTurn";
 
@@ -12,12 +31,21 @@ const clickForNext = ({ cloudState, localState }) => {
         window.location.reload()
     }
 
-    const addStoryStrength = (storyBonus) => {
-        startAddStoryBonus(localState.hostKey, parseInt(storyBonus))
+    const addStoryStrength = () => {
+        startAddStoryBonus(localState.hostKey, parseInt(localState.currentChallenge.storyBonus))
     }
 
-    const addAssistBonus = (assistingCharacter, stage) => {
-        const assistBonus = stats[assistingCharacter.classCode][stage]
+    const addAssistBonus = () => {
+
+        const stage = (
+            (cloudState.currentTurn.turnStage === turnStagesArray[12])
+                ?
+                'postAssist'
+                :
+                'preAssist'
+        )
+
+        const assistBonus = stats[cloudState.activeAssistTokens[0].classCode][stage]
         if (cloudState.strength.assistOne > 0) {
             startUpdateAssistBonusTwo(localState.hostKey, assistBonus)
         } else {
@@ -49,7 +77,16 @@ const clickForNext = ({ cloudState, localState }) => {
         startUpdateAssistTokens(localState.hostKey, updatedAssistArray)
     }
 
-    const rollDice = (rollLocation) => {
+    const rollDice = () => {
+
+        const rollLocation = (
+            cloudState.currentTurn.rollOne === null
+                ?
+                'rollOne'
+                :
+                'rollTwo'
+        )
+
         const newRoll = diceRoll()
 
         setTimeout(() => { startToggleRollAnimation(localState.hostKey, true) }, 0)
@@ -112,248 +149,1070 @@ const clickForNext = ({ cloudState, localState }) => {
             [cloudState.active.activeUID].concat(
                 cloudState.readyList
             ))
-        turnIncrement()
+        // turnIncrement()
     }
 
 
-    if (auth.currentUser.uid === cloudState.active.activeUID) {
-        switch (cloudState.active.gameStage) {
-            case 'INTRO':
-                passTheTurn()
-                break;
-            case 'BRIEF':
-                break;
-            case 'TRANSPORT':
-                break;
-            case 'CHALLENGES':
-                switch (cloudState.currentTurn.turnStage) {
-                    case 'DESCRIBEONE':
-                        turnIncrement()
-                        break;
-                    case 'CHALLENGE':
-                        if (cloudState.currentTurn.selectedChallenge !== '') {
+    const turnStageSelection = () => {
 
-                            if (
-                                // If the currently selected challenge requires 
-                                // that an action token be spent to engage it
-                                // the rest of the logic will not fire
-                                // until an active token for the active player is in the list
-                                (localState.currentChallenge.requiresToken)
-                                &&
-                                (cloudState.activeActionTokens.filter(token => token.uid === cloudState.active.activeUID).length > 0)
-                            ) {
+        const activePlayerChecker = () => {
+            return (
+                // Only accept input from the active player
+                (auth.currentUser.uid === cloudState.active.activeUID)
+            )
+        }
 
-                                if (localState.activeCharacter.charKostco &&
-                                    localState.activeCharacter.charKostco.length > 0)
-                                    // If the active character has KostCo card(s), 
-                                    // the 'ITEMS' stage will allow them to potentially use activated elementsF
-                                    turnIncrement('ITEMS')
-                            } else if (localState.currentChallenge.storyBonus > 0) {
-                                // If there are no items to use, 
-                                // AND if there is a story bonus
-                                // move to the Story stage
-                                turnIncrement('STORY')
-                            } else if (localState.currentChallenge.noAssist) {
-                                // If there is no story bonus
-                                // and if the challenge does not allow assistance
-                                // move to the Scene stage
-                                turnIncrement('SCENE')
-                            } else {
-                                // If all else fails, this challenge is eligible for assistance
-                                // Move to the Preassist stage
-                                turnIncrement('PREASSIST')
-                            }
-                        }
-                        // Need to implement code to handle No Assist, No Roll
-                        break;
-                    case 'ITEMS':
-                        console.log('did things with items')
-                        if (localState.currentChallenge.storyBonus > 0) {
-                            turnIncrement()
-                        } else {
-                            turnIncrement('PREASSIST')
-                        }
-                        break;
-                    case 'STORY':
-                        addStoryStrength(localState.currentChallenge.storyBonus)
-                        if (localState.currentChallenge.noAssist) {
-                            turnIncrement('SCENE')
-                        } else {
-                            turnIncrement()
-                        }
-                        break;
-                    case 'PREASSIST':
-                        turnIncrement()
-                        break;
-                    case 'SCENE':
-                        if (cloudState.activeAssistTokens.length > 0) {
-                            turnIncrement()
-                        } else {
-                            turnIncrement('ROLLONE')
-                        }
-                        break;
-                    case 'PRE_ASSIST_SCENE':
-                        if (cloudState.activeAssistTokens.length > 0) {
-                            // If assist tokens have been spent
-                            // clicking will add the first bonus to the current strength
-                            // and remove the first token from the list of assist tokens
-                            addAssistBonus(cloudState.activeAssistTokens[0], 'preAssist')
-                            removeFirstActiveAssistToken()
-                        }
-                        if (
-                            // If all of the assist tokens have been processed
-                            // AND if the character class has a special Action Token ability 
-                            // that could be used before
-                            (cloudState.activeAssistTokens.length === 0)
-                            &&
-                            (tokenClassesActionOne.includes(localState.activeCharacter.classCode))
-                        ) {
-                            turnIncrement()
-                        } else {
-                            turnIncrement('ROLLONE')
-                        }
-
-                        break;
-                    case 'ACTIONONE':
-                        console.log('tokenStages array', tokenStages)
-                        turnIncrement()
-                        break;
-                    case 'ROLLONE':
-                        rollDice('rollOne')
-                        if (localState.currentChallenge.advantage ||
-                            localState.currentChallenge.disadvantage
-                        ) {
-                            turnIncrement()
-                        } else {
-                            turnIncrement('EVALUATEONE')
-                        }
-                        break;
-                    case 'ROLLTWO':
-                        rollDice('rollTwo')
-                        turnIncrement()
-                        break;
-                    case 'EVALUATEONE':
-                        if (cloudState.strength.total < 0) {
-                            turnIncrement('DESCRIBETWO')
-                        } else if (
-                            // If total strength is greater than or equal to the difficulty of the challenge
-                            cloudState.strength.total >=
-                            cloudState.currentTurn.difficulty) {
-                            completeChallenge()
-                            turnIncrement('DESCRIBETWO')
-                        } else if (
-                            // Do action tokens for non active players still exist?
-                            (cloudState.hasActionToken.filter(tokens => tokens.uid !== cloudState.active.activeUID).length > 0)
+        const passesActionTokenChecker = () => {
+            return (
+                (
+                    (
+                        // If turn stage is CHALLENGE
+                        turnStagesArray.slice(1, 2).includes(cloudState.currentTurn.stage)
+                    )
+                    &&
+                    (
+                        (
+                            // If the current challenge does NOT require
+                            // that the active player spend their action token
+                            // to engage the challenge
+                            !localState.currentChallenge.requiresToken
+                        )
+                        ||
+                        (
+                            (
+                                // If the current challenge DOES require
+                                // that the active player spend their action token
+                                // to engage the challenge
+                                localState.currentChallenge.requiresToken)
                             &&
                             (
-                                (   // Can this challenge receive assistance, 
-                                    // but has not yet had assistance applied
-                                    (!localState.currentChallenge.noAssist)
-                                    &&
-                                    (cloudState.strength.assistOne === 0)
-                                )
-                                || // OR
-                                (
-                                    // Is this a doubleAssist challenge, 
-                                    // and has not yet had a second assist applied
-                                    (localState.currentChallenge.doubleAssist)
-                                    &&
-                                    (cloudState.strength.assistTwo === 0)
-                                )
-
+                                // AND the active player HAS spent their action token
+                                // in order to engage the challenge
+                                (cloudState.activeActionTokens.filter(
+                                    token => token.uid === cloudState.active.activeUID
+                                ).length > 0)
                             )
-                        ) {
-                            turnIncrement()
-                        } else if (
-                            // If the total strength does not suffice
-                            // and the challenge is not eligible for assistance
-                            // or no further non active player action tokens exist
+                        )
+                    )
+                )
+                ||
+                (
+                    // OR if turn stage is NOT CHALLENGE
+                    !turnStagesArray.slice(1, 2).includes(cloudState.currentTurn.stage)
+                )
+            )
+        }
+
+        // DESCRIBEONE
+        const setDESCRIBEONE = () => {
+            return (
+                // If turn stage is PASS
+                ([turnStagesArray[17], turnStagesArray[19]].includes(cloudState.currentTurn.turnStage))
+                ||
+                // or if step stage is TRANSPORT
+                (stepStagesArray[2] === (cloudState.active.gameStage))
+            )
+        }
+
+        // CHALLENGE
+        const setCHALLENGE = () => {
+            return (
+                // If turn stage is DESCRIBEONE
+                // then stage CHALLENGE becomes available
+                turnStagesArray[0] === (cloudState.currentTurn.turnStage)
+            )
+        }
+
+        // ITEMS
+        const setITEMS = () => {
+            return (
+                (passesActionTokenChecker())
+                &&
+                (
+                    (
+                        // If turn stage is CHALLENGE
+                        turnStagesArray[1] === (cloudState.currentTurn.turnStage)
+                    )
+                    &&
+                    (
+                        (
+                            // and the active character has any items
+                            // this will likely need to be updated
+                            // (text at the very least)
+                            // once items have been implemented
+                            // to indicate whether there are active
+                            // item options, or just reviewing the bonuses from 
+                            // current items
+                            localState.activeCharacter.charKostco
+                            &&
+                            localState.activeCharacter.charKostco.length > 0
+                        )
+                    )
+                )
+            )
+        }
+
+        // STORY
+        const setSTORY = () => {
+            // This method relies on fall-through
+            // from the ITEMS stage
+            return (
+                (passesActionTokenChecker())
+                &&
+                (
+                    (
+                        // If turn stage is CHALLENGE or ITEMS
+                        turnStagesArray.slice(1, 3).includes(cloudState.currentTurn.turnStage)
+                    )
+                    &&
+                    (
+                        // and the current challenge has a story bonus
+                        localState.currentChallenge.storyBonus > 0
+                    )
+                )
+            )
+        }
+
+        // PREASSIST
+        const setPREASSIST = () => {
+            // This method relies heavily on fall-through logic
+            // It captures all challenges that allow assist
+            // and aren't explicitly directly elsewhere
+            return (
+                (passesActionTokenChecker())
+                &&
+                (
+                    (
+                        // If turn stage is CHALLENGE or ITEMS or STORY
+                        turnStagesArray.slice(1, 4).includes(cloudState.currentTurn.turnStage)
+                    )
+                    &&
+                    (
+                        // and if the current challenge DOES allow assists
+                        !localState.currentChallenge.noAssist
+                    )
+                )
+            )
+        }
+
+        // SCENE
+        const setSCENE = () => {
+            return (
+                (passesActionTokenChecker())
+                &&
+                // If turn stage is PREASSIST
+                // then SCENE becomes available
+                (
+                    (turnStagesArray[4] === (cloudState.currentTurn.turnStage))
+                    ||
+                    (
+                        // If turn stage is CHALLENGE or STORY
+                        ([turnStagesArray[1], turnStagesArray[3]].includes(cloudState.currentTurn.turnStage))
+                        &&
+                        // and if the challenge does not allow assistance
+                        // move to the Scene stage
+                        (localState.currentChallenge.noAssist)
+                    )
+                )
+            )
+        }
+
+        // PRE_ASSIST_SCENE
+        const setPRE_ASSIST_SCENE = () => {
+            return (
+                // Accessible from SCENE
+                (turnStagesArray[5] === (cloudState.currentTurn.turnStage))
+                &&
+                (cloudState.activeAssistTokens.length > 0)
+            )
+        }
+
+        // ACTIONONE
+        const setACTIONONE = () => {
+            return (
+                (turnStagesArray[6] === (cloudState.currentTurn.turnStage))
+                &&
+                (
+                    // If all of the assist tokens have been processed
+                    // AND if the character class has a special Action Token ability
+                    // that could be used before the roll
+                    (cloudState.activeAssistTokens.length === 0)
+                    &&
+                    (tokenClassesActionOne.includes(localState.activeCharacter.classCode))
+                )
+            )
+        }
+
+        // ROLLONE
+        const setROLLONE = () => {
+            return (
+                // SCENE, PRE_ASSIST_SCENE, ACTIONONE
+                (turnStagesArray.slice(5, 8).includes(cloudState.currentTurn.turnStage))
+                &&
+                (
+                    (cloudState.activeAssistTokens.length === 0)
+                )
+                &&
+                (
+                    !localState.currentChallenge.noRoll
+                )
+            )
+        }
+
+        // ROLLTWO
+        const setROLLTWO = () => {
+            return (
+                // If turn stage is ROLLING 
+                // then stage ROLLTWO becomes available
+                // (turnStagesArray[18] === cloudState.currentTurn.turnStage)
+
+                // If turn stage is ROLLONE
+                // then stage ROLLTWO becomes available
+                (turnStagesArray[8] === cloudState.currentTurn.turnStage)
+                // (false)
+                &&
+                (
+                    // If the currently selected challenge 
+                    // is marked with advantage or disadvantage
+                    // then stage ROLLTWO becomes available
+                    localState.currentChallenge.advantage
+                    ||
+                    localState.currentChallenge.disadvantage
+                )
+                &&
+                (
+                    !localState.currentChallenge.noRoll
+                )
+                &&
+                (
+                    cloudState.currentTurn.rollTwo === null
+                )
+            )
+        }
+
+        // EVALUATEONE
+        const setEVALUATEONE = () => {
+            return (
+
+
+                (
+                    // // If turn stage is ROLLING
+                    // (turnStagesArray[18] === (cloudState.currentTurn.turnStage))
+
+                    // If turn stage is ROLLONE or ROLLTWO
+                    (turnStagesArray.slice(8, 10).includes(cloudState.currentTurn.turnStage))
+                    &&
+                    !(
+                        // and if the currently selected challenge 
+                        // is NOT marked with advantage or disadvantage
+                        localState.currentChallenge.advantage
+                        ||
+                        localState.currentChallenge.disadvantage
+                    )
+                )
+                ||
+                (
+                    // // If turn stage is ROLLING
+                    // (turnStagesArray[18] === (cloudState.currentTurn.turnStage))
+
+                    // If turn stage is ROLLTWO
+                    (turnStagesArray[9] === cloudState.currentTurn.turnStage)
+                    &&
+                    (
+                        // and if the currently selected challenge 
+                        // IS marked with advantage or disadvantage
+                        localState.currentChallenge.advantage
+                        ||
+                        localState.currentChallenge.disadvantage
+                    )
+                    // &&
+                    // (cloudState.currentTurn.rollTwo !== null)
+                )
+                ||
+                (
+                    // If turn stage is SCENE
+                    (turnStagesArray[5] === (cloudState.currentTurn.turnStage))
+                    &&
+                    // and the current challenge does not allow rolling
+                    (localState.currentChallenge.noRoll)
+                )
+            )
+        }
+
+        // POSTASSIST
+        const setPOSTASSIST = () => {
+            return (
+                // If current stage is EVALUATEONE
+                // then stage POSTASSIST becomes available
+                (turnStagesArray[10] === (cloudState.currentTurn.turnStage))
+                &&
+                (
+                    // Do action tokens for non active players still exist?
+                    (cloudState.hasActionToken.filter(tokens => tokens.uid !== cloudState.active.activeUID).length > 0)
+                    &&
+                    (
+                        (   // Can this challenge receive assistance,
+                            // but has not yet had assistance applied
+                            (!localState.currentChallenge.noAssist)
+                            &&
+                            (cloudState.strength.assistOne === 0)
+                        )
+                        || // OR
+                        (
+                            // Is this a doubleAssist challenge,
+                            // and has not yet had a second assist applied
+                            (localState.currentChallenge.doubleAssist)
+                            &&
+                            (cloudState.strength.assistTwo === 0)
+                        )
+
+                    )
+                )
+            )
+        }
+
+        // POST_ASSIST_SCENE
+        const setPOST_ASSIST_SCENE = () => {
+            return (turnStagesArray[11] === (cloudState.currentTurn.turnStage))
+        }
+
+        // EVALUATETWO
+        const setEVALUATETWO = () => {
+            // After all players assisting after the roll have described how they help
+            // move to the second evaluation stage
+            return (
+                // If the current stage is POST_ASSIST_SCENE
+                // then stage EVALUATETWO becomes available
+                (turnStagesArray[12] === (cloudState.currentTurn.turnStage))
+                &&
+                // There must be no activeAssistTokens left in the list
+                (cloudState.activeAssistTokens.length === 0)
+            )
+        }
+
+        // DESCRIBETWO
+        const setDESCRIBETWO = () => {
+            return (
+                (
+                    // If the current stage is EVALUATEONE or EVALUATETWO
+                    // then stage DESCRIBETWO becomes available
+                    [turnStagesArray[10], turnStagesArray[13]].includes(cloudState.currentTurn.turnStage)
+                )
+                &&
+                (// Evaluating roll results (via being applied to strength), if it's a critical failure
+                    (cloudState.strength.total < 0)
+                    ||
+                    // If total strength is greater than or equal to the difficulty of the challenge
+                    (cloudState.strength.total >= cloudState.currentTurn.difficulty)
+                    ||
+                    (
+                        // If total strength is less than the difficulty
+                        (cloudState.strength.total < cloudState.currentTurn.difficulty)
+                        &&
+                        // If there are no further assists to apply
+                        // (either because the challenge is a noAssist or if no teammates have
+                        // available action tokens)
+                        (
                             (localState.currentChallenge.noAssist)
                             ||
                             (cloudState.hasActionToken.filter(
                                 tokens => tokens.uid !== cloudState.active.activeUID
                             ).length === 0
                             )
-                        ) {
-                            failChallenge()
-                            turnIncrement('DESCRIBETWO')
-                        }
-                        break;
-                    case 'POSTASSIST':
-                        turnIncrement()
-                        break;
-                    case 'POST_ASSIST_SCENE':
-                        if (cloudState.activeAssistTokens.length === 0) {
-                            turnIncrement()
-                        } else {
-                            addAssistBonus(cloudState.activeAssistTokens[0], 'postAssist')
-                            removeFirstActiveAssistToken()
-                            if (cloudState.activeAssistTokens.length === 0) {
-                                turnIncrement()
-                            }
-                        }
+                        )
+                    ))
+            )
+        }
 
-                        break;
-                    case 'EVALUATETWO':
-                        if (cloudState.strength.total >= cloudState.currentTurn.difficulty) {
-                            completeChallenge()
-                            updateLoot()
-                        } else {
-                            failChallenge()
-                        }
-                        turnIncrement()
-                        break;
-                    case 'DESCRIBETWO':
-                        if (localState.activeCharacter.lootPoints >= 3) {
-                            turnIncrement()
-                        } else if (
-                            // If the character is in the list of characters with an ActionTwo token ability
-                            (tokenClassesActionTwo.includes(localState.activeCharacter.classCode))
-                            &&
-                            // And if the character action token is available
-                            (cloudState.activeActionTokens.filter(token => token.uid === cloudState.active.activeUID).length > 0)
-                        ) {
-                            console.log('tokenClassesActionTwo', tokenClassesActionTwo, localState.activeCharacter.classCode)
-                            turnIncrement('ACTIONTWO')
-                        } else {
-                            turnIncrement('PASS')
-                        }
-                        break;
-                    case 'KOSTCO':
-                        console.log('received KOSTCO card (two cards if Rogue)')
-                        console.log('discarded one if Rogue, then decided whether to hold it or give it')
-                        console.log('if this results in more than two items, decide which one to discard')
-                        if (
-                            // If the character is in the list of characters with an ActionTwo token ability
-                            (tokenClassesActionTwo.includes(localState.activeCharacter.classCode))
-                            &&
-                            // And if the character action token is available
-                            (cloudState.activeActionTokens.filter(token => token.uid === cloudState.active.activeUID).length > 0)
-                        ) {
-                            console.log('tokenClassesActionTwo', tokenClassesActionTwo, localState.activeCharacter.classCode)
-                            turnIncrement('ACTIONTWO')
-                        } else {
-                            turnIncrement('PASS')
-                        }
-                        break;
-                    case 'ACTIONTWO':
-                        turnIncrement()
-                        break;
-                    case 'PASS':
-                        passTheTurn()
-                        break;
-                    default:
-                        break;
-                }
-                break;
-            case 'END':
-                break;
-            default:
-                console.log('hit default on clickForNext, pls fix');
-                reloadPage()
+        // KOSTCO
+        const setKOSTCO = () => {
+            return (
+                // If the current stage is DESCRIBETWO
+                // then stage KOSTCO is available
+                (turnStagesArray[14] === (cloudState.currentTurn.turnStage))
+                &&
+                (localState.activeCharacter.lootPoints >= 3)
+            )
+        }
+
+        // ACTIONTWO
+        const setACTIONTWO = () => {
+
+            return (
+                // If the current stage is either DESCRIBETWO or KOSTCO
+                // then stage ACTIONTWO can be accessed
+                (turnStagesArray.slice(14, 16).includes(cloudState.currentTurn.turnStage))
+                &&
+                // If the character is in the list of characters with an ActionTwo token ability
+                (tokenClassesActionTwo.includes(localState.activeCharacter.classCode))
+                &&
+                // And if the character action token is available
+                (cloudState.activeActionTokens.filter(token => token.uid === cloudState.active.activeUID).length > 0)
+            )
+        }
+
+        // PASS
+        const setPASS = () => {
+            // If current turn is DESCRIBETWO, KOSTCO, or ACTIONTWO
+            // then stage PASS can be accessed
+            return (turnStagesArray.slice(14, 17).includes(cloudState.currentTurn.turnStage))
+        }
+
+        // ROLLING
+        // const setROLLING = () => {
+        //     return (
+        //         (
+        //             // If turn stage is ROLLONE or ROLLTWO
+        //             // then stage ROLLING becomes available
+        //             turnStagesArray.slice(8, 10).includes(cloudState.currentTurn.turnStage))
+        //         &&
+        //         (
+        //             (cloudState.activeAssistTokens.length === 0)
+        //         )
+        //         &&
+        //         (
+        //             !localState.currentChallenge.noRoll
+        //         )
+
+        //     )
+        // }
+
+        if (activePlayerChecker()) {
+            const trueArray = [
+                setDESCRIBEONE(),
+                setCHALLENGE(),
+                setITEMS(),
+                setSTORY(),
+                setPREASSIST(),
+                setSCENE(),
+                setPRE_ASSIST_SCENE(),
+                setACTIONONE(),
+                setROLLONE(),
+                setROLLTWO(),
+                setEVALUATEONE(),
+                setPOSTASSIST(),
+                setPOST_ASSIST_SCENE(),
+                setEVALUATETWO(),
+                setDESCRIBETWO(),
+                setKOSTCO(),
+                setACTIONTWO(),
+                setPASS(),
+            ]
+            console.log('trueArray', trueArray)
+
+            const returnIndex = trueArray.findIndex(returnValue => returnValue === true)
+            console.log('setting stage to ', turnStagesArray[returnIndex])
+            return (returnIndex >= turnStagesArray.length ? 'default' : turnStagesArray[returnIndex])
         }
     }
+
+    const turnStageActions = (turnStage) => {
+        const turnActionStages =
+            [
+                turnStagesArray[3],
+                turnStagesArray[6],
+                // turnStagesArray[8],
+                turnStagesArray[9],
+                turnStagesArray[10],
+                turnStagesArray[12],
+                turnStagesArray[13],
+                turnStagesArray[17],
+                // turnStagesArray[18],
+            ]
+
+        if (turnActionStages.includes(turnStage)) {
+            switch (turnStage) {
+                case turnStagesArray[3]:
+                    addStoryStrength()
+                    break;
+
+                // Roll Dice
+                // case turnStagesArray[8]:
+                case turnStagesArray[9]:
+                    // case turnStagesArray[18]:
+                    rollDice()
+                    break;
+
+                case turnStagesArray[10]:
+                    rollDice()
+                    if (
+                        // If Strength beats Difficulty
+                        cloudState.strength.total >=
+                        cloudState.currentTurn.difficulty) {
+                        completeChallenge()
+                    } else if (
+                        // If the total strength does not suffice
+                        // and the challenge is not eligible for assistance
+                        // or no further non active player action tokens exist
+                        (localState.currentChallenge.noAssist)
+                        ||
+                        (cloudState.hasActionToken.filter(
+                            tokens => tokens.uid !== cloudState.active.activeUID
+                        ).length === 0
+                        )
+                    ) {
+                        failChallenge()
+                    }
+                    break;
+                case turnStagesArray[13]:
+                    if (cloudState.strength.total >= cloudState.currentTurn.difficulty) {
+                        completeChallenge()
+                        updateLoot()
+                    } else {
+                        failChallenge()
+                    }
+                    break;
+                case turnStagesArray[17]:
+                    passTheTurn()
+                    break;
+
+                // Add assist
+                case turnStagesArray[6]:
+                case turnStagesArray[12]:
+                    if (cloudState.activeAssistTokens.length > 0) {
+                        // If assist tokens have been spent
+                        // clicking will add the first bonus to the current strength
+                        // and remove the first token from the list of assist tokens
+                        addAssistBonus()
+                        removeFirstActiveAssistToken()
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    }
+
+    const newStage = turnStageSelection()
+    startUpdateTurnStage(localState.hostKey, newStage)
+    turnStageActions(newStage)
+
+    // if (auth.currentUser.uid === cloudState.active.activeUID) {
+    //     switch (cloudState.active.gameStage) {
+    //         case 'INTRO':
+    //             passTheTurn()
+    //             break;
+    //         case 'BRIEF':
+    //             break;
+    //         case 'TRANSPORT':
+    //             break;
+    //         case 'CHALLENGES':
+
+    //             switch (cloudState.currentTurn.turnStage) {
+    //                 case 'DESCRIBEONE':
+    //                     turnIncrement('CHALLENGE')
+    //                     break;
+    //                 case 'CHALLENGE':
+    //                     if (cloudState.currentTurn.selectedChallenge !== '') {
+
+    //                         // if (
+    //                         //     // If the currently selected challenge requires
+    //                         //     // that an action token be spent to engage it
+    //                         //     // the rest of the logic will not fire
+    //                         //     // until an active token for the active player is in the list
+    //                         //     (localState.currentChallenge.requiresToken)
+    //                         //     &&
+    //                         // (cloudState.activeActionTokens.filter(
+    //                         //     token => token.uid === cloudState.active.activeUID
+    //                         // ).length > 0)
+    //                         // ) {
+
+    //                         if (localState.activeCharacter.charKostco &&
+    //                             localState.activeCharacter.charKostco.length > 0) {
+    //                             // If the active character has KostCo card(s),
+    //                             // the 'ITEMS' stage will allow them to potentially use activated elements
+    //                             // turnIncrement('ITEMS')
+    //                             console.log('set stage to ITEMS')
+    //                         } else if (localState.currentChallenge.storyBonus > 0) {
+    //                             // If there are no items to use,
+    //                             // AND if there is a story bonus
+    //                             // move to the Story stage
+    //                             // turnIncrement('STORY')
+    //                             console.log('set stage to STORY')
+    //                         } else if (localState.currentChallenge.noAssist) {
+    //                             // If there is no story bonus
+    //                             // and if the challenge does not allow assistance
+    //                             // move to the Scene stage
+    //                             // turnIncrement('SCENE')
+    //                             console.log('set stage to SCENE')
+    //                         } else {
+    //                             // If all else fails, this challenge is eligible for assistance
+    //                             // Move to the Preassist stage
+    //                             // turnIncrement('PREASSIST')
+    //                             console.log('set stage to PREASSIST')
+    //                         }
+    //                     }
+    //                     break;
+    //                 case 'ITEMS':
+    //                     console.log('did things with items')
+    //                     if (localState.currentChallenge.storyBonus > 0) {
+    //                         // turnIncrement('STORY')
+    //                         console.log('set stage to STORY')
+    //                     } else {
+    //                         // turnIncrement('PREASSIST')
+    //                         console.log('set stage to PREASSIST')
+    //                     }
+    //                     break;
+    //                 case 'STORY':
+    //                     // addStoryStrength()
+    //                     console.log('ran addStoryStrength()')
+    //                     if (localState.currentChallenge.noAssist) {
+    //                         // turnIncrement('SCENE')
+    //                         console.log('set stage to SCENE')
+    //                     } else {
+    //                         // turnIncrement('PREASSIST')
+    //                         console.log('set stage to PREASSIST')
+    //                     }
+    //                     break;
+    //                 case 'PREASSIST':
+    //                     // turnIncrement('SCENE')
+    //                     console.log('set stage to SCENE')
+    //                     break;
+    //                 case 'SCENE':
+    //                     if (cloudState.activeAssistTokens.length > 0) {
+    //                         // turnIncrement('PRE_ASSIST_SCENE')
+    //                         console.log('set stage to PRE_ASSIST_SCENE')
+    //                     } else if (localState.currentChallenge.noRoll) {
+    //                         console.log('set stage to EVALUATEONE')
+    //                     } else {
+    //                         // turnIncrement('ROLLONE')
+    //                         console.log('set stage to ROLLONE')
+    //                     }
+    //                     break;
+    //                 case 'PRE_ASSIST_SCENE':
+    //                     if (cloudState.activeAssistTokens.length > 0) {
+    //                         // If assist tokens have been spent
+    //                         // clicking will add the first bonus to the current strength
+    //                         // and remove the first token from the list of assist tokens
+    //                         // addAssistBonus()
+    //                         // removeFirstActiveAssistToken()
+    //                         console.log('ran addAssistBonus() and removeFirstActiveAssistToken()')
+    //                     }
+    //                     if (
+    //                         // If all of the assist tokens have been processed
+    //                         // AND if the character class has a special Action Token ability
+    //                         // that could be used before the roll
+    //                         (cloudState.activeAssistTokens.length === 0)
+    //                         &&
+    //                         (tokenClassesActionOne.includes(localState.activeCharacter.classCode))
+    //                     ) {
+    //                         // turnIncrement('ACTIONONE')
+    //                         console.log('set stage to ACTIONONE')
+    //                     } else {
+    //                         // turnIncrement('ROLLONE')
+    //                         console.log('set stage to ROLLONE')
+    //                     }
+
+    //                     break;
+    //                 case 'ACTIONONE':
+    //                     // console.log('tokenStages array', tokenStages)
+    //                     // turnIncrement('ROLLONE')
+    //                     console.log('set stage to ROLLONE')
+    //                     break;
+    //                 case 'ROLLONE':
+    //                     // rollDice()
+    //                     console.log('ran 1st rollDice() function')
+    //                     if (localState.currentChallenge.advantage ||
+    //                         localState.currentChallenge.disadvantage
+    //                     ) {
+    //                         // turnIncrement('ROLLTWO')
+    //                         console.log('set stage to ROLLTWO')
+    //                     } else {
+    //                         // turnIncrement('EVALUATEONE')
+    //                         console.log('set stage to EVALUATEONE')
+    //                     }
+    //                     break;
+    //                 case 'ROLLTWO':
+    //                     // rollDice()
+    //                     console.log('ran 2nd rollDice() function')
+    //                     // turnIncrement('EVALUATEONE')
+    //                     console.log('set stage to EVALUATEONE')
+    //                     break;
+    //                 case 'EVALUATEONE':
+    //                     if (cloudState.strength.total < 0) {
+    //                         // turnIncrement('DESCRIBETWO')
+    //                         console.log('set stage to DESCRIBETWO')
+    //                     } else if (
+    //                         // If total strength is greater than or equal to the difficulty of the challenge
+    //                         cloudState.strength.total >=
+    //                         cloudState.currentTurn.difficulty) {
+    //                         // completeChallenge()
+    //                         console.log('ran completeChallenge() function')
+    //                         // turnIncrement('DESCRIBETWO')
+    //                         console.log('set stage to DESCRIBETWO')
+    //                     } else if (
+    //                         // Do action tokens for non active players still exist?
+    //                         (cloudState.hasActionToken.filter(tokens => tokens.uid !== cloudState.active.activeUID).length > 0)
+    //                         &&
+    //                         (
+    //                             (   // Can this challenge receive assistance,
+    //                                 // but has not yet had assistance applied
+    //                                 (!localState.currentChallenge.noAssist)
+    //                                 &&
+    //                                 (cloudState.strength.assistOne === 0)
+    //                             )
+    //                             || // OR
+    //                             (
+    //                                 // Is this a doubleAssist challenge,
+    //                                 // and has not yet had a second assist applied
+    //                                 (localState.currentChallenge.doubleAssist)
+    //                                 &&
+    //                                 (cloudState.strength.assistTwo === 0)
+    //                             )
+
+    //                         )
+    //                     ) {
+    //                         // turnIncrement('POSTASSIST')
+    //                         console.log('set stage to POSTASSIST')
+    //                     } else if (
+    //                         // If the total strength does not suffice
+    //                         // and the challenge is not eligible for assistance
+    //                         // or no further non active player action tokens exist
+    //                         (localState.currentChallenge.noAssist)
+    //                         ||
+    //                         (cloudState.hasActionToken.filter(
+    //                             tokens => tokens.uid !== cloudState.active.activeUID
+    //                         ).length === 0
+    //                         )
+    //                     ) {
+    //                         // failChallenge()
+    //                         console.log('ran failedChallenge() function')
+    //                         // NEED TO IMPLEMENT failChallenge() ELSEWHERE
+    //                         // turnIncrement('DESCRIBETWO')
+    //                         console.log('set stage to DESCRIBETWO')
+    //                     }
+    //                     break;
+    //                 case 'POSTASSIST':
+    //                     // turnIncrement('POST_ASSIST_SCENE')
+    //                     console.log('set stage to POSTASSIST')
+    //                     break;
+    //                 case 'POST_ASSIST_SCENE':
+    //                     if (cloudState.activeAssistTokens.length === 0) {
+    //                         // turnIncrement('EVALUATETWO')
+    //                         console.log('set stage to EVALUATETWO')
+
+    //                     } else {
+    //                         // addAssistBonus()
+    //                         // removeFirstActiveAssistToken()
+    //                         console.log('ran addAssistBonus() and removeFirstActiveAssistToken()')
+    //                         if (cloudState.activeAssistTokens.length === 0) {
+    //                             // turnIncrement('EVALUATETWO')
+    //                             console.log('set stage to EVALUATETWO')
+    //                         }
+    //                     }
+
+    //                     break;
+    //                 case 'EVALUATETWO':
+    //                     if (cloudState.strength.total >= cloudState.currentTurn.difficulty) {
+    //                         completeChallenge()
+
+    //                         updateLoot()
+
+    //                     } else {
+    //                         failChallenge()
+
+    //                     }
+    //                     // turnIncrement('DESCRIBETWO')
+    //                     console.log('set stage to DESCRIBETWO')
+
+    //                     break;
+    //                 case 'DESCRIBETWO':
+    //                     if (localState.activeCharacter.lootPoints >= 3) {
+    //                         // turnIncrement('KOSTCO')
+    //                         console.log('set stage to KOSTCO')
+    //                     } else if (
+    //                         // If the character is in the list of characters with an ActionTwo token ability
+    //                         (tokenClassesActionTwo.includes(localState.activeCharacter.classCode))
+    //                         &&
+    //                         // And if the character action token is available
+    //                         (cloudState.activeActionTokens.filter(token => token.uid === cloudState.active.activeUID).length > 0)
+    //                     ) {
+    //                         // console.log('tokenClassesActionTwo', tokenClassesActionTwo, localState.activeCharacter.classCode)
+    //                         // turnIncrement('ACTIONTWO')
+    //                         console.log('set stage to ACTIONTWO')
+    //                     } else {
+    //                         // turnIncrement('PASS')
+    //                         console.log('set stage to PASS')
+    //                     }
+    //                     break;
+    //                 case 'KOSTCO':
+    //                     console.log('received KOSTCO card (two cards if Rogue)')
+    //                     console.log('discarded one if Rogue, then decided whether to hold it or give it')
+    //                     console.log('if this results in more than two items, decide which one to discard')
+    //                     if (
+    //                         // If the character is in the list of characters with an ActionTwo token ability
+    //                         (tokenClassesActionTwo.includes(localState.activeCharacter.classCode))
+    //                         &&
+    //                         // And if the character action token is available
+    //                         (cloudState.activeActionTokens.filter(token => token.uid === cloudState.active.activeUID).length > 0)
+    //                     ) {
+    //                         // console.log('tokenClassesActionTwo', tokenClassesActionTwo, localState.activeCharacter.classCode)
+    //                         // turnIncrement('ACTIONTWO')
+    //                         console.log('set stage to ACTIONTWO')
+    //                     } else {
+    //                         // turnIncrement('PASS')
+    //                         console.log('set stage to PASS')
+    //                     }
+    //                     break;
+    //                 case 'ACTIONTWO':
+    //                     // turnIncrement('PASS')
+    //                     console.log('set stage to PASS')
+    //                     break;
+    //                 case 'PASS':
+    //                     passTheTurn()
+    //                     break;
+    //                 default:
+    //                     break;
+    //             }
+    //             break;
+    //         case 'END':
+    //             break;
+    //         default:
+    //             console.log('hit default on clickForNext, pls fix');
+    //             reloadPage()
+    //     }
+    // }
+
 
 }
 
 export default clickForNext
+
+// if (auth.currentUser.uid === cloudState.active.activeUID) {
+//     switch (cloudState.active.gameStage) {
+//         case 'INTRO':
+//             passTheTurn()
+//             break;
+//         case 'BRIEF':
+//             break;
+//         case 'TRANSPORT':
+//             break;
+//         case 'CHALLENGES':
+//             switch (cloudState.currentTurn.turnStage) {
+//                 case 'DESCRIBEONE':
+//                     turnIncrement('CHALLENGE')
+//                     break;
+//                 case 'CHALLENGE':
+//                     if (cloudState.currentTurn.selectedChallenge !== '') {
+
+//                         if (
+//                             // If the currently selected challenge requires
+//                             // that an action token be spent to engage it
+//                             // the rest of the logic will not fire
+//                             // until an active token for the active player is in the list
+//                             (localState.currentChallenge.requiresToken)
+//                             &&
+//                             (cloudState.activeActionTokens.filter(token => token.uid === cloudState.active.activeUID).length > 0)
+//                         ) {
+
+//                             if (localState.activeCharacter.charKostco &&
+//                                 localState.activeCharacter.charKostco.length > 0)
+//                                 // If the active character has KostCo card(s),
+//                                 // the 'ITEMS' stage will allow them to potentially use activated elementsF
+//                                 turnIncrement('ITEMS')
+//                         } else if (localState.currentChallenge.storyBonus > 0) {
+//                             // If there are no items to use,
+//                             // AND if there is a story bonus
+//                             // move to the Story stage
+//                             turnIncrement('STORY')
+//                         } else if (localState.currentChallenge.noAssist) {
+//                             // If there is no story bonus
+//                             // and if the challenge does not allow assistance
+//                             // move to the Scene stage
+//                             turnIncrement('SCENE')
+//                         } else {
+//                             // If all else fails, this challenge is eligible for assistance
+//                             // Move to the Preassist stage
+//                             turnIncrement('PREASSIST')
+//                         }
+//                     }
+//                     // Need to implement code to handle No Assist, No Roll
+//                     break;
+//                 case 'ITEMS':
+//                     console.log('did things with items')
+//                     if (localState.currentChallenge.storyBonus > 0) {
+//                         turnIncrement('STORY')
+//                     } else {
+//                         turnIncrement('PREASSIST')
+//                     }
+//                     break;
+//                 case 'STORY':
+//                     addStoryStrength(localState.currentChallenge.storyBonus)
+//                     if (localState.currentChallenge.noAssist) {
+//                         turnIncrement('SCENE')
+//                     } else {
+//                         turnIncrement('PREASSIST')
+//                     }
+//                     break;
+//                 case 'PREASSIST':
+//                     turnIncrement('SCENE')
+//                     break;
+//                 case 'SCENE':
+//                     if (cloudState.activeAssistTokens.length > 0) {
+//                         turnIncrement('PRE_ASSIST_SCENE')
+//                     } else {
+//                         turnIncrement('ROLLONE')
+//                     }
+//                     break;
+//                 case 'PRE_ASSIST_SCENE':
+//                     if (cloudState.activeAssistTokens.length > 0) {
+//                         // If assist tokens have been spent
+//                         // clicking will add the first bonus to the current strength
+//                         // and remove the first token from the list of assist tokens
+//                         addAssistBonus(cloudState.activeAssistTokens[0], 'preAssist')
+//                         removeFirstActiveAssistToken('ROLLONE')
+//                     }
+//                     if (
+//                         // If all of the assist tokens have been processed
+//                         // AND if the character class has a special Action Token ability
+//                         // that could be used before
+//                         (cloudState.activeAssistTokens.length === 0)
+//                         &&
+//                         (tokenClassesActionOne.includes(localState.activeCharacter.classCode))
+//                     ) {
+//                         turnIncrement('ACTIONONE')
+//                     } else {
+//                         turnIncrement('ROLLONE')
+//                     }
+
+//                     break;
+//                 case 'ACTIONONE':
+//                     console.log('tokenStages array', tokenStages)
+//                     turnIncrement('ROLLONE')
+//                     break;
+//                 case 'ROLLONE':
+//                     rollDice('rollOne')
+//                     if (localState.currentChallenge.advantage ||
+//                         localState.currentChallenge.disadvantage
+//                     ) {
+//                         turnIncrement('ROLLTWO')
+//                     } else {
+//                         turnIncrement('EVALUATEONE')
+//                     }
+//                     break;
+//                 case 'ROLLTWO':
+//                     rollDice('rollTwo')
+//                     turnIncrement('EVALUATEONE')
+//                     break;
+//                 case 'EVALUATEONE':
+//                     if (cloudState.strength.total < 0) {
+//                         turnIncrement('DESCRIBETWO')
+//                     } else if (
+//                         // If total strength is greater than or equal to the difficulty of the challenge
+//                         cloudState.strength.total >=
+//                         cloudState.currentTurn.difficulty) {
+//                         completeChallenge()
+//                         turnIncrement('DESCRIBETWO')
+//                     } else if (
+//                         // Do action tokens for non active players still exist?
+//                         (cloudState.hasActionToken.filter(tokens => tokens.uid !== cloudState.active.activeUID).length > 0)
+//                         &&
+//                         (
+//                             (   // Can this challenge receive assistance,
+//                                 // but has not yet had assistance applied
+//                                 (!localState.currentChallenge.noAssist)
+//                                 &&
+//                                 (cloudState.strength.assistOne === 0)
+//                             )
+//                             || // OR
+//                             (
+//                                 // Is this a doubleAssist challenge,
+//                                 // and has not yet had a second assist applied
+//                                 (localState.currentChallenge.doubleAssist)
+//                                 &&
+//                                 (cloudState.strength.assistTwo === 0)
+//                             )
+
+//                         )
+//                     ) {
+//                         turnIncrement('POSTASSIST')
+//                     } else if (
+//                         // If the total strength does not suffice
+//                         // and the challenge is not eligible for assistance
+//                         // or no further non active player action tokens exist
+//                         (localState.currentChallenge.noAssist)
+//                         ||
+//                         (cloudState.hasActionToken.filter(
+//                             tokens => tokens.uid !== cloudState.active.activeUID
+//                         ).length === 0
+//                         )
+//                     ) {
+//                         failChallenge()
+//                         turnIncrement('DESCRIBETWO')
+//                     }
+//                     break;
+//                 case 'POSTASSIST':
+//                     turnIncrement('POST_ASSIST_SCENE')
+//                     break;
+//                 case 'POST_ASSIST_SCENE':
+//                     if (cloudState.activeAssistTokens.length === 0) {
+//                         turnIncrement('EVALUATETWO')
+//                     } else {
+//                         addAssistBonus(cloudState.activeAssistTokens[0], 'postAssist')
+//                         removeFirstActiveAssistToken()
+//                         if (cloudState.activeAssistTokens.length === 0) {
+//                             turnIncrement('EVALUATETWO')
+//                         }
+//                     }
+
+//                     break;
+//                 case 'EVALUATETWO':
+//                     if (cloudState.strength.total >= cloudState.currentTurn.difficulty) {
+//                         completeChallenge()
+//                         updateLoot()
+//                     } else {
+//                         failChallenge()
+//                     }
+//                     turnIncrement('DESCRIBETWO')
+//                     break;
+//                 case 'DESCRIBETWO':
+//                     if (localState.activeCharacter.lootPoints >= 3) {
+//                         turnIncrement('KOSTCO')
+//                     } else if (
+//                         // If the character is in the list of characters with an ActionTwo token ability
+//                         (tokenClassesActionTwo.includes(localState.activeCharacter.classCode))
+//                         &&
+//                         // And if the character action token is available
+//                         (cloudState.activeActionTokens.filter(token => token.uid === cloudState.active.activeUID).length > 0)
+//                     ) {
+//                         console.log('tokenClassesActionTwo', tokenClassesActionTwo, localState.activeCharacter.classCode)
+//                         turnIncrement('ACTIONTWO')
+//                     } else {
+//                         turnIncrement('PASS')
+//                     }
+//                     break;
+//                 case 'KOSTCO':
+//                     console.log('received KOSTCO card (two cards if Rogue)')
+//                     console.log('discarded one if Rogue, then decided whether to hold it or give it')
+//                     console.log('if this results in more than two items, decide which one to discard')
+//                     if (
+//                         // If the character is in the list of characters with an ActionTwo token ability
+//                         (tokenClassesActionTwo.includes(localState.activeCharacter.classCode))
+//                         &&
+//                         // And if the character action token is available
+//                         (cloudState.activeActionTokens.filter(token => token.uid === cloudState.active.activeUID).length > 0)
+//                     ) {
+//                         console.log('tokenClassesActionTwo', tokenClassesActionTwo, localState.activeCharacter.classCode)
+//                         turnIncrement('ACTIONTWO')
+//                     } else {
+//                         turnIncrement('PASS')
+//                     }
+//                     break;
+//                 case 'ACTIONTWO':
+//                     turnIncrement('PASS')
+//                     break;
+//                 case 'PASS':
+//                     passTheTurn()
+//                     break;
+//                 default:
+//                     break;
+//             }
+//             break;
+//         case 'END':
+//             break;
+//         default:
+//             console.log('hit default on clickForNext, pls fix');
+//             reloadPage()
+//     }
+// }

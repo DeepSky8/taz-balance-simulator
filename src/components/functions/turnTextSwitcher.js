@@ -32,6 +32,7 @@ const spendActionToken = 'You may spend your action token '
 const actionOneWizard = 'to increase your strength by 3'
 const actionOneWarrior = 'and one health point to increase your strength by 2'
 const actionTwoPriest = 'to restore one health point to the team'
+const rollingDice = 'Rolling the Dice'
 
 const turnTextSwitcher = (cloudState, localState, activeAssistPlayer) => {
 
@@ -94,6 +95,8 @@ const turnTextSwitcher = (cloudState, localState, activeAssistPlayer) => {
                         return rollAgain + disAdvan
                     }
                     break;
+                case 'ROLLING':
+                    return rollingDice
                 case 'EVALUATEONE':
                     return clickProceed
                 case 'POSTASSIST':

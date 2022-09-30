@@ -369,6 +369,26 @@ export const startResetTurnElements = (hostKey) => {
         })
 }
 
+export const startUnpickTokenChallenge = (hostKey) => {
+    const updates = {};
+    updates['savedGames/' + hostKey + `/currentTurn/selectedChallenge`] = '';
+    updates['savedGames/' + hostKey + `/currentTurn/difficulty`] = 0;
+    // updates['savedGames/' + hostKey + `/strength`] = {
+    //     assistOne: 0,
+    //     assistTwo: 0,
+    //     character: 0,
+    //     ongoingItem: 0,
+    //     rollResult: 0,
+    //     singleUseItem: 0,
+    //     story: 0,
+    //     total: 0
+    // };
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log(`Error unpicking challenge requiring token:`, error)
+        })
+}
+
 export const startSetActivePlayer = (hostKey, activeUID, activeCharID) => {
     const updates = {};
     updates['savedGames/' + hostKey + `/active/activeUID`] = activeUID;
@@ -438,7 +458,7 @@ export const startRESETActionTokens = (hostKey, playerList) => {
         })
 }
 
- const startCLEARActionTokens = (hostKey) => {
+const startCLEARActionTokens = (hostKey) => {
     const updates = {};
     updates['savedGames/' + hostKey + '/activeActionTokens'] = null;
     update(ref(db), updates)
@@ -449,7 +469,7 @@ export const startRESETActionTokens = (hostKey, playerList) => {
 // Action Tokens
 
 // Challenge Actions
- const startSetVillainDeck = (hostKey, villainDeck) => {
+const startSetVillainDeck = (hostKey, villainDeck) => {
     const updates = {};
     updates['savedGames/' + hostKey + '/villainDeck'] = villainDeck;
     update(ref(db), updates)
@@ -458,7 +478,7 @@ export const startRESETActionTokens = (hostKey, playerList) => {
         })
 }
 
- const startSetRelicDeck = (hostKey, relicDeck) => {
+const startSetRelicDeck = (hostKey, relicDeck) => {
     const updates = {};
     updates['savedGames/' + hostKey + '/relicDeck'] = relicDeck;
     update(ref(db), updates)
@@ -467,7 +487,7 @@ export const startRESETActionTokens = (hostKey, playerList) => {
         })
 }
 
- const startSetLocationDeck = (hostKey, locationDeck) => {
+const startSetLocationDeck = (hostKey, locationDeck) => {
     const updates = {};
     updates['savedGames/' + hostKey + '/locationDeck'] = locationDeck;
     update(ref(db), updates)

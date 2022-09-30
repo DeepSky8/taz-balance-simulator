@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { startSpendActionToken, startSpendAssistToken, startUNspendActionToken, startUNspendAssistToken } from "../../../../../actions/cloudActions";
+import { startSpendActionToken, startSpendAssistToken, startUnpickTokenChallenge, startUNspendActionToken, startUNspendAssistToken } from "../../../../../actions/cloudActions";
 import { auth } from "../../../../../firebase/firebase";
 import ActionToken from "./ActionToken";
 import assistStages from "../../turnStep/turnStepArrays/assistStages";
 import tokenStages from "../../turnStep/turnStepArrays/tokenStages";
 import challengeItemStages from "../../turnStep/turnStepArrays/challengeItemStages";
+import turnStagesArray from "../../turnStep/turnStepArrays/turnStagesArray";
 
 const ActionTokens = ({ cloudState, localState }) => {
     const [isAssistToken, setIsAssistToken] = useState(false)
@@ -136,6 +137,9 @@ const ActionTokens = ({ cloudState, localState }) => {
                 unspendThisToken.concat(cloudState.hasActionToken),
                 newSpentActionTokensArray
             )
+            if (cloudState.currentTurn.turnStage === turnStagesArray[1]) {
+                startUnpickTokenChallenge(localState.hostKey)
+            }
             if (isAssistToken) {
                 const newSpentAssistTokensArray = cloudState.activeAssistTokens.filter((player) => {
                     return player.uid !== playerUID

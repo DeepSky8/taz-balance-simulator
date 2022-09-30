@@ -13,6 +13,7 @@ const defaultCloudState = {
         activeCharID: null,
         activeUID: null,
         gameStage: '',
+        // gameStage INTRO, BRIEF, TRANSPORT, CHALLENGES, END
         progressVillain: null,
         progressRelic: null,
         progressLocation: null,
