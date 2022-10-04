@@ -77,6 +77,9 @@ const turnTextSwitcher = (cloudState, localState, activeAssistPlayer) => {
                     return setScene1 + localState.activeCharacter.charName + setScene2;
                 case 'PRE_ASSIST_SCENE':
                     return activeAssistPlayer + assistScene;
+                case 'ADD_ASSIST':
+                    return activeAssistPlayer + assistScene;
+
                 case 'ACTIONONE':
                     const tokenAction = () => {
                         if (localState.activeCharacter.classCode === 4) {

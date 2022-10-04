@@ -35,26 +35,6 @@ const clickForNext = ({ cloudState, localState }) => {
         startAddStoryBonus(localState.hostKey, parseInt(localState.currentChallenge.storyBonus))
     }
 
-    const addAssistBonus = () => {
-
-        const stage = (
-            (cloudState.currentTurn.turnStage === turnStagesArray[12])
-                ?
-                'postAssist'
-                :
-                'preAssist'
-        )
-
-        const assistBonus = stats[cloudState.activeAssistTokens[0].classCode][stage]
-        if (cloudState.strength.assistOne > 0) {
-            startUpdateAssistBonusTwo(localState.hostKey, assistBonus)
-        } else {
-            startUpdateAssistBonusOne(localState.hostKey, assistBonus)
-        }
-
-
-    }
-
     const updateLoot = () => {
         const currentLoot = localState.activeCharacter.lootPoints
         const newLoot = localState.currentChallenge.loot
@@ -66,8 +46,31 @@ const clickForNext = ({ cloudState, localState }) => {
         )
     }
 
-    const removeFirstActiveAssistToken = () => {
-        const removeAssist = cloudState.activeAssistTokens.splice(0, 1)
+    const addAssistBonus = () => {
+
+        const stage = (
+            (turnStagesArray.slice(11, 13).includes(cloudState.currentTurn.turnStage))
+                ?
+                'postAssist'
+                :
+                'preAssist'
+        )
+
+        const assistBonus = (
+            stats[
+            cloudState.activeAssistTokens[
+                (cloudState.activeAssistTokens.length - 1)
+            ].classCode
+            ][stage])
+        if (cloudState.strength.assistOne > 0) {
+            startUpdateAssistBonusTwo(localState.hostKey, assistBonus)
+        } else {
+            startUpdateAssistBonusOne(localState.hostKey, assistBonus)
+        }
+    }
+
+    const removeLastActiveAssistToken = () => {
+        const removeAssist = cloudState.activeAssistTokens.pop()
         const updatedAssistArray = cloudState.activeAssistTokens.filter(
             ({ currentCharacterID }) => {
                 return currentCharacterID !== removeAssist.currentCharacterID
@@ -75,6 +78,17 @@ const clickForNext = ({ cloudState, localState }) => {
 
 
         startUpdateAssistTokens(localState.hostKey, updatedAssistArray)
+    }
+
+    const processAssist = () => {
+        if (cloudState.activeAssistTokens.length > 0) {
+            // If assist tokens have been spent
+            // clicking will add the first bonus to the current strength
+            // and remove the first token from the list of assist tokens
+            addAssistBonus()
+            // removeFirstActiveAssistToken()
+            removeLastActiveAssistToken()
+        }
     }
 
     const rollDice = () => {
@@ -116,7 +130,7 @@ const clickForNext = ({ cloudState, localState }) => {
             localState.hostKey,
             code,
             localState.currentChallengeKey,
-            cloudState.currentTurn.visible
+            cloudState.currentTurn[cloudState.currentTurn.selectedChallenge].visible
         )
     }
 
@@ -152,15 +166,75 @@ const clickForNext = ({ cloudState, localState }) => {
         // turnIncrement()
     }
 
+    const activePlayerChecker = () => {
+        return (
+            // Only accept input from the active player
+            (auth.currentUser.uid === cloudState.active.activeUID)
+        )
+    }
+
+    const turnStageActions = (turnStage) => {
+
+        if (activePlayerChecker()) {
+            switch (turnStage) {
+                case turnStagesArray[3]:
+                    addStoryStrength()
+                    break;
+
+                // Roll Dice
+                case turnStagesArray[8]:
+                case turnStagesArray[9]:
+                    rollDice()
+                    break;
+
+                // Evaluate stages
+                case turnStagesArray[10]:
+                    if (
+                        // If Strength beats Difficulty
+                        cloudState.strength.total >=
+                        cloudState.currentTurn.difficulty) {
+                        completeChallenge()
+                        updateLoot()
+                    } else if (
+                        // If the total strength does not suffice
+                        // and the challenge is not eligible for assistance
+                        // or no further non active player action tokens exist
+                        (localState.currentChallenge.noAssist)
+                        ||
+                        (cloudState.hasActionToken.filter(
+                            tokens => tokens.uid !== cloudState.active.activeUID
+                        ).length === 0
+                        )
+                    ) {
+                        failChallenge()
+                    }
+                    break;
+                case turnStagesArray[13]:
+                    if (cloudState.strength.total >= cloudState.currentTurn.difficulty) {
+                        completeChallenge()
+                        updateLoot()
+                    } else {
+                        failChallenge()
+                    }
+                    break;
+                // Pass Turn
+                case turnStagesArray[17]:
+                    passTheTurn()
+                    break;
+
+                // Add assist
+                case turnStagesArray[6]:
+                case turnStagesArray[12]:
+                    processAssist()
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    }
 
     const turnStageSelection = () => {
-
-        const activePlayerChecker = () => {
-            return (
-                // Only accept input from the active player
-                (auth.currentUser.uid === cloudState.active.activeUID)
-            )
-        }
 
         const passesActionTokenChecker = () => {
             return (
@@ -206,7 +280,7 @@ const clickForNext = ({ cloudState, localState }) => {
         // DESCRIBEONE
         const setDESCRIBEONE = () => {
             return (
-                // If turn stage is PASS
+                // If turn stage is PASS or 'default'
                 ([turnStagesArray[17], turnStagesArray[19]].includes(cloudState.currentTurn.turnStage))
                 ||
                 // or if step stage is TRANSPORT
@@ -320,8 +394,8 @@ const clickForNext = ({ cloudState, localState }) => {
         // PRE_ASSIST_SCENE
         const setPRE_ASSIST_SCENE = () => {
             return (
-                // Accessible from SCENE
-                (turnStagesArray[5] === (cloudState.currentTurn.turnStage))
+                // Accessible from SCENE AND PRE_ASSIST_SCENE
+                ([turnStagesArray[5], turnStagesArray[6]].includes(cloudState.currentTurn.turnStage))
                 &&
                 (cloudState.activeAssistTokens.length > 0)
             )
@@ -330,7 +404,8 @@ const clickForNext = ({ cloudState, localState }) => {
         // ACTIONONE
         const setACTIONONE = () => {
             return (
-                (turnStagesArray[6] === (cloudState.currentTurn.turnStage))
+                // If current stage is PRE_ASSIST_SCENE
+                ([turnStagesArray[6]].includes(cloudState.currentTurn.turnStage))
                 &&
                 (
                     // If all of the assist tokens have been processed
@@ -362,14 +437,8 @@ const clickForNext = ({ cloudState, localState }) => {
         // ROLLTWO
         const setROLLTWO = () => {
             return (
-                // If turn stage is ROLLING 
-                // then stage ROLLTWO becomes available
-                // (turnStagesArray[18] === cloudState.currentTurn.turnStage)
-
                 // If turn stage is ROLLONE
-                // then stage ROLLTWO becomes available
                 (turnStagesArray[8] === cloudState.currentTurn.turnStage)
-                // (false)
                 &&
                 (
                     // If the currently selected challenge 
@@ -393,12 +462,7 @@ const clickForNext = ({ cloudState, localState }) => {
         // EVALUATEONE
         const setEVALUATEONE = () => {
             return (
-
-
                 (
-                    // // If turn stage is ROLLING
-                    // (turnStagesArray[18] === (cloudState.currentTurn.turnStage))
-
                     // If turn stage is ROLLONE or ROLLTWO
                     (turnStagesArray.slice(8, 10).includes(cloudState.currentTurn.turnStage))
                     &&
@@ -412,9 +476,6 @@ const clickForNext = ({ cloudState, localState }) => {
                 )
                 ||
                 (
-                    // // If turn stage is ROLLING
-                    // (turnStagesArray[18] === (cloudState.currentTurn.turnStage))
-
                     // If turn stage is ROLLTWO
                     (turnStagesArray[9] === cloudState.currentTurn.turnStage)
                     &&
@@ -425,8 +486,8 @@ const clickForNext = ({ cloudState, localState }) => {
                         ||
                         localState.currentChallenge.disadvantage
                     )
-                    // &&
-                    // (cloudState.currentTurn.rollTwo !== null)
+                    &&
+                    (cloudState.currentTurn.rollTwo !== null)
                 )
                 ||
                 (
@@ -443,7 +504,6 @@ const clickForNext = ({ cloudState, localState }) => {
         const setPOSTASSIST = () => {
             return (
                 // If current stage is EVALUATEONE
-                // then stage POSTASSIST becomes available
                 (turnStagesArray[10] === (cloudState.currentTurn.turnStage))
                 &&
                 (
@@ -468,12 +528,21 @@ const clickForNext = ({ cloudState, localState }) => {
 
                     )
                 )
+                &&
+                (
+                    cloudState.strength.total < cloudState.currentTurn.difficulty
+                )
             )
         }
 
         // POST_ASSIST_SCENE
         const setPOST_ASSIST_SCENE = () => {
-            return (turnStagesArray[11] === (cloudState.currentTurn.turnStage))
+            return (
+                // Available from POSTASSIST and POST_ASSIST_SCENE
+                ([turnStagesArray[11], turnStagesArray[12]].includes(cloudState.currentTurn.turnStage))
+                &&
+                (cloudState.activeAssistTokens.length > 0)
+            )
         }
 
         // EVALUATETWO
@@ -558,24 +627,6 @@ const clickForNext = ({ cloudState, localState }) => {
             return (turnStagesArray.slice(14, 17).includes(cloudState.currentTurn.turnStage))
         }
 
-        // ROLLING
-        // const setROLLING = () => {
-        //     return (
-        //         (
-        //             // If turn stage is ROLLONE or ROLLTWO
-        //             // then stage ROLLING becomes available
-        //             turnStagesArray.slice(8, 10).includes(cloudState.currentTurn.turnStage))
-        //         &&
-        //         (
-        //             (cloudState.activeAssistTokens.length === 0)
-        //         )
-        //         &&
-        //         (
-        //             !localState.currentChallenge.noRoll
-        //         )
-
-        //     )
-        // }
 
         if (activePlayerChecker()) {
             const trueArray = [
@@ -597,96 +648,23 @@ const clickForNext = ({ cloudState, localState }) => {
                 setKOSTCO(),
                 setACTIONTWO(),
                 setPASS(),
+                true
             ]
-            console.log('trueArray', trueArray)
+            // console.log('trueArray', trueArray)
 
             const returnIndex = trueArray.findIndex(returnValue => returnValue === true)
-            console.log('setting stage to ', turnStagesArray[returnIndex])
+            // console.log('setting stage to', turnStagesArray[returnIndex])
             return (returnIndex >= turnStagesArray.length ? 'default' : turnStagesArray[returnIndex])
         }
     }
 
-    const turnStageActions = (turnStage) => {
-        const turnActionStages =
-            [
-                turnStagesArray[3],
-                turnStagesArray[6],
-                // turnStagesArray[8],
-                turnStagesArray[9],
-                turnStagesArray[10],
-                turnStagesArray[12],
-                turnStagesArray[13],
-                turnStagesArray[17],
-                // turnStagesArray[18],
-            ]
 
-        if (turnActionStages.includes(turnStage)) {
-            switch (turnStage) {
-                case turnStagesArray[3]:
-                    addStoryStrength()
-                    break;
-
-                // Roll Dice
-                // case turnStagesArray[8]:
-                case turnStagesArray[9]:
-                    // case turnStagesArray[18]:
-                    rollDice()
-                    break;
-
-                case turnStagesArray[10]:
-                    rollDice()
-                    if (
-                        // If Strength beats Difficulty
-                        cloudState.strength.total >=
-                        cloudState.currentTurn.difficulty) {
-                        completeChallenge()
-                    } else if (
-                        // If the total strength does not suffice
-                        // and the challenge is not eligible for assistance
-                        // or no further non active player action tokens exist
-                        (localState.currentChallenge.noAssist)
-                        ||
-                        (cloudState.hasActionToken.filter(
-                            tokens => tokens.uid !== cloudState.active.activeUID
-                        ).length === 0
-                        )
-                    ) {
-                        failChallenge()
-                    }
-                    break;
-                case turnStagesArray[13]:
-                    if (cloudState.strength.total >= cloudState.currentTurn.difficulty) {
-                        completeChallenge()
-                        updateLoot()
-                    } else {
-                        failChallenge()
-                    }
-                    break;
-                case turnStagesArray[17]:
-                    passTheTurn()
-                    break;
-
-                // Add assist
-                case turnStagesArray[6]:
-                case turnStagesArray[12]:
-                    if (cloudState.activeAssistTokens.length > 0) {
-                        // If assist tokens have been spent
-                        // clicking will add the first bonus to the current strength
-                        // and remove the first token from the list of assist tokens
-                        addAssistBonus()
-                        removeFirstActiveAssistToken()
-                    }
-                    break;
-
-                default:
-                    break;
-            }
-        }
+    if (activePlayerChecker()) {
+        turnStageActions(cloudState.currentTurn.turnStage)
+        const newStage = turnStageSelection()
+        startUpdateTurnStage(localState.hostKey, newStage)
     }
 
-    const newStage = turnStageSelection()
-    startUpdateTurnStage(localState.hostKey, newStage)
-    turnStageActions(newStage)
 
     // if (auth.currentUser.uid === cloudState.active.activeUID) {
     //     switch (cloudState.active.gameStage) {

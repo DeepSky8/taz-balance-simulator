@@ -41,7 +41,7 @@ const turnStagesArray = [
   // 17
   'PASS',
   // 18
- // 'ROLLING',
+  // 'ADD_ASSIST',
   // 19
   'default',
 ]

@@ -11,11 +11,11 @@ const TurnStep = ({ cloudState, localState }) => {
 
     useEffect(() => {
         if (cloudState.activeAssistTokens.length > 0) {
-            setActiveAssistPlayer(cloudState.activeAssistTokens[0].charName)
+            setActiveAssistPlayer(cloudState.activeAssistTokens[(cloudState.activeAssistTokens.length - 1)].charName)
         } else {
             setActiveAssistPlayer('Friend')
         }
-    }, [cloudState.activeAssistTokens])
+    }, [cloudState.activeAssistTokens.length])
 
 
     useEffect(() => {
@@ -29,7 +29,8 @@ const TurnStep = ({ cloudState, localState }) => {
         localState.activeCharacter,
         localState.currentChallenge,
         cloudState.currentTurn.turnStage,
-        cloudState.currentTurn.selectedChallenge
+        cloudState.currentTurn.selectedChallenge,
+        activeAssistPlayer
     ])
 
     return (
