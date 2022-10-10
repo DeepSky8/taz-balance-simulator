@@ -11,12 +11,26 @@ const LocationChallenge = ({ challenge, modifier, stage, challengePicked, chance
             <span>
                 {challenge.relicModifier > 0 && '   +'}{challenge.relicModifier > 0 && challenge.relicModifier}
 
-                {stage === 'CHALLENGE' && <button
-                    disabled={requiresToken}
-                    onClick={() => { challengePicked() }}
-                >{difficulty}</button>}
+                {
+                    (
+                        stage === 'CHALLENGE' && !challenge.finale
+                    )
+                    &&
+                    <button
+                        disabled={requiresToken}
+                        onClick={() => { challengePicked() }}
+                    >{difficulty}
+                    </button>}
 
-                {stage !== 'CHALLENGE' && <span>{'  ' + difficulty}</span>}
+                {
+                    (
+                        stage !== 'CHALLENGE'
+                        ||
+                        (stage === 'CHALLENGE' && challenge.finale)
+                    )
+                    &&
+                    <span>{'  ' + difficulty}</span>
+                }
 
 
             </span>

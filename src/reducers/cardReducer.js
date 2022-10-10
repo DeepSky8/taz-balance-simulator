@@ -383,6 +383,11 @@ const cardReducer = (state, action) => {
                 gerblin: action.giant === 'true' ? false : state.gerblin,
                 specialType: action.giant === 'true' ? true : state.specialType
             }
+        case 'COMPLETED':
+            return {
+                ...state,
+                completed: action.completed === 'true' ? true : false,
+            }
         case 'UPDATE_FLIP_EFFECT':
             return {
                 ...state,
@@ -441,7 +446,9 @@ const cardReducer = (state, action) => {
         case 'UPDATE_RANDOMIZE':
             return {
                 ...state,
-                randomize: action.randomize === 'true' ? true : false
+                randomize: action.randomize === 'true' ? true : false,
+                boss: action.randomize === 'true' ? false : state.boss,
+                finale: action.finale === 'true' ? false : state.finale,
             }
         case 'UPDATE_BOSS':
             return {

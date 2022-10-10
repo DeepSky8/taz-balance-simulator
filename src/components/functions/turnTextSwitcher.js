@@ -82,13 +82,22 @@ const turnTextSwitcher = (cloudState, localState, activeAssistPlayer) => {
 
                 case 'ACTIONONE':
                     const tokenAction = () => {
-                        if (localState.activeCharacter.classCode === 4) {
+                        if (localState.activeCharacter.classCode === 3) {
                             return actionOneWarrior
-                        } else if (localState.activeCharacter.classCode === 5) {
+                        } else if (localState.activeCharacter.classCode === 4) {
                             return actionOneWizard
                         }
                     }
-                    return spendActionToken + tokenAction()
+
+                    if (
+                        (cloudState.activeActionTokens.filter(
+                            tokens => tokens.uid === cloudState.active.activeUID
+                        ).length > 0)
+                    ) {
+                        return clickProceed
+                    } else {
+                        return spendActionToken + tokenAction()
+                    }
                 case 'ROLLONE':
                     return rollDice
                 case 'ROLLTWO':

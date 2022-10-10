@@ -66,7 +66,7 @@ const ActiveGame = () => {
     // State guards
     useEffect(() => {
         // If the current user is the game host
-        if (auth.currentUser.uid === localState.hostKey.split('/', 1).toString()) {
+        if (auth.currentUser.uid === cloudState.static.host) {
 
             // If no gameStage exists, set it to the default
             if (cloudState.active.gameStage === undefined) {
@@ -303,7 +303,7 @@ const ActiveGame = () => {
     // If no players are left, clears the readyList array
     // and updates the cloud with Ready state True, 
     useEffect(() => {
-        if (auth.currentUser.uid === localState.hostKey.split('/', 1).toString()) {
+        if (auth.currentUser.uid === cloudState.static.host) {
             const remainingPlayers = []
             cloudState.playerList.forEach(player => {
                 if (!cloudState.readyList.includes(player.uid)) {
@@ -453,22 +453,25 @@ const ActiveGame = () => {
     // evaluate the current stage of the game
     // and advance it when appropriate
     useEffect(() => {
-        if (
-            (introStages.includes(cloudState.active.gameStage)) &&
-            cloudState.active.ready
-        ) {
-            incrementGameStage()
-        } else if (
-            (cloudState.active.teamHealth === 0) &&
-            cloudState.active.ready
-        ) {
-            incrementGameStage()
-        } else if (
-            ((cloudState.active.progressRelic > 10) &&
-                (cloudState.active.progressVillain > 10 || cloudState.active.progressLocation > 10))
-        ) {
-            incrementGameStage()
+        if (auth.currentUser.uid === cloudState.static.host) {
+            if (
+                (introStages.includes(cloudState.active.gameStage)) &&
+                cloudState.active.ready
+            ) {
+                incrementGameStage()
+            } else if (
+                (cloudState.active.teamHealth === 0) &&
+                cloudState.active.ready
+            ) {
+                incrementGameStage()
+            } else if (
+                ((cloudState.active.progressRelic > 10) &&
+                    (cloudState.active.progressVillain > 10 || cloudState.active.progressLocation > 10))
+            ) {
+                incrementGameStage()
+            }
         }
+
 
     }, [cloudState.active.ready, cloudState.active.teamHealth])
 
@@ -539,14 +542,25 @@ const ActiveGame = () => {
         }
     }, [cloudState.active.gameStage])
 
+    // Only run if the tempUncompleteCards length is 1 or less
+    const findFinale = (uncompleteArray, completeArray) => {
 
+        const uncompleteIndex = uncompleteArray.findIndex((fullCard) => (fullCard.front.boss === true))
+        const completeIndex = completeArray.findIndex((fullCard) => (fullCard.front.boss === true))
+
+        if (uncompleteIndex >= 0) {
+            return uncompleteArray[uncompleteIndex]
+        } else if (completeIndex >= 0) {
+            return completeArray[completeIndex]
+        }
+    }
 
     // Challenge deck listeners
     // This is only run on the host; the active challenges are pushed
     // to the cloud, as is the deck when deck creation is needed
     useEffect(() => {
-        
-        if (auth.currentUser.uid === localState.hostKey.split('/', 1).toString()) {
+
+        if (auth.currentUser.uid === cloudState.static.host) {
             // Villain challenge listener
             onValue(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeVillain),
                 (snapshot) => {
@@ -562,14 +576,22 @@ const ActiveGame = () => {
                                 tempCompleteCards.push(card.val())
                             }
                         })
-                        startUpdateActiveVillain(localState.hostKey, tempUncompleteCards[0], tempCompleteCards.length)
+                        if (tempUncompleteCards.length <= 1) {
+                            startUpdateActiveVillain(
+                                localState.hostKey,
+                                findFinale(tempUncompleteCards, tempCompleteCards),
+                                tempCompleteCards.length)
+
+                        } else {
+                            startUpdateActiveVillain(localState.hostKey, tempUncompleteCards[0], tempCompleteCards.length)
+                        }
                         dispatchLocalState(updateUncompletedChallengesVillain(tempUncompleteCards))
                         dispatchLocalState(updateCompletedChallengesVillain(tempCompleteCards))
 
                         // If no Villain challenge deck exists
                         // the Host of the game creates a deck and uploads it
-                    } else if (auth.currentUser.uid === localState.hostKey.split('/', 1).toString()) {
-                        
+                    } else if (auth.currentUser.uid === cloudState.static.host) {
+
                         onValue(ref(db, 'challenges/' + cloudState.static.codeVillain),
                             (snapshot) => {
                                 if (snapshot.exists()) {
@@ -615,11 +637,18 @@ const ActiveGame = () => {
                                 tempCompleteCards.push(card.val())
                             }
                         })
-                        // dispatchCurrentTurn(updateUncompletedRelic(tempUncompleteCards))
-                        startUpdateActiveRelic(localState.hostKey, tempUncompleteCards[0], tempCompleteCards.length)
+                        if (tempUncompleteCards.length <= 1) {
+                            startUpdateActiveRelic(
+                                localState.hostKey,
+                                findFinale(tempUncompleteCards, tempCompleteCards),
+                                tempCompleteCards.length)
+
+                        } else {
+                            startUpdateActiveRelic(localState.hostKey, tempUncompleteCards[0], tempCompleteCards.length)
+                        }
                         dispatchLocalState(updateUncompletedChallengesRelic(tempUncompleteCards))
                         dispatchLocalState(updateCompletedChallengesRelic(tempCompleteCards))
-                    } else if (auth.currentUser.uid === localState.hostKey.split('/', 1).toString()) {
+                    } else if (auth.currentUser.uid === cloudState.static.host) {
                         onValue(ref(db, 'challenges/' + cloudState.static.codeRelic),
                             (snapshot) => {
 
@@ -665,11 +694,18 @@ const ActiveGame = () => {
                                 tempCompleteCards.push(card.val())
                             }
                         })
-                        // dispatchCurrentTurn(updateUncompletedLocation(tempUncompleteCards))
-                        startUpdateActiveLocation(localState.hostKey, tempUncompleteCards[0], tempCompleteCards.length)
+                        if (tempUncompleteCards.length <= 1) {
+                            startUpdateActiveLocation(
+                                localState.hostKey,
+                                findFinale(tempUncompleteCards, tempCompleteCards),
+                                tempCompleteCards.length)
+
+                        } else {
+                            startUpdateActiveLocation(localState.hostKey, tempUncompleteCards[0], tempCompleteCards.length)
+                        }
                         dispatchLocalState(updateUncompletedChallengesLocation(tempUncompleteCards))
                         dispatchLocalState(updateCompletedChallengesLocation(tempCompleteCards))
-                    } else if (auth.currentUser.uid === localState.hostKey.split('/', 1).toString()) {
+                    } else if (auth.currentUser.uid === cloudState.static.host) {
                         onValue(ref(db, 'challenges/' + cloudState.static.codeLocation),
                             (snapshot) => {
                                 if (snapshot.exists()) {
@@ -704,7 +740,7 @@ const ActiveGame = () => {
             off(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeVillain))
             off(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeRelic))
             off(ref(db, 'savedGames/' + localState.hostKey + '/challenges/' + cloudState.static.codeLocation))
-            if (auth.currentUser.uid === localState.hostKey.split('/', 1).toString()) {
+            if (auth.currentUser.uid === cloudState.static.host) {
                 off(ref(db, 'challenges/' + cloudState.static.codeVillain))
                 off(ref(db, 'challenges/' + cloudState.static.codeRelic))
                 off(ref(db, 'challenges/' + cloudState.static.codeLocation))

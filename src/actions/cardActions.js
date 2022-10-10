@@ -287,7 +287,10 @@ export const updateFinale = (finale) => ({
     finale
 })
 
-
+export const updateCompleted = (completed) => ({
+    type: 'COMPLETED',
+    completed
+})
 
 
 export const updateCounterEffect = (counterEffect) => ({

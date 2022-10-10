@@ -660,10 +660,19 @@ export const startUpdateTeamHealth = (hostKey, newHealthTotal) => {
         })
 }
 
-export const startCompleteChallenge = (hostKey, code, challengeKey, visible,) => {
+export const startCompleteChallenge = (hostKey, code, challengeKey, visible) => {
     const updates = {}
     updates['savedGames/' + hostKey + '/challenges/' + code + '/' + challengeKey + '/completed'] = true
     updates['savedGames/' + hostKey + '/challenges/' + code + '/' + challengeKey + '/' + visible + '/completed'] = true
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not mark challenge as completed: ', error)
+        })
+}
+
+export const startCompleteBoss = (hostKey, code, challengeKey) => {
+    const updates = {}
+    updates['savedGames/' + hostKey + '/challenges/' + code + '/' + challengeKey + '/visible'] = 'back'
     update(ref(db), updates)
         .catch((error) => {
             console.log('Did not mark challenge as completed: ', error)

@@ -13,6 +13,7 @@ import {
     updateCardName,
     updateCardNumber,
     updateChance,
+    updateCompleted,
     updateCounterEffect,
     updateCounters,
     updateCrew,
@@ -630,6 +631,17 @@ const NewCard = ({ saveNewCard, cardNumber }) => {
                             id="finale"
                             value={cardState.finale}
                             onChange={(e) => { dispatchCardState(updateFinale(e.target.value)) }}
+                        >
+                            <option value={true}>true</option>
+                            <option value={false}>false</option>
+                        </select>
+
+                        <label htmlFor="completed">   Completed: </label>
+                        <select
+                            name="completed"
+                            id="completed"
+                            value={cardState.completed}
+                            onChange={(e) => { dispatchCardState(updateCompleted(e.target.value)) }}
                         >
                             <option value={true}>true</option>
                             <option value={false}>false</option>

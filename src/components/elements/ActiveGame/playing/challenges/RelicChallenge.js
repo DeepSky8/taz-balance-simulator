@@ -11,12 +11,24 @@ const RelicChallenge = ({ challenge, modifierVillain, modifierLocation, stage, c
             <span>
                 {challenge.villainModifier > 0 && '   +'}{challenge.villainModifier > 0 && challenge.villainModifier}
 
-                {stage === 'CHALLENGE' && <button
-                    disabled={requiresToken}
-                    onClick={() => { challengePicked() }}
-                >{difficulty}</button>}
+                {
+                    (
+                        stage === 'CHALLENGE' && !challenge.finale
+                    )
+                    &&
+                    <button
+                        disabled={requiresToken}
+                        onClick={() => { challengePicked() }}
+                    >{difficulty}</button>}
 
-                {stage !== 'CHALLENGE' && <span>{'  ' + difficulty + '  '}</span>}
+                {
+                    (
+                        stage !== 'CHALLENGE'
+                        ||
+                        (stage === 'CHALLENGE' && challenge.finale)
+                    )
+                    &&
+                    <span>{'  ' + difficulty + '  '}</span>}
 
 
                 {challenge.locationModifier > 0 && '   +'}{challenge.locationModifier > 0 && challenge.locationModifier}

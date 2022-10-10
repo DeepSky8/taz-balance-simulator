@@ -6,6 +6,7 @@ import assistStages from "../../turnStep/turnStepArrays/assistStages";
 import tokenStages from "../../turnStep/turnStepArrays/tokenStages";
 import challengeItemStages from "../../turnStep/turnStepArrays/challengeItemStages";
 import turnStagesArray from "../../turnStep/turnStepArrays/turnStagesArray";
+import actionStages from "../../turnStep/turnStepArrays/actionStages";
 
 const ActionTokens = ({ cloudState, localState }) => {
     const [isAssistToken, setIsAssistToken] = useState(false)
@@ -58,8 +59,10 @@ const ActionTokens = ({ cloudState, localState }) => {
     ])
 
     useEffect(() => {
+        // Control when tokens are visible, based on the current turnStage
+        // and/or if a particular challenge requires a token to engage
         if (
-            (assistStages.includes(cloudState.currentTurn.turnStage))
+            ((assistStages.concat(actionStages)).includes(cloudState.currentTurn.turnStage))
             ||
             (
                 // console.log('fired useEffect in ActionTokens', cloudState.currentTurn.turnStage, )
@@ -106,17 +109,19 @@ const ActionTokens = ({ cloudState, localState }) => {
     }
 
     const spendToken = (playerUID) => {
-        if (playerUID === auth.currentUser.uid) {
-            if ((
-                playerUID !== cloudState.active.activeUID &&
-                isAssistToken &&
-                acceptingTokens
-            )
+        if (playerUID === auth.currentUser.uid
+            &&
+            acceptingTokens
+        ) {
+            if (
+                (
+                    playerUID !== cloudState.active.activeUID &&
+                    isAssistToken
+                )
                 ||
                 (
                     playerUID === cloudState.active.activeUID &&
-                    !isAssistToken &&
-                    acceptingTokens
+                    !isAssistToken
                 )) {
 
                 actuallySpendIt(playerUID)

@@ -1,3 +1,4 @@
+import actionStages from "./actionStages"
 import assistStages from "./assistStages"
 import challengeItemStages from "./challengeItemStages"
 
@@ -9,7 +10,9 @@ const tokenStages = [
   // either to engage the challenge
   // or to activate a power
   ...challengeItemStages,
-
+  // These stages allow appropriate classes to spend
+  // their action token for specific effects
+  ...actionStages,
 ]
 
 export default tokenStages

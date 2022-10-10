@@ -1,8 +1,8 @@
 import turnStagesArray from "./turnStagesArray"
 
 const assistStages = [
-  ...turnStagesArray.slice(4, 5),
-  ...turnStagesArray.slice(11, 12)
+  turnStagesArray[4],
+  turnStagesArray[11]
   // 'PREASSIST',
   // 'POSTASSIST'
 ]
