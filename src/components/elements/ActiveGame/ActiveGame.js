@@ -412,8 +412,8 @@ const ActiveGame = () => {
 
             // Destructure current assistive strength elements
             // and total them up
-            const { assistOne, assistTwo, ongoingItem, singleUseItem, story } = cloudState.strength
-            const totalAddStrength = assistOne + assistTwo + ongoingItem + singleUseItem + story
+            const { actionWarrior, actionWizard, assistOne, assistTwo, ongoingItem, singleUseItem, story } = cloudState.strength
+            const totalAddStrength = actionWarrior + actionWizard + assistOne + assistTwo + ongoingItem + singleUseItem + story
 
             // Destructure the roll data, as well as whether the current challenge requires
             // advantage/disadvantage

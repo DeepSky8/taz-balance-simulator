@@ -1,5 +1,7 @@
 import {
     startAddStoryBonus,
+    startAddWarriorActionBonus,
+    startAddWizardActionBonus,
     startCompleteBoss,
     startCompleteChallenge,
     startMarkTurnComplete,
@@ -15,7 +17,6 @@ import {
 } from "../../actions/cloudActions"
 import { auth } from "../../firebase/firebase";
 import stepStagesArray from "../elements/ActiveGame/turnStep/turnStepArrays/stepStagesArray";
-import tokenStages from "../elements/ActiveGame/turnStep/turnStepArrays/tokenStages";
 import turnStagesArray from "../elements/ActiveGame/turnStep/turnStepArrays/turnStagesArray";
 import {
     stats,
@@ -84,12 +85,21 @@ const clickForNext = ({ cloudState, localState }) => {
     const processAssist = () => {
         if (cloudState.activeAssistTokens.length > 0) {
             // If assist tokens have been spent
-            // clicking will add the first bonus to the current strength
-            // and remove the first token from the list of assist tokens
+            // clicking will add the last bonus to the current strength
+            // and remove the last token from the list of assist tokens
             addAssistBonus()
             // removeFirstActiveAssistToken()
             removeLastActiveAssistToken()
         }
+    }
+
+    const addWarriorBuff = () => {
+        const updatedTeamHealth = (parseInt(cloudState.active.teamHealth) - 1)
+        startAddWarriorActionBonus(localState.hostKey, updatedTeamHealth)
+    }
+
+    const addWizardBuff = () => {
+        startAddWizardActionBonus(localState.hostKey)
     }
 
     const rollDice = () => {
@@ -151,9 +161,9 @@ const clickForNext = ({ cloudState, localState }) => {
         startUpdateTeamHealth(localState.hostKey, updatedHealth)
     }
 
-    const turnIncrement = (stage = incrementTurn(cloudState.currentTurn.turnStage)) => {
-        startUpdateTurnStage(localState.hostKey, stage)
-    }
+    // const turnIncrement = (stage = incrementTurn(cloudState.currentTurn.turnStage)) => {
+    //     startUpdateTurnStage(localState.hostKey, stage)
+    // }
 
     const passTheTurn = () => {
 
@@ -191,6 +201,21 @@ const clickForNext = ({ cloudState, localState }) => {
                     addStoryStrength()
                     break;
 
+                // ActionOne
+                case turnStagesArray[7]:
+                    if (
+                        (cloudState.activeActionTokens.filter(
+                            tokens => tokens.uid === cloudState.active.activeUID
+                        ).length > 0
+                        )
+                    ) {
+                        if (localState.activeCharacter.classCode === 3) {
+                            addWarriorBuff()
+                        } else if (localState.activeCharacter.classCode === 4) {
+                            addWizardBuff()
+                        }
+                    }
+                    break;
                 // Roll Dice
                 case turnStagesArray[8]:
                 case turnStagesArray[9]:
@@ -414,8 +439,8 @@ const clickForNext = ({ cloudState, localState }) => {
         // ACTIONONE
         const setACTIONONE = () => {
             return (
-                // If current stage is SCENE, PRE_ASSIST_SCENE or ACTIONONE
-                (turnStagesArray.slice(5, 8).includes(cloudState.currentTurn.turnStage))
+                // If current stage is SCENE, PRE_ASSIST_SCENE
+                (turnStagesArray.slice(5, 7).includes(cloudState.currentTurn.turnStage))
                 &&
                 (
                     // If all of the assist tokens have been processed
@@ -427,12 +452,8 @@ const clickForNext = ({ cloudState, localState }) => {
                     (tokenClassesActionOne.includes(parseInt(localState.activeCharacter.classCode)))
                     &&
                     // AND if the active character hasn't yet used their action token
-                    // OR if the active character has spent their action token
-                    // and the effect needs to take place
                     (
                         (cloudState.hasActionToken.filter(tokens => tokens.uid === cloudState.active.activeUID).length > 0)
-                        ||
-                        (cloudState.activeActionTokens.filter(tokens => tokens.uid === cloudState.active.activeUID).length > 0)
                     )
                 )
             )

@@ -89,15 +89,8 @@ const turnTextSwitcher = (cloudState, localState, activeAssistPlayer) => {
                         }
                     }
 
-                    if (
-                        (cloudState.activeActionTokens.filter(
-                            tokens => tokens.uid === cloudState.active.activeUID
-                        ).length > 0)
-                    ) {
-                        return clickProceed
-                    } else {
-                        return spendActionToken + tokenAction()
-                    }
+                    return spendActionToken + tokenAction()
+
                 case 'ROLLONE':
                     return rollDice
                 case 'ROLLTWO':
@@ -129,6 +122,8 @@ const turnTextSwitcher = (cloudState, localState, activeAssistPlayer) => {
                     return kostco;
                 case 'PASS':
                     return passTheTurn + localState.activeCharacter.charName;
+                case 'default':
+                    return 'uh oh, broked again'
             }
             break;
         case 'END':

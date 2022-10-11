@@ -1,5 +1,6 @@
 import { child, push, ref, remove, update } from "firebase/database";
 import { db } from "../firebase/firebase";
+import { defaultCloudState } from "../reducers/cloudReducer";
 
 // Local Actions
 export const updateGameStatic = (staticData) => ({
@@ -262,14 +263,7 @@ export const startMarkTurnComplete = (hostKey, readyList) => {
     updates['savedGames/' + hostKey + `/currentTurn/chanceLocation`] = 0;
     updates['savedGames/' + hostKey + `/currentTurn/turnStage`] = 'DESCRIBEONE';
     updates['savedGames/' + hostKey + `/strength`] = {
-        assistOne: 0,
-        assistTwo: 0,
-        character: 0,
-        ongoingItem: 0,
-        rollResult: 0,
-        singleUseItem: 0,
-        story: 0,
-        total: 0
+        ...defaultCloudState.strength
     };
 
     update(ref(db), updates)
@@ -354,14 +348,7 @@ export const startResetTurnElements = (hostKey) => {
     updates['savedGames/' + hostKey + `/currentTurn/chanceLocation`] = 0;
     updates['savedGames/' + hostKey + `/currentTurn/turnStage`] = 'DESCRIBEONE';
     updates['savedGames/' + hostKey + `/strength`] = {
-        assistOne: 0,
-        assistTwo: 0,
-        character: 0,
-        ongoingItem: 0,
-        rollResult: 0,
-        singleUseItem: 0,
-        story: 0,
-        total: 0
+        ...defaultCloudState.strength
     };
     update(ref(db), updates)
         .catch((error) => {
@@ -622,6 +609,27 @@ export const startUpdateTotalStrength = (hostKey, strength) => {
         })
 }
 
+export const startAddWarriorActionBonus = (hostKey, updatedTeamHealth) => {
+    const updates = {}
+    updates['savedGames/' + hostKey + '/active/teamHealth'] = updatedTeamHealth
+    updates['savedGames/' + hostKey + '/strength/actionWarrior'] = 2
+    updates['savedGames/' + hostKey + '/activeActionTokens/'] = null
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not add Warrior Action Bonus: ', error)
+        })
+}
+
+export const startAddWizardActionBonus = (hostKey) => {
+    const updates = {}
+    updates['savedGames/' + hostKey + '/strength/actionWizard'] = 3
+    updates['savedGames/' + hostKey + '/activeActionTokens/'] = null
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not add Wizard Action Bonus: ', error)
+        })
+}
+
 // Strength
 
 export const startSaveDiceRoll = (hostKey, rollLocation, newRoll) => {
@@ -696,3 +704,4 @@ export const startUpdateChanceRoll = (hostKey, type, chanceRoll) => {
             console.log('Did not update Chance Roll: ', error)
         })
 }
+

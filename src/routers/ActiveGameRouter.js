@@ -1,6 +1,11 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import { startRESETActionTokens, startResetTurnElements, startUpdateGameStage, startUpdateTurnStage } from "../actions/cloudActions";
+import {
+    startRESETActionTokens,
+    startResetTurnElements,
+    startUpdateGameStage,
+    startUpdateTurnStage
+} from "../actions/cloudActions";
 import AuthWrapper from "../components/Authentication/AuthWrapper";
 import ActiveCharWrapper from "../components/elements/ActiveGame/ActiveCharWrapper";
 import IntroCharacter from "../components/elements/ActiveGame/introductions/IntroCharacter";
@@ -11,7 +16,6 @@ import ActionTokens from "../components/elements/ActiveGame/playing/actionTokens
 import ChallengeFrame from "../components/elements/ActiveGame/playing/challenges/ChallengeFrame";
 import Playing from "../components/elements/ActiveGame/playing/Playing";
 import RollDiceAnimation from "../components/elements/ActiveGame/playing/rollDice/RollDiceAnimation";
-import RollDiceButton from "../components/elements/ActiveGame/playing/rollDice/RollDiceButton";
 import StrengthFrame from "../components/elements/ActiveGame/playing/StrengthFrame";
 import TeamHealth from "../components/elements/ActiveGame/playing/TeamHealth";
 import TurnStep from "../components/elements/ActiveGame/turnStep/TurnStep";

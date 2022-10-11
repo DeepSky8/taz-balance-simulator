@@ -81,6 +81,8 @@ const defaultCloudState = {
     ],
     surprises: [],
     strength: {
+        actionWarrior: 0,
+        actionWizard: 0,
         assistOne: 0,
         assistTwo: 0,
         character: 0,
