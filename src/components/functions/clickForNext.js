@@ -172,6 +172,7 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
 
     const passTheTurn = () => {
 
+        // The Bard action token is returned at the end of every turn
         const bardIndex = cloudState.playerList.indexOf(player => (tokenClassesReclaim.includes(player.classCode)))
 
         if (bardIndex >= 0) {
@@ -181,13 +182,29 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
                 cloudState.hasActionToken.concat(cloudState.playerList[bardIndex]),
                 []
             )
-            console.log('refreshed token list', cloudState.hasActionToken.concat(cloudState.playerList[bardIndex]))
         }
+
+        const tempNewReadyList = [cloudState.active.activeUID].concat(cloudState.readyList)
+
+        // Add current active player to the Ready list
+        // indicating that they are ready for the next turn cycle
         startMarkTurnComplete(
             localState.hostKey,
-            [cloudState.active.activeUID].concat(
-                cloudState.readyList
-            ))
+            tempNewReadyList
+        )
+
+        // Check to see if all players are ready for the next turn cycle
+        if (
+            (cloudState.playerList.length !== 0) &&
+            (cloudState.playerList.length <= tempNewReadyList.length)
+        ) {
+            // If yes, clear the ready list
+            // and return everyone's action tokens
+            startNullReadyList(localState.hostKey)
+            startRESETActionTokens(localState.hostKey, cloudState.playerList)
+
+        }
+
         // turnIncrement()
     }
 

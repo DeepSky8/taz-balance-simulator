@@ -7,6 +7,7 @@ import tokenStages from "../../turnStep/turnStepArrays/tokenStages";
 import challengeItemStages from "../../turnStep/turnStepArrays/challengeItemStages";
 import turnStagesArray from "../../turnStep/turnStepArrays/turnStagesArray";
 import actionStages from "../../turnStep/turnStepArrays/actionStages";
+import { tokenClassesActionOne, tokenClassesActionTwo } from "../../../CharacterSheet/classes/charInfo";
 
 const ActionTokens = ({ cloudState, localState }) => {
     const [isAssistToken, setIsAssistToken] = useState(false)
@@ -17,36 +18,82 @@ const ActionTokens = ({ cloudState, localState }) => {
         // Monitor the turnStage; if an action token is spent
         // to assist another player, add this action token to a special array
         // so that the assistance can be described by the assisting player
-        // in a special turnStage
+        // during the appropriate turnStage
         if (assistStages.includes(cloudState.currentTurn.turnStage)) {
             setIsAssistToken(true)
         } else {
             setIsAssistToken(false)
         }
 
-        // If the challenge has a noAssist flag
-        // or if a player has already put in their token
-        // or if it has a doubleAssist flag and _two_ players
-        // have already put in their tokens
-        // or if the current Challenge doesn't require a token to engage
-        // do not allow additional assist tokens to be added to the list
+
         setAcceptingTokens(() => {
             if (tokenStages.includes(cloudState.currentTurn.turnStage)) {
-                if (localState.currentChallenge.noAssist) {
-                    return false
-                } else if (cloudState.activeAssistTokens.length < 1) {
-                    return true
-                } else if (
-                    (localState.currentChallenge.doubleAssist)
-                    &&
-                    (cloudState.activeAssistTokens.length < 2)
-                ) {
-                    return true
-                } else if (localState.currentChallenge.requiresToken) {
-                    return true
-                } else {
-                    return false
+
+
+                const challengeRequiresToken = () => {
+                    return (
+                        // If the turnStage is CHALLENGE
+                        (turnStagesArray[1] === cloudState.currentTurn.turnStage)
+                        &&
+                        // AND the challenge requires a token to engage
+                        (localState.currentChallenge.requiresToken)
+                    )
                 }
+
+                const acceptAssist = () => {
+                    return (
+                        // If the turnStage is PREASSIST or POSTASSIST
+                        (assistStages.includes(cloudState.currentTurn.turnStage))
+                        &&
+                        (
+                            // AND the challenge allows assistance
+                            !(localState.currentChallenge.noAssist)
+                        )
+                        &&
+                        (
+                            // AND the list of active assist tokens is less than 1
+                            (cloudState.activeAssistTokens.length < 1)
+                            ||
+                            (
+                                // OR the doubleAssist flag is set 
+                                (localState.currentChallenge.doubleAssist)
+                                &&
+                                // and the list of active assist tokens is less than 2
+                                (cloudState.activeAssistTokens.length < 2)
+                            )
+
+                        )
+
+                    )
+                }
+
+                const actionSteps = () => {
+                    return (
+                        // If the turnStage is ACTIONONE or ACTIONTWO
+                        // and the active player class code is in the list of 
+                        // classes that can perform an action at that time.
+                        (
+                            (turnStagesArray[7] === cloudState.currentTurn.turnStage)
+                            &&
+                            (tokenClassesActionOne.includes(localState.activeCharacter.classCode))
+                        )
+                        ||
+                        (
+                            (turnStagesArray[16] === cloudState.currentTurn.turnStage)
+                            &&
+                            (tokenClassesActionTwo.includes(localState.activeCharacter.classCode))
+                        )
+                    )
+                }
+
+                return (
+                    challengeRequiresToken()
+                    ||
+                    acceptAssist()
+                    ||
+                    actionSteps()
+                )
+
             } else {
                 return false
             }

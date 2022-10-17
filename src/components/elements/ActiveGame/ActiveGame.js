@@ -300,8 +300,6 @@ const ActiveGame = () => {
 
     // Compares the UIDs on the readyList with the list of players in the game
     // The next player in the playerList who isn't on the readyList is set as the activePlayer
-    // If no players are left, clears the readyList array
-    // and updates the cloud with Ready state True, 
     useEffect(() => {
         if (auth.currentUser.uid === cloudState.static.host) {
             const remainingPlayers = []
@@ -312,16 +310,6 @@ const ActiveGame = () => {
             })
             if (remainingPlayers.length > 0) {
                 startSetActivePlayer(localState.hostKey, remainingPlayers[0].uid, remainingPlayers[0].currentCharacterID)
-            }
-            if ((cloudState.playerList.length !== 0) &&
-                (cloudState.playerList.length === cloudState.readyList.length)
-            ) {
-                console.log('ActiveGame firing, would have nulled ready list')
-                // startNullReadyList(localState.hostKey)
-                // startRESETActionTokens(localState.hostKey, cloudState.playerList)
-                // Dispatches locally only
-                // dispatchCloudState(updateReadyStatus(true))
-                // startSetReadyTrue(localState.hostKey)
             }
         }
 

@@ -17,7 +17,7 @@ const defaultCloudState = {
         progressVillain: null,
         progressRelic: null,
         progressLocation: null,
-        ready: false,
+        // ready: false,
         teamHealth: null
     },
     backstory: {
