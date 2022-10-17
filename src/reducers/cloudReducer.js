@@ -12,8 +12,8 @@ const defaultCloudState = {
     active: {
         activeCharID: null,
         activeUID: null,
-        gameStage: '',
-        // gameStage INTRO, BRIEF, TRANSPORT, CHALLENGES, END
+        gameStage: 'INTRO',
+        // gameStage INTRO, BRIEF, TRANSPORT, CHALLENGES, END, default
         progressVillain: null,
         progressRelic: null,
         progressLocation: null,
@@ -22,6 +22,7 @@ const defaultCloudState = {
     },
     backstory: {
         briefingStage: 'VILLAIN',
+        // briefingStage VILLAIN, RELIC, LOCATION, NEXT
         villainOne: '',
         villainTwo: '',
         relicOne: '',
@@ -125,6 +126,7 @@ const cloudReducer = (state, action) => {
                 ...defaultCloudState,
                 ...state,
                 static: {
+                    ...defaultCloudState.static,
                     ...action.staticData
                 }
             }
@@ -133,6 +135,7 @@ const cloudReducer = (state, action) => {
                 ...defaultCloudState,
                 ...state,
                 active: {
+                    ...defaultCloudState.active,
                     ...action.activeData,
                 }
             }
@@ -256,6 +259,7 @@ const cloudReducer = (state, action) => {
                 ...defaultCloudState,
                 ...state,
                 backstory: {
+                    ...defaultCloudState.backstory,
                     ...state.backstory,
                     ...action.backstory
                 }

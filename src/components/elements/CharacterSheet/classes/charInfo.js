@@ -1,8 +1,38 @@
-import { bardAssistStingerLines, bardAssistTitles, bardRaceStingerLines, bardToolStingerLines, bardToolTitles } from "./bardInfo"
-import { priestAssistStingerLines, priestAssistTitles, priestRaceStingerLines, priestToolStingerLines, priestToolTitles } from "./priestInfo"
-import { rogueAssistStingerLines, rogueAssistTitles, rogueRaceStingerLines, rogueToolStingerLines, rogueToolTitles } from "./rogueInfo"
-import { warriorAssistStingerLines, warriorAssistTitles, warriorRaceStingerLines, warriorToolStingerLines, warriorToolTitles } from "./warriorInfo"
-import { wizardAssistStingerLines, wizardAssistTitles, wizardRaceStingerLines, wizardToolStingerLines, wizardToolTitles } from "./wizardInfo"
+import {
+    bardAssistStingerLines,
+    bardAssistTitles,
+    bardRaceStingerLines,
+    bardToolStingerLines,
+    bardToolTitles
+} from "./bardInfo"
+import {
+    priestAssistStingerLines,
+    priestAssistTitles,
+    priestRaceStingerLines,
+    priestToolStingerLines,
+    priestToolTitles
+} from "./priestInfo"
+import {
+    rogueAssistStingerLines,
+    rogueAssistTitles,
+    rogueRaceStingerLines,
+    rogueToolStingerLines,
+    rogueToolTitles
+} from "./rogueInfo"
+import {
+    warriorAssistStingerLines,
+    warriorAssistTitles,
+    warriorRaceStingerLines,
+    warriorToolStingerLines,
+    warriorToolTitles
+} from "./warriorInfo"
+import {
+    wizardAssistStingerLines,
+    wizardAssistTitles,
+    wizardRaceStingerLines,
+    wizardToolStingerLines,
+    wizardToolTitles
+} from "./wizardInfo"
 
 export const shortDescription = 10
 export const mediumDescription = 20
@@ -257,4 +287,17 @@ export const stats = [
         specialStrength: 4,
         specialTarget: 'Magic'
     }
+]
+
+export const specialTargetArray = [
+    // bard
+    'Relic',
+    //priest
+    'Spooky',
+    // rogue
+    'Trap',
+    // warrior
+    'Monster',
+    // wizard
+    'Magic',
 ]

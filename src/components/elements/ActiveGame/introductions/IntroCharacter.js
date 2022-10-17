@@ -1,8 +1,14 @@
 import React from "react";
-import { assistTitles, charClassTitles, raceTitles, stats, toolTitles } from "../../CharacterSheet/classes/charInfo";
+import {
+    assistTitles,
+    charClassTitles,
+    raceTitles,
+    specialTargetArray,
+    toolTitles
+} from "../../CharacterSheet/classes/charInfo";
 
 
-const IntroCharacter = ({character}) => (
+const IntroCharacter = ({ character }) => (
     <div>
         <div>
             {character && (`My character is named ${character.charName}`)}
@@ -12,12 +18,12 @@ const IntroCharacter = ({character}) => (
             {character && (`I'm a ${raceTitles[character.raceCode]} ${charClassTitles[character.classCode]}`)}
         </div>
         <div>
-            {(character.classCode >= 0 && character.toolCode) &&
-                (`I'm especially effective against ${(stats[character.classCode]).specialTarget} challenges because of my ${(toolTitles[character.classCode])[character.toolCode]}`)}
+            {(character.classCode >= 0 && character.toolCode < 7) &&
+                (`I'm especially effective against ${specialTargetArray[character.classCode]} challenges because of my ${(toolTitles[character.classCode])[character.toolCode]}`)}
         </div>
         <div>
-        {character.assistCode &&
-        (`I usually assist teammates with my ${(assistTitles[character.classCode])[character.assistCode]}`)}
+            {character.assistCode < 7 &&
+                (`I usually assist teammates with my ${(assistTitles[character.classCode])[character.assistCode]}`)}
         </div>
     </div>
 )

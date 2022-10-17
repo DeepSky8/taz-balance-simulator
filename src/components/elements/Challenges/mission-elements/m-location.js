@@ -66,6 +66,7 @@ const locationObjectsArray = [
         prompt1: `What does your battlewagon look like?`,
         prompt2: `Where is the race?`,
     },
+    {},
     {
         challengeName: 'Location Test',
         challengeCode: 'l99',

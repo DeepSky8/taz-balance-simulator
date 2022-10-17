@@ -43,11 +43,11 @@ const turnTextSwitcher = (cloudState, localState, activeAssistPlayer) => {
         case 'BRIEF':
             switch (cloudState.backstory.briefingStage) {
                 case 'VILLAIN':
-                    return villainBrief;
+                    return villainBrief + clickForNext;
                 case 'RELIC':
-                    return relicBrief;
+                    return relicBrief + clickForNext;
                 case 'LOCATION':
-                    return locationBrief;
+                    return locationBrief + clickForNext;
                 default:
                     return missionBriefing;
             }

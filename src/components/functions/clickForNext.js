@@ -5,19 +5,23 @@ import {
     startCompleteBoss,
     startCompleteChallenge,
     startMarkTurnComplete,
+    startNullReadyList,
+    startRESETActionTokens,
     startSaveDiceRoll,
     startToggleRollAnimation,
     startUNspendActionToken,
     startUpdateAssistBonusOne,
     startUpdateAssistBonusTwo,
     startUpdateAssistTokens,
+    startUpdateBriefingStage,
+    startUpdateGameStage,
     startUpdateLootPoints,
     startUpdateTeamHealth,
     startUpdateTurnStage
 } from "../../actions/cloudActions"
 import { auth } from "../../firebase/firebase";
-import stepStagesArray from "../elements/ActiveGame/turnStep/turnStepArrays/stepStagesArray";
 import turnStagesArray from "../elements/ActiveGame/turnStep/turnStepArrays/turnStagesArray";
+import { gameStageArray } from "../elements/ActiveGame/gameStage/gameStageArray"
 import {
     stats,
     tokenClassesActionOne,
@@ -26,8 +30,9 @@ import {
 } from "../elements/CharacterSheet/classes/charInfo";
 import diceRoll from "./diceRoll";
 import incrementTurn from "./incrementTurn";
+import { briefingStagesArray, directionArray } from "../elements/ActiveGame/briefingStage/briefingStagesArray";
 
-const clickForNext = ({ cloudState, localState }) => {
+const clickForNext = ({ cloudState, localState }, direction = directionArray[0]) => {
 
     const reloadPage = () => {
         window.location.reload()
@@ -40,7 +45,7 @@ const clickForNext = ({ cloudState, localState }) => {
     const updateLoot = () => {
         const currentLoot = localState.activeCharacter.lootPoints
         const newLoot = localState.currentChallenge.loot
-        const updatedLoot = currentLoot + newLoot
+        const updatedLoot = parseInt(currentLoot) + parseInt(newLoot)
         startUpdateLootPoints(
             cloudState.active.activeUID,
             cloudState.active.activeCharID,
@@ -193,10 +198,87 @@ const clickForNext = ({ cloudState, localState }) => {
         )
     }
 
-    const turnStageActions = (turnStage) => {
+    // Increment Briefing Stages, Briefing Actions
+    const briefingStageActions = (newStage) => {
+        switch (newStage) {
+            case 'NEXT':
+                startUpdateGameStage(localState.hostKey, gameStageArray[2])
+                break;
+            default:
+                break;
+        }
+    }
+
+    const briefingStageSelection = (direction) => {
+
+        const setVILLAIN = () => {
+            return (
+                // If current briefingStage is RELIC
+                (briefingStagesArray[1] === cloudState.backstory.briefingStage)
+                &&
+                (direction === directionArray[1])
+            )
+        }
+
+        const setRELIC = () => {
+            return (
+                (
+                    // If current briefingStage is VILLAIN
+                    (briefingStagesArray[0] === cloudState.backstory.briefingStage)
+                    &&
+                    // and direction is FORWARD
+                    (directionArray[0] === direction)
+                )
+                ||
+                (
+                    // If current briefingStage is LOCATION
+                    (briefingStagesArray[2] === cloudState.backstory.briefingStage)
+                    &&
+                    // and direction is BACKWARD
+                    (directionArray[1] === direction)
+                )
+            )
+        }
+
+        const setLOCATION = () => {
+            return (
+                // If current briefingStage is RELIC
+                (briefingStagesArray[1] === cloudState.backstory.briefingStage)
+                &&
+                // and direction is FORWARD
+                (direction === directionArray[0])
+            )
+        }
+
+        const setTRANSPORT = () => {
+            return (
+                // If current briefingStage is LOCATION
+                (briefingStagesArray[2] = cloudState.backstory.briefingStage)
+                &&
+                (direction === directionArray[0])
+            )
+        }
 
         if (activePlayerChecker()) {
-            switch (turnStage) {
+            const trueArray = [
+                setVILLAIN(),
+                setRELIC(),
+                setLOCATION(),
+                setTRANSPORT()
+            ]
+
+            const returnIndex = trueArray.findIndex(returnValue => returnValue === true)
+            return (returnIndex >= briefingStagesArray.length ? 'NEXT' : briefingStagesArray[returnIndex])
+        }
+
+    }
+
+
+    // Increment Turn Stages, Turn Actions
+    const turnStageActions = () => {
+
+        if (activePlayerChecker()) {
+            switch (cloudState.currentTurn.turnStage) {
                 case turnStagesArray[3]:
                     addStoryStrength()
                     break;
@@ -319,7 +401,7 @@ const clickForNext = ({ cloudState, localState }) => {
                 ([turnStagesArray[17], turnStagesArray[19]].includes(cloudState.currentTurn.turnStage))
                 ||
                 // or if step stage is TRANSPORT
-                (stepStagesArray[2] === (cloudState.active.gameStage))
+                (gameStageArray[2] === (cloudState.active.gameStage))
             )
         }
 
@@ -702,11 +784,140 @@ const clickForNext = ({ cloudState, localState }) => {
     }
 
 
-    if (activePlayerChecker()) {
-        turnStageActions(cloudState.currentTurn.turnStage)
-        const newStage = turnStageSelection()
-        startUpdateTurnStage(localState.hostKey, newStage)
+    // Increment Game Stages, Game Actions
+    const gameStageActions = () => {
+        if (activePlayerChecker()) {
+            switch (cloudState.active.gameStage) {
+                case 'INTRO':
+                    passTheTurn()
+                    break;
+                case 'BRIEF':
+                    break;
+                case 'TRANSPORT':
+                case 'CHALLENGES':
+                    startNullReadyList(localState.hostKey)
+                    startRESETActionTokens(localState.hostKey, cloudState.playerList)
+                    break;
+                default:
+                    console.log('hit default game stage on clickForNext, pls fix')
+                    break;
+            }
+        }
     }
+
+    const gameStageSelection = () => {
+
+        const setINTRO = () => {
+            return (
+                // If the game is in INTRO stage
+                (gameStageArray[0] === cloudState.active.gameStage)
+                &&
+                // If NOT all players have indicated they are ready
+                (cloudState.readyList.length !== cloudState.playerList.length)
+            )
+        }
+
+        const setBRIEF = () => {
+            return (
+                // If current gameStage is INTRO
+                (gameStageArray[0] === cloudState.active.gameStage)
+                &&
+                // If all players have indicated they are ready
+                (cloudState.readyList.length === cloudState.playerList.length)
+            )
+        }
+
+        const setTRANSPORT = () => {
+            return (
+                // If current gameStage is BRIEF
+                (gameStageArray[1] === cloudState.active.gameStage)
+                &&
+                // If current briefingStage is LOCATION
+                (briefingStagesArray[2] === cloudState.backstory.briefingStage)
+            )
+        }
+
+        // const setCHALLENGES = () => { 
+        //     return (
+        //         // If current gameStage is TRANSPORT
+        //         (gameStageArray[2] === cloudState.active.gameStage)
+
+        //     )
+        // }
+
+        const setEND = () => {
+
+            return (
+                // If current gameStage is CHALLENGES
+                (gameStageArray[3] === cloudState.active.gameStage)
+                &&
+                (
+                    (
+                        // If relic deck is complete
+                        (cloudState.active.progressRelic > 10)
+                        &&
+                        (
+                            // If Villin or Location deck is complete
+                            cloudState.active.progressVillain > 10
+                            ||
+                            cloudState.active.progressLocation > 10
+                        )
+                    )
+                    ||
+                    (cloudState.active.teamHealth <= 0)
+                )
+            )
+        }
+
+        if (activePlayerChecker()) {
+            const trueArray = [
+                setINTRO(),
+                setBRIEF(),
+                setTRANSPORT(),
+                false,
+                setEND(),
+                false
+            ]
+            console.log('game stage true array', trueArray)
+            const returnIndex = trueArray.findIndex(returnValue => returnValue === true)
+            return (returnIndex >= gameStageArray.length ? 'default' : gameStageArray[returnIndex])
+        }
+
+    }
+
+
+
+
+
+
+
+    if (activePlayerChecker()) {
+        switch (cloudState.active.gameStage) {
+            case 'TRANSPORT':
+                break;
+            case 'CHALLENGES':
+                turnStageActions()
+                const newTurnStage = turnStageSelection()
+                startUpdateTurnStage(localState.hostKey, newTurnStage)
+                break;
+            case 'INTRO':
+            case 'END':
+                gameStageActions()
+                const newGameStage = gameStageSelection()
+                startUpdateGameStage(localState.hostKey, newGameStage)
+                break;
+            case 'BRIEF':
+                const newBriefingStage = briefingStageSelection(direction)
+                startUpdateBriefingStage(localState.hostKey, newBriefingStage)
+                briefingStageActions(newBriefingStage)
+                break;
+            default:
+                console.log('hit default on clickForNext, pls fix');
+                // reloadPage()
+                break;
+        }
+    }
+
 
 }
 

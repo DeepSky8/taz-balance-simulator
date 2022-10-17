@@ -14,6 +14,16 @@ const challengeTransformer = (challengeArray, challengeCode) => {
                 return challengeArray[3]
             case '4':
                 return challengeArray[4]
+            case '5':
+                return challengeArray[5]
+            case '6':
+                return challengeArray[6]
+            case '7':
+                return challengeArray[7]
+            case '99':
+                return challengeArray[7]
+            case '9':
+                return challengeArray[7]
             default:
                 return {
                     challengeName: null,

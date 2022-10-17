@@ -65,6 +65,7 @@ const relicObjectsArray = [
         prompt1: `What's the name of the Sword?`,
         prompt2: `What will the Villain do with it?`,
     },
+    {},
     {
         challengeName: 'Relic Test',
         challengeCode: 'r99',

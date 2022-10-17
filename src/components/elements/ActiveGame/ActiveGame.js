@@ -32,7 +32,7 @@ import { auth, db } from "../../../firebase/firebase";
 import { defaultCloudState, cloudReducer } from "../../../reducers/cloudReducer";
 import incrementStage from "../../functions/incrementStage";
 import incrementTurn from "../../functions/incrementTurn";
-import { briefingStages } from "../../functions/briefingStages";
+import { briefingStagesArray } from "./briefingStage/briefingStagesArray";
 import challengeDeck from "../../functions/challengeDeck";
 import ActiveGameRouter from "../../../routers/ActiveGameRouter";
 import {
@@ -53,7 +53,7 @@ import {
 } from "../../../actions/localActions";
 import { defaultLocalState, localStateReducer } from "../../../reducers/localReducer";
 import { stats } from "../CharacterSheet/classes/charInfo";
-import introStages from "./turnStep/turnStepArrays/introStages";
+import { gameStageArray, introStages } from "../ActiveGame/gameStage/gameStageArray";
 
 
 const ActiveGame = () => {
@@ -81,7 +81,7 @@ const ActiveGame = () => {
             if (cloudState.backstory.briefingStage === undefined) {
                 startUpdateBriefingStage(
                     localState.hostKey,
-                    briefingStages[0]
+                    briefingStagesArray[0]
                 )
             }
 
@@ -316,11 +316,12 @@ const ActiveGame = () => {
             if ((cloudState.playerList.length !== 0) &&
                 (cloudState.playerList.length === cloudState.readyList.length)
             ) {
-                startNullReadyList(localState.hostKey)
-                startRESETActionTokens(localState.hostKey, cloudState.playerList)
+                console.log('ActiveGame firing, would have nulled ready list')
+                // startNullReadyList(localState.hostKey)
+                // startRESETActionTokens(localState.hostKey, cloudState.playerList)
                 // Dispatches locally only
                 // dispatchCloudState(updateReadyStatus(true))
-                startSetReadyTrue(localState.hostKey)
+                // startSetReadyTrue(localState.hostKey)
             }
         }
 
@@ -383,7 +384,11 @@ const ActiveGame = () => {
     // and send to cloud
     // This effect is run by the active player
     useEffect(() => {
-        if (auth.currentUser.uid === cloudState.active.activeUID) {
+        if (
+            auth.currentUser.uid === cloudState.active.activeUID
+            &&
+            cloudState.active.gameStage === gameStageArray[3]
+        ) {
 
             // Does the current challenge have any specific challenge types?
             const currentChallengeTypes = [];
@@ -452,28 +457,28 @@ const ActiveGame = () => {
     // Triggered by Ready state and team health changes
     // evaluate the current stage of the game
     // and advance it when appropriate
-    useEffect(() => {
-        if (auth.currentUser.uid === cloudState.static.host) {
-            if (
-                (introStages.includes(cloudState.active.gameStage)) &&
-                cloudState.active.ready
-            ) {
-                incrementGameStage()
-            } else if (
-                (cloudState.active.teamHealth === 0) &&
-                cloudState.active.ready
-            ) {
-                incrementGameStage()
-            } else if (
-                ((cloudState.active.progressRelic > 10) &&
-                    (cloudState.active.progressVillain > 10 || cloudState.active.progressLocation > 10))
-            ) {
-                incrementGameStage()
-            }
-        }
+    // useEffect(() => {
+    //     if (auth.currentUser.uid === cloudState.static.host) {
+    //         if (
+    //             (introStages.includes(cloudState.active.gameStage)) &&
+    //             cloudState.active.ready
+    //         ) {
+    //             incrementGameStage()
+    //         } else if (
+    //             (cloudState.active.teamHealth === 0) &&
+    //             cloudState.active.ready
+    //         ) {
+    //             incrementGameStage()
+    //         } else if (
+    //             ((cloudState.active.progressRelic > 10) &&
+    //                 (cloudState.active.progressVillain > 10 || cloudState.active.progressLocation > 10))
+    //         ) {
+    //             incrementGameStage()
+    //         }
+    //     }
 
 
-    }, [cloudState.active.ready, cloudState.active.teamHealth])
+    // }, [cloudState.active.ready, cloudState.active.teamHealth])
 
     // If the cloud-stored text indicating which challenge has been selected changes
     // or if the challenge which has been selected _itself_ changes
@@ -522,8 +527,7 @@ const ActiveGame = () => {
                 navigate('transport')
                 setTimeout(() => {
                     startUpdateGameStage(
-                        cloudState.static.host,
-                        cloudState.static.key,
+                        localState.hostKey,
                         incrementStage(cloudState.active.gameStage)
                     )
                 }, 8000)

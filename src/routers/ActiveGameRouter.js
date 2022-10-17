@@ -132,6 +132,7 @@ const ActiveGameRouter = ({
             </Routes>
             <TESTFEATURES
                 resetStages={resetStages}
+                gameStage={cloudState.active.gameStage}
                 stepStage={stepStage}
                 resetTurnStage={resetTurnStage}
                 resetActionTokens={resetActionTokens}

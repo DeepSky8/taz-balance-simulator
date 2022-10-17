@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { auth } from "../../../../firebase/firebase";
 import clickForNext from "../../../functions/clickForNext";
 import turnTextSwitcher from "../../../functions/turnTextSwitcher";
-import NextDeck from './NextDeck';
-import PrevDeck from './PrevDeck';
+import { briefingStagesArray, directionArray } from "../briefingStage/briefingStagesArray";
+// import NextDeck from './NextDeck';
+// import PrevDeck from './PrevDeck';
 
 const TurnStep = ({ cloudState, localState }) => {
     const [stepText, setStepText] = useState('Welcome to TAZ Balance!')
@@ -17,7 +18,6 @@ const TurnStep = ({ cloudState, localState }) => {
         }
     }, [cloudState.activeAssistTokens.length])
 
-
     useEffect(() => {
         setStepText(
             turnTextSwitcher(
@@ -28,6 +28,8 @@ const TurnStep = ({ cloudState, localState }) => {
     }, [
         localState.activeCharacter,
         localState.currentChallenge,
+        cloudState.active.gameStage,
+        cloudState.backstory.briefingStage,
         cloudState.currentTurn.turnStage,
         cloudState.currentTurn.selectedChallenge,
         activeAssistPlayer
@@ -37,19 +39,39 @@ const TurnStep = ({ cloudState, localState }) => {
         <div>
             {cloudState.active.gameStage === 'BRIEF' &&
                 cloudState.static.host === auth.currentUser.uid &&
-                <PrevDeck gameState={cloudState} />}
+                <button
+                    onClick={() => {
+                        clickForNext({ cloudState, localState }, directionArray[1])
+                    }}
+                    disabled={cloudState.backstory.briefingStage === briefingStagesArray[0]}
+                >
+                    Previous
+                </button>
+            }
 
             <button
-                onClick={() => { clickForNext({ cloudState, localState }) }}
+                onClick={() => {
+                    clickForNext({ cloudState, localState })
+                }}
             >
                 {stepText}
             </button>
 
-            {cloudState.active.gameStage === 'BRIEF' &&
-                cloudState.static.host === auth.currentUser.uid &&
-                <NextDeck gameState={cloudState} />}
+
         </div>
     )
 }
 
 export default TurnStep
+
+// {cloudState.active.gameStage === 'BRIEF' &&
+// cloudState.static.host === auth.currentUser.uid &&
+// <NextDeck
+//     cloudState={cloudState}
+//     localState={localState}
+// />}
+
+// <PrevDeck
+// cloudState={cloudState}
+// localState={localState}
+// />

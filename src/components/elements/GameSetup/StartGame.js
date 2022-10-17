@@ -114,8 +114,10 @@ const StartGame = ({ userState, gameState, dispatchGameState, charState }) => {
                     answer = false;
                     break;
                 } else { answer = true; break; }
+            // I plan to introduce a 6th player role at some point
+            // serving as the game guide, without playing
             case 6: answer = false; setStartError(oversizeParty)
-            default: answer = false;
+            default: answer = false; setStartError(oversizeParty)
         }
         return answer
 
@@ -124,14 +126,13 @@ const StartGame = ({ userState, gameState, dispatchGameState, charState }) => {
     // is not yet selected
     const missionSelected = ({ codeVillain, codeRelic, codeLocation }) => {
 
-        if (codeVillain !== null &&
-            codeRelic !== null &&
-            codeLocation !== null) {
-            return true
-        } else {
-            setStartError(selectMission)
-            return false
-        }
+        return (
+            (codeVillain !== null)
+            &&
+            (codeRelic !== null)
+            &&
+            (codeLocation !== null)
+        )
     }
 
     // Calculates the team starting health based on team size
@@ -155,8 +156,7 @@ const StartGame = ({ userState, gameState, dispatchGameState, charState }) => {
 
         // Check if the team comp is correct, based on the updated class list
         const teamChecked = acceptableTeamComp(gameState.classList)
-        const missionChecked = missionSelected({ ...gameState.static }
-        )
+        const missionFullySelected = missionSelected({ ...gameState.static })
         // If a gameID exists AND this player has selected a character AND
         // the team comp is acceptable, then proceed
         if ((userState.gameID !== null) &&
@@ -179,7 +179,10 @@ const StartGame = ({ userState, gameState, dispatchGameState, charState }) => {
                 // and if the full team hasn't indicated they are ready yet
                 // set an error indicating the full team isn't ready yet
                 setStartError(waitForTeam)
-            } else if (startGame && missionChecked) {
+            } else if (!missionFullySelected) {
+                setStartError(selectMission)
+            }
+            else if (startGame && missionFullySelected) {
                 // If this player is hosting (inferred)
                 // and the full team has indicated they are ready to start
                 // set this player's status to ready both locally and in the cloud
