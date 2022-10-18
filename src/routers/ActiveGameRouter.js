@@ -99,8 +99,8 @@ const ActiveGameRouter = ({
                 <Route
                     path="playing"
                     element={
-                        <Playing
-                        >
+                        
+                        <Playing>
                             <TeamHealth
                                 teamHealth={cloudState.active.teamHealth}
                             />

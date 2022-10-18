@@ -1,8 +1,9 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase/firebase";
 import { signOut } from "firebase/auth";
-import { history } from "../../routers/AppRouter";
+
+
 
 const LoginLink = () => (
 
@@ -12,21 +13,26 @@ const LoginLink = () => (
 
 )
 
-const onLogoutClick = () => {
+const onLogoutClick = (navigate) => {
+
     signOut(auth)
-        .then(history.push('/'))
+        .then(navigate("/"))
         .catch((error) => {
             console.log("error thrown on logout:", error)
         })
 }
 
-const LogoutLink = () => (
+const LogoutLink = () => {
+    const navigate = useNavigate()
+    return (
 
-    <button onClick={onLogoutClick}>Logout</button>
+        <button onClick={() => {onLogoutClick(navigate) }}> Logout</button >
 
-)
+    )
+}
 
 export const AuthWrapper = () => {
+
 
     return (
         <div>

@@ -1,8 +1,7 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { off, onValue, ref } from "firebase/database";
 import { auth, db } from "../../../firebase/firebase";
-import { history } from "../../../routers/AppRouter";
-import { Link, useNavigate } from "react-router-dom";
+import { Link,useLocation, useNavigate } from "react-router-dom";
 import {
     startSetCurrentCharacter,
     editCharacter,
@@ -30,9 +29,10 @@ import CharName from "./AttributePickerElements/CharName";
 
 const CharacterSheet = ({ }) => {
     let navigate = useNavigate()
-    let classAction = history.location.pathname.split("/")[2]
+    let location = useLocation()
+    let classAction = location.pathname.split("/")[2]
     // console.log('classAction: ', classAction)
-    let editID = history.location.pathname.split("/")[3]
+    let editID = location.pathname.split("/")[3]
     // console.log('editID: ', editID)
     const [charArray, setCharArray] = useState([])
     const [charState, dispatchCharState] = useReducer(charReducer, defaultCharState)

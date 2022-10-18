@@ -172,7 +172,7 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
 
     const passTheTurn = () => {
 
-        // The Bard action token is returned at the end of every turn
+        // The Bard action token is returned at the end of every player's turn
         const bardIndex = cloudState.playerList.indexOf(player => (tokenClassesReclaim.includes(player.classCode)))
 
         if (bardIndex >= 0) {
@@ -788,14 +788,7 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
                 setPASS(),
                 true
             ]
-            // console.log('trueArray', trueArray)
-            // console.log('activeAssistToken length equals 0', (cloudState.activeAssistTokens.length === 0))
-            // console.log('Active class', localState.activeCharacter.classCode)
-            // console.log('has action token filter', (cloudState.hasActionToken.filter(tokens => tokens.uid === cloudState.active.activeUID).length > 0))
-            // console.log('active action token filter', (cloudState.activeActionTokens.filter(tokens => tokens.uid === cloudState.active.activeUID).length > 0))
-            // console.log('active class is in action one array', (tokenClassesActionOne.includes(parseInt(localState.activeCharacter.classCode))))
             const returnIndex = trueArray.findIndex(returnValue => returnValue === true)
-            // console.log('setting stage to', turnStagesArray[returnIndex])
             return (returnIndex >= turnStagesArray.length ? 'default' : turnStagesArray[returnIndex])
         }
     }

@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
-import { startUpdateGameStage, startUpdatePrompt } from "../../../../actions/cloudActions";
+import React from "react";
+import { startUpdatePrompt } from "../../../../actions/cloudActions";
 import challengeTransformer from "../../../functions/challengeTransformer";
 import flavorTransformer from "../../../functions/flavorTransformer";
-import incrementStage from "../../../functions/incrementStage";
 import { locationObjectsArray } from "../../Challenges/mission-elements/m-location";
 import { relicObjectsArray } from "../../Challenges/mission-elements/m-relic";
 import { villainObjectsArray } from "../../Challenges/mission-elements/m-villain";
@@ -14,21 +13,21 @@ const MissionBriefing = ({ cloudState }) => {
     const location = (challengeTransformer(locationObjectsArray, cloudState.static.codeLocation))
     const villainIntro = "Today you're up against a dangerous foe:"
     const relicIntro = `It is vital that your team secure ${relic.challengeName}:`
-    const locationIntro = "Don't let appearances fool you; this location is extremly dangerous:"
+    const locationIntro = `Don't let appearances fool you; ${location.challengeName} is extremly dangerous:`
     const { villainFlavor, relicFlavor, locationFlavor } = flavorTransformer(villain, relic, location)
 
 
     // Monitor the briefingStage, and update the 
     // gameStage stage when the briefing is complete
-    useEffect(() => {
-        if (cloudState.backstory.briefingStage === 'NEXT') {
-            startUpdateGameStage(
-                cloudState.static.host,
-                cloudState.static.key,
-                incrementStage(cloudState.active.gameStage)
-            )
-        }
-    }, [cloudState.backstory.briefingStage])
+    // useEffect(() => {
+    //     if (cloudState.backstory.briefingStage === 'NEXT') {
+    //         startUpdateGameStage(
+    //             cloudState.static.host,
+    //             cloudState.static.key,
+    //             incrementStage(cloudState.active.gameStage)
+    //         )
+    //     }
+    // }, [cloudState.backstory.briefingStage])
 
     const updatePromptOne = (updateText) => {
 
