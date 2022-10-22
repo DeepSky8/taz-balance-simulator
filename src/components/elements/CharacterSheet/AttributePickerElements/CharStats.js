@@ -9,7 +9,7 @@ const Stats = ({ charState }) => {
         <div id="stats">
             <p>
                 {'Strength against Challenges: ' + classStats.strength}<br />
-                {'Strength against Relic Challenges: ' + classStats.specialStrength}<br />
+                {`Strength against ${classStats.specialTarget} Challenges: ` + classStats.specialStrength}<br />
                 {'Assist BEFORE die roll: ' + classStats.preAssist}<br />
                 {'Assist AFTER die roll: ' + classStats.postAssist}<br />
 
