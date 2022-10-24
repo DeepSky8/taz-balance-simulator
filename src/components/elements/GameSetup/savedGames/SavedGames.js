@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { off, onValue, ref } from "firebase/database";
-
 import { startRemoveSavedGame, startLoadSavedGame } from "../../../../actions/cloudActions";
-import { auth, db } from "../../../../firebase/firebase";
+import { auth } from "../../../../firebase/firebase";
 import SavedGame from "./SavedGame";
 
 const SavedGames = ({ gameState, toggleGameType, gameTypeButtonText, savedGameArray }) => {
@@ -10,7 +8,9 @@ const SavedGames = ({ gameState, toggleGameType, gameTypeButtonText, savedGameAr
 
     useEffect(() => {
         setHosting(gameState.static.gameID && gameState.static.host === auth.currentUser.uid)
-    }, [gameState.static.gameID])
+    },
+        [gameState.static.gameID]
+    )
 
     const loadGame = (savedGameKey, challengesObject) => {
         if (hosting) {

@@ -4,7 +4,7 @@ import { charTitles } from "../classes/charInfo";
 const AttributePicker = ({ charState, children }) => {
 
     // Close the race selector dropdown if the user clicks outside of it
-    window.onclick = function (event) {
+    window.addEventListener("click", function(event){
         if (!event.target.matches('.dropbtn')) {
             var dropdowns = document.getElementsByClassName("dropdown-content");
             var i;
@@ -15,7 +15,7 @@ const AttributePicker = ({ charState, children }) => {
                 }
             }
         }
-    }
+    })
 
 
     return (

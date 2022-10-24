@@ -2,8 +2,6 @@ import React, { useEffect, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
 import { off, onValue, ref } from "firebase/database";
 import {
-    startNullReadyList,
-    startRESETActionTokens,
     startSetActivePlayer,
     startUpdateActiveLocation,
     startUpdateActiveRelic,
@@ -26,7 +24,6 @@ import {
     updateStrength,
     clearStrength,
     startSetCharacterStrength,
-    startSetReadyTrue,
 } from "../../../actions/cloudActions";
 import { auth, db } from "../../../firebase/firebase";
 import { defaultCloudState, cloudReducer } from "../../../reducers/cloudReducer";

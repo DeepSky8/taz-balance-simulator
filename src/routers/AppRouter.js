@@ -12,6 +12,7 @@ import CharacterSheet from "../components/elements/CharacterSheet/CharacterSheet
 import ActiveGame from "../components/elements/ActiveGame/ActiveGame";
 import DeckUpdates from "../components/elements/admin/DeckUpdates";
 import DeckDuplicate from "../components/elements/admin/DeckDuplicate";
+import Home from "../components/elements/Home/Home";
 
 
 const AppRouter = () => {
@@ -22,19 +23,24 @@ const AppRouter = () => {
 
             <div>
                 <Routes>
-                    <Route path="/" element={<Welcome />} />
+                    <Route path="/" element={<Home />} />
+
+                    <Route index path="/welcome" element={<Welcome />} />
                     <Route path='/chooseMode/' element={<ChooseMode />} />
                     <Route path='/gameSetup/*' element={<GameSetup />} />
                     <Route path="/charactersheet/*" element={<CharacterSheet />} />
                     <Route path="/activeGame/*" element={<ActiveGame />} />
                     <Route path="/signIn" element={<FirebaseSignIn />} />
+
                     <Route path='/refreshHelper' element={<RefreshHelper />} />
                     <Route path='/deckUpdates' element={<DeckUpdates />} />
                     <Route path='/deckDuplicate' element={<DeckDuplicate />} />
+
                     <Route path="termsofservice" element={<Tos />} />
                     <Route path="privacypolicy" element={<PrivacyPolicy />} />
 
                     <Route path="*" element={<NotFoundPage />} />
+
                 </Routes>
             </div>
 

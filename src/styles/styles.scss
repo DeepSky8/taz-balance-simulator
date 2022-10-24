@@ -1,4 +1,8 @@
+@import "./base/settings";
+@import "./base/base";
 @import "./components/dropdown";
+@import "./components/edges";
 @import "./components/navLink";
-@import "./base/templates.scss";
 @import "./components/diceroll";
+@import "./components/errorPage";
+@import "./components/menuContainer";

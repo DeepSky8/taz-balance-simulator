@@ -1,0 +1,107 @@
+@mixin leftMenuStandards {
+  height: 100vh;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  transition: transform 0.3s cubic-bezier(0, 0.52, 0, 1);
+  overflow: hidden;
+  z-index: 1;
+}
+
+@mixin leftMenuContainerLinks {
+  color: rgb(52, 252, 2);
+  margin-left: 15px;
+  text-decoration: none;
+  display: flex;
+  flex-direction: row;
+}
+
+#leftMenuContainer {
+  @include leftMenuStandards;
+  width: 20vw;
+  background-color: none;
+}
+
+#leftMenuContents {
+  @include leftMenuStandards;
+  width: 16vw;
+  background-color: #303030;
+
+  // width: 17vw;
+  // height: 100vh;
+  // background-color: #303030;
+  // position: fixed;
+  // top: 0;
+  // left: 0;
+  // transition: transform 0.3s cubic-bezier(0, 0.52, 0, 1);
+  // overflow: hidden;
+  // z-index: 1;
+}
+
+#leftMenuContainer.hide {
+  transform: translate3d(-16vw, 0, 0);
+}
+
+#leftMenuContainer.show {
+  transform: translate3d(0vw, 0, 0);
+  overflow: auto;
+}
+
+#leftMenuContents h2 a {
+  @include leftMenuContainerLinks;
+  // color: rgb(52, 252, 2);
+  // margin-left: 15px;
+  // text-decoration: none;
+  // display: flex;
+  // flex-direction: row;
+}
+
+#leftMenuContents h2 a:hover {
+  text-decoration: underline;
+}
+
+#leftMenuContents h3 a {
+  @include leftMenuContainerLinks;
+  // color: rgb(52, 252, 2);
+  // margin-left: 15px;
+  // text-decoration: none;
+  // display: flex;
+  // flex-direction: row;
+}
+
+#leftMenuContents h3 a:hover {
+  text-decoration: underline;
+}
+
+#leftMenuContents ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  margin-left: 5px;
+}
+
+#leftMenuButtonContainer {
+  background-color: none;
+
+  position: sticky;
+  top: 0;
+  padding-right: 0;
+  // right: -1vw;
+  float: right;
+}
+
+.menuButtonContainer {
+  // right: 0;
+  left: 1vw;
+
+  z-index: 2;
+}
+
+.menuButton {
+  padding: 0;
+  background: none;
+  border: none;
+  height: 5em;
+  width: 5em;
+}

@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { auth, db } from "../../../firebase/firebase";
 import { off, onValue, ref } from "firebase/database";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
     clearGameState,
     clearClassList,
@@ -16,25 +16,16 @@ import {
     updateGameStatic,
     updateGameActive,
 } from "../../../actions/cloudActions";
-import CharacterChallengeNavBar from "./CharacterChallengeNavBar";
-import PlayingAs from "./PlayingAs";
 import {
     clearUserState,
     startRecordCurrentGame,
     updateUserState
 } from "../../../actions/userActions";
-import CharacterSelect from "./CharacterSelect/CharacterSelect";
 import { setCharState, setNoCurrentChar } from "../../../actions/charActions";
 import { charReducer, defaultCharState } from "../../../reducers/charReducer";
 import { defaultCloudState, cloudReducer } from "../../../reducers/cloudReducer";
 import { defaultUserProfile, userReducer } from "../../../reducers/userReducer";
-import NewLoadWrapper from "../Challenges/NewLoadWrapper";
-import RestOfParty from "./Party/RestOfParty";
-import JoiningHosting from "./JoiningHosting";
-import StartGame from "./StartGame";
-import GameInstructions from "./GameInstructions";
-import AuthWrapper from "../../Authentication/AuthWrapper";
-import ChallengeDisplay from "./ChallengeDisplay";
+import GameMenuRouter from "../../../routers/GameMenuRouter";
 
 
 
@@ -290,58 +281,14 @@ export const GameSetup = ({ }) => {
 
     return (
         <div>
-            <AuthWrapper />
-            <JoiningHosting
+            <GameMenuRouter
+                charArray={charArray}
+                charState={charState}
                 userState={userState}
-                dispatchGameState={dispatchCloudState}
+                cloudState={cloudState}
+                dispatchCloudState={dispatchCloudState}
                 gameArray={gameArray}
-            />
-            <ChallengeDisplay
-                gameState={cloudState}
-            />
-            <PlayingAs
-                userState={userState}
-                charState={charState}
-            />
-            <CharacterChallengeNavBar
-
-            />
-            <Routes>
-                <Route index element={<GameInstructions />} />
-                <Route
-                    path="gameInstructions"
-                    element={<GameInstructions />}
-                />
-                <Route
-                    path='selectCharacter'
-                    element={
-                        <CharacterSelect
-                            charState={charState}
-                            charArray={charArray}
-                        />
-                    } />
-                <Route
-                    path='selectChallenges'
-                    element={
-                        <NewLoadWrapper
-                            userState={userState}
-                            gameState={cloudState}
-                            savedGameArray={savedGameArray}
-                        />
-                    } />
-                <Route
-                    path='restOfParty'
-                    element={
-                        <RestOfParty
-                            gameState={cloudState}
-                        />
-                    } />
-            </Routes>
-            <StartGame
-                userState={userState}
-                gameState={cloudState}
-                dispatchGameState={dispatchCloudState}
-                charState={charState}
+                savedGameArray={savedGameArray}
             />
         </div>
     )
@@ -349,6 +296,3 @@ export const GameSetup = ({ }) => {
 }
 
 export { GameSetup as default }
-
-
-

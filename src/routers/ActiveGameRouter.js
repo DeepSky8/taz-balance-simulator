@@ -6,7 +6,7 @@ import {
     startUpdateGameStage,
     startUpdateTurnStage
 } from "../actions/cloudActions";
-import AuthWrapper from "../components/Authentication/AuthWrapper";
+import AuthWrapper from "../dumpingGround/AuthWrapper";
 import ActiveCharWrapper from "../components/elements/ActiveGame/ActiveCharWrapper";
 import IntroCharacter from "../components/elements/ActiveGame/introductions/IntroCharacter";
 import IntroDescription from "../components/elements/ActiveGame/introductions/IntroDescription";
@@ -50,7 +50,6 @@ const ActiveGameRouter = ({
 
     return (
         <div>
-            <AuthWrapper />
             <ActiveCharWrapper
                 cloudState={cloudState}
                 activeCharacter={localState.activeCharacter}

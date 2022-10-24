@@ -13,7 +13,7 @@ const CharSheetNavBar = ({ charState }) => (
                             key={title}
                             to={title}
                             className={isActive =>
-                                (isActive ? "nav-link" : "nav-link-unselected")}
+                                (isActive ? "active" : "")}
                         >{title}</NavLink>
                     )
                 })}

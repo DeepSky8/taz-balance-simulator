@@ -1,21 +1,30 @@
 import React, { useState } from "react";
 import ChallengeSelect from "./ChallengeSelect";
 import SavedGames from "../GameSetup/savedGames/SavedGames";
+import { useEffect } from "react";
 
 
 const NewLoadWrapper = ({ userState, gameState, savedGameArray }) => {
     const newGameText = 'Display saved missions'
-    const savedGamesText = 'Select new mission'
+    const savedGamesText = 'New mission'
 
-    const [showNewGame, setShowNewGame] = useState(true)
-    const [showSavedGames, setShowSavedGames] = useState(false)
-    const [gameTypeButtonText, setButtonText] = useState(newGameText)
+    const [showNewGame, setShowNewGame] = useState(false)
+    const [showSavedGames, setShowSavedGames] = useState(true)
+    const [gameTypeButtonText, setButtonText] = useState(savedGamesText)
 
     const toggleGameType = () => {
         setShowNewGame(!showNewGame)
         setShowSavedGames(!showSavedGames)
         setButtonText(showSavedGames ? newGameText : savedGamesText)
     }
+
+    useEffect(() => {
+        if (savedGameArray.length <= 0) {
+            setShowNewGame(true)
+            setShowSavedGames(false)
+            setButtonText(newGameText)
+        }
+    }, [])
 
     return (
         <div>

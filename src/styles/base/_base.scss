@@ -1,0 +1,11 @@
+.titleText {
+  font-weight: bold;
+}
+
+button {
+  cursor: pointer;
+
+  :disabled {
+    cursor: default;
+  }
+}
