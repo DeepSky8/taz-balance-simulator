@@ -5,7 +5,7 @@ const CharNav = ({ cloudState, localState, children }) => {
 
   const gameBoard = {
     uid: cloudState.static.key,
-    charName: 'Challenges'
+    charName: 'Gameboard'
   }
 
   const tabs = [
@@ -15,22 +15,34 @@ const CharNav = ({ cloudState, localState, children }) => {
 
   return (
     <div>
+
       <nav>
+
         {tabs.map((element) => {
           return (
             <NavLink
               key={element.uid}
               to={element.charName}
-              className={isActive =>
-                (isActive ? "nav-link" : 'nav-link-unselected')}
+              className={({ isActive }) =>
+              (`${isActive
+                  ?
+                  "nav-link-selected"
+                  :
+                  'nav-link'}${element.currentCharacterID === localState.activeCharacterID
+                  ?
+                  '-currentTurn'
+                  :
+                  ""}`
+              )
+              }
             >
-              {element.charName}
+              | {element.charName} |
             </NavLink>
           )
         })}
       </nav>
 
-    </div>
+    </div >
   )
 }
 

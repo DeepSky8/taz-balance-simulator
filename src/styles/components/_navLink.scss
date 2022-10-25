@@ -1,7 +1,22 @@
 .nav-link {
-    font-weight: bold;
+    font-weight: normal;
+    text-decoration: none;
+    color: green;
 }
 
-.nav-link-unselected {
-    font-weight: normal;
+.nav-link-selected {
+    font-weight: bold;
+    color: green;
+    text-decoration: none;
+}
+
+.nav-link-currentTurn {
+    color: blue;
+    text-decoration: solid;
+}
+
+.nav-link-selected-currentTurn {
+    font-weight: bold;
+    color: blue;
+    text-decoration: solid;
 }

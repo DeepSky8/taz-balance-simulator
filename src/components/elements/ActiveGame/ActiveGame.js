@@ -47,10 +47,11 @@ import {
     updateCompletedChallengesRelic,
     updateUncompletedChallengesLocation,
     updateCompletedChallengesLocation,
+    updateActiveCharacterID,
 } from "../../../actions/localActions";
 import { defaultLocalState, localStateReducer } from "../../../reducers/localReducer";
 import { stats } from "../CharacterSheet/classes/charInfo";
-import { gameStageArray, introStages } from "../ActiveGame/gameStage/gameStageArray";
+import { gameStageArray } from "../ActiveGame/gameStage/gameStageArray";
 
 
 const ActiveGame = () => {
@@ -325,6 +326,7 @@ const ActiveGame = () => {
                 (snapshot) => {
                     if (snapshot.exists()) {
                         dispatchLocalState(updateActiveCharacter(snapshot.val()))
+                        // dispatchLocalState(updateActiveCharacterID(snapshot.val().activeCharID))
                     }
                 })
         }
@@ -518,7 +520,7 @@ const ActiveGame = () => {
                 }, 8000)
                 break;
             case 'CHALLENGES':
-                navigate('playing')
+                navigate('playing/Gameboard')
                 break;
             case 'END':
                 navigate('summary')

@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Outlet } from "react-router-dom";
 import {
     startRESETActionTokens,
     startResetTurnElements,
@@ -22,6 +22,7 @@ import TurnStep from "../components/elements/ActiveGame/turnStep/TurnStep";
 import TESTFEATURES from "../components/elements/admin/TESTFEATURES";
 import incrementStage from "../components/functions/incrementStage";
 import incrementTurn from "../components/functions/incrementTurn";
+import CharNav from "../components/elements/ActiveGame/playing/CharacterOverview/CharNav";
 
 const ActiveGameRouter = ({
     cloudState,
@@ -96,30 +97,52 @@ const ActiveGameRouter = ({
                     }
                 />
                 <Route
-                    path="playing"
+                    path="playing/*"
                     element={
-                        
+
                         <Playing>
-                            <TeamHealth
-                                teamHealth={cloudState.active.teamHealth}
-                            />
-                            <ActionTokens
+                            <CharNav
                                 cloudState={cloudState}
                                 localState={localState}
                             />
-                            {cloudState.currentTurn.showRoll &&
-                                <RollDiceAnimation />
-                            }
-                            <ChallengeFrame
-                                cloudState={cloudState}
-                                localState={localState}
-                            />
-                            <StrengthFrame
-                                cloudState={cloudState}
-                            />
+                            <Outlet />
+
                         </Playing>
                     }
-                />
+                >
+                    <Route
+                        path="Gameboard"
+                        index={true}
+                        element={
+                            <span>
+                                <TeamHealth
+                                    teamHealth={cloudState.active.teamHealth}
+                                />
+                                <ActionTokens
+                                    cloudState={cloudState}
+                                    localState={localState}
+                                />
+                                {cloudState.currentTurn.showRoll &&
+                                    <RollDiceAnimation />
+                                }
+                                <ChallengeFrame
+                                    cloudState={cloudState}
+                                    localState={localState}
+                                />
+                                <StrengthFrame
+                                    cloudState={cloudState}
+                                />
+                            </span>
+                        }
+                    />
+                    <Route
+                        path=":"
+                    />
+
+
+
+
+                </Route>
                 <Route
                     path="summary"
                     element={

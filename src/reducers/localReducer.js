@@ -195,6 +195,7 @@ const localStateReducer = (state, action) => {
             return {
                 ...defaultLocalState,
                 ...state,
+                activeCharacterID: action.activeCharacter.charID,
                 activeCharacter: {
                     ...defaultLocalState.activeCharacter,
                     ...action.activeCharacter
