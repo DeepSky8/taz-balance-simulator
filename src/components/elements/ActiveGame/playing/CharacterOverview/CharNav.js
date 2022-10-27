@@ -22,13 +22,21 @@ const CharNav = ({ cloudState, localState, children }) => {
           return (
             <NavLink
               key={element.uid}
-              to={element.charName}
+              to={
+                element.charName + (
+                  element.uid === gameBoard.uid
+                    ?
+                    ''
+                    :
+                    ("/" + element.currentCharacterID)
+                )
+              }
               className={({ isActive }) =>
               (`${isActive
-                  ?
-                  "nav-link-selected"
-                  :
-                  'nav-link'}${element.currentCharacterID === localState.activeCharacterID
+                ?
+                "nav-link-selected"
+                :
+                'nav-link'}${element.currentCharacterID === localState.activeCharacterID
                   ?
                   '-currentTurn'
                   :

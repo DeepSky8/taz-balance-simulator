@@ -77,3 +77,13 @@ export const updateUncompletedChallengesLocation = (uncompletedChallengeArrayLoc
     type: 'UPDATE_UNCOMPLETED_CHALLENGES_LOCATION',
     uncompletedChallengeArrayLocation
 })
+
+export const updateTeamArrayCharObject = (charObject) => ({
+    type: 'UPDATE_TEAM_CHAR',
+    charObject
+})
+
+export const removeTeamArrayCharObject = (charID) => ({
+    type: 'REMOVE_TEAM_CHAR',
+    charID
+})

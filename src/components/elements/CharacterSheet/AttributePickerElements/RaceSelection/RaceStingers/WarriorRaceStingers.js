@@ -5,6 +5,7 @@ const imA = "I'm a "
 const iWasRaisedBy = "       I was raised by "
 const i = '     I '
 const lift = ' lift'
+const myBeard = 'My beard '
 
 const WarriorRaceStingers = ({ charState, dispatchCharState }) => (
     <div>
@@ -61,10 +62,11 @@ const WarriorRaceStingers = ({ charState, dispatchCharState }) => (
         <div id="dwarfWarrior">
             {charState.raceCode === raceTitles.indexOf('Dwarf') &&
                 <div>
+                    {myBeard}
                     <input
                         value={charState.dwarfWarriorBeard}
                         type='text'
-                        placeholder="My beard ... "
+                        placeholder="is/can/has ... "
                         maxLength={30}
                         onChange={(e) => {
                             dispatchCharState(

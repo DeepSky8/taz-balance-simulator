@@ -7,16 +7,19 @@
 .nav-link-selected {
     font-weight: bold;
     color: green;
-    text-decoration: none;
+    text-decoration: solid underline;
+    text-decoration-thickness: 3px;
 }
 
 .nav-link-currentTurn {
     color: blue;
-    text-decoration: solid;
+    text-decoration: none;
+    
 }
 
 .nav-link-selected-currentTurn {
     font-weight: bold;
     color: blue;
-    text-decoration: solid;
+    text-decoration: solid underline;
+    text-decoration-thickness: 3px;
 }

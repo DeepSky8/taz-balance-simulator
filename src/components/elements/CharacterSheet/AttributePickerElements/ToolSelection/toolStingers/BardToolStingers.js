@@ -10,7 +10,7 @@ const BardToolStingers = ({ charState, dispatchCharState }) => (
                 <input
                     value={charState.bardSuperGoal}
                     type="text"
-                    placeholder="Your big goal"
+                    placeholder="Your big goal is"
                     maxLength={longDescription}
                     onChange={(e) => {
                         dispatchCharState(

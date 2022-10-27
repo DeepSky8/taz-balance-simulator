@@ -10,7 +10,7 @@ const PriestToolStingers = ({ charState, dispatchCharState }) => (
                 <input
                     value={charState.priestToolHolySymbol}
                     type="text"
-                    placeholder="Your holy symbol is..."
+                    placeholder="My holy symbol is..."
                     maxLength={longDescription}
                     onChange={(e) => {
                         dispatchCharState(
@@ -26,7 +26,7 @@ const PriestToolStingers = ({ charState, dispatchCharState }) => (
                 <input
                     value={charState.priestToolMantra}
                     type="text"
-                    placeholder="Your mantra is..."
+                    placeholder="My mantra is..."
                     maxLength={longDescription}
                     onChange={(e) => {
                         dispatchCharState(

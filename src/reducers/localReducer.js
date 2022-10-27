@@ -55,6 +55,7 @@ const defaultLocalState = {
     activeCharacter: {
         ...defaultCharState
     },
+    teamCharArray: [],
     currentChallengeKey: '',
     currentChallenge: {
         ...defaultCardState
@@ -275,6 +276,45 @@ const localStateReducer = (state, action) => {
                 ...defaultLocalState,
                 ...state,
                 uncompletedChallengeArrayLocation: action.uncompletedChallengeArrayLocation
+            }
+        case 'UPDATE_TEAM_CHAR':
+            const charIndex = state.teamCharArray.findIndex((storedCharObject) => {
+                return storedCharObject.charID === action.charObject.charID
+            })
+            const updatedTeamCharArray = [];
+            if (charIndex === -1) {
+                (updatedTeamCharArray.push(...state.teamCharArray));
+                updatedTeamCharArray.push(action.charObject);
+            } else {
+                if (charIndex === (state.teamCharArray.length - 1)) {
+                    (updatedTeamCharArray
+                        .push(state.teamCharArray.slice(0, charIndex)));
+                    updatedTeamCharArray.push(action.charObject);
+                } else {
+                    (updatedTeamCharArray
+                        .push(...state.teamCharArray.slice(0, charIndex)));
+                    updatedTeamCharArray.push(action.charObject);
+                    updatedTeamCharArray.push(state.teamCharArray.slice(charIndex + 1));
+                }
+            }
+            return {
+                ...defaultLocalState,
+                ...state,
+                teamCharArray: updatedTeamCharArray,
+            }
+        case 'REMOVE_TEAM_CHAR':
+            const charIDIndex = state.teamCharArray.findIndex((storedCharObject) => {
+                return storedCharObject.charID === action.charID
+            })
+            if (charIDIndex !== -1) {
+                updatedTeamCharArray.push(state.teamCharArray.filter((storedCharObject) => {
+                    return storedCharObject.charID !== action.charID
+                }))
+            }
+            return {
+                ...defaultLocalState,
+                ...state,
+                teamCharArray: updatedTeamCharArray,
             }
         default:
             return {

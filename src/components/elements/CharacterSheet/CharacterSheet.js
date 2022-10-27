@@ -14,7 +14,6 @@ import {
 } from "../../../actions/charActions";
 import { charClassTitles, unselectedAttribute, unselectedClass, unselectedRace } from "../CharacterSheet/classes/charInfo";
 import CharSheetNavBar from "./CharacterSheetElements/CharSheetNavBar";
-import AuthWrapper from "../../../dumpingGround/AuthWrapper";
 import { charReducer, defaultCharState } from "../../../reducers/charReducer";
 import AttributePicker from "./CharacterSheetElements/AttributePicker";
 import SpecialAbility from "./AttributePickerElements/SpecialAbility";

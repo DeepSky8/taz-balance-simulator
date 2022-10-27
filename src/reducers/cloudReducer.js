@@ -116,6 +116,14 @@ const defaultCloudState = {
         // classCode
         // charName
         // }
+    ],
+    missionNoteArray: [
+        //{
+        // uid
+        // currentCharacterID
+        // charName
+        // notes
+        //}
     ]
 }
 
@@ -317,6 +325,14 @@ const cloudReducer = (state, action) => {
                     ongoingItem: 0,
                     total: 0
                 }
+            }
+        case 'UPDATE_MISSION_NOTE_ARRAY':
+            return {
+                ...defaultCloudState,
+                ...state,
+                missionNoteArray: [
+                    ...action.missionNoteArray
+                ]
             }
         default:
             return state

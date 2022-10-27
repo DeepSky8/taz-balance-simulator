@@ -2,13 +2,13 @@ export const bardRaceStingerLines = [
     // Human
     "You're a brooding musician. What's the name of your band?",
     // Elf
-    "You sing the ancient songs of the fey. For money.",
+    "I sing the ancient songs of the fey. For money.",
     // Dwarf
-    "Who said Dwarves couldn't sing? You've got hidden depths, bro.",
+    "Who said Dwarves couldn't sing? I've got hidden depths, bro.",
     // Gnome
-    "You've got an innate talent for magic and a really cool hat.",
+    "I have an innate talent for magic and a really cool hat.",
     // Halfling
-    "You don't actually sing. You're more about the standup.",
+    "I don't actually sing. I'm more about the standup.",
     // Magical Robot
     "Who created you? What do you look like?"
 ]
@@ -25,12 +25,12 @@ export const bardToolTitles = [
 export const bardToolBigGoal = 4
 
 export const bardToolStingerLines = [
-    "You've devoted your life to studying relics and magic.",
-    "You just know a lot of random, stupid things.",
-    "You've been dungeon delving for decades. You're kind of over it, actually.",
-    "You don't actually KNOW anything about relics, but a positive attitude goes a long way!",
-    "After you bag a few relics, you're going to be a superstar! What is it you want to do?",
-    "What have you got in your pocketses? You have a trinket or tool for every occasion."
+    "I've devoted my life to studying relics and magic.",
+    "I just know a lot of random, stupid things.",
+    "I've been dungeon delving for decades. I'm kind of over it, actually.",
+    "I don't actually KNOW anything about relics, but a positive attitude goes a long way!",
+    "After I bag a few relics, I'm going to be a superstar! What is it you want to do?",
+    "What have I got in my pocketses? I have a trinket or tool for every occasion."
 ]
 
 export const bardAssistTitles = [
@@ -45,12 +45,12 @@ export const bardAssistTitles = [
 export const bardAssistMusic = 2
 
 export const bardAssistStingerLines = [
-    "As far as you're concerned, life is a musical.",
+    "As far as I'm concerned, life is a musical.",
     "There once was a wizard from Oz...",
     "What instrument do you play? Can you shred?",
     "Well-fed adventurers are effective adventurers. Food comes first!",
-    "Sometimes your ideas are a little over the top, but go big or go home!",
-    "You know a little something about everything. Nerd."
+    "Sometimes my ideas are a little over the top, but go big or go home!",
+    "I know a little something about everything. Unkind folks call me a nerd."
 ]
 
 // export const bardNumbers = {

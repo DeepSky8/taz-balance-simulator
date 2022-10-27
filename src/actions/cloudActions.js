@@ -130,6 +130,11 @@ export const clearStrength = () => ({
     type: 'CLEAR_STRENGTH'
 })
 
+export const updateMissionNoteArray = (missionNoteArray) => ({
+    type: 'UPDATE_MISSION_NOTE_ARRAY',
+    missionNoteArray
+})
+
 // Cloud Actions
 
 export const startGetKey = (uid) => {
@@ -705,3 +710,12 @@ export const startUpdateChanceRoll = (hostKey, type, chanceRoll) => {
         })
 }
 
+export const startUpdateMissionNoteArray = (hostKey, missionNoteArray) => {
+    console.log('missionNoteArray', missionNoteArray)
+    const updates = {}
+    updates['savedGames/' + hostKey + '/missionNoteArray'] = missionNoteArray
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not update Mission Note Array: ', error)
+        })
+}

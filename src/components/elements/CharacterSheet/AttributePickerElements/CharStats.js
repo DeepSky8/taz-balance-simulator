@@ -8,11 +8,10 @@ const Stats = ({ charState }) => {
 
         <div id="stats">
             <p>
-                {'Strength against Challenges: ' + classStats.strength}<br />
-                {`Strength against ${classStats.specialTarget} Challenges: ` + classStats.specialStrength}<br />
-                {'Assist BEFORE die roll: ' + classStats.preAssist}<br />
-                {'Assist AFTER die roll: ' + classStats.postAssist}<br />
-
+                {classStats && 'Strength against Challenges: ' + classStats.strength}<br />
+                {classStats && `Strength against ${classStats.specialTarget} Challenges: ` + classStats.specialStrength}<br />
+                {classStats && 'Assist BEFORE die roll: ' + classStats.preAssist}<br />
+                {classStats && 'Assist AFTER die roll: ' + classStats.postAssist}<br />
             </p>
         </div>
     )

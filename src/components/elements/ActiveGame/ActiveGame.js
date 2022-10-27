@@ -24,6 +24,7 @@ import {
     updateStrength,
     clearStrength,
     startSetCharacterStrength,
+    updateMissionNoteArray,
 } from "../../../actions/cloudActions";
 import { auth, db } from "../../../firebase/firebase";
 import { defaultCloudState, cloudReducer } from "../../../reducers/cloudReducer";
@@ -48,6 +49,8 @@ import {
     updateUncompletedChallengesLocation,
     updateCompletedChallengesLocation,
     updateActiveCharacterID,
+    updateTeamArrayCharObject,
+    removeTeamArrayCharObject,
 } from "../../../actions/localActions";
 import { defaultLocalState, localStateReducer } from "../../../reducers/localReducer";
 import { stats } from "../CharacterSheet/classes/charInfo";
@@ -263,6 +266,18 @@ const ActiveGame = () => {
 
             })
 
+        // Ongoing missionNoteArray listener
+        onValue(ref(db, 'savedGames/' + localState.hostKey + '/missionNoteArray'),
+            (snapshot) => {
+                const tempMissionNoteArray = [];
+                if (snapshot.exists()) {
+                    snapshot.forEach((note) => {
+                        tempMissionNoteArray.push(note.val())
+                    })
+                }
+                dispatchCloudState(updateMissionNoteArray(tempMissionNoteArray))
+            })
+
         return () => {
             off(ref(db, 'savedGames/' + localState.hostKey + '/static'))
             off(ref(db, 'savedGames/' + localState.hostKey + '/active'))
@@ -274,11 +289,12 @@ const ActiveGame = () => {
             off(ref(db, 'savedGames/' + localState.hostKey + '/activeActionTokens'))
             off(ref(db, 'savedGames/' + localState.hostKey + '/activeAssistTokens'))
             off(ref(db, 'savedGames/' + localState.hostKey + '/strength'))
+            off(ref(db, 'savedGames/' + localState.hostKey + '/missionNoteArray'))
         }
 
     }, [localState.hostKey])
 
-    // Ongoing local character listener
+    // Ongoing character listeners
     useEffect(() => {
         if (localState.localCharacterID !== '') {
             onValue(ref(db, 'characters/' + auth.currentUser.uid + '/' + localState.localCharacterID),
@@ -289,12 +305,32 @@ const ActiveGame = () => {
                 })
         }
 
+        if (cloudState.playerList.length > 0) {
+            cloudState.playerList.forEach((player) => {
+                onValue(ref(db, 'characters/' + player.uid + '/' + player.currentCharacterID),
+                    (snapshot) => {
+                        if (snapshot.exists()) {
+                            dispatchLocalState(updateTeamArrayCharObject(snapshot.val()))
+                        } else {
+                            dispatchLocalState(removeTeamArrayCharObject(player.currentCharacterID))
+                        }
+                    }
+                )
+            })
+        }
+
+
         return () => {
             if (localState.localCharacterID !== '') {
                 off(ref(db, 'characters/' + auth.currentUser.uid + '/' + localState.localCharacterID))
             }
+            if (cloudState.playerList.length > 0) {
+                cloudState.playerList.forEach((player) => {
+                    off(ref(db, 'characters/' + player.uid + '/' + player.currentCharacterID))
+                })
+            }
         }
-    }, [localState.localCharacterID])
+    }, [cloudState.playerList])
 
     // Compares the UIDs on the readyList with the list of players in the game
     // The next player in the playerList who isn't on the readyList is set as the activePlayer

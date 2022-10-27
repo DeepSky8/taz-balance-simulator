@@ -1,16 +1,16 @@
 export const wizardRaceStingerLines = [
     // Human
-    "You went to a prestigious school for Magic & Wizardry, and you're kind of a snob about it.",
+    "I went to a prestigious school for Magic & Wizardry, and I'm kind of a snob about it.",
     // Elf
-    "Magic is in your blood. Along with baking.",
+    "Magic is in my blood. Along with baking.",
     // Gnome
-    "You're small, cute, and you have a pointy hat. Wizardly seemed like the logical next step.",
+    "I'm small, cute, and I have a pointy hat. Wizardly seemed like the logical next step.",
     // Dark Elf
-    "You're a renegade. A maverick. You play by your own rules.",
+    "I'm a renegade. A maverick. I play by my own rules.",
     // Undead
     "How did you die and come back? Are you a skeleton? A zombie?",
     // Gerblin
-    "You're small and green, and the first gerblin in your horde to get a degree in wizardry."
+    "I'm small, and green, and the first gerblin in my horde to get a degree in wizardry."
 ]
 
 export const wizardToolTitles = [
@@ -32,11 +32,11 @@ export const wizardToolStingerLines = [
     // "Spellbook",
     "It's full of spells, recipies, and a lot of good advice",
     // "Amazing Intellect",
-    "You're the smartest person in the room, and don't let anyone forget it!",
+    "I'm the smartest person in the room, and I don't let anyone forget it!",
     // "Catchphrase",
     "Skill and luck aren't nearly as important as a good catchphrase.",
     // "Superstition",
-    "You believe a lot of ridiculous things, but sometimes they can save your life.",
+    "I believe a lot of ridiculous things, but sometimes they save my life.",
 ]
 
 export const wizardAssistTitles = [
@@ -54,13 +54,13 @@ export const wizardAssistStingerLines = [
     // "Magic",
     "There's very few problems that can't be solved with a fireball.",
     // "Arcane Lord",
-    "You know secrets about everything. Nerd.",
+    "I know secrets about everything. The unkind call me a nerd.",
     // "Fame",
     "What is it you're known for? How does that help?",
     // "Wisdom",
-    "You're like a fortune cookie factory",
+    "I'm like a fortune cookie factory",
     // "Sarcasm",
     "Sometimes, a well-placed insult is the key to victory",
     // "Fashion Sense",
-    "How? We're not sure yet.",
+    "How? I'm not sure yet.",
 ]

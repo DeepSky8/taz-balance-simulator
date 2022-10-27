@@ -23,6 +23,8 @@ import TESTFEATURES from "../components/elements/admin/TESTFEATURES";
 import incrementStage from "../components/functions/incrementStage";
 import incrementTurn from "../components/functions/incrementTurn";
 import CharNav from "../components/elements/ActiveGame/playing/CharacterOverview/CharNav";
+import PlayingSheet from "../components/elements/ActiveGame/playing/PlayingSheets/PlayingSheet";
+import NotFoundPage from "../components/Authentication/NotFoundPage";
 
 const ActiveGameRouter = ({
     cloudState,
@@ -113,6 +115,8 @@ const ActiveGameRouter = ({
                     <Route
                         path="Gameboard"
                         index={true}
+                        errorElement={<NotFoundPage />}
+
                         element={
                             <span>
                                 <TeamHealth
@@ -136,7 +140,14 @@ const ActiveGameRouter = ({
                         }
                     />
                     <Route
-                        path=":"
+                        path=":charName/:charID"
+                        errorElement={<NotFoundPage />}
+                        element={
+                            <PlayingSheet
+                                cloudState={cloudState}
+                                localState={localState}
+                            />
+                        }
                     />
 
 

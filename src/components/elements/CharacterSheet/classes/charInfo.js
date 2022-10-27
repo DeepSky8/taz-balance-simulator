@@ -1,14 +1,20 @@
 import {
+    bardAssistMusic,
     bardAssistStingerLines,
     bardAssistTitles,
     bardRaceStingerLines,
+    bardToolBigGoal,
     bardToolStingerLines,
     bardToolTitles
 } from "./bardInfo"
 import {
+    priestAssistFame,
+    priestAssistHobby,
     priestAssistStingerLines,
     priestAssistTitles,
     priestRaceStingerLines,
+    priestToolHolySymbol,
+    priestToolMantra,
     priestToolStingerLines,
     priestToolTitles
 } from "./priestInfo"
@@ -16,20 +22,26 @@ import {
     rogueAssistStingerLines,
     rogueAssistTitles,
     rogueRaceStingerLines,
+    rogueToolCatchphrase,
     rogueToolStingerLines,
     rogueToolTitles
 } from "./rogueInfo"
 import {
+    warriorAssistFame,
     warriorAssistStingerLines,
     warriorAssistTitles,
     warriorRaceStingerLines,
+    warriorToolArmor,
+    warriorToolBattlecry,
     warriorToolStingerLines,
     warriorToolTitles
 } from "./warriorInfo"
 import {
+    wizardAssistFame,
     wizardAssistStingerLines,
     wizardAssistTitles,
     wizardRaceStingerLines,
+    wizardToolCatchphrase,
     wizardToolStingerLines,
     wizardToolTitles
 } from "./wizardInfo"
@@ -124,15 +136,15 @@ export const modifiedByAn = [5, 13, 14]
 
 export const charBlurb = [
     // Bard
-    " bard, you always have an inspiring word or song",
+    " bard, I always have an inspiring word or song",
     // Priest
-    " priest, you have the power to heal your allies and defeat the restless dead",
+    " priest, I have the power to heal my allies and defeat the restless dead",
     // Rogue
-    " rogue, you excel at evading traps and coordinating with your allies",
+    " rogue, I excel at evading traps and coordinating with my allies",
     // Warrior
-    " warrior, you defeat challenges using your strength and skill",
+    " warrior, I defeat challenges using my strength and skill",
     // Wizard
-    " wizard, you're a master of magic and can use spells to defeat monsters"
+    " wizard, I'm a master of magic and can use spells to defeat monsters"
 ]
 
 export const unselectedAttribute = 7
@@ -155,30 +167,30 @@ export const toolStingers = [
 
 export const toolBlurb = [
     // Bard
-    "You're an expert on relics, mostly because of your ",
+    "I'm an expert on relics, mostly because of my ",
     // Priest
-    "You're especially strong against undead, because of your ",
+    "I'm especially strong against undead, because of my ",
     // Rogue
-    "You're especially effective against traps, because of your ",
+    "I'm especially effective against traps, because of my ",
     // Warrior
-    "You're especially effective against monsters, because of your ",
+    "I'm especially effective against monsters, because of my ",
     // Wizard
-    "You're especially effective against magical threats, because of your ",
+    "I'm especially effective against magical threats, because of my ",
     // default
     ['-select-'],
 ]
 
 export const assistPrompt = [
     // Bard
-    "You generally assist your teammates using your ",
+    "I generally assist my teammates using my ",
     // Priest
-    "You generally assist your teamsmates with your ",
+    "I generally assist my teamsmates with my ",
     // Rogue
-    "You assist your teammates with your ",
+    "I assist my teammates with my ",
     // Warrior
-    "You assist your teammates with your ",
+    "I assist my teammates with my ",
     // Wizard
-    "You assist your teammates with your "
+    "I assist my teammates with my ",
 ]
 
 export const assistTitles = [
@@ -300,4 +312,36 @@ export const specialTargetArray = [
     'Monster',
     // wizard
     'Magic',
+]
+
+export const stingerQuestions = [
+    {
+        tool: [bardToolBigGoal],
+        assist: [bardAssistMusic],
+    },
+    {
+        tool: [
+            priestToolHolySymbol,
+            priestToolMantra
+        ],
+        assist: [
+            priestAssistFame,
+            priestAssistHobby
+        ],
+    },
+    {
+        tool: [rogueToolCatchphrase],
+        assist: []
+    },
+    {
+        tool: [
+            warriorToolArmor,
+            warriorToolBattlecry
+        ],
+        assist: [warriorAssistFame],
+    },
+    {
+        tool: [wizardToolCatchphrase],
+        assist: [wizardAssistFame]
+    }
 ]

@@ -4,13 +4,13 @@ export const priestRaceStingerLines = [
     // Dwarf
     "Are you from the mountains? The hills? The beach?",
     // Elf
-    "You possess the wisdom of the ages. And pointy ears.",
+    "I possess the wisdom of the ages. And pointy ears.",
     // Halfling
-    "You'd rather be eating a second breakfast than going on this adventure.",
+    "I'd rather be eating a second breakfast than going on this adventure.",
     // Gnome
-    "While you're wise and powerful, your greatest talent is being adorable.",
+    "While I'm wise and powerful, my greatest talent is being adorable.",
     // Centaur
-    "You're half horse and half something else."
+    "I'm half horse and half ... something else."
 ]
 
 export const priestToolTitles = [
@@ -29,13 +29,13 @@ export const priestToolStingerLines = [
     // "Holy Symbol",
     "What do you use to focus your magical powers?",
     // "Powers of Light",
-    "You're a vessel for divine forces. But you're not all stuck up about it.",
+    "I'm a vessel for divine forces. But I'm not all stuck up about it.",
     // "Mantra",
     "When evil arises, what's your go-to prayer?",
     // "Sacred Mission",
-    "You're on a mission from a higher power, and you're wearing sunglasses. Hit it.",
+    "I'm on a mission from a higher power, and I'm wearing sunglasses. Hit it.",
     // "Experience",
-    "You used to be a professional exorcist. This is just another day on the job.",
+    "I used to be a professional exorcist. This is just another day on the job.",
     // "Pleasant Converation"
     "Most restless spirits just need someone to talk to."
 ]
@@ -54,9 +54,9 @@ export const priestAssistHobby = 4
 
 export const priestAssistStingerLines = [
     // "Magic",
-    "Your prayers strengthen your comrades and guide them in battle.",
+    "My prayers strengthen my comrades and guide them in battle.",
     // "Folksy Wisdom",
-    "You have a proverb for every situation",
+    "I have a proverb for every situation",
     // "Fame",
     "What is it you're known for? How does that help?",
     // "Optimism",
@@ -64,5 +64,5 @@ export const priestAssistStingerLines = [
     // "Hobbies",
     "What do you do in your spare time? How is it helpful?",
     // "Divine Insight",
-    "Higher powers tell you things. Embarrasing things."
+    "Higher powers tell me things. Embarrasing things."
 ]

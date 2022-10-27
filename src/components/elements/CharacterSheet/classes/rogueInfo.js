@@ -1,16 +1,16 @@
 export const rogueRaceStingerLines = [
     // Human
-    "You've always been 'edgy.' You've probably got dramatic hair or a bad tattoo.",
+    "I've always been 'edgy.' I've got dramatic hair, or a bad tattoo.",
     // Halfling
     "Really? A halfling rogue? Seems like you're playing it safe.",
     // Gerblin
     "You're small, sneaky, and green. Why'd you decide to become an adventurer?",
     // Lizardborn
-    "You're like a snake in the shadows. Only with arms and legs.",
+    "I'm like a snake in the shadows. Only with arms and legs.",
     // Elf
-    "You're graceful, elegant, and maybe a little too full of yourself.",
+    "I'm graceful, elegant, and maybe a little too full of myself.",
     // Cat Person
-    "You're cool, aloof, and covered with floof."
+    "I'm cool, aloof, and covered with floof."
 ]
 
 export const rogueToolTitles = [
@@ -26,17 +26,17 @@ export const rogueToolCatchphrase = 3
 
 export const rogueToolStingerLines = [
     // "Thieves' Tools",
-    "You have an amazing collection of keys, picks, and other tools.",
+    "I have an amazing collection of keys, picks, and other tools.",
     // "Shady Background",
     "We're not saying you're a crook. But you're probably a crook.",
     // "Thirst for Revenge",
-    "The Villain wronged you, and you won't stop until they pay.",
+    "The Villain wronged me, and I won't stop until they pay.",
     // "Catchphrase",
     "Skill and luck aren't nearly as important as a good catchphrase.",
     // "Conspiracy Theories",
-    "You're always prepared for the worst.",
+    "I'm always prepared for the worst.",
     // "Dumb Luck",
-    "Things just seem to go your way.",
+    "Things just seem to go my way.",
 ]
 
 export const rogueAssistTitles = [
@@ -52,13 +52,13 @@ export const rogueAssistStingerLines = [
     // "Wit and Charm",
     "In dangerous situations, the important thing is to lighten the mood.",
     // "Sleight of Hand",
-    "You're equally skilled at picking pockets and close-up magic.",
+    "I'm equally skilled at picking pockets and close-up magic.",
     // "Dagger",
     "Because many problems can be solved with a knife in the back.",
     // "Constructive Criticism",
-    "You're just trying to be helpful.",
+    "I'm just trying to be helpful.",
     // "Gold",
-    "You'd be surprised how often you can buy your way out of trouble.",
+    "You'd be surprised how often I can buy my way out of trouble.",
     // "Even Dumber Luck",
     "Seriously, how are you still even alive?",
 ]
