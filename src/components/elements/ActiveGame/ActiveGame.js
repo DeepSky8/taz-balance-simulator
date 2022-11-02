@@ -48,7 +48,6 @@ import {
     updateCompletedChallengesRelic,
     updateUncompletedChallengesLocation,
     updateCompletedChallengesLocation,
-    updateActiveCharacterID,
     updateTeamArrayCharObject,
     removeTeamArrayCharObject,
 } from "../../../actions/localActions";
@@ -62,7 +61,6 @@ const ActiveGame = () => {
 
     const [cloudState, dispatchCloudState] = useReducer(cloudReducer, defaultCloudState)
     const [localState, dispatchLocalState] = useReducer(localStateReducer, defaultLocalState)
-
 
     // State guards
     useEffect(() => {

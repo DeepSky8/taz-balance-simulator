@@ -120,9 +120,10 @@ const defaultCloudState = {
     missionNoteArray: [
         //{
         // uid
-        // currentCharacterID
+        // charID
         // charName
         // notes
+        // type
         //}
     ]
 }

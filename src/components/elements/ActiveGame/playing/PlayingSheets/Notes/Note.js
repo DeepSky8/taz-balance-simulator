@@ -1,20 +1,25 @@
 import React from "react";
 
-const Note = ({ note, charName, setNote, saveNote, placeholderText, id, type }) => {
+const Note = ({ note, setNote, saveNote }) => {
+  const charNotePlaceholder = 'Character-specific notes (accessible on all missions)'
+  const missionNotePlaceholder = 'Mission-specific notes (accessible only on this mission)'
+  const missionNoteType = 'Mission'
+  // const charNoteType = 'Character'
+
   return (
     <span>
-      <label htmlFor={id}>{charName}'s {type} Notes: </label>
+      <label htmlFor={note.charID}>{note.charName}'s {note.genre} Notes: </label>
       <div>
         <textarea
-          id={id}
-          name={id}
+          id={note.charID}
+          name={note.charID}
           type="text"
           rows='6'
           columns='60'
-          placeholder={placeholderText}
-          value={note}
+          placeholder={note.genre === missionNoteType ? missionNotePlaceholder : charNotePlaceholder}
+          value={note.notes}
           onChange={(e) => {
-            setNote(e.target.value, id)
+            setNote(e.target.value)
           }}
           onBlur={() => { saveNote() }}
         />

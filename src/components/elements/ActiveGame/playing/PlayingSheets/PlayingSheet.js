@@ -12,71 +12,118 @@ import ToolDisplay from "./AttributeDisplay/ToolDisplay/ToolDisplay";
 import Note from "./Notes/Note";
 import { auth } from "../../../../../firebase/firebase";
 import { startUpdateMissionNoteArray } from "../../../../../actions/cloudActions";
-import MissionNotes from "./Notes/MissionNotes";
+import { defaultNotePad, noteReducer } from "../../../../../reducers/noteReducer";
+import { clearNote, receivedNote, setNoteAuth, setNoteText } from "../../../../../actions/noteActions";
 
 
 const PlayingSheet = ({ cloudState, localState }) => {
+  let location = useLocation()
+  const pageCharID = location.pathname.split("/")[4]
+  const charIndex = localState.teamCharArray.findIndex((char) =>
+    char.charID === pageCharID
+  )
+  const pageCharName = location.pathname.split("/")[3]
   const tokenAvailable = 'Action Token available'
   const tokenSpent = 'Action Token spent'
-  const charNotePlaceholder = 'Character-specific notes (accessible on all missions)'
-  const missionNotePlaceholder = 'Mission-specific notes (accessible only on this mission)'
+  const missionNoteType = 'Mission'
+  const charNoteType = 'Character'
+
   const [charState, dispatchCharState] = useReducer(charReducer, defaultCharState)
+
   const [hasToken, setHasToken] = useState(false)
-  const [charNote, setCharNote] = useState('')
-  const [playerMissionNoteArray, setLocalMissionNoteArray] = useState(
-    [{
-      uid: auth.currentUser.uid,
-      currentCharacterID: localState.localCharacterID,
-      charName: localState.localCharacter.charName,
-      notes: ''
-    }]
-  )
-  let location = useLocation()
-  let pageCharID = location.pathname.split("/")[4]
-  const charIndex = localState.teamCharArray.findIndex((char) => {
-    return char.charID === pageCharID
-  })
+  const [charNote, setCharNote] = useReducer(noteReducer, defaultNotePad)
+  const [missionNote, dispatchMissionNote] = useReducer(noteReducer, defaultNotePad)
 
 
-  const updateMissionNote = (text, charID) => {
-    // Save all mission notes made when playing other characters
+
+
+
+  const updateMissionNote = (text) => {
+    // Retain all mission notes made when playing other characters
     // removing the single note made while playing this character
     // then concat a new note onto the array
     // containing the new text of the note
 
-    if (localState.localCharacterID === charID) {
-      const removedOldNote = playerMissionNoteArray.filter((note) => {
-        return note.currentCharacterID !== localState.localCharacterID
-      })
-
-      setLocalMissionNoteArray([{
-        uid: auth.currentUser.uid,
-        currentCharacterID: localState.localCharacterID,
-        charName: localState.localCharacter.charName,
-        notes: text
-      }].concat(removedOldNote))
+    if (pageCharID === localState.localCharacterID) {
+      dispatchMissionNote(setNoteText(text))
     }
+
+
+
+
+
+    // if (localState.localCharacterID === charID) {
+    //   setPlayerMissionNote(
+    //     {
+    //       uid: auth.currentUser.uid,
+    //       currentCharacterID: localState.localCharacterID,
+    //       charName: pageCharName,
+    //       notes: text
+    //     })
+    // }
+
+
+
+    // const removedOldNote = playerMissionNoteArray.filter((note) =>
+    //   note.currentCharacterID !== localState.localCharacterID
+    // )
+
+    // setPlayerMissionNoteArray([{
+    //   uid: auth.currentUser.uid,
+    //   currentCharacterID: localState.localCharacterID,
+    //   charName: localState.localCharacter.charName,
+    //   notes: text
+    // }].concat(removedOldNote))
 
 
   }
 
   const saveMissionNote = () => {
-    const otherMissionNotes = cloudState.missionNoteArray.filter((note) => {
-      return note.uid !== auth.currentUser.uid
-    })
-    const newNoteArray = otherMissionNotes.concat(playerMissionNoteArray)
-    startUpdateMissionNoteArray(localState.hostKey, newNoteArray)
+
+    if (pageCharID === localState.localCharacterID) {
+      const otherMissionNotes = cloudState.missionNoteArray.filter((note) =>
+        note.uid !== auth.currentUser.uid
+      )
+      const newNoteArray = otherMissionNotes.concat([missionNote])
+      startUpdateMissionNoteArray(localState.hostKey, newNoteArray)
+    }
+
   }
 
-  // Set localMissionNoteArray with all notes that match player uid
+  // missionNote
   useEffect(() => {
-    const receivedMissionNoteArray = cloudState.missionNoteArray.filter((note) => {
-      return note.uid === auth.currentUser.uid
-    })
-    if (receivedMissionNoteArray.length > 0) {
-      setLocalMissionNoteArray(receivedMissionNoteArray)
+    // Clear note contents
+    dispatchMissionNote(clearNote())
+    // Get all notes from cloudState, filtering on the current character displayed
+    const tempMissionNoteArray = cloudState.missionNoteArray.filter((note) =>
+      note.charID === pageCharID
+    )
+
+    // If a single note for the current displayed character exists
+    // store that note in the note reducer
+    if (tempMissionNoteArray.length === 1) {
+      dispatchMissionNote(receivedNote(tempMissionNoteArray[0]))
+
+    } else {
+      // If a single note does not exists, and player is viewing their
+      // character's page, create a blank note for that character in the reducer
+      if (pageCharID === localState.localCharacterID) {
+
+        dispatchMissionNote(
+          setNoteAuth(
+            auth.currentUser.uid,
+            pageCharID,
+            pageCharName,
+            missionNoteType
+          ))
+      }
     }
-  }, [cloudState.missionNoteArray])
+
+  }, [cloudState.missionNoteArray, pageCharID])
+
+
+  useEffect(()=>{},[])
+
 
   // set local character state
   useEffect(() => {
@@ -117,12 +164,10 @@ const PlayingSheet = ({ cloudState, localState }) => {
       <ClassDisplay charState={charState} />
       <ToolDisplay charState={charState} />
       <AssistDisplay charState={charState} />
-      <MissionNotes
-        playerMissionNoteArray={playerMissionNoteArray}
+      <Note
+        note={missionNote}
         setNote={updateMissionNote}
         saveNote={saveMissionNote}
-        placeholderText={missionNotePlaceholder}
-        type={'Mission'}
       />
 
     </span>
@@ -131,11 +176,14 @@ const PlayingSheet = ({ cloudState, localState }) => {
 
 export default PlayingSheet
 
-// <Note
-// note={localMissionNoteArray.notes}
+
+
+
+
+// <MissionNotes
+// playerMissionNoteArray={playerMissionNoteArray}
 // setNote={updateMissionNote}
 // saveNote={saveMissionNote}
 // placeholderText={missionNotePlaceholder}
-// id={localMissionNoteArray.uid}
 // type={'Mission'}
 // />
