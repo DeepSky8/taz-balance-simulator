@@ -1,13 +1,13 @@
 import React from "react";
 
-const Note = ({ note, setNote, saveNote }) => {
+const Note = ({ note, updateNote, saveNote }) => {
   const charNotePlaceholder = 'Character-specific notes (accessible on all missions)'
   const missionNotePlaceholder = 'Mission-specific notes (accessible only on this mission)'
   const missionNoteType = 'Mission'
   // const charNoteType = 'Character'
 
   return (
-    <span>
+    <span className="noteContainer">
       <label htmlFor={note.charID}>{note.charName}'s {note.genre} Notes: </label>
       <div>
         <textarea
@@ -19,7 +19,7 @@ const Note = ({ note, setNote, saveNote }) => {
           placeholder={note.genre === missionNoteType ? missionNotePlaceholder : charNotePlaceholder}
           value={note.notes}
           onChange={(e) => {
-            setNote(e.target.value)
+            updateNote(e.target.value)
           }}
           onBlur={() => { saveNote() }}
         />

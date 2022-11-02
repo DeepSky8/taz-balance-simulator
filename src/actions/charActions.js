@@ -54,6 +54,27 @@ export const editCharacter = (charObject) => ({
     charObject
 })
 
+export const setCharNote = (uid, notes, genre) => ({
+    type: 'SET_CHAR_NOTE',
+    uid,
+    notes,
+    genre
+})
+
+export const setCharNoteAuth = (uid, genre) => ({
+    type: 'SET_CHAR_NOTE_AUTH',
+    uid,
+    genre
+})
+
+export const setCharNoteText = (notes) => ({
+    type: 'SET_CHAR_NOTE_TEXT',
+    notes
+})
+
+export const clearCharNote = () => ({
+    type: 'CLEAR_CHAR_NOTE'
+})
 
 // Cloud Actions
 
@@ -92,7 +113,16 @@ export const startRemoveCharacter = (uid, charID) => {
     updates['characters/' + uid + "/" + charID] = null
     update(ref(db), updates)
         .catch((error) => {
-            console.log('Error when saving retiring character:', error)
+            console.log('Error when retiring character:', error)
+        })
+}
+
+export const startUpdateCharNote = (uid, charID, charNote) => {
+    const updates = {}
+    updates['characters/' + uid + "/" + charID + '/charNote'] = charNote
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Error when updating character note:', error)
         })
 }
 

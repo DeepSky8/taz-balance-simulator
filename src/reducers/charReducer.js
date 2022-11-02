@@ -1,3 +1,5 @@
+import { defaultNotePad } from "./noteReducer"
+
 const defaultCharState = {
     showAlerts: false,
     changeClass: true,
@@ -7,7 +9,14 @@ const defaultCharState = {
     raceCode: 0,
     toolCode: 7,
     assistCode: 7,
-    charNotes: '',
+    charNote: {
+        ...defaultNotePad
+        // uid: '',
+        // charID: '',
+        // charName: '',
+        // notes: '',
+        // genre: '',
+    },
     lootPoints: 0,
     charKostco: [],
     displayChars: true,
@@ -54,6 +63,7 @@ const charReducer = (state, action) => {
             }
         case 'SET_CHAR_STATE':
             return {
+                ...defaultCharState,
                 ...state,
                 ...action.charObject,
                 displayChars: false
@@ -100,11 +110,54 @@ const charReducer = (state, action) => {
                 ...action.charObject,
                 changeClass: false
             }
-
         case 'SET_CHAR_NAME':
             return {
                 ...state,
                 charName: action.charName
+            }
+        case 'SET_CHAR_NOTE':
+            return {
+                ...defaultCharState,
+                ...state,
+                charNote: {
+                    uid: action.uid,
+                    charID: state.charID,
+                    charName: state.charName,
+                    notes: action.notes,
+                    genre: action.genre
+                }
+            }
+        case 'SET_CHAR_NOTE_AUTH':
+            return {
+                ...defaultCharState,
+                ...state,
+                charNote: {
+                    uid: action.uid,
+                    charID: state.charID,
+                    charName: state.charName,
+                    notes: (state.notes ? state.notes : defaultCharState.charNote.notes),
+                    genre: action.genre
+                }
+            }
+        case 'SET_CHAR_NOTE_TEXT':
+            return {
+                ...defaultCharState,
+                ...state,
+                charNote: {
+                    uid: state.uid,
+                    charID: state.charID,
+                    charName: state.charName,
+                    notes: action.notes,
+                    genre: state.genre
+                }
+            }
+        case 'CLEAR_CHAR_NOTE':
+            return {
+                ...defaultCharState,
+                ...state,
+                charNote: {
+                    ...defaultNotePad
+                }
             }
         // Bard Actions
         case 'SET_BARD_INSTRUMENT':

@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { charReducer, defaultCharState } from "../../../../../reducers/charReducer";
 import CharStats from "../../../CharacterSheet/AttributePickerElements/CharStats";
 import { useReducer } from "react";
-import { setCharState } from "../../../../../actions/charActions";
+import { setCharNoteAuth, setCharState, setNoCurrentChar, startUpdateCharNote } from "../../../../../actions/charActions";
 import SpecialAbility from "../../../CharacterSheet/AttributePickerElements/SpecialAbility";
 import ClassDisplay from "./AttributeDisplay/ClassDisplay/ClassDisplay";
 import { charTitles } from "../../../CharacterSheet/classes/charInfo";
@@ -14,6 +14,7 @@ import { auth } from "../../../../../firebase/firebase";
 import { startUpdateMissionNoteArray } from "../../../../../actions/cloudActions";
 import { defaultNotePad, noteReducer } from "../../../../../reducers/noteReducer";
 import { clearNote, receivedNote, setNoteAuth, setNoteText } from "../../../../../actions/noteActions";
+import NotesFrame from "./Notes/NotesFrame";
 
 
 const PlayingSheet = ({ cloudState, localState }) => {
@@ -25,13 +26,13 @@ const PlayingSheet = ({ cloudState, localState }) => {
   const pageCharName = location.pathname.split("/")[3]
   const tokenAvailable = 'Action Token available'
   const tokenSpent = 'Action Token spent'
-  const missionNoteType = 'Mission'
-  const charNoteType = 'Character'
+  const missionNoteGenre = 'Mission'
+  const charNoteGenre = 'Character'
 
   const [charState, dispatchCharState] = useReducer(charReducer, defaultCharState)
 
   const [hasToken, setHasToken] = useState(false)
-  const [charNote, setCharNote] = useReducer(noteReducer, defaultNotePad)
+  const [charNote, dispatchCharNote] = useReducer(noteReducer, defaultNotePad)
   const [missionNote, dispatchMissionNote] = useReducer(noteReducer, defaultNotePad)
 
 
@@ -39,43 +40,9 @@ const PlayingSheet = ({ cloudState, localState }) => {
 
 
   const updateMissionNote = (text) => {
-    // Retain all mission notes made when playing other characters
-    // removing the single note made while playing this character
-    // then concat a new note onto the array
-    // containing the new text of the note
-
     if (pageCharID === localState.localCharacterID) {
       dispatchMissionNote(setNoteText(text))
     }
-
-
-
-
-
-    // if (localState.localCharacterID === charID) {
-    //   setPlayerMissionNote(
-    //     {
-    //       uid: auth.currentUser.uid,
-    //       currentCharacterID: localState.localCharacterID,
-    //       charName: pageCharName,
-    //       notes: text
-    //     })
-    // }
-
-
-
-    // const removedOldNote = playerMissionNoteArray.filter((note) =>
-    //   note.currentCharacterID !== localState.localCharacterID
-    // )
-
-    // setPlayerMissionNoteArray([{
-    //   uid: auth.currentUser.uid,
-    //   currentCharacterID: localState.localCharacterID,
-    //   charName: localState.localCharacter.charName,
-    //   notes: text
-    // }].concat(removedOldNote))
-
-
   }
 
   const saveMissionNote = () => {
@@ -93,7 +60,7 @@ const PlayingSheet = ({ cloudState, localState }) => {
   // missionNote
   useEffect(() => {
     // Clear note contents
-    dispatchMissionNote(clearNote())
+    // dispatchMissionNote(clearNote())
     // Get all notes from cloudState, filtering on the current character displayed
     const tempMissionNoteArray = cloudState.missionNoteArray.filter((note) =>
       note.charID === pageCharID
@@ -114,7 +81,7 @@ const PlayingSheet = ({ cloudState, localState }) => {
             auth.currentUser.uid,
             pageCharID,
             pageCharName,
-            missionNoteType
+            missionNoteGenre
           ))
       }
     }
@@ -122,15 +89,45 @@ const PlayingSheet = ({ cloudState, localState }) => {
   }, [cloudState.missionNoteArray, pageCharID])
 
 
-  useEffect(()=>{},[])
+  const updateCharNote = (text) => {
+    if (pageCharID === localState.localCharacterID) {
+      dispatchCharNote(setNoteText(text))
+    }
+  }
+
+  const saveCharNote = () => {
+    if (pageCharID === localState.localCharacterID) {
+      startUpdateCharNote(auth.currentUser.uid, localState.localCharacterID, charNote)
+    }
+  }
+
+  // charNote
+  useEffect(() => {
+    // dispatchCharNote(clearNote())
+
+
+    if (charState.charNote.charID === pageCharID) {
+      dispatchCharNote(receivedNote(charState.charNote))
+    } else {
+      dispatchCharNote(
+        setNoteAuth(
+          auth.currentUser.uid,
+          pageCharID,
+          pageCharName,
+          charNoteGenre
+        ))
+    }
+
+  }, [charState.charNote, pageCharID])
 
 
   // set local character state
   useEffect(() => {
+    dispatchCharState(setNoCurrentChar())
     if (charIndex >= 0) {
       dispatchCharState(setCharState(localState.teamCharArray[charIndex]))
     }
-  }, [localState.teamCharArray, charIndex])
+  }, [localState.teamCharArray[charIndex], charIndex, pageCharID])
 
   // set token status
   useEffect(() => {
@@ -164,10 +161,13 @@ const PlayingSheet = ({ cloudState, localState }) => {
       <ClassDisplay charState={charState} />
       <ToolDisplay charState={charState} />
       <AssistDisplay charState={charState} />
-      <Note
-        note={missionNote}
-        setNote={updateMissionNote}
-        saveNote={saveMissionNote}
+      <NotesFrame
+        charNote={charNote}
+        updateCharNote={updateCharNote}
+        saveCharNote={saveCharNote}
+        missionNote={missionNote}
+        updateMissionNote={updateMissionNote}
+        saveMissionNote={saveMissionNote}
       />
 
     </span>
@@ -186,4 +186,10 @@ export default PlayingSheet
 // saveNote={saveMissionNote}
 // placeholderText={missionNotePlaceholder}
 // type={'Mission'}
+// />
+
+// <Note
+// note={missionNote}
+// setNote={updateMissionNote}
+// saveNote={saveMissionNote}
 // />
