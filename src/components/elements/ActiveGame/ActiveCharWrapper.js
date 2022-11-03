@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 
-const ActiveCharWrapper = ({ cloudState, activeCharacter, localCharacter }) => {
+const ActiveCharWrapper = ({ gameStage, localState }) => {
+
+    const localChar = localState.teamCharArray[localState.localIndex]
+    const activeChar = localState.teamCharArray[localState.activeIndex]
     const currentActiveChar = 'Active Character: '
-    const myCharacter = `Playing as ${localCharacter.charName} || `
-    const activeCharName = activeCharacter.charName.toString()
+    const myCharacter = `Playing as ${localChar.charName} || `
+
     const [actionBarText, setActionBarText] = useState(currentActiveChar)
     const missionBriefBy = "Today's briefing conducted by "
     // const createBackstory = 'Create backstory together'
@@ -11,18 +14,18 @@ const ActiveCharWrapper = ({ cloudState, activeCharacter, localCharacter }) => {
 
     useEffect(() => {
 
-        switch (cloudState.active.gameStage) {
+        switch (gameStage) {
             case 'INTRO':
-                setActionBarText(myCharacter + currentActiveChar + activeCharName)
+                setActionBarText(myCharacter + currentActiveChar + activeChar.charName)
                 break;
             case 'BRIEF':
-                setActionBarText(myCharacter + missionBriefBy + activeCharName)
+                setActionBarText(myCharacter + missionBriefBy + activeChar.charName)
                 break;
             // case 'BACKSTORY':
             //     setActionBarText(createBackstory)
             //     break;
             case 'CHALLENGES':
-                setActionBarText(myCharacter + currentActiveChar + activeCharName)
+                setActionBarText(myCharacter + currentActiveChar + activeChar.charName)
                 break;
             case 'END':
                 setActionBarText(gameEnded)
@@ -31,7 +34,8 @@ const ActiveCharWrapper = ({ cloudState, activeCharacter, localCharacter }) => {
                 setActionBarText(currentActiveChar)
                 break;
         }
-    }, [cloudState.active.gameStage, activeCharacter, localCharacter])
+    }, [gameStage, activeChar.charName, localChar.charName
+    ])
 
     return (
         <div>

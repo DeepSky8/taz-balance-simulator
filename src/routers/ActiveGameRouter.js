@@ -54,9 +54,8 @@ const ActiveGameRouter = ({
     return (
         <div>
             <ActiveCharWrapper
-                cloudState={cloudState}
-                activeCharacter={localState.activeCharacter}
-                localCharacter={localState.localCharacter}
+                gameStage={cloudState.active.gameStage}
+                localState={localState}
             />
             <TurnStep
                 cloudState={cloudState}
@@ -70,8 +69,7 @@ const ActiveGameRouter = ({
                         <div>
                             <IntroDescription />
                             <IntroCharacter
-                                character={localState.activeCharacter}
-                                ready={cloudState.ready}
+                                character={localState.teamCharArray[localState.activeIndex]}
                             />
                         </div>
                     }

@@ -50,6 +50,9 @@ import {
     updateCompletedChallengesLocation,
     updateTeamArrayCharObject,
     removeTeamArrayCharObject,
+    updateActiveCharacterID,
+    updateActiveIndex,
+    updateLocalIndex,
 } from "../../../actions/localActions";
 import { defaultLocalState, localStateReducer } from "../../../reducers/localReducer";
 import { stats } from "../CharacterSheet/classes/charInfo";
@@ -347,11 +350,69 @@ const ActiveGame = () => {
 
     }, [cloudState.readyList])
 
+    // Finds index of local and active characters in localState.teamCharArray
+    // and stores these indexes on localState
+    useEffect(() => {
+
+        dispatchLocalState(
+            updateActiveCharacterID(
+                cloudState.active.activeCharID
+            )
+        )
+
+        const activeCharIndex = localState.teamCharArray.findIndex(
+            (charObject) => charObject.charID === cloudState.active.activeCharID)
+        if (activeCharIndex >= 0) {
+            dispatchLocalState(
+                updateActiveIndex(
+                    activeCharIndex
+                )
+            )
+        }
+
+        const localCharIndex = localState.teamCharArray.findIndex(
+            (charObject) => charObject.charID === localState.localCharacterID)
+
+        if (localCharIndex >= 0) {
+            dispatchLocalState(
+                updateLocalIndex(
+                    localCharIndex
+                )
+            )
+        }
+
+    },
+        [
+            localState.localCharacterID,
+            cloudState.active.activeCharID,
+            localState.teamCharArray
+        ]
+    )
+
+
+
+
+
+
+
+
+
+    // Should be able to delete the following after refactor
+
     // Listener for remote activePlayer on cloudState
     useEffect(() => {
-        if (cloudState.active.activeUID &&
-            (cloudState.active.activeUID !== auth.currentUser.uid)
+        if (cloudState.active.activeUID
+            // &&
+            // (cloudState.active.activeUID !== auth.currentUser.uid)
         ) {
+
+            dispatchLocalState(
+                updateActiveCharacterID(
+                    cloudState.active.activeCharID
+                ))
+
+
+
             dispatchLocalState(clearActiveCharacter())
 
             // If the current Active Player is not the local player, 
@@ -372,7 +433,7 @@ const ActiveGame = () => {
                 })
             }
         }
-    }, [cloudState.active.activeUID])
+    }, [cloudState.active.activeCharUID])
 
     // If activePlayer is the local player
     // mirror the localChar state into the activeCharacterObject
@@ -385,6 +446,12 @@ const ActiveGame = () => {
         }
 
     }, [cloudState.active.activeCharID, localState.localCharacterID, localState.localCharacter])
+
+    // Should be able to delete the previous after refactor
+
+
+
+
 
     const calcDisAdvantage = (advantage, disadvantage, rollOne, rollTwo) => {
         let rollResult = 0
@@ -399,10 +466,6 @@ const ActiveGame = () => {
     }
 
     // Calculate current active player strength 
-    // taking into effect current challenge, 
-    // any effects that add to strength,
-    // and dice rolls
-    // and send to cloud
     // This effect is run by the active player
     useEffect(() => {
         if (
@@ -474,32 +537,6 @@ const ActiveGame = () => {
         startUpdateGameStage(localState.hostKey, incrementStage(cloudState.active.gameStage))
         dispatchCloudState(updateReadyStatus(false))
     }
-
-    // Triggered by Ready state and team health changes
-    // evaluate the current stage of the game
-    // and advance it when appropriate
-    // useEffect(() => {
-    //     if (auth.currentUser.uid === cloudState.static.host) {
-    //         if (
-    //             (introStages.includes(cloudState.active.gameStage)) &&
-    //             cloudState.active.ready
-    //         ) {
-    //             incrementGameStage()
-    //         } else if (
-    //             (cloudState.active.teamHealth === 0) &&
-    //             cloudState.active.ready
-    //         ) {
-    //             incrementGameStage()
-    //         } else if (
-    //             ((cloudState.active.progressRelic > 10) &&
-    //                 (cloudState.active.progressVillain > 10 || cloudState.active.progressLocation > 10))
-    //         ) {
-    //             incrementGameStage()
-    //         }
-    //     }
-
-
-    // }, [cloudState.active.ready, cloudState.active.teamHealth])
 
     // If the cloud-stored text indicating which challenge has been selected changes
     // or if the challenge which has been selected _itself_ changes

@@ -8,9 +8,19 @@ export const updateLocalCharacterID = (localCharacterID) => ({
     localCharacterID
 })
 
+export const updateLocalIndex = (localIndex) => ({
+    type: 'UPDATE_LOCAL_INDEX',
+    localIndex
+})
+
 export const updateActiveCharacterID = (activeCharacterID) => ({
     type: 'UPDATE_ACTIVE_CHARACTER_ID',
     activeCharacterID
+})
+
+export const updateActiveIndex = (activeIndex) => ({
+    type: 'UPDATE_ACTIVE_INDEX',
+    activeIndex
 })
 
 export const updateLocalCharacter = (localCharacter) => ({

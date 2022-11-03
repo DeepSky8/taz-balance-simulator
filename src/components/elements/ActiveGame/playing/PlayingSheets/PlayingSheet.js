@@ -1,19 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useReducer } from "react";
+import { auth } from "../../../../../firebase/firebase";
 import { useLocation } from "react-router-dom";
 import { charReducer, defaultCharState } from "../../../../../reducers/charReducer";
+import { defaultNotePad, noteReducer } from "../../../../../reducers/noteReducer";
 import CharStats from "../../../CharacterSheet/AttributePickerElements/CharStats";
-import { useReducer } from "react";
-import { setCharNoteAuth, setCharState, setNoCurrentChar, startUpdateCharNote } from "../../../../../actions/charActions";
+import {
+  setCharState,
+  setNoCurrentChar,
+  startUpdateCharNote
+} from "../../../../../actions/charActions";
 import SpecialAbility from "../../../CharacterSheet/AttributePickerElements/SpecialAbility";
 import ClassDisplay from "./AttributeDisplay/ClassDisplay/ClassDisplay";
 import { charTitles } from "../../../CharacterSheet/classes/charInfo";
 import AssistDisplay from "./AttributeDisplay/AssistDisplay/AssistDisplay";
 import ToolDisplay from "./AttributeDisplay/ToolDisplay/ToolDisplay";
-import Note from "./Notes/Note";
-import { auth } from "../../../../../firebase/firebase";
 import { startUpdateMissionNoteArray } from "../../../../../actions/cloudActions";
-import { defaultNotePad, noteReducer } from "../../../../../reducers/noteReducer";
-import { clearNote, receivedNote, setNoteAuth, setNoteText } from "../../../../../actions/noteActions";
+import {
+  receivedNote,
+  setNoteAuth,
+  setNoteText
+} from "../../../../../actions/noteActions";
 import NotesFrame from "./Notes/NotesFrame";
 
 

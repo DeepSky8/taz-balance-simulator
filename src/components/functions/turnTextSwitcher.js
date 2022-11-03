@@ -36,10 +36,11 @@ const rollingDice = 'Rolling the Dice'
 
 const turnTextSwitcher = (cloudState, localState, activeAssistPlayer) => {
 
-    // console.log('stages: ', gameStage, briefingStage, turnStage)
+    const activeChar = localState.teamCharArray[localState.activeIndex]
+
     switch (cloudState.active.gameStage) {
         case 'INTRO':
-            return introChar + localState.activeCharacter.charName + clickToPassTurn;
+            return introChar + activeChar.charName + clickToPassTurn;
         case 'BRIEF':
             switch (cloudState.backstory.briefingStage) {
                 case 'VILLAIN':
@@ -63,7 +64,7 @@ const turnTextSwitcher = (cloudState, localState, activeAssistPlayer) => {
                         return engageChallenge;
                     } else if (selector !== '') {
                         const cardName = localState.currentChallenge.cardName
-                        return localState.activeCharacter.charName + challengeSelected + cardName;
+                        return activeChar.charName + challengeSelected + cardName;
                     }
                     break;
                 case 'ITEMS':
@@ -74,7 +75,7 @@ const turnTextSwitcher = (cloudState, localState, activeAssistPlayer) => {
                 case 'PREASSIST':
                     return askAssist;
                 case 'SCENE':
-                    return setScene1 + localState.activeCharacter.charName + setScene2;
+                    return setScene1 + activeChar.charName + setScene2;
                 case 'PRE_ASSIST_SCENE':
                     return activeAssistPlayer + assistScene;
                 case 'ADD_ASSIST':
@@ -82,9 +83,9 @@ const turnTextSwitcher = (cloudState, localState, activeAssistPlayer) => {
 
                 case 'ACTIONONE':
                     const tokenAction = () => {
-                        if (localState.activeCharacter.classCode === 3) {
+                        if (activeChar.classCode === 3) {
                             return actionOneWarrior
-                        } else if (localState.activeCharacter.classCode === 4) {
+                        } else if (activeChar.classCode === 4) {
                             return actionOneWizard
                         }
                     }
@@ -121,7 +122,7 @@ const turnTextSwitcher = (cloudState, localState, activeAssistPlayer) => {
                 case 'KOSTCO':
                     return kostco;
                 case 'PASS':
-                    return passTheTurn + localState.activeCharacter.charName;
+                    return passTheTurn + activeChar.charName;
                 case 'default':
                     return 'uh oh, broked again'
             }

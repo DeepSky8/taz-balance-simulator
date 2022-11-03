@@ -50,7 +50,7 @@ const CharNav = ({ cloudState, localState, children }) => {
         })}
       </nav>
 
-    </div >
+    </div>
   )
 }
 

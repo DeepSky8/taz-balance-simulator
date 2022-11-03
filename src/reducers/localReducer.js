@@ -5,7 +5,15 @@ const defaultLocalState = {
     // The hostKey reducer concats two strings with a separating /, which serves as a drop-in
     // when accessing the savedGame in Firebase
     hostKey: '',
+
+    activeCharacterID: '',
+    activeIndex: null,
+    activeCharacter: {
+        ...defaultCharState
+    },
+
     localCharacterID: '',
+    localIndex: null,
     localCharacter: {
         ...defaultCharState
         // showAlerts: false,
@@ -51,10 +59,7 @@ const defaultLocalState = {
         // wizardAssistFame: '',
         // wizardAssistFameHelps: '',
     },
-    activeCharacterID: '',
-    activeCharacter: {
-        ...defaultCharState
-    },
+
     teamCharArray: [],
     currentChallengeKey: '',
     currentChallenge: {
@@ -177,11 +182,23 @@ const localStateReducer = (state, action) => {
                 ...state,
                 localCharacterID: action.localCharacterID
             }
+        case 'UPDATE_LOCAL_INDEX':
+            return {
+                ...defaultLocalState,
+                ...state,
+                localIndex: action.localIndex
+            }
         case 'UPDATE_ACTIVE_CHARACTER_ID':
             return {
                 ...defaultLocalState,
                 ...state,
                 activeCharacterID: action.activeCharacterID
+            }
+        case 'UPDATE_ACTIVE_INDEX':
+            return {
+                ...defaultLocalState,
+                ...state,
+                activeIndex: action.activeIndex
             }
         case 'UPDATE_LOCAL_CHARACTER':
             return {
@@ -278,24 +295,22 @@ const localStateReducer = (state, action) => {
                 uncompletedChallengeArrayLocation: action.uncompletedChallengeArrayLocation
             }
         case 'UPDATE_TEAM_CHAR':
-            const charIndex = state.teamCharArray.findIndex((storedCharObject) => {
-                return storedCharObject.charID === action.charObject.charID
-            })
+            const charIndex = state.teamCharArray.findIndex(
+                storedCharObject => storedCharObject.charID === action.charObject.charID
+            )
             const updatedTeamCharArray = [];
             if (charIndex === -1) {
-                (updatedTeamCharArray.push(...state.teamCharArray));
+                updatedTeamCharArray.push(...state.teamCharArray);
+                updatedTeamCharArray.push(action.charObject);
+            } else if (charIndex === (state.teamCharArray.length - 1)) {
+                (updatedTeamCharArray
+                    .push(...state.teamCharArray.slice(0, charIndex)));
                 updatedTeamCharArray.push(action.charObject);
             } else {
-                if (charIndex === (state.teamCharArray.length - 1)) {
-                    (updatedTeamCharArray
-                        .push(state.teamCharArray.slice(0, charIndex)));
-                    updatedTeamCharArray.push(action.charObject);
-                } else {
-                    (updatedTeamCharArray
-                        .push(...state.teamCharArray.slice(0, charIndex)));
-                    updatedTeamCharArray.push(action.charObject);
-                    updatedTeamCharArray.push(state.teamCharArray.slice(charIndex + 1));
-                }
+                (updatedTeamCharArray
+                    .push(...state.teamCharArray.slice(0, charIndex)));
+                updatedTeamCharArray.push(action.charObject);
+                updatedTeamCharArray.push(...state.teamCharArray.slice(charIndex + 1));
             }
             return {
                 ...defaultLocalState,
@@ -303,13 +318,11 @@ const localStateReducer = (state, action) => {
                 teamCharArray: updatedTeamCharArray,
             }
         case 'REMOVE_TEAM_CHAR':
-            const charIDIndex = state.teamCharArray.findIndex((storedCharObject) => {
-                return storedCharObject.charID === action.charID
-            })
+            const charIDIndex = state.teamCharArray.findIndex(
+                (storedCharObject) => storedCharObject.charID === action.charID)
             if (charIDIndex !== -1) {
-                updatedTeamCharArray.push(state.teamCharArray.filter((storedCharObject) => {
-                    return storedCharObject.charID !== action.charID
-                }))
+                updatedTeamCharArray.push(...state.teamCharArray.filter(
+                    (storedCharObject) => storedCharObject.charID !== action.charID))
             }
             return {
                 ...defaultLocalState,

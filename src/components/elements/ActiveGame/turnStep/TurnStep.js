@@ -9,7 +9,7 @@ import { briefingStagesArray, directionArray } from "../briefingStage/briefingSt
 const TurnStep = ({ cloudState, localState }) => {
     const [stepText, setStepText] = useState('Welcome to TAZ Balance!')
     const [activeAssistPlayer, setActiveAssistPlayer] = useState('Friend')
-
+    
     useEffect(() => {
         if (cloudState.activeAssistTokens.length > 0) {
             setActiveAssistPlayer(cloudState.activeAssistTokens[(cloudState.activeAssistTokens.length - 1)].charName)
@@ -26,7 +26,7 @@ const TurnStep = ({ cloudState, localState }) => {
                 activeAssistPlayer)
         )
     }, [
-        localState.activeCharacter,
+        localState.activeCharacterID,
         localState.currentChallenge,
         cloudState.active.gameStage,
         cloudState.backstory.briefingStage,
@@ -63,15 +63,3 @@ const TurnStep = ({ cloudState, localState }) => {
 }
 
 export default TurnStep
-
-// {cloudState.active.gameStage === 'BRIEF' &&
-// cloudState.static.host === auth.currentUser.uid &&
-// <NextDeck
-//     cloudState={cloudState}
-//     localState={localState}
-// />}
-
-// <PrevDeck
-// cloudState={cloudState}
-// localState={localState}
-// />

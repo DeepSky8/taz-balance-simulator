@@ -14,7 +14,11 @@ const ActionTokens = ({ cloudState, localState }) => {
     const [acceptingTokens, setAcceptingTokens] = useState(false)
     const [displayActionTokens, setDisplayActionTokens] = useState(false)
 
+
+
     useEffect(() => {
+        const activeChar = localState.teamCharArray[localState.activeIndex]
+
         // Monitor the turnStage; if an action token is spent
         // to assist another player, add this action token to a special array
         // so that the assistance can be described by the assisting player
@@ -75,13 +79,13 @@ const ActionTokens = ({ cloudState, localState }) => {
                         (
                             (turnStagesArray[7] === cloudState.currentTurn.turnStage)
                             &&
-                            (tokenClassesActionOne.includes(localState.activeCharacter.classCode))
+                            (tokenClassesActionOne.includes(activeChar.classCode))
                         )
                         ||
                         (
                             (turnStagesArray[16] === cloudState.currentTurn.turnStage)
                             &&
-                            (tokenClassesActionTwo.includes(localState.activeCharacter.classCode))
+                            (tokenClassesActionTwo.includes(activeChar.classCode))
                         )
                     )
                 }
