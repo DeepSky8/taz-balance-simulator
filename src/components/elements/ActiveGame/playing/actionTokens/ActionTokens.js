@@ -8,6 +8,7 @@ import challengeItemStages from "../../turnStep/turnStepArrays/challengeItemStag
 import turnStagesArray from "../../turnStep/turnStepArrays/turnStagesArray";
 import actionStages from "../../turnStep/turnStepArrays/actionStages";
 import { tokenClassesActionOne, tokenClassesActionTwo } from "../../../CharacterSheet/classes/charInfo";
+import { defaultCharState } from "../../../../../reducers/charReducer";
 
 const ActionTokens = ({ cloudState, localState }) => {
     const [isAssistToken, setIsAssistToken] = useState(false)
@@ -15,9 +16,13 @@ const ActionTokens = ({ cloudState, localState }) => {
     const [displayActionTokens, setDisplayActionTokens] = useState(false)
 
 
-
     useEffect(() => {
-        const activeChar = localState.teamCharArray[localState.activeIndex]
+        let activeChar = {
+            ...defaultCharState
+        }
+        if (localState.teamCharArray && localState.activeIndex) {
+            activeChar = localState.teamCharArray[localState.activeIndex]
+        }
 
         // Monitor the turnStage; if an action token is spent
         // to assist another player, add this action token to a special array

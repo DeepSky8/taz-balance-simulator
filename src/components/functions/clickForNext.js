@@ -30,10 +30,19 @@ import {
 } from "../elements/CharacterSheet/classes/charInfo";
 import diceRoll from "./diceRoll";
 import { briefingStagesArray, directionArray } from "../elements/ActiveGame/briefingStage/briefingStagesArray";
+import { defaultCharState } from "../../reducers/charReducer";
 
 const clickForNext = ({ cloudState, localState }, direction = directionArray[0]) => {
-
     const activeChar = localState.teamCharArray[localState.activeIndex]
+
+
+
+    // let activeChar = {
+    //     ...defaultCharState
+    // }
+    // if (localState.teamCharArray && localState.activeIndex) {
+    //     activeChar = localState.teamCharArray[localState.activeIndex]
+    // }
 
     const addStoryStrength = () => {
         startAddStoryBonus(localState.hostKey, parseInt(localState.currentChallenge.storyBonus))

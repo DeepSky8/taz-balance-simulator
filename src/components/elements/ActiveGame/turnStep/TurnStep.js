@@ -26,7 +26,8 @@ const TurnStep = ({ cloudState, localState }) => {
                 activeAssistPlayer)
         )
     }, [
-        localState.activeCharacterID,
+        // localState.activeCharacterID,
+        localState.activeIndex,
         localState.currentChallenge,
         cloudState.active.gameStage,
         cloudState.backstory.briefingStage,

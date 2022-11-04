@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 
 const ActiveCharWrapper = ({ gameStage, localState }) => {
-
     const localChar = localState.teamCharArray[localState.localIndex]
     const activeChar = localState.teamCharArray[localState.activeIndex]
     const currentActiveChar = 'Active Character: '

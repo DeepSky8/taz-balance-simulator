@@ -69,7 +69,7 @@ const ActiveGameRouter = ({
                         <div>
                             <IntroDescription />
                             <IntroCharacter
-                                character={localState.teamCharArray[localState.activeIndex]}
+                                localState={localState}
                             />
                         </div>
                     }

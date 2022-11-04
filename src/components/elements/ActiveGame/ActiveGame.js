@@ -362,7 +362,7 @@ const ActiveGame = () => {
 
         const activeCharIndex = localState.teamCharArray.findIndex(
             (charObject) => charObject.charID === cloudState.active.activeCharID)
-        if (activeCharIndex >= 0) {
+        if (activeCharIndex > 0) {
             dispatchLocalState(
                 updateActiveIndex(
                     activeCharIndex
@@ -373,7 +373,7 @@ const ActiveGame = () => {
         const localCharIndex = localState.teamCharArray.findIndex(
             (charObject) => charObject.charID === localState.localCharacterID)
 
-        if (localCharIndex >= 0) {
+        if (localCharIndex > 0) {
             dispatchLocalState(
                 updateLocalIndex(
                     localCharIndex
@@ -417,13 +417,13 @@ const ActiveGame = () => {
 
             // If the current Active Player is not the local player, 
             // establish a listener for the duration of their turn
-            onValue(ref(db, 'characters/' + cloudState.active.activeUID + '/' + cloudState.active.activeCharID),
-                (snapshot) => {
-                    if (snapshot.exists()) {
-                        dispatchLocalState(updateActiveCharacter(snapshot.val()))
-                        // dispatchLocalState(updateActiveCharacterID(snapshot.val().activeCharID))
-                    }
-                })
+            // onValue(ref(db, 'characters/' + cloudState.active.activeUID + '/' + cloudState.active.activeCharID),
+            //     (snapshot) => {
+            //         if (snapshot.exists()) {
+            //             dispatchLocalState(updateActiveCharacter(snapshot.val()))
+            //             // dispatchLocalState(updateActiveCharacterID(snapshot.val().activeCharID))
+            //         }
+            //     })
         }
 
         return () => {

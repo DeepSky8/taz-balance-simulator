@@ -7,13 +7,13 @@ const defaultLocalState = {
     hostKey: '',
 
     activeCharacterID: '',
-    activeIndex: null,
+    activeIndex: 0,
     activeCharacter: {
         ...defaultCharState
     },
 
     localCharacterID: '',
-    localIndex: null,
+    localIndex: 0,
     localCharacter: {
         ...defaultCharState
         // showAlerts: false,
@@ -60,7 +60,13 @@ const defaultLocalState = {
         // wizardAssistFameHelps: '',
     },
 
-    teamCharArray: [],
+    teamCharArray: [
+        {
+            ...defaultCharState,
+            charID: 0,
+            charName: 'Loading...'
+        }
+    ],
     currentChallengeKey: '',
     currentChallenge: {
         ...defaultCardState
@@ -319,10 +325,10 @@ const localStateReducer = (state, action) => {
             }
         case 'REMOVE_TEAM_CHAR':
             const charIDIndex = state.teamCharArray.findIndex(
-                (storedCharObject) => storedCharObject.charID === action.charID)
+                storedCharObject => storedCharObject.charID === action.charID)
             if (charIDIndex !== -1) {
                 updatedTeamCharArray.push(...state.teamCharArray.filter(
-                    (storedCharObject) => storedCharObject.charID !== action.charID))
+                    storedCharObject => storedCharObject.charID !== action.charID))
             }
             return {
                 ...defaultLocalState,
