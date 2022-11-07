@@ -5,66 +5,13 @@ const defaultLocalState = {
     // The hostKey reducer concats two strings with a separating /, which serves as a drop-in
     // when accessing the savedGame in Firebase
     hostKey: '',
-
     activeCharacterID: '',
     activeIndex: 0,
-    activeCharacter: {
-        ...defaultCharState
-    },
-
     localCharacterID: '',
     localIndex: 0,
-    localCharacter: {
-        ...defaultCharState
-        // showAlerts: false,
-        // changeClass: true,
-        // charID: undefined,
-        // charName: '',
-        // classCode: 5,
-        // raceCode: 0,
-        // toolCode: 7,
-        // assistCode: 7,
-        // charNotes: '',
-        // lootPoints: 0,
-        // charKostco: [{}],
-        // displayChars: true,
-        // questCount: 0,
-
-        // humanBardBand: '',
-        // robotBardCreator: '',
-        // robotBardVisual: '',
-        // bardSuperGoal: '',
-        // bardInstrument: '',
-        // bardMusicSkill: '',
-        // dwarfPriestOrigin: '',
-        // gerblinRogueOrigin: '',
-        // humanWarriorOrigin1: '',
-        // humanWarriorOrigin2: '',
-        // humanWarriorOrigin3: '',
-        // dwarfWarriorBeard: '',
-        // undeadWizardOrigin1: '',
-        // undeadWizardOrigin2: '',
-        // undeadWizardOrigin3: '',
-        // priestToolHolySymbol: '',
-        // priestToolMantra: '',
-        // rogueToolCatchphrase: '',
-        // warriorToolArmor: '',
-        // warriorToolBattlecry: '',
-        // wizardToolCatchphrase: '',
-        // priestAssistFame: '',
-        // priestAssistFameHelps: '',
-        // priestAssistHobby: '',
-        // warriorAssistFame: '',
-        // warriorAssistFameHelps: '',
-        // wizardAssistFame: '',
-        // wizardAssistFameHelps: '',
-    },
-
     teamCharArray: [
         {
             ...defaultCharState,
-            charID: 0,
-            charName: 'Loading...'
         }
     ],
     currentChallengeKey: '',

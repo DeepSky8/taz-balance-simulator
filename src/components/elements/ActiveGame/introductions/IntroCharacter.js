@@ -10,13 +10,16 @@ import {
 
 
 const IntroCharacter = ({ localState }) => {
-    let activeChar = {
-        ...defaultCharState
-    }
-    if (localState.teamCharArray && localState.activeIndex) {
-        activeChar = localState.teamCharArray[localState.activeIndex]
-    }
+    // let activeChar = {
+    //     ...defaultCharState
+    // }
+    // if (localState.teamCharArray && zlocalState.activeIndex) {
+    //     activeChar = localState.teamCharArray[localState.activeIndex]
+    // }
 
+
+
+    const activeChar = localState.teamCharArray[localState.activeIndex]
 
     return (
         <div>

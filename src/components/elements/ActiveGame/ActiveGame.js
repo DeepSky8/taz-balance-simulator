@@ -20,7 +20,6 @@ import {
     updateGameStatic,
     updatePlayerList,
     updateReadyList,
-    updateReadyStatus,
     updateStrength,
     clearStrength,
     startSetCharacterStrength,
@@ -33,9 +32,7 @@ import incrementTurn from "../../functions/incrementTurn";
 import challengeDeck from "../../functions/challengeDeck";
 import ActiveGameRouter from "../../../routers/ActiveGameRouter";
 import {
-    clearActiveCharacter,
     clearCurrentChallenge,
-    updateActiveCharacter,
     updateCurrentChallenge,
     updateLocalCharacterID,
     updateHostKey,
@@ -388,69 +385,6 @@ const ActiveGame = () => {
     )
 
 
-
-
-
-
-
-
-
-    // Should be able to delete the following after refactor
-
-    // Listener for remote activePlayer on cloudState
-    useEffect(() => {
-        if (cloudState.active.activeUID
-            // &&
-            // (cloudState.active.activeUID !== auth.currentUser.uid)
-        ) {
-
-            dispatchLocalState(
-                updateActiveCharacterID(
-                    cloudState.active.activeCharID
-                ))
-
-
-
-            dispatchLocalState(clearActiveCharacter())
-
-            // If the current Active Player is not the local player, 
-            // establish a listener for the duration of their turn
-            // onValue(ref(db, 'characters/' + cloudState.active.activeUID + '/' + cloudState.active.activeCharID),
-            //     (snapshot) => {
-            //         if (snapshot.exists()) {
-            //             dispatchLocalState(updateActiveCharacter(snapshot.val()))
-            //             // dispatchLocalState(updateActiveCharacterID(snapshot.val().activeCharID))
-            //         }
-            //     })
-        }
-
-        return () => {
-            if (cloudState.active.activeUID && cloudState.active.activeUID !== auth.currentUser.uid) {
-                cloudState.playerList.forEach((player) => {
-                    off(ref(db, 'characters/' + player.uid + '/' + player.currentCharacterID))
-                })
-            }
-        }
-    }, [cloudState.active.activeCharUID])
-
-    // If activePlayer is the local player
-    // mirror the localChar state into the activeCharacterObject
-    useEffect(() => {
-        if (cloudState.active.activeCharID &&
-            (cloudState.active.activeCharID === localState.localCharacterID)
-        ) {
-            dispatchLocalState(clearActiveCharacter())
-            dispatchLocalState(updateActiveCharacter(localState.localCharacter))
-        }
-
-    }, [cloudState.active.activeCharID, localState.localCharacterID, localState.localCharacter])
-
-    // Should be able to delete the previous after refactor
-
-
-
-
-
     const calcDisAdvantage = (advantage, disadvantage, rollOne, rollTwo) => {
         let rollResult = 0
         if (rollOne) { rollResult = rollOne }
@@ -481,14 +415,9 @@ const ActiveGame = () => {
             if (cloudState.currentTurn.selectedChallenge === 'relic') { currentChallengeTypes.push('Relic') }
 
             // Get the strength info from the active character
-            let baseStrength = 0;
-            let specialStrength = 0;
-            let specialTarget = '';
-            if (localState.activeCharacter.charName) {
-                baseStrength = stats[localState.activeCharacter.classCode].strength;
-                specialStrength = stats[localState.activeCharacter.classCode].specialStrength;
-                specialTarget = stats[localState.activeCharacter.classCode].specialTarget
-            }
+            const baseStrength = stats[localState.teamCharArray[localState.activeIndex].classCode].strength;
+            const specialStrength = stats[localState.teamCharArray[localState.activeIndex].classCode].specialStrength;
+            const specialTarget = stats[localState.teamCharArray[localState.activeIndex].classCode].specialTarget
 
             // If the active character is extra strong against the current challenge
             // use their special strength instead of base strength
@@ -524,17 +453,12 @@ const ActiveGame = () => {
     },
         [
             localState.currentChallenge,
-            localState.activeCharacter,
+            localState.activeIndex,
+            // localState.activeCharacterID,
             cloudState.strength,
             cloudState.currentTurn.rollOne,
             cloudState.currentTurn.rollTwo
         ])
-
-
-    const incrementGameStage = () => {
-        startUpdateGameStage(localState.hostKey, incrementStage(cloudState.active.gameStage))
-        dispatchCloudState(updateReadyStatus(false))
-    }
 
     // If the cloud-stored text indicating which challenge has been selected changes
     // or if the challenge which has been selected _itself_ changes

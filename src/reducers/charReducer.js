@@ -3,8 +3,8 @@ import { defaultNotePad } from "./noteReducer"
 const defaultCharState = {
     showAlerts: false,
     changeClass: true,
-    charID: undefined,
-    charName: '',
+    charID: 'Loading...',
+    charName: 'Loading...',
     classCode: 5,
     raceCode: 0,
     toolCode: 7,

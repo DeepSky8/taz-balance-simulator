@@ -298,6 +298,14 @@ export const stats = [
         postAssist: 1,
         specialStrength: 4,
         specialTarget: 'Magic'
+    },
+    // default
+    {
+        strength: 0,
+        preAssist: 0,
+        postAssist: 0,
+        specialStrength: 0,
+        specialTarget: 'Your mom'
     }
 ]
 

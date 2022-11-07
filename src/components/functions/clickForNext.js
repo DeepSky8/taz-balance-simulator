@@ -798,7 +798,7 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
             switch (cloudState.active.gameStage) {
                 case 'INTRO':
                 case 'BRIEF':
-                    // passTheTurn()
+                    passTheTurn()
                     break;
                 case 'TRANSPORT':
                 case 'CHALLENGES':
