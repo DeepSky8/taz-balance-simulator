@@ -308,6 +308,7 @@ export const startSetReadyFalse = (uid, key) => {
 export const startUpdateGameStage = (hostKey, gameStage) => {
     const updates = {};
     updates['savedGames/' + hostKey + '/active/gameStage'] = gameStage;
+    // updates['savedGames/' + hostKey + '/active/ready'] = false;
     update(ref(db), updates)
         .catch((error) => {
             console.log('Error updating game stages:', error)

@@ -30,7 +30,6 @@ import { auth, db } from "../../../firebase/firebase";
 import { defaultCloudState, cloudReducer } from "../../../reducers/cloudReducer";
 import incrementStage from "../../functions/incrementStage";
 import incrementTurn from "../../functions/incrementTurn";
-import { briefingStagesArray } from "./briefingStage/briefingStagesArray";
 import challengeDeck from "../../functions/challengeDeck";
 import ActiveGameRouter from "../../../routers/ActiveGameRouter";
 import {
@@ -56,8 +55,7 @@ import {
 } from "../../../actions/localActions";
 import { defaultLocalState, localStateReducer } from "../../../reducers/localReducer";
 import { stats } from "../CharacterSheet/classes/charInfo";
-import { gameStageArray } from "../ActiveGame/gameStage/gameStageArray";
-
+import { briefingStagesArray, gameStageArray } from "./stageArrays/stageArrays";
 
 const ActiveGame = () => {
     let navigate = useNavigate()

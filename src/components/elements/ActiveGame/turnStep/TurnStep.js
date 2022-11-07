@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { auth } from "../../../../firebase/firebase";
 import clickForNext from "../../../functions/clickForNext";
 import turnTextSwitcher from "../../../functions/turnTextSwitcher";
-import { briefingStagesArray, directionArray } from "../briefingStage/briefingStagesArray";
+import { briefingStagesArray, directionArray } from "../stageArrays/stageArrays";
 // import NextDeck from './NextDeck';
 // import PrevDeck from './PrevDeck';
 
@@ -49,7 +49,7 @@ const TurnStep = ({ cloudState, localState }) => {
                     Previous
                 </button>
             }
-
+ 
             <button
                 onClick={() => {
                     clickForNext({ cloudState, localState })

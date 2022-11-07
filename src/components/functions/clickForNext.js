@@ -21,7 +21,6 @@ import {
 } from "../../actions/cloudActions"
 import { auth } from "../../firebase/firebase";
 import turnStagesArray from "../elements/ActiveGame/turnStep/turnStepArrays/turnStagesArray";
-import { gameStageArray } from "../elements/ActiveGame/gameStage/gameStageArray"
 import {
     stats,
     tokenClassesActionOne,
@@ -29,19 +28,13 @@ import {
     tokenClassesReclaim
 } from "../elements/CharacterSheet/classes/charInfo";
 import diceRoll from "./diceRoll";
-import { briefingStagesArray, directionArray } from "../elements/ActiveGame/briefingStage/briefingStagesArray";
-import { defaultCharState } from "../../reducers/charReducer";
+import { briefingStagesArray, directionArray, gameStageArray } from "../elements/ActiveGame/stageArrays/stageArrays";
 
 const clickForNext = ({ cloudState, localState }, direction = directionArray[0]) => {
     const activeChar = localState.teamCharArray[localState.activeIndex]
 
-
-
-    // let activeChar = {
-    //     ...defaultCharState
-    // }
-    // if (localState.teamCharArray && localState.activeIndex) {
-    //     activeChar = localState.teamCharArray[localState.activeIndex]
+    // const reloadPage = () => {
+    //     window.location.reload()
     // }
 
     const addStoryStrength = () => {
@@ -172,10 +165,6 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
         startUpdateTeamHealth(localState.hostKey, updatedHealth)
     }
 
-    // const turnIncrement = (stage = incrementTurn(cloudState.currentTurn.turnStage)) => {
-    //     startUpdateTurnStage(localState.hostKey, stage)
-    // }
-
     const passTheTurn = () => {
 
         // The Bard action token is returned at the end of every player's turn
@@ -200,15 +189,19 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
         )
 
         // Check to see if all players are ready for the next turn cycle
+        // AND if the current gameStage is CHALLENGES
         if (
             (cloudState.playerList.length !== 0) &&
             (cloudState.playerList.length <= tempNewReadyList.length)
+            // &&
+            // (cloudState.active.gameState === gameStageArray[3])
         ) {
             // If yes, clear the ready list
             // and return everyone's action tokens
+
             startNullReadyList(localState.hostKey)
             startRESETActionTokens(localState.hostKey, cloudState.playerList)
-
+            // startSetReadyTrue(localState.hostKey)
         }
 
         // turnIncrement()
@@ -276,7 +269,7 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
         const setTRANSPORT = () => {
             return (
                 // If current briefingStage is LOCATION
-                (briefingStagesArray[2] = cloudState.backstory.briefingStage)
+                (briefingStagesArray[2] === cloudState.backstory.briefingStage)
                 &&
                 (direction === directionArray[0])
             )
@@ -289,7 +282,6 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
                 setLOCATION(),
                 setTRANSPORT()
             ]
-
             const returnIndex = trueArray.findIndex(returnValue => returnValue === true)
             return (returnIndex >= briefingStagesArray.length ? 'NEXT' : briefingStagesArray[returnIndex])
         }
@@ -805,14 +797,13 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
         if (activePlayerChecker()) {
             switch (cloudState.active.gameStage) {
                 case 'INTRO':
-                    passTheTurn()
-                    break;
                 case 'BRIEF':
+                    // passTheTurn()
                     break;
                 case 'TRANSPORT':
                 case 'CHALLENGES':
-                    startNullReadyList(localState.hostKey)
-                    startRESETActionTokens(localState.hostKey, cloudState.playerList)
+                    // startNullReadyList(localState.hostKey)
+                    // startRESETActionTokens(localState.hostKey, cloudState.playerList)
                     break;
                 default:
                     console.log('hit default game stage on clickForNext, pls fix')
@@ -828,8 +819,7 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
                 // If the game is in INTRO stage
                 (gameStageArray[0] === cloudState.active.gameStage)
                 &&
-                // If NOT all players have indicated they are ready
-                (cloudState.readyList.length !== cloudState.playerList.length)
+                (cloudState.playerList.length > (cloudState.readyList.length + 1))
             )
         }
 
@@ -838,8 +828,10 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
                 // If current gameStage is INTRO
                 (gameStageArray[0] === cloudState.active.gameStage)
                 &&
-                // If all players have indicated they are ready
-                (cloudState.readyList.length === cloudState.playerList.length)
+                // If all but one players have indicated they are ready
+                // (as this is clicked by the last player to indicate they too are ready to move on)
+                (cloudState.playerList.length <= (cloudState.readyList.length + 1))
+
             )
         }
 
@@ -892,9 +884,8 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
                 setTRANSPORT(),
                 false,
                 setEND(),
-                false
+                true
             ]
-            console.log('game stage true array', trueArray)
             const returnIndex = trueArray.findIndex(returnValue => returnValue === true)
             return (returnIndex >= gameStageArray.length ? 'default' : gameStageArray[returnIndex])
         }
@@ -908,6 +899,8 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
 
 
     if (activePlayerChecker()) {
+        const newGameStage = gameStageSelection()
+
         switch (cloudState.active.gameStage) {
             case 'TRANSPORT':
                 break;
@@ -917,9 +910,13 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
                 startUpdateTurnStage(localState.hostKey, newTurnStage)
                 break;
             case 'INTRO':
+                // const updateGameStage = gameStageSelection()
+                startUpdateGameStage(localState.hostKey, newGameStage)
+                gameStageActions()
+                break;
             case 'END':
                 gameStageActions()
-                const newGameStage = gameStageSelection()
+                // const newGameStage = gameStageSelection()
                 startUpdateGameStage(localState.hostKey, newGameStage)
                 break;
             case 'BRIEF':

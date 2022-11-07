@@ -175,6 +175,8 @@ const defaultLocalState = {
 }
 
 const localStateReducer = (state, action) => {
+    const updatedTeamCharArray = [];
+
     switch (action.type) {
         case 'UPDATE_HOSTKEY':
             return {
@@ -304,7 +306,7 @@ const localStateReducer = (state, action) => {
             const charIndex = state.teamCharArray.findIndex(
                 storedCharObject => storedCharObject.charID === action.charObject.charID
             )
-            const updatedTeamCharArray = [];
+            // const updatedTeamCharArray = [];
             if (charIndex === -1) {
                 updatedTeamCharArray.push(...state.teamCharArray);
                 updatedTeamCharArray.push(action.charObject);

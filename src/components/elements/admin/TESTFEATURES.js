@@ -1,7 +1,7 @@
 import React from "react"
 import { startUpdateGameStage, startUpdateTurnStage } from "../../../actions/cloudActions"
+import { gameStageArray } from "../ActiveGame/stageArrays/stageArrays"
 import turnStagesArray from "../ActiveGame/turnStep/turnStepArrays/turnStagesArray"
-import { gameStageArray } from "../ActiveGame/gameStage/gameStageArray"
 
 
 const TESTFEATURES = ({ currentStage, gameStage, hostKey, resetStages, stepStage, resetTurnStage, resetActionTokens }) => {
