@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import { auth } from "../../../../firebase/firebase";
 import clickForNext from "../../../functions/clickForNext";
 import turnTextSwitcher from "../../../functions/turnTextSwitcher";
-import { briefingStagesArray, directionArray } from "../stageArrays/stageArrays";
+import { briefingStagesArray, directionArray, gameStageArray } from "../stageArrays/stageArrays";
 // import NextDeck from './NextDeck';
 // import PrevDeck from './PrevDeck';
 
 const TurnStep = ({ cloudState, localState }) => {
     const [stepText, setStepText] = useState('Welcome to TAZ Balance!')
     const [activeAssistPlayer, setActiveAssistPlayer] = useState('Friend')
-    
+
     useEffect(() => {
         if (cloudState.activeAssistTokens.length > 0) {
             setActiveAssistPlayer(cloudState.activeAssistTokens[(cloudState.activeAssistTokens.length - 1)].charName)
@@ -38,7 +38,7 @@ const TurnStep = ({ cloudState, localState }) => {
 
     return (
         <div>
-            {cloudState.active.gameStage === 'BRIEF' &&
+            {cloudState.active.gameStage === gameStageArray[1] &&
                 cloudState.static.host === auth.currentUser.uid &&
                 <button
                     onClick={() => {
@@ -49,11 +49,16 @@ const TurnStep = ({ cloudState, localState }) => {
                     Previous
                 </button>
             }
- 
+
             <button
                 onClick={() => {
                     clickForNext({ cloudState, localState })
                 }}
+                disabled={
+                    cloudState.active.gameStage === gameStageArray[1]
+                    &&
+                    cloudState.static.host !== auth.currentUser.uid
+                }
             >
                 {stepText}
             </button>

@@ -1,10 +1,10 @@
 import React from "react"
-import { startUpdateGameStage, startUpdateTurnStage } from "../../../actions/cloudActions"
-import { gameStageArray } from "../ActiveGame/stageArrays/stageArrays"
+import { startUpdateBriefingStage, startUpdateGameStage, startUpdateTurnStage } from "../../../actions/cloudActions"
+import { briefingStagesArray, gameStageArray } from "../ActiveGame/stageArrays/stageArrays"
 import turnStagesArray from "../ActiveGame/turnStep/turnStepArrays/turnStagesArray"
 
 
-const TESTFEATURES = ({ currentStage, gameStage, hostKey, resetStages, stepStage, resetTurnStage, resetActionTokens }) => {
+const TESTFEATURES = ({ currentStage, gameStage, briefingStage, hostKey, resetStages, stepStage, resetTurnStage, resetActionTokens }) => {
 
     return (
         <div>
@@ -22,7 +22,7 @@ const TESTFEATURES = ({ currentStage, gameStage, hostKey, resetStages, stepStage
                 <button onClick={() => { resetActionTokens() }}>-Reset Action Tokens-</button>
             </div>
             <div>
-                SELECT STAGE: <select
+                SELECT GAME STAGE: <select
                     name="setGameStage"
                     value={gameStage}
                     onChange={(e) => { startUpdateGameStage(hostKey, e.target.value) }}
@@ -40,7 +40,25 @@ const TESTFEATURES = ({ currentStage, gameStage, hostKey, resetStages, stepStage
                 </select>
             </div>
             <div>
-                SELECT STEP: <select
+                SELECT BRIEFING STAGE: <select
+                    name="setBriefingStage"
+                    value={briefingStage}
+                    onChange={(e) => { startUpdateBriefingStage(hostKey, e.target.value) }}
+                >
+                    {briefingStagesArray.map((stage) => {
+                        return (
+                            <option
+                                key={stage}
+                                value={stage}
+                            >
+                                {stage}
+                            </option>
+                        )
+                    })}
+                </select>
+            </div>
+            <div>
+                SELECT TURN STEP: <select
                     name="setTurnStage"
                     value={currentStage}
                     onChange={(e) => { startUpdateTurnStage(hostKey, e.target.value) }}

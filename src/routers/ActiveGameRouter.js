@@ -6,7 +6,6 @@ import {
     startUpdateGameStage,
     startUpdateTurnStage
 } from "../actions/cloudActions";
-import AuthWrapper from "../dumpingGround/AuthWrapper";
 import ActiveCharWrapper from "../components/elements/ActiveGame/ActiveCharWrapper";
 import IntroCharacter from "../components/elements/ActiveGame/introductions/IntroCharacter";
 import IntroDescription from "../components/elements/ActiveGame/introductions/IntroDescription";
@@ -147,7 +146,15 @@ const ActiveGameRouter = ({
                             />
                         }
                     />
-
+                    <Route
+                        path="Mission/"
+                        errorElement={<NotFoundPage />}
+                        element={
+                            <MissionBriefing
+                                cloudState={cloudState}
+                            />
+                        }
+                    />
 
 
 
@@ -169,6 +176,7 @@ const ActiveGameRouter = ({
                 resetActionTokens={resetActionTokens}
                 hostKey={localState.hostKey}
                 currentStage={cloudState.currentTurn.turnStage}
+                briefingStage={cloudState.backstory.briefingStage}
             />
         </div>
     )

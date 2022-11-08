@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 const DeckBriefing = ({ intro, flavor, p1, a1, u1, p2, a2, u2 }) => {
+    const clickToSave = 'Click out of box to save'
     const [prompt1, setPrompt1] = useState('')
     const [prompt2, setPrompt2] = useState('')
 
@@ -21,7 +22,7 @@ const DeckBriefing = ({ intro, flavor, p1, a1, u1, p2, a2, u2 }) => {
                         id='StoryPrompt1'
                         name='StoryPrompt1'
                         value={prompt1}
-                        placeholder='Click out of box to save'
+                        placeholder={clickToSave}
                         type='text'
                         onChange={(e) => { setPrompt1(e.target.value) }}
                         onBlur={() => { u1(prompt1); }}
@@ -37,7 +38,7 @@ const DeckBriefing = ({ intro, flavor, p1, a1, u1, p2, a2, u2 }) => {
                         name="StoryPrompt2"
                         rows='4'
                         cols='30'
-                        placeholder="Click out of box to save"
+                        placeholder={clickToSave}
                         value={prompt2}
                         onChange={(e) => { setPrompt2(e.target.value) }}
                         onBlur={() => { u2(prompt2); }}
@@ -50,18 +51,3 @@ const DeckBriefing = ({ intro, flavor, p1, a1, u1, p2, a2, u2 }) => {
 }
 
 export default DeckBriefing
-
-// <textarea
-// id="StoryPrompt1"
-// name="StoryPrompt2"
-// rows='4'
-// cols='30'
-// placeholder="Text will be saved when you click out of this box"
-// value={a2}
-// onChange={(e) => { u2(e) }}
-// />
-
-// onChange={(e) => { u1(e) }}
-
-
-// e.preventDefault();
