@@ -2,7 +2,8 @@ const briefingStagesArray = [
   'VILLAIN',
   'RELIC',
   'LOCATION',
-  'NEXT'
+  'TRANSPORT',
+  'DISPLAY'
 ]
 
 const directionArray = [

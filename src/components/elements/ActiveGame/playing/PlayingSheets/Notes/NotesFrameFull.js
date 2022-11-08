@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useReducer } from "react";
 import { startUpdateCharNote } from "../../../../../../actions/charActions";
 import { startUpdateMissionNoteArray } from "../../../../../../actions/cloudActions";
-import { receivedNote, setNoteAuth, setNoteText } from "../../../../../../actions/noteActions";
+import { clearNote, receivedNote, setNoteAuth, setNoteText } from "../../../../../../actions/noteActions";
 import { auth } from "../../../../../../firebase/firebase";
 import { defaultNotePad, noteReducer } from "../../../../../../reducers/noteReducer";
 import Note, { charNoteGenre, missionNoteGenre } from "./Note";
@@ -41,7 +41,7 @@ const NotesFrameFull = ({
   // missionNote
   useEffect(() => {
     // Clear note contents
-    // dispatchMissionNote(clearNote())
+    dispatchMissionNote(clearNote())
     // Get all notes from cloudState, filtering on the current character displayed
     const tempMissionNoteArray = cloudState.missionNoteArray.filter((note) =>
       note.charID === pageData.charID
@@ -53,18 +53,16 @@ const NotesFrameFull = ({
       dispatchMissionNote(receivedNote(tempMissionNoteArray[0]))
 
     } else {
-      // If a single note does not exists, and player is viewing their
-      // character's page, create a blank note for that character in the reducer
-      if (pageData.charID === localState.localCharacterID) {
+      // If a single note does not exist create a blank note 
+      // for that character in the reducer
 
-        dispatchMissionNote(
-          setNoteAuth(
-            auth.currentUser.uid,
-            pageData.charID,
-            pageData.charName,
-            missionNoteGenre
-          ))
-      }
+      dispatchMissionNote(
+        setNoteAuth(
+          auth.currentUser.uid,
+          pageData.charID,
+          pageData.charName,
+          missionNoteGenre
+        ))
     }
 
   }, [cloudState.missionNoteArray, pageData.charID])
@@ -84,8 +82,7 @@ const NotesFrameFull = ({
 
   // charNote
   useEffect(() => {
-    // dispatchCharNote(clearNote())
-
+    dispatchCharNote(clearNote())
 
     if (charState.charNote.charID === pageData.charID) {
       dispatchCharNote(receivedNote(charState.charNote))

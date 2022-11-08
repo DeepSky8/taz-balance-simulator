@@ -217,8 +217,9 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
     // Increment Briefing Stages, Briefing Actions
     const briefingStageActions = (newStage) => {
         switch (newStage) {
-            case 'NEXT':
+            case 'TRANSPORT':
                 startUpdateGameStage(localState.hostKey, gameStageArray[2])
+                startUpdateBriefingStage(localState.hostKey, briefingStagesArray[4])
                 break;
             default:
                 break;
@@ -275,15 +276,26 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
             )
         }
 
+        const setDISPLAY = () => {
+            return (
+                // If current briefingStage is TRANSPORT or DISPLAY
+                (briefingStagesArray.slice(3) === cloudState.backstory.briefingStage)
+                &&
+                // If current gameStage is TRANSPORT or CHALLENGES
+                (gameStageArray.slice(2, 4) === cloudState.active.gameStage)
+            )
+        }
+
         if (activePlayerChecker()) {
             const trueArray = [
                 setVILLAIN(),
                 setRELIC(),
                 setLOCATION(),
-                setTRANSPORT()
+                setTRANSPORT(),
+                setDISPLAY()
             ]
             const returnIndex = trueArray.findIndex(returnValue => returnValue === true)
-            return (returnIndex >= briefingStagesArray.length ? 'NEXT' : briefingStagesArray[returnIndex])
+            return (returnIndex >= briefingStagesArray.length ? briefingStagesArray[4] : briefingStagesArray[returnIndex])
         }
 
     }
@@ -900,8 +912,17 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
 
     if (activePlayerChecker()) {
         const newGameStage = gameStageSelection()
+        const newBriefingStage = briefingStageSelection(direction)
 
         switch (cloudState.active.gameStage) {
+            case 'INTRO':
+                startUpdateGameStage(localState.hostKey, newGameStage)
+                gameStageActions()
+                break;
+            case 'BRIEF':
+                startUpdateBriefingStage(localState.hostKey, newBriefingStage)
+                briefingStageActions(newBriefingStage)
+                break;
             case 'TRANSPORT':
                 break;
             case 'CHALLENGES':
@@ -909,20 +930,9 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
                 const newTurnStage = turnStageSelection()
                 startUpdateTurnStage(localState.hostKey, newTurnStage)
                 break;
-            case 'INTRO':
-                // const updateGameStage = gameStageSelection()
-                startUpdateGameStage(localState.hostKey, newGameStage)
-                gameStageActions()
-                break;
             case 'END':
                 gameStageActions()
-                // const newGameStage = gameStageSelection()
                 startUpdateGameStage(localState.hostKey, newGameStage)
-                break;
-            case 'BRIEF':
-                const newBriefingStage = briefingStageSelection(direction)
-                startUpdateBriefingStage(localState.hostKey, newBriefingStage)
-                briefingStageActions(newBriefingStage)
                 break;
             default:
                 console.log('hit default on clickForNext, pls fix');

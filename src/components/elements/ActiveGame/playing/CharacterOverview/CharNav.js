@@ -1,16 +1,24 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-const CharNav = ({ cloudState, localState, children }) => {
+const CharNav = ({ cloudState, localState }) => {
 
   const gameBoard = {
-    uid: cloudState.static.key,
-    charName: 'Gameboard'
+    uid: 'Gameboard',
+    charName: 'Gameboard',
+    currentCharacterID: ''
+  }
+
+  const mission = {
+    uid: 'Mission',
+    charName: 'Mission',
+    currentCharacterID: ''
   }
 
   const tabs = [
     gameBoard,
-    ...cloudState.playerList
+    ...cloudState.playerList,
+    mission,
   ]
 
   return (
@@ -23,13 +31,14 @@ const CharNav = ({ cloudState, localState, children }) => {
             <NavLink
               key={element.uid}
               to={
-                element.charName + (
-                  element.uid === gameBoard.uid
-                    ?
-                    ''
-                    :
-                    ("/" + element.currentCharacterID)
-                )
+                element.charName + '/' + element.currentCharacterID
+                // (
+                //   element.uid === gameBoard.uid
+                //     ?
+                //     ''
+                //     :
+                //     ("/" + element.currentCharacterID)
+                // )
               }
               className={({ isActive }) =>
               (`${isActive
