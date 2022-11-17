@@ -2,6 +2,7 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../../../firebase/firebase";
 import { signOut } from "firebase/auth";
+import { adminAccess } from "../../admin/lincolnLogs";
 
 
 const MenuContents = () => {
@@ -55,6 +56,16 @@ const MenuContents = () => {
 
       </h2>
 
+      <h3>
+        {auth.currentUser.uid === adminAccess &&
+          <span>
+            --------------
+            <Link to='/deckUpdates'>Deck Updates</Link>
+            <Link to='/kostcoUpdates'>Kostco Updates</Link>
+          </span>
+        }
+
+      </h3>
 
     </div>
   )

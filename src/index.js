@@ -18,7 +18,9 @@ import FirebaseSignIn from './components/Authentication/FirebaseSignIn';
 import Tos from './components/Authentication/Tos';
 import PrivacyPolicy from './components/Authentication/PrivacyPolicy';
 import CharacterSheet from './components/elements/CharacterSheet/CharacterSheet';
-import KostcoUpdates from './components/elements/admin/KostcoUpdates';
+import KostcoUpdates from './components/elements/admin/Kostco/KostcoUpdates';
+import DeckUpdates from './components/elements/admin/Challenge/DeckUpdates';
+
 
 
 const router = createBrowserRouter([
@@ -60,8 +62,12 @@ const router = createBrowserRouter([
         element: <PrivacyPolicy />
       },
       {
-        path: "/kostcoUpdates",
+        path: "/kostcoUpdates/*",
         element: <KostcoUpdates />
+      },
+      {
+        path: "/deckUpdates",
+        element: <DeckUpdates />
       }
     ],
   },

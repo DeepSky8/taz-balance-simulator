@@ -1,18 +1,19 @@
 import { off, onValue, ref } from "firebase/database";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { startNewCard, startRemoveCard, startUpdateCard } from "../../../actions/cardActions";
-import { auth, db } from "../../../firebase/firebase";
-import { locationObjectsArray } from "../Challenges/mission-elements/m-location";
-import { relicObjectsArray } from "../Challenges/mission-elements/m-relic";
-import { villainObjectsArray } from "../Challenges/mission-elements/m-villain";
+import { startNewCard, startRemoveCard, startUpdateCard } from "../../../../actions/cardActions";
+import { auth, db } from "../../../../firebase/firebase";
+import { locationObjectsArray } from "../../Challenges/mission-elements/m-location";
+import { relicObjectsArray } from "../../Challenges/mission-elements/m-relic";
+import { villainObjectsArray } from "../../Challenges/mission-elements/m-villain";
 import EditCard from "./EditCard";
+import { adminAccess } from "../lincolnLogs";
 import NewCard from "./NewCard";
 
 const DeckUpdates = () => {
     let navigate = useNavigate()
     useEffect(() => {
-        if (auth.currentUser.uid !== 'nKtUXPTXqMaRfQhOTSWsuOxrxst1') {
+        if (auth.currentUser.uid !== adminAccess) {
             navigate('/')
         }
     })

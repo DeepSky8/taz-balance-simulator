@@ -1,10 +1,10 @@
 import { off, onValue, ref } from "firebase/database";
 import React, { useEffect, useState } from "react";
-import { startAddDeckItem } from "../../../actions/cardActions";
-import { db } from "../../../firebase/firebase";
-import { locationObjectsArray } from "../Challenges/mission-elements/m-location";
-import { relicObjectsArray } from "../Challenges/mission-elements/m-relic";
-import { villainObjectsArray } from "../Challenges/mission-elements/m-villain";
+import { startAddDeckItem } from "../../../../actions/cardActions";
+import { db } from "../../../../firebase/firebase";
+import { locationObjectsArray } from "../../Challenges/mission-elements/m-location";
+import { relicObjectsArray } from "../../Challenges/mission-elements/m-relic";
+import { villainObjectsArray } from "../../Challenges/mission-elements/m-villain";
 
 const DeckDuplicate = () => {
     const [activeDeckCode, setActiveDeckCode] = useState('')

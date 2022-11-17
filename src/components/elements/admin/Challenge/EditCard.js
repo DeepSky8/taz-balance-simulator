@@ -78,9 +78,9 @@ import {
     updateStoryPrompt,
     updateTrap,
     updateVillainModifier
-} from "../../../actions/cardActions";
-import { cardReducer, defaultCardState } from "../../../reducers/cardReducer";
-import { images } from '../ActiveGame/playing/challenges/imageInfo'
+} from "../../../../actions/cardActions";
+import { cardReducer, defaultCardState } from "../../../../reducers/cardReducer";
+import { images } from '../../ActiveGame/playing/challenges/imageInfo'
 
 const EditCard = ({ deckCard, updateCardCloud, currentCardNumber, removeCard, cardKeyIndex }) => {
     const [cardState, dispatchCardState] = useReducer(cardReducer, defaultCardState)

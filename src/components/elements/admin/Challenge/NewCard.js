@@ -78,8 +78,8 @@ import {
     updateStoryPrompt,
     updateTrap,
     updateVillainModifier
-} from "../../../actions/cardActions";
-import { cardReducer, defaultCardState } from "../../../reducers/cardReducer";
+} from "../../../../actions/cardActions";
+import { cardReducer, defaultCardState } from "../../../../reducers/cardReducer";
 
 const NewCard = ({ saveNewCard, cardNumber }) => {
     const [cardState, dispatchCardState] = useReducer(cardReducer, defaultCardState)

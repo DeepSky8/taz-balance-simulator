@@ -1,0 +1,31 @@
+@mixin kostcoContainer {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+@mixin kostcoWrapping {
+  // flex-direction: row;
+  // flex-wrap: wrap;
+  flex-flow: row wrap;
+}
+
+.kostcoFlexContainer {
+  @include kostcoContainer;
+  @include kostcoWrapping;
+}
+
+.kostcoEditBorder {
+  @include kostcoContainer;
+  border-style: solid;
+  border-radius: 5px;
+  margin-right: 10px;
+  min-width: 35em;
+}
+
+.kostcoNumberEntry {
+  width: 2em;
+}
+
+.kostcoCenter {
+  margin: auto;
+}

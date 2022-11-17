@@ -10,8 +10,8 @@ import { RefreshHelper } from "../components/elements/admin/RefreshHelper";
 import GameSetup from "../components/elements/GameSetup/GameSetup";
 import CharacterSheet from "../components/elements/CharacterSheet/CharacterSheet";
 import ActiveGame from "../components/elements/ActiveGame/ActiveGame";
-import DeckUpdates from "../components/elements/admin/DeckUpdates";
-import DeckDuplicate from "../components/elements/admin/DeckDuplicate";
+import DeckUpdates from "../components/elements/admin/Challenge/DeckUpdates";
+import DeckDuplicate from "../components/elements/admin/Challenge/DeckDuplicate";
 import Home from "../components/elements/Home/Home";
 
 
