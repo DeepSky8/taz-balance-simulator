@@ -1,5 +1,4 @@
 
-
 const defaultKostcoSearchState = {
   // Search Parameters
   terms: '',
@@ -9,39 +8,86 @@ const defaultKostcoSearchState = {
   kFlavor: false,
 
   // Effects
-  ongoing: false,
-  oneshot: false,
+  // ongoing: false,
+  // oneshot: false,
 
 
-  // Challenge types
-  magic: false,
-  monster: false,
-  spooky: false,
-  trap: false,
 
-  // Rolls
-  reroll: false,
-  critRoll: false,
+  g: {
+    // Challenge types
+    magic: false,
+    monster: false,
+    spooky: false,
+    trap: false,
 
-  // Targets
-  targetSelf: false,
-  targetOther: false,
+    // Rolls
+    reroll: false,
+    critRoll: false,
 
-  // Timing
-  combat: false,
-  combatPreroll: false,
-  combatPostroll: false,
-  turnEnd: false,
-  anyTime: false,
+    // Targets
+    targetSelf: false,
+    targetOther: false,
 
-  // Others
-  actionToken: false,
-  addStrength: false,
-  assist: false,
-  health: false,
+    // Timing
+    combat: false,
+    combatPreroll: false,
+    combatPostroll: false,
+    turnEnd: false,
+    anyTime: false,
+
+    // Others
+    actionToken: false,
+    assist: false,
+
+    // Changes numbers
+    health: false,
+    healthValue: 0,
+    strength: false,
+    strengthValue: 0,
+  },
+
+  t: {
+    // Challenge types
+    magic: false,
+    monster: false,
+    spooky: false,
+    trap: false,
+
+    // Rolls
+    reroll: false,
+    critRoll: false,
+
+    // Targets
+    targetSelf: false,
+    targetOther: false,
+
+    // Timing
+    combat: false,
+    combatPreroll: false,
+    combatPostroll: false,
+    turnEnd: false,
+    anyTime: false,
+
+    // Others
+    actionToken: false,
+    assist: false,
+
+    // Changes numbers
+    health: false,
+    healthValue: 0,
+    strength: false,
+    strengthValue: 0,
+  }
+
 }
 
 const kostcoSearchReducer = (state, action) => {
+  const CHECKG = action.flagType === 'g'
+  const CHECKT = action.flagType === 't'
+
+  let currentG = false
+  let currentT = false
+
   switch (action.type) {
     case 'KOSTCO_SEARCH_RESET':
       return {
@@ -73,119 +119,439 @@ const kostcoSearchReducer = (state, action) => {
         kFlavor: !state.kFlavor
       }
     case 'KOSTCO_MAGIC':
+      currentG = state.g.magic
+      currentT = state.t.magic
       return {
         ...state,
-        magic: !state.magic
+        g: {
+          ...state.g,
+          magic: CHECKG
+            ?
+            !currentG
+            :
+            currentG
+        },
+        t: {
+          ...state.t,
+          magic: CHECKT
+            ?
+            !currentT
+            :
+            currentT
+        },
       }
     case 'KOSTCO_MONSTER':
+      currentG = state.g.monster
+      currentT = state.t.monster
       return {
         ...state,
-        monster: !state.monster
+        g: {
+          ...state.g,
+          monster: CHECKG
+            ?
+            !currentG
+            :
+            currentG
+        },
+        t: {
+          ...state.t,
+          monster: CHECKT
+            ?
+            !currentT
+            :
+            currentT
+        },
       }
     case 'KOSTCO_SPOOKY':
+      currentG = state.g.spooky
+      currentT = state.t.spooky
       return {
         ...state,
-        spooky: !state.spooky
+        g: {
+          ...state.g,
+          spooky: CHECKG
+            ?
+            !currentG
+            :
+            currentG
+        },
+        t: {
+          ...state.t,
+          spooky: CHECKT
+            ?
+            !currentT
+            :
+            currentT
+        },
       }
     case 'KOSTCO_TRAP':
+      currentG = state.g.trap
+      currentT = state.t.trap
       return {
         ...state,
-        trap: !state.trap
+        g: {
+          ...state.g,
+          trap: CHECKG
+            ?
+            !currentG
+            :
+            currentG
+        },
+        t: {
+          ...state.t,
+          trap: CHECKT
+            ?
+            !currentT
+            :
+            currentT
+        },
       }
     case 'KOSTCO_REROLL':
+      currentG = state.g.reroll
+      currentT = state.t.reroll
       return {
         ...state,
-        reroll: !state.reroll
+        g: {
+          ...state.g,
+          reroll: CHECKG
+            ?
+            !currentG
+            :
+            currentG
+        },
+        t: {
+          ...state.t,
+          reroll: CHECKT
+            ?
+            !currentT
+            :
+            currentT
+        },
       }
     case 'KOSTCO_CRIT_ROLL':
+      currentG = state.g.critRoll
+      currentT = state.t.critRoll
       return {
         ...state,
-        critRoll: !state.critRoll
+        g: {
+          ...state.g,
+          critRoll: CHECKG
+            ?
+            !currentG
+            :
+            currentG
+        },
+        t: {
+          ...state.t,
+          critRoll: CHECKT
+            ?
+            !currentT
+            :
+            currentT
+        },
       }
     case 'KOSTCO_TARGET_SELF':
+      currentG = state.g.targetSelf
+      currentT = state.t.targetSelf
       return {
         ...state,
-        targetSelf: !state.targetSelf
+        g: {
+          ...state.g,
+          targetSelf: CHECKG
+            ?
+            !currentG
+            :
+            currentG
+        },
+        t: {
+          ...state.t,
+          targetSelf: CHECKT
+            ?
+            !currentT
+            :
+            currentT
+        },
       }
     case 'KOSTCO_TARGET_OTHER':
+      currentG = state.g.targetOther
+      currentT = state.t.targetOther
       return {
         ...state,
-        targetOther: !state.targetOther
+        g: {
+          ...state.g,
+          targetOther: CHECKG
+            ?
+            !currentG
+            :
+            currentG
+        },
+        t: {
+          ...state.t,
+          targetOther: CHECKT
+            ?
+            !currentT
+            :
+            currentT
+        },
       }
     case 'KOSTCO_COMBAT':
+      currentG = state.g.combat
+      currentT = state.t.combat
       return {
         ...state,
-        combat: !state.combat
+        g: {
+          ...state.g,
+          combat: CHECKG
+            ?
+            !currentG
+            :
+            currentG
+        },
+        t: {
+          ...state.t,
+          combat: CHECKT
+            ?
+            !currentT
+            :
+            currentT
+        },
       }
     case 'COMBAT_PREROLL':
+      currentG = state.g.combatPreroll
+      currentT = state.t.combatPreroll
       return {
         ...state,
-        combatPreroll: !state.combatPreroll
+        g: {
+          ...state.g,
+          combatPreroll: CHECKG
+            ?
+            !currentG
+            :
+            currentG
+        },
+        t: {
+          ...state.t,
+          combatPreroll: CHECKT
+            ?
+            !currentT
+            :
+            currentT
+        },
       }
     case 'COMBAT_POSTROLL':
+      currentG = state.g.combatPostroll
+      currentT = state.t.combatPostroll
       return {
         ...state,
-        combatPostroll: !state.combatPostroll,
+        g: {
+          ...state.g,
+          combatPostroll: CHECKG
+            ?
+            !currentG
+            :
+            currentG
+        },
+        t: {
+          ...state.t,
+          combatPostroll: CHECKT
+            ?
+            !currentT
+            :
+            currentT
+        },
       }
     case 'KOSTCO_TURN_END':
+      currentG = state.g.turnEnd
+      currentT = state.t.turnEnd
       return {
         ...state,
-        turnEnd: !state.turnEnd
+        g: {
+          ...state.g,
+          turnEnd: CHECKG
+            ?
+            !currentG
+            :
+            currentG
+        },
+        t: {
+          ...state.t,
+          turnEnd: CHECKT
+            ?
+            !currentT
+            :
+            currentT
+        },
       }
     case 'KOSTCO_ANY_TIME':
+      currentG = state.g.anyTime
+      currentT = state.t.anyTime
       return {
         ...state,
-        anyTime: !state.anyTime,
+        g: {
+          ...state.g,
+          anyTime: CHECKG
+            ?
+            !currentG
+            :
+            currentG
+        },
+        t: {
+          ...state.t,
+          anyTime: CHECKT
+            ?
+            !currentT
+            :
+            currentT
+        },
       }
     case 'KOSTCO_ACTION_TOKEN':
+      currentG = state.g.actionToken
+      currentT = state.t.actionToken
       return {
         ...state,
-        actionToken: !state.actionToken
+        g: {
+          ...state.g,
+          actionToken: (CHECKG
+            ?
+            !currentG
+            :
+            currentG),
+        },
+        t: {
+          ...state.t,
+          actionToken: (CHECKT
+            ?
+            !currentT
+            :
+            currentT),
+        }
       }
-    case 'KOSTCO_ADD_STRENGTH':
+    case 'KOSTCO_STRENGTH':
+      currentG = state.g.strength
+      currentT = state.t.strength
       return {
         ...state,
-        addStrength: !state.addStrength
+        g: {
+          ...state.g,
+          strength: (CHECKG
+            ?
+            !currentG
+            :
+            currentG),
+        },
+        t: {
+          ...state.t,
+          strength: (CHECKT
+            ?
+            !currentT
+            :
+            currentT),
+        }
       }
     case 'KOSTCO_ASSIST':
+      currentG = state.g.assist
+      currentT = state.t.assist
       return {
         ...state,
-        assist: !state.assist
+        g: {
+          ...state.g,
+          assist: (CHECKG
+            ?
+            !currentG
+            :
+            currentG),
+        },
+        t: {
+          ...state.t,
+          assist: (CHECKT
+            ?
+            !currentT
+            :
+            currentT),
+        }
       }
     case 'KOSTCO_HEALTH':
+      currentG = state.g.health
+      currentT = state.t.health
       return {
         ...state,
-        health: !state.health
+        g: {
+          ...state.g,
+          health: (CHECKG
+            ?
+            !currentG
+            :
+            currentG),
+        },
+        t: {
+          ...state.t,
+          health: (CHECKT
+            ?
+            !currentT
+            :
+            currentT),
+        }
       }
     case 'TOGGLE_ALL':
-      const toggleTO = !state.magic
+      const toggleTO = !state.g.magic
       return {
         ...state,
-        // Challenge types
-        magic: toggleTO,
-        monster: toggleTO,
-        spooky: toggleTO,
-        trap: toggleTO,
+        g: {
+          // Challenge types
+          magic: toggleTO,
+          monster: toggleTO,
+          spooky: toggleTO,
+          trap: toggleTO,
 
-        // Rolls
-        reroll: toggleTO,
-        critRoll: toggleTO,
+          // Rolls
+          reroll: toggleTO,
+          critRoll: toggleTO,
 
-        // Targets
-        targetSelf: toggleTO,
-        targetOther: toggleTO,
+          // Targets
+          targetSelf: toggleTO,
+          targetOther: toggleTO,
 
-        // Timing
-        combat: toggleTO,
-        combatPreroll: toggleTO,
-        turnEnd: toggleTO,
-        anyTime: toggleTO,
+          // Timing
+          combat: toggleTO,
+          combatPreroll: toggleTO,
+          combatPostroll: toggleTO,
+          turnEnd: toggleTO,
+          anyTime: toggleTO,
 
-        // Others
-        actionToken: toggleTO,
-        addStrength: toggleTO,
-        assist: toggleTO,
-        health: toggleTO,
+          // Others
+          actionToken: toggleTO,
+          addStrength: toggleTO,
+          assist: toggleTO,
+          health: toggleTO,
+        },
+        t: {
+          // Challenge types
+          magic: toggleTO,
+          monster: toggleTO,
+          spooky: toggleTO,
+          trap: toggleTO,
+
+          // Rolls
+          reroll: toggleTO,
+          critRoll: toggleTO,
+
+          // Targets
+          targetSelf: toggleTO,
+          targetOther: toggleTO,
+
+          // Timing
+          combat: toggleTO,
+          combatPreroll: toggleTO,
+          combatPostroll: toggleTO,
+          turnEnd: toggleTO,
+          anyTime: toggleTO,
+
+          // Others
+          actionToken: toggleTO,
+          addStrength: toggleTO,
+          assist: toggleTO,
+          health: toggleTO,
+        }
       }
     default:
       return state

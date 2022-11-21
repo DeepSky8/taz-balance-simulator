@@ -26,13 +26,13 @@ const NewKostco = () => {
           reducer={kardState}
           dispatchReducer={dispatchKardState}
           updateKard={updateKard}
-          ident={''}
+          ident={'new'}
         />
         <KostcoFlags
           reducer={kardState}
           dispatchReducer={dispatchKardState}
           updateKard={updateKard}
-          ident={''}
+          ident={'new'}
         />
       </div>
 

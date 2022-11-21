@@ -1,10 +1,9 @@
 import React from "react";
-import { useState } from "react";
 import {
   kCombatPreroll,
   kHealthValue,
   kostcoActionToken,
-  kostcoAddStrength,
+  kostcoStrength,
   kostcoAnyTime,
   kostcoAssist,
   kostcoCombat,
@@ -22,8 +21,15 @@ import {
   kCombatPostroll
 } from "../../../../actions/kostcoActions";
 
-const FlagFrame = ({ reducer, dispatchReducer, updateKard, ident, flagType }) => {
-
+const FlagFrame = (
+  {
+    reducer,
+    dispatchReducer,
+    updateKard,
+    ident,
+    flagType
+  }
+) => {
 
   return (
 
@@ -36,7 +42,7 @@ const FlagFrame = ({ reducer, dispatchReducer, updateKard, ident, flagType }) =>
           id={'magic' + flagType + ident}
           checked={reducer.magic}
           onChange={() => {
-            dispatchReducer(kostcoMagic())
+            dispatchReducer(kostcoMagic(flagType))
           }}
           onBlur={() => { updateKard() }}
         />
@@ -47,7 +53,7 @@ const FlagFrame = ({ reducer, dispatchReducer, updateKard, ident, flagType }) =>
           id={'monster' + flagType + ident}
           checked={reducer.monster}
           onChange={() => {
-            dispatchReducer(kostcoMonster())
+            dispatchReducer(kostcoMonster(flagType))
           }}
           onBlur={() => { updateKard() }}
         />
@@ -58,7 +64,7 @@ const FlagFrame = ({ reducer, dispatchReducer, updateKard, ident, flagType }) =>
           id={'spooky' + flagType + ident}
           checked={reducer.spooky}
           onChange={() => {
-            dispatchReducer(kostcoSpooky())
+            dispatchReducer(kostcoSpooky(flagType))
           }}
           onBlur={() => { updateKard() }}
         />
@@ -69,7 +75,7 @@ const FlagFrame = ({ reducer, dispatchReducer, updateKard, ident, flagType }) =>
           id={'trap' + flagType + ident}
           checked={reducer.trap}
           onChange={() => {
-            dispatchReducer(kostcoTrap())
+            dispatchReducer(kostcoTrap(flagType))
           }}
           onBlur={() => { updateKard() }}
         />
@@ -82,7 +88,7 @@ const FlagFrame = ({ reducer, dispatchReducer, updateKard, ident, flagType }) =>
           id={'reroll' + flagType + ident}
           checked={reducer.reroll}
           onChange={() => {
-            dispatchReducer(kostcoReroll())
+            dispatchReducer(kostcoReroll(flagType))
           }}
           onBlur={() => { updateKard() }}
         />
@@ -93,7 +99,7 @@ const FlagFrame = ({ reducer, dispatchReducer, updateKard, ident, flagType }) =>
           id={'critRoll' + flagType + ident}
           checked={reducer.critRoll}
           onChange={() => {
-            dispatchReducer(kostcoCritRoll())
+            dispatchReducer(kostcoCritRoll(flagType))
           }}
           onBlur={() => { updateKard() }}
         />
@@ -107,22 +113,22 @@ const FlagFrame = ({ reducer, dispatchReducer, updateKard, ident, flagType }) =>
           id={'targetSelf' + flagType + ident}
           checked={reducer.targetSelf}
           onChange={() => {
-            dispatchReducer(kostcoTargetSelf())
+            dispatchReducer(kostcoTargetSelf(flagType))
           }}
           onBlur={() => { updateKard() }}
         />
-        <label htmlFor={'targetSelf' + flagType + ident}>Target Self</label>
+        <label htmlFor={'targetSelf' + flagType + ident}>Own Turn/Self</label>
 
         <input
           type='checkbox'
           id={'targetOther' + flagType + ident}
           checked={reducer.targetOther}
           onChange={() => {
-            dispatchReducer(kostcoTargetOther())
+            dispatchReducer(kostcoTargetOther(flagType))
           }}
           onBlur={() => { updateKard() }}
         />
-        <label htmlFor={'targetOther' + flagType + ident}>Target Other</label>
+        <label htmlFor={'targetOther' + flagType + ident}>Other Turn/Other</label>
       </div>
 
       <div className="kostcoFlexContainer">
@@ -131,7 +137,7 @@ const FlagFrame = ({ reducer, dispatchReducer, updateKard, ident, flagType }) =>
           id={'combat' + flagType + ident}
           checked={reducer.combat}
           onChange={() => {
-            dispatchReducer(kostcoCombat())
+            dispatchReducer(kostcoCombat(flagType))
           }}
           onBlur={() => { updateKard() }}
         />
@@ -142,7 +148,7 @@ const FlagFrame = ({ reducer, dispatchReducer, updateKard, ident, flagType }) =>
           id={'turnEnd' + flagType + ident}
           checked={reducer.turnEnd}
           onChange={() => {
-            dispatchReducer(kostcoTurnEnd())
+            dispatchReducer(kostcoTurnEnd(flagType))
           }}
           onBlur={() => { updateKard() }}
         />
@@ -153,11 +159,11 @@ const FlagFrame = ({ reducer, dispatchReducer, updateKard, ident, flagType }) =>
           id={'anyTime' + flagType + ident}
           checked={reducer.anyTime}
           onChange={() => {
-            dispatchReducer(kostcoAnyTime())
+            dispatchReducer(kostcoAnyTime(flagType))
           }}
           onBlur={() => { updateKard() }}
         />
-        <label htmlFor={'anyTime' + flagType + ident}>Any Time</label>
+        <label htmlFor={'anyTime' + flagType + ident}>Any Turn Step</label>
       </div>
 
       {
@@ -168,7 +174,7 @@ const FlagFrame = ({ reducer, dispatchReducer, updateKard, ident, flagType }) =>
             id={'combatPreroll' + flagType + ident}
             checked={reducer.combatPreroll}
             onChange={() => {
-              dispatchReducer(kCombatPreroll())
+              dispatchReducer(kCombatPreroll(flagType))
             }}
             onBlur={() => { updateKard() }}
           />
@@ -179,7 +185,7 @@ const FlagFrame = ({ reducer, dispatchReducer, updateKard, ident, flagType }) =>
             id={'combatPostroll' + flagType + ident}
             checked={reducer.combatPostroll}
             onChange={() => {
-              dispatchReducer(kCombatPostroll())
+              dispatchReducer(kCombatPostroll(flagType))
             }}
             onBlur={() => { updateKard() }}
           />
@@ -194,7 +200,7 @@ const FlagFrame = ({ reducer, dispatchReducer, updateKard, ident, flagType }) =>
           id={'actionToken' + flagType + ident}
           checked={reducer.actionToken}
           onChange={() => {
-            dispatchReducer(kostcoActionToken())
+            dispatchReducer(kostcoActionToken(flagType))
           }}
           onBlur={() => { updateKard() }}
         />
@@ -205,7 +211,7 @@ const FlagFrame = ({ reducer, dispatchReducer, updateKard, ident, flagType }) =>
           id={'assist' + flagType + ident}
           checked={reducer.assist}
           onChange={() => {
-            dispatchReducer(kostcoAssist())
+            dispatchReducer(kostcoAssist(flagType))
           }}
           onBlur={() => { updateKard() }}
         />
@@ -221,26 +227,26 @@ const FlagFrame = ({ reducer, dispatchReducer, updateKard, ident, flagType }) =>
           id={'health' + flagType + ident}
           checked={reducer.health}
           onChange={() => {
-            dispatchReducer(kostcoHealth())
+            dispatchReducer(kostcoHealth(flagType))
           }}
           onBlur={() => { updateKard() }}
         />
-        <label htmlFor={'health' + flagType + ident}>Affects Health</label>
+        <label htmlFor={'health' + flagType + ident}>Modifies Health</label>
 
         <input
           type='checkbox'
-          id={'addStrength' + flagType + ident}
-          checked={reducer.addStrength}
+          id={'strength' + flagType + ident}
+          checked={reducer.strength}
           onChange={() => {
-            dispatchReducer(kostcoAddStrength())
+            dispatchReducer(kostcoStrength(flagType))
           }}
           onBlur={() => { updateKard() }}
         />
-        <label htmlFor={"addStrength" + flagType + ident}>Adds Strength</label>
+        <label htmlFor={"strength" + flagType + ident}>Modifies Strength</label>
       </div>
 
       {
-        (reducer.addStrength || reducer.health) &&
+        (reducer.strength || reducer.health) &&
         <div className="kostcoFlexContainer">
           <label htmlFor={'healthValue' + flagType + ident}>Health Modifier</label>
           <input
@@ -249,7 +255,7 @@ const FlagFrame = ({ reducer, dispatchReducer, updateKard, ident, flagType }) =>
             type='number'
             value={reducer.healthValue}
             onChange={(e) => {
-              dispatchReducer(kHealthValue(e.target.value))
+              dispatchReducer(kHealthValue(e.target.value, flagType))
             }}
             onBlur={() => { updateKard() }}
           />
@@ -261,7 +267,7 @@ const FlagFrame = ({ reducer, dispatchReducer, updateKard, ident, flagType }) =>
             type='number'
             value={reducer.strengthValue}
             onChange={(e) => {
-              dispatchReducer(kStrengthValue(e.target.value))
+              dispatchReducer(kStrengthValue(e.target.value, flagType))
             }}
             onBlur={() => { updateKard() }}
           />

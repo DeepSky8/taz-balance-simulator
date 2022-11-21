@@ -32,22 +32,26 @@ export const kFlavor = (kFlavor) => ({
   kFlavor
 })
 
-export const kCombatPreroll = () => ({
-  type: 'COMBAT_PREROLL'
+export const kCombatPreroll = (flagType) => ({
+  type: 'COMBAT_PREROLL',
+  flagType
 })
 
-export const kCombatPostroll = () => ({
-  type: 'COMBAT_POSTROLL'
+export const kCombatPostroll = (flagType) => ({
+  type: 'COMBAT_POSTROLL',
+  flagType
 })
 
-export const kHealthValue = (healthValue) => ({
+export const kHealthValue = (healthValue, flagType) => ({
   type: 'HEALTH_VALUE',
-  healthValue
+  healthValue,
+  flagType
 })
 
-export const kStrengthValue = (strengthValue) => ({
+export const kStrengthValue = (strengthValue, flagType) => ({
   type: 'STRENGTH_VALUE',
-  strengthValue
+  strengthValue,
+  flagType
 })
 
 // Search Actions
@@ -79,67 +83,82 @@ export const kostcoSearchFlavor = () => ({
 })
 
 
-export const kostcoMagic = () => ({
-  type: 'KOSTCO_MAGIC'
+export const kostcoMagic = (flagType) => ({
+  type: 'KOSTCO_MAGIC',
+  flagType
 })
 
-export const kostcoMonster = () => ({
-  type: 'KOSTCO_MONSTER'
+export const kostcoMonster = (flagType) => ({
+  type: 'KOSTCO_MONSTER',
+  flagType
 })
 
-export const kostcoSpooky = () => ({
-  type: 'KOSTCO_SPOOKY'
+export const kostcoSpooky = (flagType) => ({
+  type: 'KOSTCO_SPOOKY',
+  flagType
 })
 
-export const kostcoTrap = () => ({
-  type: 'KOSTCO_TRAP'
-})
-
-
-export const kostcoReroll = () => ({
-  type: 'KOSTCO_REROLL'
-})
-
-export const kostcoCritRoll = () => ({
-  type: 'KOSTCO_CRIT_ROLL'
-})
-
-export const kostcoTargetSelf = () => ({
-  type: 'KOSTCO_TARGET_SELF'
-})
-
-export const kostcoTargetOther = () => ({
-  type: 'KOSTCO_TARGET_OTHER'
+export const kostcoTrap = (flagType) => ({
+  type: 'KOSTCO_TRAP',
+  flagType
 })
 
 
-export const kostcoCombat = () => ({
-  type: 'KOSTCO_COMBAT'
+export const kostcoReroll = (flagType) => ({
+  type: 'KOSTCO_REROLL',
+  flagType
 })
 
-export const kostcoTurnEnd = () => ({
-  type: 'KOSTCO_TURN_END'
+export const kostcoCritRoll = (flagType) => ({
+  type: 'KOSTCO_CRIT_ROLL',
+  flagType
 })
 
-export const kostcoAnyTime = () => ({
-  type: 'KOSTCO_ANY_TIME'
+export const kostcoTargetSelf = (flagType) => ({
+  type: 'KOSTCO_TARGET_SELF',
+  flagType
+})
+
+export const kostcoTargetOther = (flagType) => ({
+  type: 'KOSTCO_TARGET_OTHER',
+  flagType
 })
 
 
-export const kostcoActionToken = () => ({
-  type: 'KOSTCO_ACTION_TOKEN'
+export const kostcoCombat = (flagType) => ({
+  type: 'KOSTCO_COMBAT',
+  flagType
 })
 
-export const kostcoAddStrength = () => ({
-  type: 'KOSTCO_ADD_STRENGTH'
+export const kostcoTurnEnd = (flagType) => ({
+  type: 'KOSTCO_TURN_END',
+  flagType
 })
 
-export const kostcoAssist = () => ({
-  type: 'KOSTCO_ASSIST'
+export const kostcoAnyTime = (flagType) => ({
+  type: 'KOSTCO_ANY_TIME',
+  flagType
 })
 
-export const kostcoHealth = () => ({
-  type: 'KOSTCO_HEALTH'
+
+export const kostcoActionToken = (flagType) => ({
+  type: 'KOSTCO_ACTION_TOKEN',
+  flagType
+})
+
+export const kostcoStrength = (flagType) => ({
+  type: 'KOSTCO_STRENGTH',
+  flagType
+})
+
+export const kostcoAssist = (flagType) => ({
+  type: 'KOSTCO_ASSIST',
+  flagType
+})
+
+export const kostcoHealth = (flagType) => ({
+  type: 'KOSTCO_HEALTH',
+  flagType
 })
 
 export const kostcoToggleAll = () => ({

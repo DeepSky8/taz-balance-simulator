@@ -5,7 +5,15 @@ import DisplayKostcos from "../components/elements/admin/Kostco/DisplayKostcos";
 import KostcoSearchModule from "../components/elements/admin/Kostco/KostcoSearchModule";
 import NewKostco from "../components/elements/admin/Kostco/NewKostco";
 
-const KostcoUpdatesRouter = ({ kostcoSearch, dispatchKostcoSearch, kostcoArray }) => {
+const KostcoUpdatesRouter = (
+  {
+    kostcoSearch,
+    dispatchKostcoSearch,
+    kostcoArray,
+    kostcoUnfiltered,
+    setKostcoArray
+  }
+) => {
 
   return (
     <div>
@@ -20,6 +28,8 @@ const KostcoUpdatesRouter = ({ kostcoSearch, dispatchKostcoSearch, kostcoArray }
                 kostcoArray={kostcoArray}
                 kostcoSearch={kostcoSearch}
                 dispatchKostcoSearch={dispatchKostcoSearch}
+                kostcoUnfiltered={kostcoUnfiltered}
+                setKostcoArray={setKostcoArray}
               />
               <DisplayKostcos
                 kostcoArray={kostcoArray}
