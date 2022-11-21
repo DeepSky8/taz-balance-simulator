@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
-  kostcoSearchFlavor,
-  kostcoSearchOneshot,
-  kostcoSearchOngoing,
-  kostcoSearchReset,
-  kostcoSearchTerms,
-  kostcoSearchTitle,
-  kostcoToggleAll
+  kSearchFlavor,
+  kSearchOneshot,
+  kSearchOngoing,
+  kSearchReset,
+  kSearchTerms,
+  kSearchTitle,
+  kToggleAll
 } from "../../../../actions/kostcoActions";
 import KostcoFlags from "./KostcoFlags";
 
@@ -130,7 +130,7 @@ const KostcoSearchModule = ({
     //     return textFilter.length > 0
     //   })
 
-    console.log('kostcoSearchG', kostcoSearch.g)
+    // console.log('kostcoSearchG', kostcoSearch.g)
 
     // Create a text array of 'ongoing' key names with a value of true
     const paramArrayG = Object
@@ -188,7 +188,7 @@ const KostcoSearchModule = ({
                 true
             )))
           .length
-        console.log('G plus T', (objectFilterG + objectFilterT))
+        // console.log('G plus T', (objectFilterG + objectFilterT))
 
         return (objectFilterG + objectFilterT) > 0
       })
@@ -208,7 +208,7 @@ const KostcoSearchModule = ({
       <Link to='new'>New Kostco card</Link>
       <div>
         <button onClick={() => {
-          dispatchKostcoSearch(kostcoSearchReset())
+          dispatchKostcoSearch(kSearchReset())
         }}>Clear Search</button>
 
 
@@ -223,7 +223,7 @@ const KostcoSearchModule = ({
         id='searchTitle'
         checked={kostcoSearch.kTitle}
         onChange={() => {
-          dispatchKostcoSearch(kostcoSearchTitle())
+          dispatchKostcoSearch(kSearchTitle())
         }} />
       <label htmlFor="searchTitle">Search Title</label>
 
@@ -232,7 +232,7 @@ const KostcoSearchModule = ({
         id='searchOngoing'
         checked={kostcoSearch.kOngoing}
         onChange={() => {
-          dispatchKostcoSearch(kostcoSearchOngoing())
+          dispatchKostcoSearch(kSearchOngoing())
         }}
       />
       <label htmlFor="searchOngoing">Search Ongoing text</label>
@@ -242,7 +242,7 @@ const KostcoSearchModule = ({
         id='searchOneshot'
         checked={kostcoSearch.kOneshot}
         onChange={() => {
-          dispatchKostcoSearch(kostcoSearchOneshot())
+          dispatchKostcoSearch(kSearchOneshot())
         }}
       />
       <label htmlFor="searchOneshot">Search Oneshot text</label>
@@ -252,7 +252,7 @@ const KostcoSearchModule = ({
         id='searchFlavor'
         checked={kostcoSearch.kFlavor}
         onChange={() => {
-          dispatchKostcoSearch(kostcoSearchFlavor())
+          dispatchKostcoSearch(kSearchFlavor())
         }}
       />
       <label htmlFor="searchFlavor">Search Flavor</label>
@@ -265,14 +265,14 @@ const KostcoSearchModule = ({
           placeholder="Search card text"
           value={kostcoSearch.terms}
           onChange={(e) => {
-            dispatchKostcoSearch(kostcoSearchTerms(e.target.value))
+            dispatchKostcoSearch(kSearchTerms(e.target.value))
 
           }}
         />
       </div>
 
       <div>
-        <button onClick={() => { dispatchKostcoSearch(kostcoToggleAll()) }} >Toggle All</button>
+        <button onClick={() => { dispatchKostcoSearch(kToggleAll()) }} >Toggle All</button>
         <label htmlFor="searchEffects">Must include: </label>
         <div id="searchEffects">
 

@@ -5,11 +5,8 @@ const defaultKostcoCardState = {
   kID: '0',
   kTitle: '',
   kOngoing: '',
-  // searchOngoing: false,
   kOneshot: '',
-  // searchOneshot: false,
   kFlavor: '',
-  // searchFlavor: false,
 
   g: {
     // Challenge types
@@ -33,15 +30,31 @@ const defaultKostcoCardState = {
     turnEnd: false,
     anyTime: false,
 
-    // Others
+    // Action Token
     actionToken: false,
+
+    // Assist
     assist: false,
+    assistExtra: false, // new abc
+    assistValue: 0, // new abc
 
     // Changes numbers
     health: false,
     healthValue: 0,
     strength: false,
     strengthValue: 0,
+    damage: false, // new abc
+    damageValue: -1, // new abc
+
+    // Special
+    special: false, // new
+    switcharoo: false, // new
+    safetyHarness: false, // new
+    giantSlayerBonus: false, // new
+    pocketSpa: false, // new
+    fannypack: false, // new
+    ringGreed: false, // new
+    stevenGoldfish: false, // new
   },
 
   t: {
@@ -66,8 +79,11 @@ const defaultKostcoCardState = {
     turnEnd: false,
     anyTime: false,
 
-    // Others
+    // Action Token
     actionToken: false,
+    // requireSpendToken: false, // new a
+
+    // Assist
     assist: false,
 
     // Changes numbers
@@ -75,6 +91,15 @@ const defaultKostcoCardState = {
     healthValue: 0,
     strength: false,
     strengthValue: 0,
+    damage: false, // new
+    damageValue: 0, // new
+
+    // Special
+    special: false, // new
+    flaregun: false, // new
+    prongles: false, // new
+    crit50: false, // new
+    ringRecall: false, // new
   }
 
 }
@@ -695,6 +720,8 @@ const kostcoCardReducer = (state, action) => {
     case 'KOSTCO_ASSIST':
       currentG = state.g.assist
       currentT = state.t.assist
+      leaveAlone1G = state.g.assistExtra
+      leaveAlone2G = state.g.assistValue
       return {
         ...state,
         g: {
@@ -704,6 +731,17 @@ const kostcoCardReducer = (state, action) => {
             !currentG
             :
             currentG),
+          assistExtra: (CHECKG && currentG
+            ?
+            false
+            :
+            leaveAlone1G
+          ),
+          assistValue: (CHECKG && currentG
+            ?
+            0
+            :
+            leaveAlone2G),
         },
         t: {
           ...state.t,
@@ -713,6 +751,60 @@ const kostcoCardReducer = (state, action) => {
             :
             currentT),
         }
+      }
+    case 'ASSIST_EXTRA':
+      currentG = state.g.assistExtra
+      leaveAlone1G = state.g.assist
+      leaveAlone2G = state.g.assistValue
+      return {
+        ...state,
+        g: {
+          ...state.g,
+          assistExtra: (CHECKG
+            ?
+            !currentG
+            :
+            currentG),
+          assist: (CHECKG && !currentG
+            ?
+            true
+            :
+            leaveAlone1G),
+          assistValue: (CHECKG && !currentG
+            ?
+            leaveAlone2G
+            :
+            0
+          )
+        },
+
+      }
+    case 'ASSIST_VALUE':
+      leaveAlone1G = state.g.assistValue
+      leaveAlone2G = state.g.assist
+      return {
+        ...state,
+        g: {
+          ...state.g,
+          assistValue: (CHECKG
+            ?
+            action.assistValue
+            :
+            leaveAlone1G),
+          assist: (
+            (CHECKG && action.assistValue !== 0)
+              ?
+              true
+              :
+              leaveAlone2G),
+          assistExtra: (
+            (CHECKG && action.assistValue !== 0)
+              ?
+              true
+              :
+              false
+          )
+        },
       }
     case 'KOSTCO_HEALTH':
       currentG = state.g.health
@@ -844,6 +936,66 @@ const kostcoCardReducer = (state, action) => {
               false)
         },
       }
+    case 'KOSTCO_DAMAGE':
+      currentG = state.g.damage
+      currentT = state.t.damage
+      return {
+        ...state,
+        g: {
+          ...state.g,
+          damage: (CHECKG
+            ?
+            !currentG
+            :
+            currentG),
+        },
+        t: {
+          ...state.t,
+          damage: (CHECKT
+            ?
+            !currentT
+            :
+            currentT),
+        }
+      }
+    case 'DAMAGE_VALUE':
+      leaveAlone1G = state.g.damageValue
+      leaveAlone1T = state.t.damageValue
+      return {
+        ...state,
+
+        g: {
+          ...state.g,
+          damageValue: (
+            CHECKG
+              ?
+              action.damageValue
+              :
+              leaveAlone1G),
+          damage: (
+            (CHECKG && action.damageValue !== 0)
+              ?
+              true
+              :
+              false)
+        },
+        t: {
+          ...state.t,
+          damageValue: (
+            CHECKT
+              ?
+              action.damageValue
+              :
+              leaveAlone1T),
+          damage: (
+            (CHECKT && action.damageValue !== 0)
+              ?
+              true
+              :
+              false)
+        },
+      }
+
     default:
       return state
   }

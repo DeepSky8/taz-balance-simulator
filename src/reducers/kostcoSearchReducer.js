@@ -7,12 +7,6 @@ const defaultKostcoSearchState = {
   kOneshot: true,
   kFlavor: false,
 
-  // Effects
-  // ongoing: false,
-  // oneshot: false,
-
-
-
   g: {
     // Challenge types
     magic: false,
@@ -35,15 +29,31 @@ const defaultKostcoSearchState = {
     turnEnd: false,
     anyTime: false,
 
-    // Others
+    // Action Token
     actionToken: false,
+
+    // Assist
     assist: false,
+    assistExtra: false, // new abc
+    assistExtraValue: 0, // new
 
     // Changes numbers
     health: false,
     healthValue: 0,
     strength: false,
     strengthValue: 0,
+    damage: false, // new abc
+    damageValue: 0, // new a
+
+    // Special
+    special: false, // new
+    switcharoo: false, // new
+    safetyHarness: false, // new
+    giantSlayerBonus: false, // new
+    pocketSpa: false, // new
+    fannypack: false, // new
+    ringGreed: false, // new
+    stevenGoldfish: false, // new
   },
 
   t: {
@@ -68,8 +78,11 @@ const defaultKostcoSearchState = {
     turnEnd: false,
     anyTime: false,
 
-    // Others
+    // Action Token
     actionToken: false,
+    // requireSpendToken: false, // new a
+
+    // Assist
     assist: false,
 
     // Changes numbers
@@ -77,6 +90,16 @@ const defaultKostcoSearchState = {
     healthValue: 0,
     strength: false,
     strengthValue: 0,
+    damage: false, // new
+    damageValue: 0, // new
+
+    // Special
+    special: false, // new
+    flaregun: false, // new
+    prongles: false, // new
+    crit50: false, // new
+    ringRecall: false, // new
+
   }
 
 }
@@ -87,6 +110,9 @@ const kostcoSearchReducer = (state, action) => {
 
   let currentG = false
   let currentT = false
+
+  let leaveAlone1G = false
+  let leaveAlone1T = false
 
   switch (action.type) {
     case 'KOSTCO_SEARCH_RESET':
@@ -426,6 +452,30 @@ const kostcoSearchReducer = (state, action) => {
             currentT),
         }
       }
+    // case 'REQUIRE_SPEND_TOKEN':
+    //   currentG = state.g.requireSpendToken
+    //   currentT = state.t.requireSpendToken
+    //   return {
+    //     ...state,
+    //     g: {
+    //       ...state.g,
+    //       requireSpendToken: (CHECKG
+    //         ?
+    //         !currentG
+    //         :
+    //         currentG
+    //       )
+    //     },
+    //     t: {
+    //       ...state.t,
+    //       requireSpendToken: (CHECKT
+    //         ?
+    //         !currentT
+    //         :
+    //         currentT
+    //       )
+    //     }
+    //   }
     case 'KOSTCO_STRENGTH':
       currentG = state.g.strength
       currentT = state.t.strength
@@ -451,6 +501,7 @@ const kostcoSearchReducer = (state, action) => {
     case 'KOSTCO_ASSIST':
       currentG = state.g.assist
       currentT = state.t.assist
+      leaveAlone1G = state.g.assistExtra
       return {
         ...state,
         g: {
@@ -460,6 +511,11 @@ const kostcoSearchReducer = (state, action) => {
             !currentG
             :
             currentG),
+          assistExtra: (CHECKG && currentG
+            ?
+            false
+            :
+            leaveAlone1G)
         },
         t: {
           ...state.t,
@@ -468,6 +524,26 @@ const kostcoSearchReducer = (state, action) => {
             !currentT
             :
             currentT),
+        }
+      }
+    case 'ASSIST_EXTRA':
+      currentG = state.g.assistExtra
+      leaveAlone1G = state.g.assist
+      return {
+        ...state,
+        g: {
+          ...state.g,
+          assistExtra: (CHECKG
+            ?
+            !currentG
+            :
+            currentG
+          ),
+          assist: (CHECKG && !currentG
+            ?
+            true
+            :
+            leaveAlone1G),
         }
       }
     case 'KOSTCO_HEALTH':
@@ -492,6 +568,29 @@ const kostcoSearchReducer = (state, action) => {
             currentT),
         }
       }
+    case 'KOSTCO_DAMAGE':
+      currentG = state.g.damage
+      currentT = state.t.damage
+      return {
+        ...state,
+        g: {
+          ...state.g,
+          damage: (CHECKG
+            ?
+            !currentG
+            :
+            currentG),
+        },
+        t: {
+          ...state.t,
+          damage: (CHECKT
+            ?
+            !currentT
+            :
+            currentT),
+        }
+      }
+
     case 'TOGGLE_ALL':
       const toggleTO = !state.g.magic
       return {

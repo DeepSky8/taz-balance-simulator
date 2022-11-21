@@ -42,9 +42,128 @@ export const kCombatPostroll = (flagType) => ({
   flagType
 })
 
+
+
+export const kSearchTerms = (terms) => ({
+  type: 'KOSTCO_SEARCH_TERMS',
+  terms
+})
+
+export const kSearchReset = () => ({
+  type: 'KOSTCO_SEARCH_RESET'
+})
+
+
+export const kSearchTitle = () => ({
+  type: 'SEARCH_TITLE'
+})
+
+export const kSearchOngoing = () => ({
+  type: 'SEARCH_ONGOING'
+})
+
+export const kSearchOneshot = () => ({
+  type: 'SEARCH_ONE_SHOT'
+})
+
+export const kSearchFlavor = () => ({
+  type: 'SEARCH_FLAVOR'
+})
+
+
+export const kMagic = (flagType) => ({
+  type: 'KOSTCO_MAGIC',
+  flagType
+})
+
+export const kMonster = (flagType) => ({
+  type: 'KOSTCO_MONSTER',
+  flagType
+})
+
+export const kSpooky = (flagType) => ({
+  type: 'KOSTCO_SPOOKY',
+  flagType
+})
+
+export const kTrap = (flagType) => ({
+  type: 'KOSTCO_TRAP',
+  flagType
+})
+
+
+export const kReroll = (flagType) => ({
+  type: 'KOSTCO_REROLL',
+  flagType
+})
+
+export const kCritRoll = (flagType) => ({
+  type: 'KOSTCO_CRIT_ROLL',
+  flagType
+})
+
+export const kTargetSelf = (flagType) => ({
+  type: 'KOSTCO_TARGET_SELF',
+  flagType
+})
+
+export const kTargetOther = (flagType) => ({
+  type: 'KOSTCO_TARGET_OTHER',
+  flagType
+})
+
+
+export const kCombat = (flagType) => ({
+  type: 'KOSTCO_COMBAT',
+  flagType
+})
+
+export const kTurnEnd = (flagType) => ({
+  type: 'KOSTCO_TURN_END',
+  flagType
+})
+
+export const kAnyTime = (flagType) => ({
+  type: 'KOSTCO_ANY_TIME',
+  flagType
+})
+
+
+export const kActionToken = (flagType) => ({
+  type: 'KOSTCO_ACTION_TOKEN',
+  flagType
+})
+
+
+export const kAssist = (flagType) => ({
+  type: 'KOSTCO_ASSIST',
+  flagType
+})
+
+export const kAssistExtra = (flagType) => ({
+  type: 'ASSIST_EXTRA',
+  flagType
+})
+
+export const kAssistValue = (assistValue, flagType) => ({
+  type: 'ASSIST_VALUE',
+  assistValue,
+  flagType,
+})
+
+export const kHealth = (flagType) => ({
+  type: 'KOSTCO_HEALTH',
+  flagType
+})
+
 export const kHealthValue = (healthValue, flagType) => ({
   type: 'HEALTH_VALUE',
   healthValue,
+  flagType
+})
+
+export const kStrength = (flagType) => ({
+  type: 'KOSTCO_STRENGTH',
   flagType
 })
 
@@ -54,114 +173,18 @@ export const kStrengthValue = (strengthValue, flagType) => ({
   flagType
 })
 
-// Search Actions
-
-export const kostcoSearchTerms = (terms) => ({
-  type: 'KOSTCO_SEARCH_TERMS',
-  terms
-})
-
-export const kostcoSearchReset = () => ({
-  type: 'KOSTCO_SEARCH_RESET'
-})
-
-
-export const kostcoSearchTitle = () => ({
-  type: 'SEARCH_TITLE'
-})
-
-export const kostcoSearchOngoing = () => ({
-  type: 'SEARCH_ONGOING'
-})
-
-export const kostcoSearchOneshot = () => ({
-  type: 'SEARCH_ONE_SHOT'
-})
-
-export const kostcoSearchFlavor = () => ({
-  type: 'SEARCH_FLAVOR'
-})
-
-
-export const kostcoMagic = (flagType) => ({
-  type: 'KOSTCO_MAGIC',
+export const kDamage = (flagType) => ({
+  type: 'KOSTCO_DAMAGE',
   flagType
 })
 
-export const kostcoMonster = (flagType) => ({
-  type: 'KOSTCO_MONSTER',
+export const kDamageValue = (damageValue, flagType) => ({
+  type: 'DAMAGE_VALUE',
+  damageValue,
   flagType
 })
 
-export const kostcoSpooky = (flagType) => ({
-  type: 'KOSTCO_SPOOKY',
-  flagType
-})
-
-export const kostcoTrap = (flagType) => ({
-  type: 'KOSTCO_TRAP',
-  flagType
-})
-
-
-export const kostcoReroll = (flagType) => ({
-  type: 'KOSTCO_REROLL',
-  flagType
-})
-
-export const kostcoCritRoll = (flagType) => ({
-  type: 'KOSTCO_CRIT_ROLL',
-  flagType
-})
-
-export const kostcoTargetSelf = (flagType) => ({
-  type: 'KOSTCO_TARGET_SELF',
-  flagType
-})
-
-export const kostcoTargetOther = (flagType) => ({
-  type: 'KOSTCO_TARGET_OTHER',
-  flagType
-})
-
-
-export const kostcoCombat = (flagType) => ({
-  type: 'KOSTCO_COMBAT',
-  flagType
-})
-
-export const kostcoTurnEnd = (flagType) => ({
-  type: 'KOSTCO_TURN_END',
-  flagType
-})
-
-export const kostcoAnyTime = (flagType) => ({
-  type: 'KOSTCO_ANY_TIME',
-  flagType
-})
-
-
-export const kostcoActionToken = (flagType) => ({
-  type: 'KOSTCO_ACTION_TOKEN',
-  flagType
-})
-
-export const kostcoStrength = (flagType) => ({
-  type: 'KOSTCO_STRENGTH',
-  flagType
-})
-
-export const kostcoAssist = (flagType) => ({
-  type: 'KOSTCO_ASSIST',
-  flagType
-})
-
-export const kostcoHealth = (flagType) => ({
-  type: 'KOSTCO_HEALTH',
-  flagType
-})
-
-export const kostcoToggleAll = () => ({
+export const kToggleAll = () => ({
   type: 'TOGGLE_ALL'
 })
 

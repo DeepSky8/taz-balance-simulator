@@ -12,7 +12,16 @@ const KostcoFlags = (
 ) => {
   const ongoing = 'ongoing'
   const oneshot = 'oneshot'
-  const [flagDisplay, setFlagDisplay] = useState(ongoing)
+  const g = 'g'
+  const t = 't'
+  const newKard = 'new'
+  const [flagDisplay, setFlagDisplay] = useState(
+    (ident !== newKard && reducer.kOngoing.length === 0)
+      ?
+      oneshot
+      :
+      ongoing
+  )
 
   return (
     <div>
@@ -36,7 +45,7 @@ const KostcoFlags = (
           dispatchReducer={dispatchReducer}
           updateKard={updateKard}
           ident={ident}
-          flagType={'g'}
+          flagType={g}
         />
       }
 
@@ -47,7 +56,7 @@ const KostcoFlags = (
           dispatchReducer={dispatchReducer}
           updateKard={updateKard}
           ident={ident}
-          flagType={'t'}
+          flagType={t}
         />
       }
 
