@@ -1,15 +1,13 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
-  kSearchFlavor,
-  kSearchOneshot,
-  kSearchOngoing,
+  kSearchOneshotFlags,
+  kSearchOngoingFlags,
   kSearchReset,
-  kSearchTerms,
-  kSearchTitle,
   kToggleAll
 } from "../../../../actions/kostcoActions";
-import KostcoFlags from "./KostcoFlags";
+import KostcoSearchFlags from "./KostcoSearchFlags";
+import KostcoSearchText from "./KostcoSearchText";
 
 
 const KostcoSearchModule = ({
@@ -19,7 +17,7 @@ const KostcoSearchModule = ({
   kostcoUnfiltered,
   setKostcoArray,
 }) => {
-
+  const ident = 'search'
   // Search Effect
   useEffect(() => {
     // Split out each search term seperated by a comma
@@ -96,43 +94,11 @@ const KostcoSearchModule = ({
         return kEntries > 0
       })
 
-    // const textFilteredArray = textboxFilteredArray
-    //   .filter((kardObject) => {
-    //     const textFilter = Object
-    //       .entries(kardObject)
-    //       .filter(keyValue => {
+    // console.log('textboxfilteredArray', textboxFilteredArray)
 
-    //         const lowercaseText = (
-    //           (
-    //             (/^k/).test(keyValue[0])
-    //             &&
-    //             keyValue[1].length > 0
-    //           )
-    //             ?
-    //             keyValue[1].toLowerCase()
-    //             :
-    //             ''
-    //         )
-    //         // console.log('lowercaseText', lowercaseText)
 
-    //         return (
-    //           (searchTermsArray.length === 0)
-    //           ||
-    //           (
-    //             searchTermsArray
-    //               .filter(searchTerm => lowercaseText.includes(searchTerm))
-    //               .length > 0
-    //           )
-    //         )
-    //       })
-    //     // .length
-    //     console.log('textFilter', textFilter)
-    //     return textFilter.length > 0
-    //   })
 
-    // console.log('kostcoSearchG', kostcoSearch.g)
-
-    // Create a text array of 'ongoing' key names with a value of true
+    // Create a text array of 'ongoing' effect key names with a value of true
     const paramArrayG = Object
       // create a temporary array from the 'g' object on the search reducer
       .entries(kostcoSearch.g)
@@ -142,11 +108,11 @@ const KostcoSearchModule = ({
       .map(keyValue => keyValue[0])
 
 
-    // Create a text array of 'oneshot' key names with a value of true
+    // Create a text array of 'oneshot' effect key names with a value of true
     const paramArrayT = Object
-      // create a temporary array from the 'g' object on the search reducer
+      // create a temporary array from the 't' object on the search reducer
       .entries(kostcoSearch.t)
-      // select all 'g' object search parameters that are 'true'
+      // select all 't' object search parameters that are 'true'
       .filter(keyValue => keyValue[1])
       // return only the key text from the keyValue pair
       .map(keyValue => keyValue[0])
@@ -163,7 +129,9 @@ const KostcoSearchModule = ({
           .entries(kardObject.g)
           .filter(keyValue =>
           (
-            keyValue[1]
+            (keyValue[1] === true)
+            &&
+            (kostcoSearch.fOngoing)
             &&
             (
               paramArrayG.length > 0
@@ -173,12 +141,15 @@ const KostcoSearchModule = ({
                 true
             )))
           .length
+        // console.log('objectFilterG', objectFilterG)
 
         const objectFilterT = Object
           .entries(kardObject.t)
           .filter(keyValue =>
           (
-            keyValue[1]
+            (keyValue[1] === true)
+            &&
+            (kostcoSearch.fOneshot)
             &&
             (
               paramArrayT.length > 0
@@ -189,15 +160,17 @@ const KostcoSearchModule = ({
             )))
           .length
         // console.log('G plus T', (objectFilterG + objectFilterT))
+        // console.log('objectFilterT', objectFilterT)
 
         return (objectFilterG + objectFilterT) > 0
       })
+    // console.log('flagFilteredArray', flagFilteredArray)
 
-
-
-    setKostcoArray(flagFilteredArray)
-
-
+    if (kostcoSearch.fOngoing === false && kostcoSearch.fOneshot === false) {
+      setKostcoArray(textboxFilteredArray)
+    } else {
+      setKostcoArray(flagFilteredArray)
+    }
 
   }, [kostcoSearch, kostcoUnfiltered])
 
@@ -216,74 +189,48 @@ const KostcoSearchModule = ({
 
       </div>
 
-      <label htmlFor="searchTerms">Text Search: </label>
-
-      <input
-        type='checkbox'
-        id='searchTitle'
-        checked={kostcoSearch.kTitle}
-        onChange={() => {
-          dispatchKostcoSearch(kSearchTitle())
-        }} />
-      <label htmlFor="searchTitle">Search Title</label>
-
-      <input
-        type='checkbox'
-        id='searchOngoing'
-        checked={kostcoSearch.kOngoing}
-        onChange={() => {
-          dispatchKostcoSearch(kSearchOngoing())
-        }}
+      <KostcoSearchText
+        kostcoSearch={kostcoSearch}
+        dispatchKostcoSearch={dispatchKostcoSearch}
       />
-      <label htmlFor="searchOngoing">Search Ongoing text</label>
-
-      <input
-        type='checkbox'
-        id='searchOneshot'
-        checked={kostcoSearch.kOneshot}
-        onChange={() => {
-          dispatchKostcoSearch(kSearchOneshot())
-        }}
-      />
-      <label htmlFor="searchOneshot">Search Oneshot text</label>
-
-      <input
-        type='checkbox'
-        id='searchFlavor'
-        checked={kostcoSearch.kFlavor}
-        onChange={() => {
-          dispatchKostcoSearch(kSearchFlavor())
-        }}
-      />
-      <label htmlFor="searchFlavor">Search Flavor</label>
 
       <div>
-        <input
-          type='text'
-          id="searchTerms"
-          name="searchTerms"
-          placeholder="Search card text"
-          value={kostcoSearch.terms}
-          onChange={(e) => {
-            dispatchKostcoSearch(kSearchTerms(e.target.value))
 
-          }}
-        />
-      </div>
-
-      <div>
-        <button onClick={() => { dispatchKostcoSearch(kToggleAll()) }} >Toggle All</button>
         <label htmlFor="searchEffects">Must include: </label>
-        <div id="searchEffects">
+        <span>
 
-          <KostcoFlags
-            reducer={kostcoSearch}
-            dispatchReducer={dispatchKostcoSearch}
-            updateKard={updateKard}
-            ident={'search'}
+          <input
+            type='checkbox'
+            id={'fOngoing' + ident}
+            checked={kostcoSearch.fOngoing}
+            onChange={() => {
+              dispatchKostcoSearch(kSearchOngoingFlags())
+            }}
+
           />
+          <label htmlFor={'fOngoing' + ident}>Ongoing</label>
 
-        </div>
+          <input
+            type='checkbox'
+            id={'fOneshot' + ident}
+            checked={kostcoSearch.fOneshot}
+            onChange={() => {
+              dispatchKostcoSearch(kSearchOneshotFlags())
+            }}
+
+          />
+          <label htmlFor={'fOneshot' + ident}>Oneshot</label>
+
+        </span>
+
+        <KostcoSearchFlags
+          id="searchEffects"
+          reducer={kostcoSearch}
+          dispatchReducer={dispatchKostcoSearch}
+          updateKard={updateKard}
+          ident={ident}
+        />
+
       </div>
 
 
@@ -292,3 +239,5 @@ const KostcoSearchModule = ({
 }
 
 export default KostcoSearchModule
+
+//         <button onClick={() => { dispatchKostcoSearch(kToggleAll()) }} >Toggle All</button>

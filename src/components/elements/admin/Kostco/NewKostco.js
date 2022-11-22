@@ -5,7 +5,7 @@ import {
   startNewKard,
 } from "../../../../actions/kostcoActions";
 import { defaultKostcoCardState, kostcoCardReducer } from "../../../../reducers/kostcoCardReducer";
-import KostcoFlags from "./KostcoFlags";
+import KostcoSearchFlags from "./KostcoSearchFlags";
 import KostcoText from "./KostcoText";
 
 const NewKostco = () => {
@@ -28,7 +28,7 @@ const NewKostco = () => {
           updateKard={updateKard}
           ident={'new'}
         />
-        <KostcoFlags
+        <KostcoSearchFlags
           reducer={kardState}
           dispatchReducer={dispatchKardState}
           updateKard={updateKard}

@@ -1,8 +1,13 @@
 import React from "react";
 import { useState } from "react";
+import {
+  kSearchOneshotFlags,
+  kSearchOngoingFlags,
+  kSpecial
+} from "../../../../actions/kostcoActions";
 import FlagFrame from "./FlagFrame";
 
-const KostcoFlags = (
+const KostcoSearchFlags = (
   {
     reducer,
     dispatchReducer,
@@ -15,6 +20,7 @@ const KostcoFlags = (
   const g = 'g'
   const t = 't'
   const newKard = 'new'
+
   const [flagDisplay, setFlagDisplay] = useState(
     (ident !== newKard && reducer.kOngoing.length === 0)
       ?
@@ -23,19 +29,62 @@ const KostcoFlags = (
       ongoing
   )
 
+  const [specialDisplay, setSpecialDisplay] = useState(
+    (
+      flagDisplay === oneshot
+      &&
+      reducer.t.special
+    )
+      ?
+      true
+      :
+      (
+        flagDisplay === ongoing
+        &&
+        reducer.g.special
+      )
+        ?
+        true
+        :
+        false
+  )
+
+
+
+
   return (
     <div>
       <span>
+
         <button
           disabled={flagDisplay === ongoing}
           onClick={() => { setFlagDisplay(ongoing) }}
-        >Switch to Ongoing
+        >View Ongoing
         </button>
+
         <button
           disabled={flagDisplay === oneshot}
           onClick={() => { setFlagDisplay(oneshot) }}
-        >Switch to Oneshot
+        >View Oneshot
         </button>
+
+        <input
+          id={'special' + flagDisplay + ident}
+          type='checkbox'
+          value={specialDisplay}
+          onChange={() => {
+            if (flagDisplay === oneshot) {
+              dispatchReducer(kSpecial(t))
+            } else if (flagDisplay === ongoing) {
+              dispatchReducer(kSpecial(g))
+            }
+            // dispatchReducer(kSpecial(flagType))
+          }}
+          onBlur={() => { updateKard() }}
+        />
+        <label htmlFor={'special' + flagDisplay + ident}>One-off</label>
+
+
       </span>
 
       {flagDisplay === ongoing &&
@@ -65,4 +114,6 @@ const KostcoFlags = (
   )
 }
 
-export default KostcoFlags
+export default KostcoSearchFlags
+
+

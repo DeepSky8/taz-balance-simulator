@@ -70,6 +70,13 @@ export const kSearchFlavor = () => ({
   type: 'SEARCH_FLAVOR'
 })
 
+export const kSearchOngoingFlags = () => ({
+  type: 'SEARCH_ONGOING_FLAGS'
+})
+
+export const kSearchOneshotFlags = () => ({
+  type: 'SEARCH_ONESHOT_FLAGS'
+})
 
 export const kMagic = (flagType) => ({
   type: 'KOSTCO_MAGIC',
@@ -186,6 +193,11 @@ export const kDamageValue = (damageValue, flagType) => ({
 
 export const kToggleAll = () => ({
   type: 'TOGGLE_ALL'
+})
+
+export const kSpecial = (flagType) => ({
+  type: 'KOSTCO_SPECIAL',
+  flagType
 })
 
 // Cloud Actions

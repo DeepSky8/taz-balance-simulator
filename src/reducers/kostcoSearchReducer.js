@@ -6,6 +6,8 @@ const defaultKostcoSearchState = {
   kOngoing: true,
   kOneshot: true,
   kFlavor: false,
+  fOngoing: true,
+  fOneshot: true,
 
   g: {
     // Challenge types
@@ -46,7 +48,7 @@ const defaultKostcoSearchState = {
     damageValue: 0, // new a
 
     // Special
-    special: false, // new
+    special: false, // new ab
     switcharoo: false, // new
     safetyHarness: false, // new
     giantSlayerBonus: false, // new
@@ -143,6 +145,16 @@ const kostcoSearchReducer = (state, action) => {
       return {
         ...state,
         kFlavor: !state.kFlavor
+      }
+    case 'SEARCH_ONGOING_FLAGS':
+      return {
+        ...state,
+        fOngoing: !state.fOngoing
+      }
+    case 'SEARCH_ONESHOT_FLAGS':
+      return {
+        ...state,
+        fOneshot: !state.fOneshot
       }
     case 'KOSTCO_MAGIC':
       currentG = state.g.magic
@@ -651,6 +663,28 @@ const kostcoSearchReducer = (state, action) => {
           assist: toggleTO,
           health: toggleTO,
         }
+      }
+    case 'KOSTCO_SPECIAL':
+      currentG = state.g.special
+      currentT = state.t.special
+      return {
+        ...state,
+        g: {
+          ...state.g,
+          special: CHECKG
+            ?
+            !currentG
+            :
+            currentG
+        },
+        t: {
+          ...state.t,
+          special: CHECKT
+            ?
+            !currentT
+            :
+            currentT
+        },
       }
     default:
       return state

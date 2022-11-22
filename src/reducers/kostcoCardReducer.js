@@ -47,7 +47,7 @@ const defaultKostcoCardState = {
     damageValue: -1, // new abc
 
     // Special
-    special: false, // new
+    special: false, // new ab
     switcharoo: false, // new
     safetyHarness: false, // new
     giantSlayerBonus: false, // new
@@ -995,6 +995,29 @@ const kostcoCardReducer = (state, action) => {
               false)
         },
       }
+      case 'KOSTCO_SPECIAL':
+      currentG = state.g.special
+      currentT = state.t.special
+      return {
+        ...state,
+        g: {
+          ...state.g,
+          special: CHECKG
+            ?
+            !currentG
+            :
+            currentG
+        },
+        t: {
+          ...state.t,
+          special: CHECKT
+            ?
+            !currentT
+            :
+            currentT
+        },
+      }
+
 
     default:
       return state

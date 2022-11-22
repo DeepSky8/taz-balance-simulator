@@ -3,15 +3,24 @@
   margin-bottom: 10px;
 }
 
-@mixin kostcoWrapping {
+@mixin kostcoRowWrapping {
   // flex-direction: row;
   // flex-wrap: wrap;
   flex-flow: row wrap;
 }
 
+@mixin kostcoColWrapping {
+  flex-flow: column wrap;
+}
+
 .kostcoFlexContainer {
   @include kostcoContainer;
-  @include kostcoWrapping;
+  @include kostcoRowWrapping;
+}
+
+.kostcoColContainer {
+  @include kostcoContainer;
+  @include kostcoColWrapping;
 }
 
 .kostcoEditBorder {
