@@ -35,26 +35,28 @@ const defaultKostcoCardState = {
 
     // Assist
     assist: false,
-    assistExtra: false, // new abc
-    assistValue: 0, // new abc
+    assistExtra: false,
+    assistValue: 0,
 
     // Changes numbers
     health: false,
     healthValue: 0,
     strength: false,
     strengthValue: 0,
-    damage: false, // new abc
-    damageValue: -1, // new abc
+    damage: false,
+    damageValue: -1,
 
     // Special
-    special: false, // new abc
-    switcharoo: false, // new abc
-    safetyHarness: false, // new abc
-    giantSlayer: false, // new abc
-    pocketSpa: false, // new abc
-    fannypack: false, // new abc
-    ringGreed: false, // new abc
-    stevenGoldfish: false, // new abc
+    special: false,
+    switcharoo: false,
+    safetyHarness: false,
+    giantSlayer: false,
+    pocketSpa: false,
+    fannypack: false,
+    ringGreed: false,
+    stevenGoldfish: false,
+    slippiesHaste: false,
+    burnsideburns: false,
   },
 
   t: {
@@ -81,7 +83,6 @@ const defaultKostcoCardState = {
 
     // Action Token
     actionToken: false,
-    // requireSpendToken: false, // new a
 
     // Assist
     assist: false,
@@ -91,15 +92,15 @@ const defaultKostcoCardState = {
     healthValue: 0,
     strength: false,
     strengthValue: 0,
-    damage: false, // new
-    damageValue: 0, // new
+    damage: false,
+    damageValue: 0,
 
     // Special
-    special: false, // new abc
-    flaregun: false, // new abc
-    prongles: false, // new abc
-    crit50: false, // new abc
-    ringRecall: false, // new abc
+    special: false,
+    flaregun: false,
+    prongles: false,
+    crit50: false,
+    ringRecall: false,
   }
 
 }
@@ -109,6 +110,9 @@ const kostcoCardReducer = (state, action) => {
   const CHECKG = action.flagType === 'g'
   const CHECKT = action.flagType === 't'
 
+  let leaveAloneNumberG = 0
+  let leaveAloneNumberT = 0
+
   let currentG = false
   let leaveAlone1G = false
   let leaveAlone2G = false
@@ -117,7 +121,8 @@ const kostcoCardReducer = (state, action) => {
   let leaveAlone5G = false
   let leaveAlone6G = false
   let leaveAlone7G = false
-
+  let leaveAlone8G = false
+  let leaveAlone9G = false
 
   let currentT = false
   let leaveAlone1T = false
@@ -836,8 +841,10 @@ const kostcoCardReducer = (state, action) => {
         }
       }
     case 'HEALTH_VALUE':
-      leaveAlone1G = state.g.healthValue
-      leaveAlone1T = state.t.healthValue
+      leaveAlone1G = state.g.health
+      leaveAloneNumberG = state.g.healthValue
+      leaveAlone1T = state.t.health
+      leaveAloneNumberT = state.t.healthValue
       return {
         ...state,
         // healthValue: action.healthValue,
@@ -849,13 +856,18 @@ const kostcoCardReducer = (state, action) => {
               ?
               action.healthValue
               :
-              leaveAlone1G),
+              leaveAloneNumberG),
           health: (
-            (CHECKG && action.healthValue !== 0)
+            CHECKG
               ?
-              true
+              (action.healthValue !== 0
+                ?
+                true
+                :
+                false)
               :
-              false)
+              leaveAlone1G
+          )
         },
         t: {
           ...state.t,
@@ -864,20 +876,25 @@ const kostcoCardReducer = (state, action) => {
               ?
               action.healthValue
               :
-              leaveAlone1T),
+              leaveAloneNumberT),
           health: (
-            (CHECKT && action.healthValue !== 0)
+            CHECKT
               ?
-              true
+              (action.healthValue !== 0
+                ?
+                true
+                :
+                false)
               :
-              false)
+              leaveAlone1T
+          )
         },
       }
     case 'KOSTCO_STRENGTH':
       currentG = state.g.strength
       currentT = state.t.strength
-      const strengthValG = state.g.strength ? 0 : state.g.strengthValue
-      const strengthValT = state.t.strength ? 0 : state.t.strengthValue
+      const strengthValG = (CHECKG && state.g.strength) ? 0 : state.g.strengthValue
+      const strengthValT = (CHECKT && state.t.strength) ? 0 : state.t.strengthValue
       return {
         ...state,
         g: {
@@ -902,8 +919,10 @@ const kostcoCardReducer = (state, action) => {
         },
       }
     case 'STRENGTH_VALUE':
-      leaveAlone1G = state.g.strengthValue
-      leaveAlone1T = state.t.strengthValue
+      leaveAlone1G = state.g.strength
+      leaveAloneNumberG = state.g.strengthValue
+      leaveAlone1T = state.t.strength
+      leaveAloneNumberT = state.t.strengthValue
       return {
         ...state,
         // strengthValue: action.strengthValue,
@@ -915,13 +934,18 @@ const kostcoCardReducer = (state, action) => {
               ?
               action.strengthValue
               :
-              leaveAlone1G),
+              leaveAloneNumberG),
           strength: (
-            (CHECKG && action.strengthValue !== 0)
+            CHECKG
               ?
-              true
+              (action.strengthValue !== 0
+                ?
+                true
+                :
+                false
+              )
               :
-              false)
+              leaveAlone1G)
         },
         t: {
           ...state.t,
@@ -930,13 +954,18 @@ const kostcoCardReducer = (state, action) => {
               ?
               action.strengthValue
               :
-              leaveAlone1T),
+              leaveAloneNumberT),
           strength: (
-            (CHECKT && action.strengthValue !== 0)
+            CHECKT
               ?
-              true
+              (action.strengthValue !== 0
+                ?
+                true
+                :
+                false
+              )
               :
-              false)
+              leaveAlone1T)
         },
       }
     case 'KOSTCO_DAMAGE':
@@ -1008,11 +1037,14 @@ const kostcoCardReducer = (state, action) => {
       leaveAlone5G = state.g.fannypack
       leaveAlone6G = state.g.ringGreed
       leaveAlone7G = state.g.stevenGoldfish
+      leaveAlone8G = state.g.slippiesHaste
+      leaveAlone9G = state.g.burnsideburns
 
       leaveAlone1T = state.t.flaregun
       leaveAlone2T = state.t.prongles
       leaveAlone3T = state.t.crit50
       leaveAlone4T = state.t.ringRecall
+
       return {
         ...state,
         g: {
@@ -1057,6 +1089,16 @@ const kostcoCardReducer = (state, action) => {
             false
             :
             leaveAlone7G),
+          slippiesHaste: (CHECKG && currentG
+            ?
+            false
+            :
+            leaveAlone8G),
+          burnsideburns: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone9G),
         },
         t: {
           ...state.t,
@@ -1089,13 +1131,14 @@ const kostcoCardReducer = (state, action) => {
       }
     case 'SPECIAL_SWITCHAROO':
       currentG = state.g.switcharoo
-      // leaveAlone1G = state.g.switcharoo
       leaveAlone2G = state.g.safetyHarness
       leaveAlone3G = state.g.giantSlayer
       leaveAlone4G = state.g.pocketSpa
       leaveAlone5G = state.g.fannypack
       leaveAlone6G = state.g.ringGreed
       leaveAlone7G = state.g.stevenGoldfish
+      leaveAlone8G = state.g.slippiesHaste
+      leaveAlone9G = state.g.burnsideburns
       return {
         ...state,
         g: {
@@ -1135,17 +1178,28 @@ const kostcoCardReducer = (state, action) => {
             false
             :
             leaveAlone7G),
+          slippiesHaste: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone8G),
+          burnsideburns: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone9G),
         }
       }
     case 'SPECIAL_HARNESS':
       currentG = state.g.safetyHarness
       leaveAlone1G = state.g.switcharoo
-      // leaveAlone2G = state.g.safetyHarness
       leaveAlone3G = state.g.giantSlayer
       leaveAlone4G = state.g.pocketSpa
       leaveAlone5G = state.g.fannypack
       leaveAlone6G = state.g.ringGreed
       leaveAlone7G = state.g.stevenGoldfish
+      leaveAlone8G = state.g.slippiesHaste
+      leaveAlone9G = state.g.burnsideburns
       return {
         ...state,
         g: {
@@ -1185,17 +1239,28 @@ const kostcoCardReducer = (state, action) => {
             false
             :
             leaveAlone7G),
+          slippiesHaste: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone8G),
+          burnsideburns: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone9G),
         }
       }
     case 'SPECIAL_SLAYER':
       currentG = state.g.giantSlayer
       leaveAlone1G = state.g.switcharoo
       leaveAlone2G = state.g.safetyHarness
-      // leaveAlone3G = state.g.giantSlayer
       leaveAlone4G = state.g.pocketSpa
       leaveAlone5G = state.g.fannypack
       leaveAlone6G = state.g.ringGreed
       leaveAlone7G = state.g.stevenGoldfish
+      leaveAlone8G = state.g.slippiesHaste
+      leaveAlone9G = state.g.burnsideburns
       return {
         ...state,
         g: {
@@ -1235,6 +1300,16 @@ const kostcoCardReducer = (state, action) => {
             false
             :
             leaveAlone7G),
+          slippiesHaste: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone8G),
+          burnsideburns: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone9G),
         }
       }
     case 'SPECIAL_SPA':
@@ -1242,10 +1317,11 @@ const kostcoCardReducer = (state, action) => {
       leaveAlone1G = state.g.switcharoo
       leaveAlone2G = state.g.safetyHarness
       leaveAlone3G = state.g.giantSlayer
-      // leaveAlone4G = state.g.pocketSpa
       leaveAlone5G = state.g.fannypack
       leaveAlone6G = state.g.ringGreed
       leaveAlone7G = state.g.stevenGoldfish
+      leaveAlone8G = state.g.slippiesHaste
+      leaveAlone9G = state.g.burnsideburns
       return {
         ...state,
         g: {
@@ -1285,6 +1361,16 @@ const kostcoCardReducer = (state, action) => {
             false
             :
             leaveAlone7G),
+          slippiesHaste: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone8G),
+          burnsideburns: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone9G),
         }
       }
     case 'SPECIAL_FANNYPACK':
@@ -1293,9 +1379,10 @@ const kostcoCardReducer = (state, action) => {
       leaveAlone2G = state.g.safetyHarness
       leaveAlone3G = state.g.giantSlayer
       leaveAlone4G = state.g.pocketSpa
-      // leaveAlone5G = state.g.fannypack
       leaveAlone6G = state.g.ringGreed
       leaveAlone7G = state.g.stevenGoldfish
+      leaveAlone8G = state.g.slippiesHaste
+      leaveAlone9G = state.g.burnsideburns
       return {
         ...state,
         g: {
@@ -1335,6 +1422,16 @@ const kostcoCardReducer = (state, action) => {
             false
             :
             leaveAlone7G),
+          slippiesHaste: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone8G),
+          burnsideburns: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone9G),
         }
       }
     case 'SPECIAL_GREED':
@@ -1344,8 +1441,9 @@ const kostcoCardReducer = (state, action) => {
       leaveAlone3G = state.g.giantSlayer
       leaveAlone4G = state.g.pocketSpa
       leaveAlone5G = state.g.fannypack
-      // leaveAlone6G = state.g.ringGreed
       leaveAlone7G = state.g.stevenGoldfish
+      leaveAlone8G = state.g.slippiesHaste
+      leaveAlone9G = state.g.burnsideburns
       return {
         ...state,
         g: {
@@ -1385,6 +1483,16 @@ const kostcoCardReducer = (state, action) => {
             false
             :
             leaveAlone7G),
+          slippiesHaste: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone8G),
+          burnsideburns: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone9G),
         }
       }
     case 'SPECIAL_STEVEN':
@@ -1395,7 +1503,8 @@ const kostcoCardReducer = (state, action) => {
       leaveAlone4G = state.g.pocketSpa
       leaveAlone5G = state.g.fannypack
       leaveAlone6G = state.g.ringGreed
-      // leaveAlone7G = state.g.stevenGoldfish
+      leaveAlone8G = state.g.slippiesHaste
+      leaveAlone9G = state.g.burnsideburns
       return {
         ...state,
         g: {
@@ -1435,10 +1544,137 @@ const kostcoCardReducer = (state, action) => {
             false
             :
             leaveAlone6G),
+          slippiesHaste: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone8G),
+          burnsideburns: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone9G),
+        }
+      }
+    case 'SPECIAL_SLIPPIES':
+      currentG = state.g.slippiesHaste
+      leaveAlone1G = state.g.switcharoo
+      leaveAlone2G = state.g.safetyHarness
+      leaveAlone3G = state.g.giantSlayer
+      leaveAlone4G = state.g.pocketSpa
+      leaveAlone5G = state.g.fannypack
+      leaveAlone6G = state.g.ringGreed
+      leaveAlone7G = state.g.stevenGoldfish
+      leaveAlone9G = state.g.burnsideburns
+      return {
+        ...state,
+        g: {
+          ...state.g,
+          slippiesHaste: (CHECKG
+            ?
+            !currentG
+            :
+            currentG),
+          switcharoo: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone1G),
+          safetyHarness: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone2G),
+          giantSlayer: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone3G),
+          pocketSpa: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone4G),
+          fannypack: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone5G),
+          ringGreed: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone6G),
+          stevenGoldfish: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone7G),
+          burnsideburns: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone9G),
+        }
+      }
+    case 'SPECIAL_BURNSIDEBURNS':
+      currentG = state.g.burnsideburns
+      leaveAlone1G = state.g.switcharoo
+      leaveAlone2G = state.g.safetyHarness
+      leaveAlone3G = state.g.giantSlayer
+      leaveAlone4G = state.g.pocketSpa
+      leaveAlone5G = state.g.fannypack
+      leaveAlone6G = state.g.ringGreed
+      leaveAlone7G = state.g.stevenGoldfish
+      // leaveAlone9G = state.g.burnsideburns
+      return {
+        ...state,
+        g: {
+          ...state.g,
+          burnsideburns: (CHECKG
+            ?
+            !currentG
+            :
+            currentG),
+          switcharoo: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone1G),
+          safetyHarness: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone2G),
+          giantSlayer: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone3G),
+          pocketSpa: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone4G),
+          fannypack: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone5G),
+          ringGreed: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone6G),
+          stevenGoldfish: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone7G),
         }
       }
     case 'SPECIAL_FLAREGUN':
-      currentT = state.g.flaregun
+      currentT = state.t.flaregun
       // leaveAlone1T = state.t.flaregun
       leaveAlone2T = state.t.prongles
       leaveAlone3T = state.t.crit50
@@ -1475,7 +1711,7 @@ const kostcoCardReducer = (state, action) => {
         }
       }
     case 'SPECIAL_PRONGLES':
-      currentT = state.g.prongles
+      currentT = state.t.prongles
       leaveAlone1T = state.t.flaregun
       // leaveAlone2T = state.t.prongles
       leaveAlone3T = state.t.crit50
@@ -1512,7 +1748,7 @@ const kostcoCardReducer = (state, action) => {
         }
       }
     case 'SPECIAL_CRIT50':
-      currentT = state.g.crit50
+      currentT = state.t.crit50
       leaveAlone1T = state.t.flaregun
       leaveAlone2T = state.t.prongles
       // leaveAlone3T = state.t.crit50
@@ -1549,7 +1785,7 @@ const kostcoCardReducer = (state, action) => {
         }
       }
     case 'SPECIAL_RECALL':
-      currentT = state.g.ringRecall
+      currentT = state.t.ringRecall
       leaveAlone1T = state.t.flaregun
       leaveAlone2T = state.t.prongles
       leaveAlone3T = state.t.crit50

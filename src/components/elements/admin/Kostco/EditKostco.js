@@ -34,6 +34,7 @@ const EditKostco = ({ kard }) => {
             dispatchReducer={dispatchKardState}
             updateKard={updateKard}
             ident={kardState.kID}
+            textReset={false}
           />
 
           <KostcoSearchFlags

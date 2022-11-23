@@ -236,6 +236,15 @@ export const kStevenGoldfish = (flagType) => ({
   flagType
 })
 
+export const kSlippiesHaste = (flagType) => ({
+  type: 'SPECIAL_SLIPPIES',
+  flagType
+})
+
+export const kBurnsideburns = (flagType) => ({
+  type: 'SPECIAL_BURNSIDEBURNS',
+  flagType
+})
 // Oneshot Special
 
 export const kFlaregun = (flagType) => ({

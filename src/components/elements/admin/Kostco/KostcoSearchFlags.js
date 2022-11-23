@@ -1,6 +1,4 @@
-import React from "react";
-import { useEffect } from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   kSpecial
 } from "../../../../actions/kostcoActions";
@@ -17,13 +15,19 @@ const KostcoSearchFlags = (
   const g = 'g'
   const t = 't'
   const newKard = 'new'
+  const searchKard = 'search'
 
   const [flagDisplay, setFlagDisplay] = useState(
-    // (ident !== newKard && reducer.kOngoing.length === 0)
+    // ((ident === newKard) || (ident === searchKard))
     //   ?
-    //   t
+    //   g
     //   :
-      g
+    //   (reducer.kOngoing.length > 0)
+    //     ?
+    //     g
+    //     :
+    //     t
+    g
   )
 
   return (
@@ -31,21 +35,23 @@ const KostcoSearchFlags = (
       <span>
 
         <button
+          className='kostcoTabBlue'
           disabled={flagDisplay === g}
           onClick={() => {
             setFlagDisplay(g);
             // setSpecialDisplay(reducer.g.special) 
           }}
-        >View Ongoing
+        >Ongoing
         </button>
 
         <button
+          className='kostcoTabGreen'
           disabled={flagDisplay === t}
           onClick={() => {
             setFlagDisplay(t);
             // setSpecialDisplay(reducer.t.special) 
           }}
-        >View Oneshot
+        >Oneshot
         </button>
 
         {flagDisplay === g &&
@@ -92,25 +98,39 @@ const KostcoSearchFlags = (
       </span>
 
       {flagDisplay === g &&
+        <div className="kostcoFlexContainer">
 
-        <FlagFrame
-          reducer={reducer.g}
-          dispatchReducer={dispatchReducer}
-          updateKard={updateKard}
-          ident={ident}
-          flagType={g}
-        />
+          <div className='kostcoFlagBlue'>
+            <FlagFrame
+
+              reducer={reducer.g}
+              dispatchReducer={dispatchReducer}
+              updateKard={updateKard}
+              ident={ident}
+              flagType={g}
+            />
+          </div>
+
+        </div>
+
       }
 
       {flagDisplay === t &&
+        <div className="kostcoFlexContainer">
 
-        <FlagFrame
-          reducer={reducer.t}
-          dispatchReducer={dispatchReducer}
-          updateKard={updateKard}
-          ident={ident}
-          flagType={t}
-        />
+          <div className='kostcoFlagGreen'>
+            <FlagFrame
+
+              reducer={reducer.t}
+              dispatchReducer={dispatchReducer}
+              updateKard={updateKard}
+              ident={ident}
+              flagType={t}
+            />
+          </div>
+
+        </div>
+
       }
 
 

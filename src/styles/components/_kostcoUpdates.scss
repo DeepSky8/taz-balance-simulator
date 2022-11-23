@@ -13,6 +13,14 @@
   flex-flow: column wrap;
 }
 
+@mixin kostcoBlue {
+  background-color: #91d9ed;
+}
+
+@mixin kostcoGreen {
+  background-color: #91edbc;
+}
+
 .kostcoFlexContainer {
   @include kostcoContainer;
   @include kostcoRowWrapping;
@@ -33,4 +41,26 @@
 
 .kostcoNumberEntry {
   width: 3em;
+}
+
+.kostcoFlagBlue {
+  @include kostcoBlue;
+  // border-style: none;
+}
+
+.kostcoFlagGreen {
+  @include kostcoGreen;
+  // border-style: none;
+}
+
+.kostcoTabBlue {
+  @include kostcoBlue;
+  border-color: #91d9ed;
+  border-bottom-style: none;
+}
+
+.kostcoTabGreen {
+  @include kostcoGreen;
+  border-color: #91edbc;
+  border-bottom-style: none;
 }

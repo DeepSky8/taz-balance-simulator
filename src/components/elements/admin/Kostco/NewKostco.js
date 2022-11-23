@@ -1,4 +1,5 @@
 import React, { useReducer } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   clearKard,
@@ -10,12 +11,15 @@ import KostcoText from "./KostcoText";
 
 const NewKostco = () => {
   const [kardState, dispatchKardState] = useReducer(kostcoCardReducer, defaultKostcoCardState)
-
+  const [textEffect, setTextEffect] = useState(false)
+  const ident = 'new'
   const updateKard = () => { }
 
   const saveKard = () => {
     startNewKard(kardState)
     dispatchKardState(clearKard())
+    setTextEffect(!textEffect)
+    document.getElementById('kTitlenew').focus({ focusVisible: true })
   }
 
   return (
@@ -26,13 +30,14 @@ const NewKostco = () => {
           reducer={kardState}
           dispatchReducer={dispatchKardState}
           updateKard={updateKard}
-          ident={'new'}
+          ident={ident}
+          textReset={textEffect}
         />
         <KostcoSearchFlags
           reducer={kardState}
           dispatchReducer={dispatchKardState}
           updateKard={updateKard}
-          ident={'new'}
+          ident={ident}
         />
       </div>
 

@@ -6,7 +6,7 @@ import {
   kTitle,
 } from "../../../../actions/kostcoActions";
 
-const KostcoText = ({ reducer, dispatchReducer, updateKard, ident }) => {
+const KostcoText = ({ reducer, dispatchReducer, updateKard, ident, textReset }) => {
   const textAreaWidth = 30;
   const lengthCompare = 25
   const [activeTextBox, setActiveTextBox] = useState('')
@@ -41,7 +41,7 @@ const KostcoText = ({ reducer, dispatchReducer, updateKard, ident }) => {
     const flavorBig = document.getElementById("kFlavorBig" + ident)
     if (flavorBig && activeTextBox === 'kFlavor') { flavorBig.focus(); }
 
-  }, [activeTextBox])
+  }, [activeTextBox, textReset])
 
 
   return (
@@ -74,6 +74,7 @@ const KostcoText = ({ reducer, dispatchReducer, updateKard, ident }) => {
           <label htmlFor={'kOngoingBig' + ident}>Ongoing: </label>
           <div>
             <textarea
+              className='kostcoFlagBlue'
               type='text'
               id={"kOngoingBig" + ident}
               placeholder="Ongoing Effect"
@@ -95,6 +96,7 @@ const KostcoText = ({ reducer, dispatchReducer, updateKard, ident }) => {
           <label htmlFor={"kOngoingSmall" + ident}>Ongoing: </label>
           <div>
             <input
+              className='kostcoFlagBlue'
               type='text'
               id={"kOngoingSmall" + ident}
               placeholder="Ongoing Effect"
@@ -114,6 +116,7 @@ const KostcoText = ({ reducer, dispatchReducer, updateKard, ident }) => {
           <label htmlFor={"kOneshotBig" + ident}>Oneshot: </label>
           <div>
             <textarea
+              className="kostcoFlagGreen"
               type='text'
               id={"kOneshotBig" + ident}
               rows='4'
@@ -134,6 +137,7 @@ const KostcoText = ({ reducer, dispatchReducer, updateKard, ident }) => {
           <label htmlFor={"kOneshotSmall" + ident}>Oneshot: </label>
           <div>
             <input
+              className='kostcoFlagGreen'
               type='text'
               id={"kOneshotSmall" + ident}
               placeholder="Oneshot Effect"

@@ -209,7 +209,7 @@ const KostcoSearchModule = ({
 
       <div>
 
-        <label htmlFor="searchEffects">Search elements: </label>
+        <label htmlFor="searchEffects">Search in: </label>
         <span>
 
           <input

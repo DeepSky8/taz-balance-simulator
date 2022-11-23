@@ -36,26 +36,27 @@ const defaultKostcoSearchState = {
 
     // Assist
     assist: false,
-    assistExtra: false, // new abc
-    assistExtraValue: 0, // new
+    assistExtra: false,
+    assistExtraValue: 0,
 
     // Changes numbers
     health: false,
     healthValue: 0,
     strength: false,
     strengthValue: 0,
-    damage: false, // new abc
-    damageValue: 0, // new a
+    damage: false,
+    damageValue: 0,
 
     // Special
-    special: false, // new ab
-    switcharoo: false, // new
-    safetyHarness: false, // new
-    giantSlayer: false, // new
-    pocketSpa: false, // new
-    fannypack: false, // new
-    ringGreed: false, // new
-    stevenGoldfish: false, // new
+    special: false,
+    switcharoo: false,
+    safetyHarness: false,
+    giantSlayer: false,
+    fannypack: false,
+    ringGreed: false,
+    stevenGoldfish: false,
+    slippiesHaste: false,
+    burnsideburns: false,
   },
 
   t: {
@@ -82,7 +83,7 @@ const defaultKostcoSearchState = {
 
     // Action Token
     actionToken: false,
-    // requireSpendToken: false, // new a
+
 
     // Assist
     assist: false,
@@ -92,15 +93,15 @@ const defaultKostcoSearchState = {
     healthValue: 0,
     strength: false,
     strengthValue: 0,
-    damage: false, // new
-    damageValue: 0, // new
+    damage: false,
+    damageValue: 0,
 
     // Special
-    special: false, // new
-    flaregun: false, // new
-    prongles: false, // new
-    crit50: false, // new
-    ringRecall: false, // new
+    special: false,
+    flaregun: false,
+    prongles: false,
+    crit50: false,
+    ringRecall: false,
 
   }
 
@@ -709,6 +710,32 @@ const kostcoSearchReducer = (state, action) => {
         g: {
           ...state.g,
           stevenGoldfish: CHECKG
+            ?
+            !currentG
+            :
+            currentG
+        },
+      }
+    case 'SPECIAL_SLIPPIES':
+      currentG = state.g.slippiesHaste
+      return {
+        ...state,
+        g: {
+          ...state.g,
+          slippiesHaste: CHECKG
+            ?
+            !currentG
+            :
+            currentG
+        },
+      }
+    case 'SPECIAL_BURNSIDEBURNS':
+      currentG = state.g.burnsideburns
+      return {
+        ...state,
+        g: {
+          ...state.g,
+          burnsideburns: CHECKG
             ?
             !currentG
             :

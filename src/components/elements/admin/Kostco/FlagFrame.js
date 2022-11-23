@@ -34,7 +34,9 @@ import {
   kFlaregun,
   kProngles,
   kCrit50,
-  kRingRecall
+  kRingRecall,
+  kSlippiesHaste,
+  kBurnsideburns
 } from "../../../../actions/kostcoActions";
 
 const FlagFrame = (
@@ -376,6 +378,19 @@ const FlagFrame = (
 
             <div>
 
+            <div className="kostcoFlexContainer">
+            <input
+              type='checkbox'
+              id={'burnsideburns' + flagType + ident}
+              checked={reducer.burnsideburns}
+              onChange={() => {
+                dispatchReducer(kBurnsideburns(flagType))
+              }}
+              onBlur={() => { updateKard() }}
+            />
+            <label htmlFor={'burnsideburns' + flagType + ident}>Burnside's Sideburns</label>
+          </div>
+
               <div className="kostcoFlexContainer">
                 <input
                   type='checkbox'
@@ -445,6 +460,19 @@ const FlagFrame = (
                 />
                 <label htmlFor={'safetyHarness' + flagType + ident}>Safety Harness</label>
               </div>
+
+              <div className="kostcoFlexContainer">
+              <input
+                type='checkbox'
+                id={'slippiesHaste' + flagType + ident}
+                checked={reducer.slippiesHaste}
+                onChange={() => {
+                  dispatchReducer(kSlippiesHaste(flagType))
+                }}
+                onBlur={() => { updateKard() }}
+              />
+              <label htmlFor={'slippiesHaste' + flagType + ident}>Slippies of Haste</label>
+            </div>
 
 
               <div className="kostcoFlexContainer">
