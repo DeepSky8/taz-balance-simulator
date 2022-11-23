@@ -47,14 +47,14 @@ const defaultKostcoCardState = {
     damageValue: -1, // new abc
 
     // Special
-    special: false, // new ab
-    switcharoo: false, // new
-    safetyHarness: false, // new
-    giantSlayerBonus: false, // new
-    pocketSpa: false, // new
-    fannypack: false, // new
-    ringGreed: false, // new
-    stevenGoldfish: false, // new
+    special: false, // new abc
+    switcharoo: false, // new abc
+    safetyHarness: false, // new abc
+    giantSlayer: false, // new abc
+    pocketSpa: false, // new abc
+    fannypack: false, // new abc
+    ringGreed: false, // new abc
+    stevenGoldfish: false, // new abc
   },
 
   t: {
@@ -95,11 +95,11 @@ const defaultKostcoCardState = {
     damageValue: 0, // new
 
     // Special
-    special: false, // new
-    flaregun: false, // new
-    prongles: false, // new
-    crit50: false, // new
-    ringRecall: false, // new
+    special: false, // new abc
+    flaregun: false, // new abc
+    prongles: false, // new abc
+    crit50: false, // new abc
+    ringRecall: false, // new abc
   }
 
 }
@@ -114,6 +114,9 @@ const kostcoCardReducer = (state, action) => {
   let leaveAlone2G = false
   let leaveAlone3G = false
   let leaveAlone4G = false
+  let leaveAlone5G = false
+  let leaveAlone6G = false
+  let leaveAlone7G = false
 
 
   let currentT = false
@@ -995,27 +998,592 @@ const kostcoCardReducer = (state, action) => {
               false)
         },
       }
-      case 'KOSTCO_SPECIAL':
+    case 'KOSTCO_SPECIAL':
       currentG = state.g.special
       currentT = state.t.special
+      leaveAlone1G = state.g.switcharoo
+      leaveAlone2G = state.g.safetyHarness
+      leaveAlone3G = state.g.giantSlayer
+      leaveAlone4G = state.g.pocketSpa
+      leaveAlone5G = state.g.fannypack
+      leaveAlone6G = state.g.ringGreed
+      leaveAlone7G = state.g.stevenGoldfish
+
+      leaveAlone1T = state.t.flaregun
+      leaveAlone2T = state.t.prongles
+      leaveAlone3T = state.t.crit50
+      leaveAlone4T = state.t.ringRecall
       return {
         ...state,
         g: {
           ...state.g,
-          special: CHECKG
+          special: (CHECKG
             ?
             !currentG
             :
-            currentG
+            currentG),
+          switcharoo: (CHECKG && currentG
+            ?
+            false
+            :
+            leaveAlone1G),
+          safetyHarness: (CHECKG && currentG
+            ?
+            false
+            :
+            leaveAlone2G),
+          giantSlayer: (CHECKG && currentG
+            ?
+            false
+            :
+            leaveAlone3G),
+          pocketSpa: (CHECKG && currentG
+            ?
+            false
+            :
+            leaveAlone4G),
+          fannypack: (CHECKG && currentG
+            ?
+            false
+            :
+            leaveAlone5G),
+          ringGreed: (CHECKG && currentG
+            ?
+            false
+            :
+            leaveAlone6G),
+          stevenGoldfish: (CHECKG && currentG
+            ?
+            false
+            :
+            leaveAlone7G),
         },
         t: {
           ...state.t,
-          special: CHECKT
+          special: (CHECKT
             ?
             !currentT
             :
-            currentT
+            currentT),
+          flaregun: (CHECKT && currentT
+            ?
+            false
+            :
+            leaveAlone1T),
+          prongles: (CHECKT && currentT
+            ?
+            false
+            :
+            leaveAlone2T),
+          crit50: (CHECKT && currentT
+            ?
+            false
+            :
+            leaveAlone3T),
+          ringRecall: (CHECKT && currentT
+            ?
+            false
+            :
+            leaveAlone4T),
         },
+      }
+    case 'SPECIAL_SWITCHAROO':
+      currentG = state.g.switcharoo
+      // leaveAlone1G = state.g.switcharoo
+      leaveAlone2G = state.g.safetyHarness
+      leaveAlone3G = state.g.giantSlayer
+      leaveAlone4G = state.g.pocketSpa
+      leaveAlone5G = state.g.fannypack
+      leaveAlone6G = state.g.ringGreed
+      leaveAlone7G = state.g.stevenGoldfish
+      return {
+        ...state,
+        g: {
+          ...state.g,
+          switcharoo: (CHECKG
+            ?
+            !currentG
+            :
+            currentG),
+          safetyHarness: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone2G),
+          giantSlayer: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone3G),
+          pocketSpa: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone4G),
+          fannypack: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone5G),
+          ringGreed: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone6G),
+          stevenGoldfish: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone7G),
+        }
+      }
+    case 'SPECIAL_HARNESS':
+      currentG = state.g.safetyHarness
+      leaveAlone1G = state.g.switcharoo
+      // leaveAlone2G = state.g.safetyHarness
+      leaveAlone3G = state.g.giantSlayer
+      leaveAlone4G = state.g.pocketSpa
+      leaveAlone5G = state.g.fannypack
+      leaveAlone6G = state.g.ringGreed
+      leaveAlone7G = state.g.stevenGoldfish
+      return {
+        ...state,
+        g: {
+          ...state.g,
+          safetyHarness: (CHECKG
+            ?
+            !currentG
+            :
+            currentG),
+          switcharoo: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone1G),
+          giantSlayer: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone3G),
+          pocketSpa: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone4G),
+          fannypack: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone5G),
+          ringGreed: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone6G),
+          stevenGoldfish: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone7G),
+        }
+      }
+    case 'SPECIAL_SLAYER':
+      currentG = state.g.giantSlayer
+      leaveAlone1G = state.g.switcharoo
+      leaveAlone2G = state.g.safetyHarness
+      // leaveAlone3G = state.g.giantSlayer
+      leaveAlone4G = state.g.pocketSpa
+      leaveAlone5G = state.g.fannypack
+      leaveAlone6G = state.g.ringGreed
+      leaveAlone7G = state.g.stevenGoldfish
+      return {
+        ...state,
+        g: {
+          ...state.g,
+          giantSlayer: (CHECKG
+            ?
+            !currentG
+            :
+            currentG),
+          switcharoo: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone1G),
+          safetyHarness: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone2G),
+          pocketSpa: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone4G),
+          fannypack: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone5G),
+          ringGreed: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone6G),
+          stevenGoldfish: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone7G),
+        }
+      }
+    case 'SPECIAL_SPA':
+      currentG = state.g.pocketSpa
+      leaveAlone1G = state.g.switcharoo
+      leaveAlone2G = state.g.safetyHarness
+      leaveAlone3G = state.g.giantSlayer
+      // leaveAlone4G = state.g.pocketSpa
+      leaveAlone5G = state.g.fannypack
+      leaveAlone6G = state.g.ringGreed
+      leaveAlone7G = state.g.stevenGoldfish
+      return {
+        ...state,
+        g: {
+          ...state.g,
+          pocketSpa: (CHECKG
+            ?
+            !currentG
+            :
+            currentG),
+          switcharoo: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone1G),
+          safetyHarness: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone2G),
+          giantSlayer: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone3G),
+          fannypack: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone5G),
+          ringGreed: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone6G),
+          stevenGoldfish: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone7G),
+        }
+      }
+    case 'SPECIAL_FANNYPACK':
+      currentG = state.g.fannypack
+      leaveAlone1G = state.g.switcharoo
+      leaveAlone2G = state.g.safetyHarness
+      leaveAlone3G = state.g.giantSlayer
+      leaveAlone4G = state.g.pocketSpa
+      // leaveAlone5G = state.g.fannypack
+      leaveAlone6G = state.g.ringGreed
+      leaveAlone7G = state.g.stevenGoldfish
+      return {
+        ...state,
+        g: {
+          ...state.g,
+          fannypack: (CHECKG
+            ?
+            !currentG
+            :
+            currentG),
+          switcharoo: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone1G),
+          safetyHarness: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone2G),
+          giantSlayer: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone3G),
+          pocketSpa: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone4G),
+          ringGreed: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone6G),
+          stevenGoldfish: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone7G),
+        }
+      }
+    case 'SPECIAL_GREED':
+      currentG = state.g.ringGreed
+      leaveAlone1G = state.g.switcharoo
+      leaveAlone2G = state.g.safetyHarness
+      leaveAlone3G = state.g.giantSlayer
+      leaveAlone4G = state.g.pocketSpa
+      leaveAlone5G = state.g.fannypack
+      // leaveAlone6G = state.g.ringGreed
+      leaveAlone7G = state.g.stevenGoldfish
+      return {
+        ...state,
+        g: {
+          ...state.g,
+          ringGreed: (CHECKG
+            ?
+            !currentG
+            :
+            currentG),
+          switcharoo: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone1G),
+          safetyHarness: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone2G),
+          giantSlayer: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone3G),
+          pocketSpa: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone4G),
+          fannypack: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone5G),
+          stevenGoldfish: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone7G),
+        }
+      }
+    case 'SPECIAL_STEVEN':
+      currentG = state.g.stevenGoldfish
+      leaveAlone1G = state.g.switcharoo
+      leaveAlone2G = state.g.safetyHarness
+      leaveAlone3G = state.g.giantSlayer
+      leaveAlone4G = state.g.pocketSpa
+      leaveAlone5G = state.g.fannypack
+      leaveAlone6G = state.g.ringGreed
+      // leaveAlone7G = state.g.stevenGoldfish
+      return {
+        ...state,
+        g: {
+          ...state.g,
+          stevenGoldfish: (CHECKG
+            ?
+            !currentG
+            :
+            currentG),
+          switcharoo: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone1G),
+          safetyHarness: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone2G),
+          giantSlayer: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone3G),
+          pocketSpa: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone4G),
+          fannypack: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone5G),
+          ringGreed: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone6G),
+        }
+      }
+    case 'SPECIAL_FLAREGUN':
+      currentT = state.g.flaregun
+      // leaveAlone1T = state.t.flaregun
+      leaveAlone2T = state.t.prongles
+      leaveAlone3T = state.t.crit50
+      leaveAlone4T = state.t.ringRecall
+      return {
+        ...state,
+        t: {
+          ...state.t,
+          flaregun: (CHECKT
+            ?
+            !currentT
+            :
+            currentT),
+          // flaregun: (CHECKT && !currentT
+          //   ?
+          //   false
+          //   :
+          //   leaveAlone1T),
+          prongles: (CHECKT && !currentT
+            ?
+            false
+            :
+            leaveAlone2T),
+          crit50: (CHECKT && !currentT
+            ?
+            false
+            :
+            leaveAlone3T),
+          ringRecall: (CHECKT && !currentT
+            ?
+            false
+            :
+            leaveAlone4T),
+        }
+      }
+    case 'SPECIAL_PRONGLES':
+      currentT = state.g.prongles
+      leaveAlone1T = state.t.flaregun
+      // leaveAlone2T = state.t.prongles
+      leaveAlone3T = state.t.crit50
+      leaveAlone4T = state.t.ringRecall
+      return {
+        ...state,
+        t: {
+          ...state.t,
+          prongles: (CHECKT
+            ?
+            !currentT
+            :
+            currentT),
+          flaregun: (CHECKT && !currentT
+            ?
+            false
+            :
+            leaveAlone1T),
+          // prongles: (CHECKT && !currentT
+          //   ?
+          //   false
+          //   :
+          //   leaveAlone2T),
+          crit50: (CHECKT && !currentT
+            ?
+            false
+            :
+            leaveAlone3T),
+          ringRecall: (CHECKT && !currentT
+            ?
+            false
+            :
+            leaveAlone4T),
+        }
+      }
+    case 'SPECIAL_CRIT50':
+      currentT = state.g.crit50
+      leaveAlone1T = state.t.flaregun
+      leaveAlone2T = state.t.prongles
+      // leaveAlone3T = state.t.crit50
+      leaveAlone4T = state.t.ringRecall
+      return {
+        ...state,
+        t: {
+          ...state.t,
+          crit50: (CHECKT
+            ?
+            !currentT
+            :
+            currentT),
+          flaregun: (CHECKT && !currentT
+            ?
+            false
+            :
+            leaveAlone1T),
+          prongles: (CHECKT && !currentT
+            ?
+            false
+            :
+            leaveAlone2T),
+          // crit50: (CHECKT && !currentT
+          //   ?
+          //   false
+          //   :
+          //   leaveAlone3T),
+          ringRecall: (CHECKT && !currentT
+            ?
+            false
+            :
+            leaveAlone4T),
+        }
+      }
+    case 'SPECIAL_RECALL':
+      currentT = state.g.ringRecall
+      leaveAlone1T = state.t.flaregun
+      leaveAlone2T = state.t.prongles
+      leaveAlone3T = state.t.crit50
+      // leaveAlone4T = state.t.ringRecall
+      return {
+        ...state,
+        t: {
+          ...state.t,
+          ringRecall: (CHECKT
+            ?
+            !currentT
+            :
+            currentT),
+          flaregun: (CHECKT && !currentT
+            ?
+            false
+            :
+            leaveAlone1T),
+          prongles: (CHECKT && !currentT
+            ?
+            false
+            :
+            leaveAlone2T),
+          crit50: (CHECKT && !currentT
+            ?
+            false
+            :
+            leaveAlone3T),
+          // ringRecall: (CHECKT && !currentT
+          //   ?
+          //   false
+          //   :
+          //   leaveAlone4T),
+        }
       }
 
 

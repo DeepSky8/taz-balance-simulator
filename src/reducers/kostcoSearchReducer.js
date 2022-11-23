@@ -51,7 +51,7 @@ const defaultKostcoSearchState = {
     special: false, // new ab
     switcharoo: false, // new
     safetyHarness: false, // new
-    giantSlayerBonus: false, // new
+    giantSlayer: false, // new
     pocketSpa: false, // new
     fannypack: false, // new
     ringGreed: false, // new
@@ -602,68 +602,6 @@ const kostcoSearchReducer = (state, action) => {
             currentT),
         }
       }
-
-    case 'TOGGLE_ALL':
-      const toggleTO = !state.g.magic
-      return {
-        ...state,
-        g: {
-          // Challenge types
-          magic: toggleTO,
-          monster: toggleTO,
-          spooky: toggleTO,
-          trap: toggleTO,
-
-          // Rolls
-          reroll: toggleTO,
-          critRoll: toggleTO,
-
-          // Targets
-          targetSelf: toggleTO,
-          targetOther: toggleTO,
-
-          // Timing
-          combat: toggleTO,
-          combatPreroll: toggleTO,
-          combatPostroll: toggleTO,
-          turnEnd: toggleTO,
-          anyTime: toggleTO,
-
-          // Others
-          actionToken: toggleTO,
-          addStrength: toggleTO,
-          assist: toggleTO,
-          health: toggleTO,
-        },
-        t: {
-          // Challenge types
-          magic: toggleTO,
-          monster: toggleTO,
-          spooky: toggleTO,
-          trap: toggleTO,
-
-          // Rolls
-          reroll: toggleTO,
-          critRoll: toggleTO,
-
-          // Targets
-          targetSelf: toggleTO,
-          targetOther: toggleTO,
-
-          // Timing
-          combat: toggleTO,
-          combatPreroll: toggleTO,
-          combatPostroll: toggleTO,
-          turnEnd: toggleTO,
-          anyTime: toggleTO,
-
-          // Others
-          actionToken: toggleTO,
-          addStrength: toggleTO,
-          assist: toggleTO,
-          health: toggleTO,
-        }
-      }
     case 'KOSTCO_SPECIAL':
       currentG = state.g.special
       currentT = state.t.special
@@ -686,9 +624,236 @@ const kostcoSearchReducer = (state, action) => {
             currentT
         },
       }
+    case 'SPECIAL_SWITCHAROO':
+      currentG = state.g.switcharoo
+      return {
+        ...state,
+        g: {
+          ...state.g,
+          switcharoo: CHECKG
+            ?
+            !currentG
+            :
+            currentG
+        },
+      }
+    case 'SPECIAL_HARNESS':
+      currentG = state.g.safetyHarness
+      return {
+        ...state,
+        g: {
+          ...state.g,
+          safetyHarness: CHECKG
+            ?
+            !currentG
+            :
+            currentG
+        },
+      }
+    case 'SPECIAL_SLAYER':
+      currentG = state.g.giantSlayer
+      return {
+        ...state,
+        g: {
+          ...state.g,
+          giantSlayer: CHECKG
+            ?
+            !currentG
+            :
+            currentG
+        },
+      }
+    case 'SPECIAL_SPA':
+      currentG = state.g.pocketSpa
+      return {
+        ...state,
+        g: {
+          ...state.g,
+          pocketSpa: CHECKG
+            ?
+            !currentG
+            :
+            currentG
+        },
+      }
+    case 'SPECIAL_FANNYPACK':
+      currentG = state.g.fannypack
+      return {
+        ...state,
+        g: {
+          ...state.g,
+          fannypack: CHECKG
+            ?
+            !currentG
+            :
+            currentG
+        },
+      }
+    case 'SPECIAL_GREED':
+      currentG = state.g.ringGreed
+      return {
+        ...state,
+        g: {
+          ...state.g,
+          ringGreed: CHECKG
+            ?
+            !currentG
+            :
+            currentG
+        },
+      }
+    case 'SPECIAL_STEVEN':
+      currentG = state.g.stevenGoldfish
+      return {
+        ...state,
+        g: {
+          ...state.g,
+          stevenGoldfish: CHECKG
+            ?
+            !currentG
+            :
+            currentG
+        },
+      }
+    case 'SPECIAL_FLAREGUN':
+      currentT = state.t.flaregun
+      return {
+        ...state,
+        t: {
+          ...state.t,
+          flaregun: CHECKT
+            ?
+            !currentT
+            :
+            currentT
+        },
+      }
+    case 'SPECIAL_PRONGLES':
+      currentT = state.t.prongles
+      return {
+        ...state,
+        t: {
+          ...state.t,
+          prongles: CHECKT
+            ?
+            !currentT
+            :
+            currentT
+        },
+      }
+    case 'SPECIAL_CRIT50':
+      currentT = state.t.crit50
+      return {
+        ...state,
+        t: {
+          ...state.t,
+          crit50: CHECKT
+            ?
+            !currentT
+            :
+            currentT
+        },
+      }
+    case 'SPECIAL_RECALL':
+      currentT = state.t.ringRecall
+      return {
+        ...state,
+        t: {
+          ...state.t,
+          ringRecall: CHECKT
+            ?
+            !currentT
+            :
+            currentT
+        },
+      }
+    // case 'SPECIAL_':
+    //   currentG = state.g.special
+    //   currentT = state.t.special
+    //   return {
+    //     ...state,
+    //     g: {
+    //       ...state.g,
+    //       special: CHECKG
+    //         ?
+    //         !currentG
+    //         :
+    //         currentG
+    //     },
+    //     t: {
+    //       ...state.t,
+    //       special: CHECKT
+    //         ?
+    //         !currentT
+    //         :
+    //         currentT
+    //     },
+    //   }
     default:
       return state
   }
 }
 
 export { defaultKostcoSearchState, kostcoSearchReducer }
+
+// case 'TOGGLE_ALL':
+//   const toggleTO = !state.g.magic
+//   return {
+//     ...state,
+//     g: {
+//       // Challenge types
+//       magic: toggleTO,
+//       monster: toggleTO,
+//       spooky: toggleTO,
+//       trap: toggleTO,
+
+//       // Rolls
+//       reroll: toggleTO,
+//       critRoll: toggleTO,
+
+//       // Targets
+//       targetSelf: toggleTO,
+//       targetOther: toggleTO,
+
+//       // Timing
+//       combat: toggleTO,
+//       combatPreroll: toggleTO,
+//       combatPostroll: toggleTO,
+//       turnEnd: toggleTO,
+//       anyTime: toggleTO,
+
+//       // Others
+//       actionToken: toggleTO,
+//       addStrength: toggleTO,
+//       assist: toggleTO,
+//       health: toggleTO,
+//     },
+//     t: {
+//       // Challenge types
+//       magic: toggleTO,
+//       monster: toggleTO,
+//       spooky: toggleTO,
+//       trap: toggleTO,
+
+//       // Rolls
+//       reroll: toggleTO,
+//       critRoll: toggleTO,
+
+//       // Targets
+//       targetSelf: toggleTO,
+//       targetOther: toggleTO,
+
+//       // Timing
+//       combat: toggleTO,
+//       combatPreroll: toggleTO,
+//       combatPostroll: toggleTO,
+//       turnEnd: toggleTO,
+//       anyTime: toggleTO,
+
+//       // Others
+//       actionToken: toggleTO,
+//       addStrength: toggleTO,
+//       assist: toggleTO,
+//       health: toggleTO,
+//     }
+//   }

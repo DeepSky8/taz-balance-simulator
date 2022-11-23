@@ -1,8 +1,7 @@
 import React from "react";
+import { useEffect } from "react";
 import { useState } from "react";
 import {
-  kSearchOneshotFlags,
-  kSearchOngoingFlags,
   kSpecial
 } from "../../../../actions/kostcoActions";
 import FlagFrame from "./FlagFrame";
@@ -15,79 +14,84 @@ const KostcoSearchFlags = (
     ident
   }
 ) => {
-  const ongoing = 'ongoing'
-  const oneshot = 'oneshot'
   const g = 'g'
   const t = 't'
   const newKard = 'new'
 
   const [flagDisplay, setFlagDisplay] = useState(
-    (ident !== newKard && reducer.kOngoing.length === 0)
-      ?
-      oneshot
-      :
-      ongoing
+    // (ident !== newKard && reducer.kOngoing.length === 0)
+    //   ?
+    //   t
+    //   :
+      g
   )
-
-  const [specialDisplay, setSpecialDisplay] = useState(
-    (
-      flagDisplay === oneshot
-      &&
-      reducer.t.special
-    )
-      ?
-      true
-      :
-      (
-        flagDisplay === ongoing
-        &&
-        reducer.g.special
-      )
-        ?
-        true
-        :
-        false
-  )
-
-
-
 
   return (
     <div>
       <span>
 
         <button
-          disabled={flagDisplay === ongoing}
-          onClick={() => { setFlagDisplay(ongoing) }}
+          disabled={flagDisplay === g}
+          onClick={() => {
+            setFlagDisplay(g);
+            // setSpecialDisplay(reducer.g.special) 
+          }}
         >View Ongoing
         </button>
 
         <button
-          disabled={flagDisplay === oneshot}
-          onClick={() => { setFlagDisplay(oneshot) }}
+          disabled={flagDisplay === t}
+          onClick={() => {
+            setFlagDisplay(t);
+            // setSpecialDisplay(reducer.t.special) 
+          }}
         >View Oneshot
         </button>
 
-        <input
-          id={'special' + flagDisplay + ident}
-          type='checkbox'
-          value={specialDisplay}
-          onChange={() => {
-            if (flagDisplay === oneshot) {
-              dispatchReducer(kSpecial(t))
-            } else if (flagDisplay === ongoing) {
-              dispatchReducer(kSpecial(g))
-            }
-            // dispatchReducer(kSpecial(flagType))
-          }}
-          onBlur={() => { updateKard() }}
-        />
-        <label htmlFor={'special' + flagDisplay + ident}>One-off</label>
+        {flagDisplay === g &&
+          <span>
+            <input
+              id={'special' + g + ident}
+              type='checkbox'
+              checked={reducer.g.special}
+              onChange={() => {
+                // if (flagDisplay === oneshot) {
+                //   dispatchReducer(kSpecial(t))
+                // } else if (flagDisplay === ongoing) {
+                //   dispatchReducer(kSpecial(g))
+                // }
+                dispatchReducer(kSpecial(g))
+              }}
+              onBlur={() => { updateKard() }}
+            />
+            <label htmlFor={'special' + g + ident}>One-off</label>
+          </span>
+        }
+
+        {flagDisplay === t &&
+          <span>
+            <input
+              id={'special' + t + ident}
+              type='checkbox'
+              checked={reducer.t.special}
+              onChange={() => {
+                // if (flagDisplay === oneshot) {
+                //   dispatchReducer(kSpecial(t))
+                // } else if (flagDisplay === ongoing) {
+                //   dispatchReducer(kSpecial(g))
+                // }
+                dispatchReducer(kSpecial(t))
+              }}
+              onBlur={() => { updateKard() }}
+            />
+            <label htmlFor={'special' + t + ident}>One-off</label>
+          </span>
+        }
 
 
       </span>
 
-      {flagDisplay === ongoing &&
+      {flagDisplay === g &&
 
         <FlagFrame
           reducer={reducer.g}
@@ -98,7 +102,7 @@ const KostcoSearchFlags = (
         />
       }
 
-      {flagDisplay === oneshot &&
+      {flagDisplay === t &&
 
         <FlagFrame
           reducer={reducer.t}

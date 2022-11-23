@@ -4,7 +4,6 @@ import {
   kSearchOneshotFlags,
   kSearchOngoingFlags,
   kSearchReset,
-  kToggleAll
 } from "../../../../actions/kostcoActions";
 import KostcoSearchFlags from "./KostcoSearchFlags";
 import KostcoSearchText from "./KostcoSearchText";
@@ -117,9 +116,13 @@ const KostcoSearchModule = ({
       // return only the key text from the keyValue pair
       .map(keyValue => keyValue[0])
 
+    const anyParams = (
+      (paramArrayG.length === 0)
+      &&
+      (paramArrayT.length === 0)
+    )
 
-
-    // If restrictions exist, evaluate whether an individual kard
+    // If any restrictions exist, evaluate whether an individual kard
     // has a flag that indicates it meets that restriction
     // otherwise return all kards
     const flagFilteredArray = textboxFilteredArray
@@ -129,16 +132,21 @@ const KostcoSearchModule = ({
           .entries(kardObject.g)
           .filter(keyValue =>
           (
-            (keyValue[1] === true)
+            // Count if a value is TRUE, unless it's the 'special' flag
+            (keyValue[1] === true && keyValue[0] !== 'special')
             &&
+            // Filter Ongoing effects
             (kostcoSearch.fOngoing)
             &&
+            // If ANY flags (ongoing OR oneshot) are TRUE
+            // ONLY return kards that match those flags
+            // Otherwise return all kards
             (
               paramArrayG.length > 0
                 ?
                 paramArrayG.includes(keyValue[0])
                 :
-                true
+                anyParams
             )))
           .length
         // console.log('objectFilterG', objectFilterG)
@@ -147,16 +155,21 @@ const KostcoSearchModule = ({
           .entries(kardObject.t)
           .filter(keyValue =>
           (
-            (keyValue[1] === true)
+            // Count if a value is TRUE, unless it's the 'special' flag
+            (keyValue[1] === true && keyValue[0] !== 'special')
             &&
+            // Filter Oneshot effects
             (kostcoSearch.fOneshot)
             &&
+                        // If ANY flags (ongoing OR oneshot) are TRUE
+            // ONLY return kards that match those flags
+            // Otherwise return all kards
             (
               paramArrayT.length > 0
                 ?
                 paramArrayT.includes(keyValue[0])
                 :
-                true
+                anyParams
             )))
           .length
         // console.log('G plus T', (objectFilterG + objectFilterT))
@@ -196,7 +209,7 @@ const KostcoSearchModule = ({
 
       <div>
 
-        <label htmlFor="searchEffects">Must include: </label>
+        <label htmlFor="searchEffects">Search elements: </label>
         <span>
 
           <input

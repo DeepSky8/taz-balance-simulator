@@ -200,6 +200,64 @@ export const kSpecial = (flagType) => ({
   flagType
 })
 
+// Ongoing Special
+export const kSwitcharoo = (flagType) => ({
+  type: 'SPECIAL_SWITCHAROO',
+  flagType
+})
+
+export const kSafetyHarness = (flagType) => ({
+  type: 'SPECIAL_HARNESS',
+  flagType
+})
+
+export const kGiantSlayer = (flagType) => ({
+  type: 'SPECIAL_SLAYER',
+  flagType
+})
+
+export const kPocketSpa = (flagType) => ({
+  type: 'SPECIAL_SPA',
+  flagType
+})
+
+export const kFannypack = (flagType) => ({
+  type: 'SPECIAL_FANNYPACK',
+  flagType
+})
+
+export const kRingGreed = (flagType) => ({
+  type: 'SPECIAL_GREED',
+  flagType
+})
+
+export const kStevenGoldfish = (flagType) => ({
+  type: 'SPECIAL_STEVEN',
+  flagType
+})
+
+// Oneshot Special
+
+export const kFlaregun = (flagType) => ({
+  type: 'SPECIAL_FLAREGUN',
+  flagType
+})
+
+export const kProngles = (flagType) => ({
+  type: 'SPECIAL_PRONGLES',
+  flagType
+})
+
+export const kCrit50 = (flagType) => ({
+  type: 'SPECIAL_CRIT50',
+  flagType
+})
+
+export const kRingRecall = (flagType) => ({
+  type: 'SPECIAL_RECALL',
+  flagType
+})
+
 // Cloud Actions
 
 export const startUpdateKard = (kardData, kardKey) => {

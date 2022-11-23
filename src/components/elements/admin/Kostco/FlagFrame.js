@@ -23,7 +23,18 @@ import {
   kAssistValue,
   kDamage,
   kDamageValue,
-  kSpecial
+  kSpecial,
+  kSwitcharoo,
+  kSafetyHarness,
+  kGiantSlayer,
+  kPocketSpa,
+  kFannypack,
+  kRingGreed,
+  kStevenGoldfish,
+  kFlaregun,
+  kProngles,
+  kCrit50,
+  kRingRecall
 } from "../../../../actions/kostcoActions";
 
 const FlagFrame = (
@@ -39,6 +50,8 @@ const FlagFrame = (
   const byAdding = '_by adding: '
   const newKard = 'new'
   const searchKard = 'search'
+  const g = 'g'
+  const t = 't'
   return (
 
 
@@ -324,9 +337,9 @@ const FlagFrame = (
           </div>
 
           {
-            (reducer.strength || reducer.health) &&
+            (ident !== 'search' && (reducer.strength || reducer.health)) &&
             <div className="kostcoFlexContainer">
-              <label htmlFor={'healthValue' + flagType + ident}>Health Modifier</label>
+              <label htmlFor={'healthValue' + flagType + ident}>Health Mod:</label>
               <input
                 className="kostcoNumberEntry"
                 id={'healthValue' + flagType + ident}
@@ -338,7 +351,7 @@ const FlagFrame = (
                 onBlur={() => { updateKard() }}
               />
 
-              <label htmlFor={'strengthValue' + flagType + ident}>Strength Modifier</label>
+              <label htmlFor={'strengthValue' + flagType + ident}>Strength Mod:</label>
               <input
                 className="kostcoNumberEntry"
                 id={'strengthValue' + flagType + ident}
@@ -359,7 +372,176 @@ const FlagFrame = (
       {reducer.special &&
 
         <div>
-          test
+          {flagType === g &&
+
+            <div>
+
+              <div className="kostcoFlexContainer">
+                <input
+                  type='checkbox'
+                  id={'fannypack' + flagType + ident}
+                  checked={reducer.fannypack}
+                  onChange={() => {
+                    dispatchReducer(kFannypack(flagType))
+                  }}
+                  onBlur={() => { updateKard() }}
+                />
+                <label htmlFor={'fannypack' + flagType + ident}>Fannypack of Holding</label>
+              </div>
+
+
+              <div className="kostcoFlexContainer">
+                <input
+                  type='checkbox'
+                  id={'pocketSpa' + flagType + ident}
+                  checked={reducer.pocketSpa}
+                  onChange={() => {
+                    dispatchReducer(kPocketSpa(flagType))
+                  }}
+                  onBlur={() => { updateKard() }}
+                />
+                <label htmlFor={'pocketSpa' + flagType + ident}>Pocket Spa</label>
+              </div>
+
+
+
+              <div className="kostcoFlexContainer">
+                <input
+                  type='checkbox'
+                  id={'ringGreed' + flagType + ident}
+                  checked={reducer.ringGreed}
+                  onChange={() => {
+                    dispatchReducer(kRingGreed(flagType))
+                  }}
+                  onBlur={() => { updateKard() }}
+                />
+                <label htmlFor={'ringGreed' + flagType + ident}>Ring of Greed</label>
+              </div>
+
+
+
+              <div className="kostcoFlexContainer">
+                <input
+                  type='checkbox'
+                  id={'giantSlayer' + flagType + ident}
+                  checked={reducer.giantSlayer}
+                  onChange={() => {
+                    dispatchReducer(kGiantSlayer(flagType))
+                  }}
+                  onBlur={() => { updateKard() }}
+                />
+                <label htmlFor={'giantSlayer' + flagType + ident}>Ring of the Giant Slayer</label>
+              </div>
+
+              <div className="kostcoFlexContainer">
+                <input
+                  type='checkbox'
+                  id={'safetyHarness' + flagType + ident}
+                  checked={reducer.safetyHarness}
+                  onChange={() => {
+                    dispatchReducer(kSafetyHarness(flagType))
+                  }}
+                  onBlur={() => { updateKard() }}
+                />
+                <label htmlFor={'safetyHarness' + flagType + ident}>Safety Harness</label>
+              </div>
+
+
+              <div className="kostcoFlexContainer">
+                <input
+                  type='checkbox'
+                  id={'stevenGoldfish' + flagType + ident}
+                  checked={reducer.stevenGoldfish}
+                  onChange={() => {
+                    dispatchReducer(kStevenGoldfish(flagType))
+                  }}
+                  onBlur={() => { updateKard() }}
+                />
+                <label htmlFor={'stevenGoldfish' + flagType + ident}>Steven the Goldfish</label>
+              </div>
+
+
+              <div className="kostcoFlexContainer">
+
+                <input
+                  type='checkbox'
+                  id={'switcharoo' + flagType + ident}
+                  checked={reducer.switcharoo}
+                  onChange={() => {
+                    dispatchReducer(kSwitcharoo(flagType))
+                  }}
+                  onBlur={() => { updateKard() }}
+                />
+                <label htmlFor={'switcharoo' + flagType + ident}>Wand of Switcharoo</label>
+
+              </div>
+
+            </div>
+
+
+
+          }
+
+
+          {flagType === t &&
+
+            <div>
+
+              <div className="kostcoFlexContainer">
+                <input
+                  type='checkbox'
+                  id={'crit50' + flagType + ident}
+                  checked={reducer.crit50}
+                  onChange={() => {
+                    dispatchReducer(kCrit50(flagType))
+                  }}
+                  onBlur={() => { updateKard() }}
+                />
+                <label htmlFor={'crit50' + flagType + ident}>All or Nothing Coin</label>
+              </div>
+
+              <div className="kostcoFlexContainer">
+                <input
+                  type='checkbox'
+                  id={'flaregun' + flagType + ident}
+                  checked={reducer.flaregun}
+                  onChange={() => {
+                    dispatchReducer(kFlaregun(flagType))
+                  }}
+                  onBlur={() => { updateKard() }}
+                />
+                <label htmlFor={'flaregun' + flagType + ident}>Flaregun of the Fearless</label>
+              </div>
+
+              <div className="kostcoFlexContainer">
+                <input
+                  type='checkbox'
+                  id={'prongles' + flagType + ident}
+                  checked={reducer.prongles}
+                  onChange={() => {
+                    dispatchReducer(kProngles(flagType))
+                  }}
+                  onBlur={() => { updateKard() }}
+                />
+                <label htmlFor={'prongles' + flagType + ident}>Hyper-Caffeinated Prongles</label>
+              </div>
+
+              <div className="kostcoFlexContainer">
+                <input
+                  type='checkbox'
+                  id={'ringRecall' + flagType + ident}
+                  checked={reducer.ringRecall}
+                  onChange={() => {
+                    dispatchReducer(kRingRecall(flagType))
+                  }}
+                  onBlur={() => { updateKard() }}
+                />
+                <label htmlFor={'ringRecall' + flagType + ident}>Ring of Recall</label>
+              </div>
+
+            </div>
+
+          }
         </div>
 
       }
