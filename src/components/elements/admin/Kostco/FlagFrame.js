@@ -36,7 +36,9 @@ import {
   kCrit50,
   kRingRecall,
   kSlippiesHaste,
-  kBurnsideburns
+  kBurnsideburns,
+  kChampionBelt,
+  kNitPicker
 } from "../../../../actions/kostcoActions";
 
 const FlagFrame = (
@@ -378,18 +380,31 @@ const FlagFrame = (
 
             <div>
 
-            <div className="kostcoFlexContainer">
-            <input
-              type='checkbox'
-              id={'burnsideburns' + flagType + ident}
-              checked={reducer.burnsideburns}
-              onChange={() => {
-                dispatchReducer(kBurnsideburns(flagType))
-              }}
-              onBlur={() => { updateKard() }}
-            />
-            <label htmlFor={'burnsideburns' + flagType + ident}>Burnside's Sideburns</label>
-          </div>
+              <div className="kostcoFlexContainer">
+                <input
+                  type='checkbox'
+                  id={'burnsideburns' + flagType + ident}
+                  checked={reducer.burnsideburns}
+                  onChange={() => {
+                    dispatchReducer(kBurnsideburns(flagType))
+                  }}
+                  onBlur={() => { updateKard() }}
+                />
+                <label htmlFor={'burnsideburns' + flagType + ident}>Burnside's Sideburns</label>
+              </div>
+
+              <div className="kostcoFlexContainer">
+                <input
+                  type='checkbox'
+                  id={'championBelt' + flagType + ident}
+                  checked={reducer.championBelt}
+                  onChange={() => {
+                    dispatchReducer(kChampionBelt(flagType))
+                  }}
+                  onBlur={() => { updateKard() }}
+                />
+                <label htmlFor={'championBelt' + flagType + ident}>Champion's Belt</label>
+              </div>
 
               <div className="kostcoFlexContainer">
                 <input
@@ -404,6 +419,18 @@ const FlagFrame = (
                 <label htmlFor={'fannypack' + flagType + ident}>Fannypack of Holding</label>
               </div>
 
+              <div className="kostcoFlexContainer">
+                <input
+                  type='checkbox'
+                  id={'nitPicker' + flagType + ident}
+                  checked={reducer.nitPicker}
+                  onChange={() => {
+                    dispatchReducer(kNitPicker(flagType))
+                  }}
+                  onBlur={() => { updateKard() }}
+                />
+                <label htmlFor={'nitPicker' + flagType + ident}>Nit-Picker</label>
+              </div>
 
               <div className="kostcoFlexContainer">
                 <input
@@ -462,17 +489,17 @@ const FlagFrame = (
               </div>
 
               <div className="kostcoFlexContainer">
-              <input
-                type='checkbox'
-                id={'slippiesHaste' + flagType + ident}
-                checked={reducer.slippiesHaste}
-                onChange={() => {
-                  dispatchReducer(kSlippiesHaste(flagType))
-                }}
-                onBlur={() => { updateKard() }}
-              />
-              <label htmlFor={'slippiesHaste' + flagType + ident}>Slippies of Haste</label>
-            </div>
+                <input
+                  type='checkbox'
+                  id={'slippiesHaste' + flagType + ident}
+                  checked={reducer.slippiesHaste}
+                  onChange={() => {
+                    dispatchReducer(kSlippiesHaste(flagType))
+                  }}
+                  onBlur={() => { updateKard() }}
+                />
+                <label htmlFor={'slippiesHaste' + flagType + ident}>Slippies of Haste</label>
+              </div>
 
 
               <div className="kostcoFlexContainer">

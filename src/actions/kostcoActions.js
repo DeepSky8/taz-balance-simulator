@@ -245,6 +245,18 @@ export const kBurnsideburns = (flagType) => ({
   type: 'SPECIAL_BURNSIDEBURNS',
   flagType
 })
+
+export const kNitPicker = (flagType) => ({
+  type: 'SPECIAL_NITPICKER',
+  flagType
+})
+
+export const kChampionBelt = (flagType) => ({
+  type: 'SPECIAL_CHAMPIONBELT',
+  flagType
+})
+
+
 // Oneshot Special
 
 export const kFlaregun = (flagType) => ({

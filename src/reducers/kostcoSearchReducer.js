@@ -57,6 +57,8 @@ const defaultKostcoSearchState = {
     stevenGoldfish: false,
     slippiesHaste: false,
     burnsideburns: false,
+    nitPicker: false,
+    championBelt: false,
   },
 
   t: {
@@ -736,6 +738,32 @@ const kostcoSearchReducer = (state, action) => {
         g: {
           ...state.g,
           burnsideburns: CHECKG
+            ?
+            !currentG
+            :
+            currentG
+        },
+      }
+    case 'SPECIAL_NITPICKER':
+      currentG = state.g.nitPicker
+      return {
+        ...state,
+        g: {
+          ...state.g,
+          nitPicker: CHECKG
+            ?
+            !currentG
+            :
+            currentG
+        },
+      }
+    case 'SPECIAL_CHAMPIONBELT':
+      currentG = state.g.championBelt
+      return {
+        ...state,
+        g: {
+          ...state.g,
+          championBelt: CHECKG
             ?
             !currentG
             :

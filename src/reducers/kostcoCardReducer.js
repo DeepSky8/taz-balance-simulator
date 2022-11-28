@@ -1,3 +1,4 @@
+import { FOCUSABLE_SELECTOR } from "@testing-library/user-event/dist/utils"
 
 const defaultKostcoCardState = {
   // elements beginning with 'k' are reserved
@@ -57,6 +58,8 @@ const defaultKostcoCardState = {
     stevenGoldfish: false,
     slippiesHaste: false,
     burnsideburns: false,
+    nitPicker: false,
+    championBelt: false,
   },
 
   t: {
@@ -123,6 +126,8 @@ const kostcoCardReducer = (state, action) => {
   let leaveAlone7G = false
   let leaveAlone8G = false
   let leaveAlone9G = false
+  let leaveAlone10G = false
+  let leaveAlone11G = false
 
   let currentT = false
   let leaveAlone1T = false
@@ -1039,6 +1044,8 @@ const kostcoCardReducer = (state, action) => {
       leaveAlone7G = state.g.stevenGoldfish
       leaveAlone8G = state.g.slippiesHaste
       leaveAlone9G = state.g.burnsideburns
+      leaveAlone10G = state.g.nitPicker
+      leaveAlone11G = state.g.championBelt
 
       leaveAlone1T = state.t.flaregun
       leaveAlone2T = state.t.prongles
@@ -1099,6 +1106,16 @@ const kostcoCardReducer = (state, action) => {
             false
             :
             leaveAlone9G),
+          nitPicker: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone10G),
+          championBelt: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone11G),
         },
         t: {
           ...state.t,
@@ -1139,6 +1156,8 @@ const kostcoCardReducer = (state, action) => {
       leaveAlone7G = state.g.stevenGoldfish
       leaveAlone8G = state.g.slippiesHaste
       leaveAlone9G = state.g.burnsideburns
+      leaveAlone10G = state.g.nitPicker
+      leaveAlone11G = state.g.championBelt
       return {
         ...state,
         g: {
@@ -1188,6 +1207,16 @@ const kostcoCardReducer = (state, action) => {
             false
             :
             leaveAlone9G),
+          nitPicker: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone10G),
+          championBelt: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone11G),
         }
       }
     case 'SPECIAL_HARNESS':
@@ -1200,6 +1229,8 @@ const kostcoCardReducer = (state, action) => {
       leaveAlone7G = state.g.stevenGoldfish
       leaveAlone8G = state.g.slippiesHaste
       leaveAlone9G = state.g.burnsideburns
+      leaveAlone10G = state.g.nitPicker
+      leaveAlone11G = state.g.championBelt
       return {
         ...state,
         g: {
@@ -1249,6 +1280,16 @@ const kostcoCardReducer = (state, action) => {
             false
             :
             leaveAlone9G),
+          nitPicker: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone10G),
+          championBelt: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone11G),
         }
       }
     case 'SPECIAL_SLAYER':
@@ -1261,6 +1302,8 @@ const kostcoCardReducer = (state, action) => {
       leaveAlone7G = state.g.stevenGoldfish
       leaveAlone8G = state.g.slippiesHaste
       leaveAlone9G = state.g.burnsideburns
+      leaveAlone10G = state.g.nitPicker
+      leaveAlone11G = state.g.championBelt
       return {
         ...state,
         g: {
@@ -1310,6 +1353,16 @@ const kostcoCardReducer = (state, action) => {
             false
             :
             leaveAlone9G),
+          nitPicker: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone10G),
+          championBelt: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone11G),
         }
       }
     case 'SPECIAL_SPA':
@@ -1322,6 +1375,8 @@ const kostcoCardReducer = (state, action) => {
       leaveAlone7G = state.g.stevenGoldfish
       leaveAlone8G = state.g.slippiesHaste
       leaveAlone9G = state.g.burnsideburns
+      leaveAlone10G = state.g.nitPicker
+      leaveAlone11G = state.g.championBelt
       return {
         ...state,
         g: {
@@ -1371,6 +1426,16 @@ const kostcoCardReducer = (state, action) => {
             false
             :
             leaveAlone9G),
+          nitPicker: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone10G),
+          championBelt: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone11G),
         }
       }
     case 'SPECIAL_FANNYPACK':
@@ -1383,6 +1448,8 @@ const kostcoCardReducer = (state, action) => {
       leaveAlone7G = state.g.stevenGoldfish
       leaveAlone8G = state.g.slippiesHaste
       leaveAlone9G = state.g.burnsideburns
+      leaveAlone10G = state.g.nitPicker
+      leaveAlone11G = state.g.championBelt
       return {
         ...state,
         g: {
@@ -1432,6 +1499,16 @@ const kostcoCardReducer = (state, action) => {
             false
             :
             leaveAlone9G),
+          nitPicker: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone10G),
+          championBelt: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone11G),
         }
       }
     case 'SPECIAL_GREED':
@@ -1444,6 +1521,8 @@ const kostcoCardReducer = (state, action) => {
       leaveAlone7G = state.g.stevenGoldfish
       leaveAlone8G = state.g.slippiesHaste
       leaveAlone9G = state.g.burnsideburns
+      leaveAlone10G = state.g.nitPicker
+      leaveAlone11G = state.g.championBelt
       return {
         ...state,
         g: {
@@ -1493,6 +1572,16 @@ const kostcoCardReducer = (state, action) => {
             false
             :
             leaveAlone9G),
+          nitPicker: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone10G),
+          championBelt: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone11G),
         }
       }
     case 'SPECIAL_STEVEN':
@@ -1505,6 +1594,8 @@ const kostcoCardReducer = (state, action) => {
       leaveAlone6G = state.g.ringGreed
       leaveAlone8G = state.g.slippiesHaste
       leaveAlone9G = state.g.burnsideburns
+      leaveAlone10G = state.g.nitPicker
+      leaveAlone11G = state.g.championBelt
       return {
         ...state,
         g: {
@@ -1554,6 +1645,16 @@ const kostcoCardReducer = (state, action) => {
             false
             :
             leaveAlone9G),
+          nitPicker: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone10G),
+          championBelt: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone11G),
         }
       }
     case 'SPECIAL_SLIPPIES':
@@ -1566,6 +1667,8 @@ const kostcoCardReducer = (state, action) => {
       leaveAlone6G = state.g.ringGreed
       leaveAlone7G = state.g.stevenGoldfish
       leaveAlone9G = state.g.burnsideburns
+      leaveAlone10G = state.g.nitPicker
+      leaveAlone11G = state.g.championBelt
       return {
         ...state,
         g: {
@@ -1615,6 +1718,16 @@ const kostcoCardReducer = (state, action) => {
             false
             :
             leaveAlone9G),
+          nitPicker: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone10G),
+          championBelt: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone11G),
         }
       }
     case 'SPECIAL_BURNSIDEBURNS':
@@ -1626,7 +1739,9 @@ const kostcoCardReducer = (state, action) => {
       leaveAlone5G = state.g.fannypack
       leaveAlone6G = state.g.ringGreed
       leaveAlone7G = state.g.stevenGoldfish
-      // leaveAlone9G = state.g.burnsideburns
+      leaveAlone8G = state.g.slippiesHaste
+      leaveAlone10G = state.g.nitPicker
+      leaveAlone11G = state.g.championBelt
       return {
         ...state,
         g: {
@@ -1671,6 +1786,153 @@ const kostcoCardReducer = (state, action) => {
             false
             :
             leaveAlone7G),
+          nitPicker: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone10G),
+          championBelt: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone11G),
+        }
+      }
+    case 'SPECIAL_NITPICKER':
+      currentG = state.g.nitPicker
+      leaveAlone1G = state.g.switcharoo
+      leaveAlone2G = state.g.safetyHarness
+      leaveAlone3G = state.g.giantSlayer
+      leaveAlone4G = state.g.pocketSpa
+      leaveAlone5G = state.g.fannypack
+      leaveAlone6G = state.g.ringGreed
+      leaveAlone7G = state.g.stevenGoldfish
+      leaveAlone8G = state.g.slippiesHaste
+      leaveAlone9G = state.g.burnsideburns
+      // leaveAlone10G = state.g.nitPicker
+      leaveAlone11G = state.g.championBelt
+      return {
+        ...state,
+        g: {
+          ...state.g,
+          nitPicker: (CHECKG
+            ?
+            !currentG
+            :
+            currentG),
+          switcharoo: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone1G),
+          safetyHarness: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone2G),
+          giantSlayer: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone3G),
+          pocketSpa: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone4G),
+          fannypack: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone5G),
+          ringGreed: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone6G),
+          stevenGoldfish: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone7G),
+          burnsideburns: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone9G),
+          // nitPicker: (CHECKG && !currentG
+          //   ?
+          //   false
+          //   :
+          //   leaveAlone10G),
+          championBelt: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone11G),
+        }
+      }
+    case 'SPECIAL_CHAMPIONBELT':
+      currentG = state.g.nitPicker
+      leaveAlone1G = state.g.switcharoo
+      leaveAlone2G = state.g.safetyHarness
+      leaveAlone3G = state.g.giantSlayer
+      leaveAlone4G = state.g.pocketSpa
+      leaveAlone5G = state.g.fannypack
+      leaveAlone6G = state.g.ringGreed
+      leaveAlone7G = state.g.stevenGoldfish
+      leaveAlone8G = state.g.slippiesHaste
+      leaveAlone9G = state.g.burnsideburns
+      leaveAlone10G = state.g.nitPicker
+      return {
+        ...state,
+        g: {
+          ...state.g,
+          championBelt: (CHECKG
+            ?
+            !currentG
+            :
+            currentG),
+          switcharoo: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone1G),
+          safetyHarness: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone2G),
+          giantSlayer: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone3G),
+          pocketSpa: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone4G),
+          fannypack: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone5G),
+          ringGreed: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone6G),
+          stevenGoldfish: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone7G),
+          nitPicker: (CHECKG && !currentG
+            ?
+            false
+            :
+            leaveAlone10G),
         }
       }
     case 'SPECIAL_FLAREGUN':
