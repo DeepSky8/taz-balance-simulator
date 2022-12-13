@@ -1,6 +1,5 @@
 import React from "react"
 import { Routes, Route } from "react-router-dom";
-import AuthWrapper from "../dumpingGround/AuthWrapper";
 import JoiningHosting from "../components/elements/GameSetup/JoiningHosting";
 import ChallengeDisplay from "../components/elements/GameSetup/ChallengeDisplay";
 import PlayingAs from "../components/elements/GameSetup/PlayingAs";

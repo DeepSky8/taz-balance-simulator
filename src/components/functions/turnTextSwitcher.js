@@ -25,7 +25,10 @@ const rollAgain = 'Roll again; you have '
 const clickProceed = 'Click to proceed'
 const describeSuccess = 'Describe your success!'
 const describeFailure = 'Describe how this attempt failed.'
-const kostco = 'Time to shop at Fantasy Kostco!';
+const kostco = 'Click to purchase ';
+const kostcoRogue = 'Select an item to purchase'
+const kostcoGive = 'Give and accept Fantasy Kostco items to and from your team (click here when finished)'
+const kostcoDiscard = 'Discard down to two Kostco items'
 const passTheTurn = 'Click here to pass the turn, ';
 const reload = 'Please reload the game';
 const spendActionToken = 'You may spend your action token '
@@ -36,7 +39,7 @@ const rollingDice = 'Rolling the Dice'
 
 const turnTextSwitcher = (cloudState, localState, activeAssistPlayer) => {
 
-    const activeChar = localState.teamCharArray[localState.activeIndex]
+    let activeChar = localState.teamCharArray[localState.activeIndex]
 
     switch (cloudState.active.gameStage) {
         case 'INTRO':
@@ -119,8 +122,16 @@ const turnTextSwitcher = (cloudState, localState, activeAssistPlayer) => {
                     }
                 case 'ACTIONTWO':
                     return spendActionToken + actionTwoPriest
-                case 'KOSTCO':
-                    return kostco;
+                case 'KOSTCO_BUY':
+                    if (cloudState.kostco.selected.kID === '0') {
+                        return kostcoRogue
+                    } else {
+                        return kostco + cloudState.kostco.selected.kTitle
+                    }
+                case 'KOSTCO_GIVE':
+                    return kostcoGive
+                case 'KOSTCO_DISCARD':
+                    return kostcoDiscard
                 case 'PASS':
                     return passTheTurn + activeChar.charName;
                 case 'default':

@@ -48,8 +48,8 @@ import {
 
 export const shortDescription = 10
 export const mediumDescription = 20
-export const longDescription = 30
-export const extraLongDescription = 40
+export const longDescription = 35
+export const extraLongDescription = 50
 
 export const asA = "As a "
 export const asAn = "As an "

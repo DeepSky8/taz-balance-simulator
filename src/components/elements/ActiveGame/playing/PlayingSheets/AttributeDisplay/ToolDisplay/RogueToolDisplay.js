@@ -4,7 +4,7 @@ import { rogueToolCatchphrase } from "../../../../../CharacterSheet/classes/rogu
 const RogueToolDisplay = ({ charState }) => (
   <span>
     {charState.toolCode === rogueToolCatchphrase &&
-      ` My catchphrase is ${charState.rogueCatchphrase}.`
+      ` My catchphrase is "${charState.rogueToolCatchphrase}"`
     }
   </span>
 )

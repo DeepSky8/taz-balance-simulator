@@ -1,0 +1,94 @@
+.kostcoStoreBorder {
+    border-style: solid;
+}
+
+.kKardBorder {
+    @include kostcoContainer;
+    @include kostcoColWrapping;
+    border-style: solid;
+    border-radius: 15px;
+    min-width: max-content;
+    max-width: 30rem;
+    margin: 1rem;
+}
+
+.kKardDisplay {
+    @include kostcoContainer;
+    @include kostcoRowWrapping;
+    justify-content: center;
+}
+
+.kGrid {
+    display: grid;
+    margin: 0 0.5rem 0 0.5rem;
+    // gap: .5rem;
+    // row-gap: 1rem;
+    column-gap: 0.5rem;
+}
+
+.kTitle {
+    @include kostcoMargin;
+    @include kGridTitle;
+    text-align: center;
+    margin: 0.5rem;
+}
+
+.kKardTitleEffect {
+    @include kostcoContainer;
+    @include kostcoRowWrapping;
+}
+
+.kKardOngoingTitle {
+    @include kostcoMargin;
+    @include kGridOngoingTitle;
+}
+
+.kKardOngoingEffect {
+    @include kostcoMargin;
+    @include kGridOngoingEffect;
+    max-width: 20em;
+}
+
+.kKardOneshotTitle {
+    @include kostcoMargin;
+    @include kGridOneshotTitle
+}
+
+.kKardOneshotEffect {
+    @include kostcoMargin;
+    @include kGridOneshotEffect;
+    max-width: 20em;
+}
+
+.kFlavor {
+    @include italicCenter;
+    @include kostcoMargin;
+    @include kGridFlavor;
+    max-width: 29em;
+}
+
+.kStoreTitle {
+    // @include italicCenter;
+    text-align: center;
+    @include kostcoContainer;
+    @include kostcoColWrapping;
+}
+.kStoreTag {
+        @include italicCenter;
+        @include kostcoContainer;
+        @include kostcoColWrapping;
+}
+
+.kNoOngoingEffect {
+    @include kostcoMargin;
+    @include kGridOngoingEffect;
+    max-width: 20em;
+    font-style: italic;
+}
+
+.kNoOneshotEffect {
+    @include kostcoMargin;
+    @include kGridOneshotEffect;
+    max-width: 20em;
+    font-style: italic;
+}

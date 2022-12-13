@@ -8,7 +8,7 @@ const RogueToolStingers = ({ charState, dispatchCharState }) => (
         <div id="rogueCatchphrase">
             {charState.toolCode === rogueToolCatchphrase &&
                 <input
-                    value={charState.rogueCatchphrase}
+                    value={charState.rogueToolCatchphrase}
                     type="text"
                     placeholder="What's your catchphrase?"
                     maxLength={longDescription}

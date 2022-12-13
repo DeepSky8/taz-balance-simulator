@@ -31,17 +31,17 @@ const villainObjectsArray = [
     {
         challengeName: 'The Dark Lord',
         challengeCode: 'v2',
-        challengeFlavor: 'The Dark Lord is a cruel tyrant with an army of monstrous minions. They are searching for the Relic, and if they claim it before you do, the world is doomed!',
+        challengeFlavor: 'The Dark Lord is a cruel tyrant with an army of monstrous minions. They are searching for the Relic, and if they claim it before we do, the world is doomed!',
         promptFlavor1: 'The Dark Lord is a cruel tyrant with an army of monstrous minions. They are searching for ',
-        promptFlavor2: ', and if they claim it before you do, the world is doomed!',
+        promptFlavor2: ', and if they claim it before we do, the world is doomed!',
         prompt1: 'What is the name of the Dark Lord?',
         prompt2: 'What is their connection to the Relic?',
     },
     {
         challengeName: 'The Dragon',
         challengeCode: 'v3',
-        challengeFlavor: 'The Dragon is ancient and powerful, and it is determined to destroy you. You must survive its attacks and press forward until you have an opportunity to defeat it once and for all.',
-        promptFlavor1: 'The Dragon is ancient and powerful, and it is determined to destroy you. You must survive its attacks and press forward until you have an opportunity to defeat it once and for all.',
+        challengeFlavor: 'The Dragon is ancient and powerful, and it is determined to destroy us. We must survive its attacks and press forward until we have an opportunity to defeat it once and for all.',
+        promptFlavor1: 'The Dragon is ancient and powerful, and it is determined to destroy us. We must survive its attacks and press forward until we have an opportunity to defeat it once and for all.',
         promptFlavor2: '',
         prompt1: "What is the Dragon's name?",
         prompt2: 'What does it look like?',
@@ -49,8 +49,8 @@ const villainObjectsArray = [
     {
         challengeName: 'The Band of Rogues',
         challengeCode: 'v4',
-        challengeFlavor: 'Why settle for one villain when you can have ten? A host of enemies stand between you and your goal.',
-        promptFlavor1: 'Why settle for one villain when you can have ten? A host of enemies stand between you and ',
+        challengeFlavor: 'Why settle for one villain when you can have ten? A host of enemies stand between us and our goal.',
+        promptFlavor1: 'Why settle for one villain when you can have ten? A host of enemies stand between us and ',
         promptFlavor2: '.',
         prompt1: 'Are these villains working together, or are they independent?',
         prompt2: 'Do they have a cool team name?'
@@ -67,9 +67,9 @@ const villainObjectsArray = [
     {
         challengeName: 'The Giant',
         challengeCode: 'v6',
-        challengeFlavor: "The Giant is a big problem ... because they're a giant, get it? To find the Relic, you must make your way through the Giant's home, which is filled with enormous threats!",
+        challengeFlavor: "The Giant is a big problem ... because they're a giant, get it? To find the Relic, we must make our way through the Giant's home, which is filled with enormous threats!",
         promptFlavor1: "The Giant is a big problem ... because they're a giant, get it? To find ",
-        promptFlavor2: ", you must make your way through the Giant's home, which is filled with enormous threats!",
+        promptFlavor2: ", we must make our way through the Giant's home, which is filled with enormous threats!",
         prompt1: "What does the Giant look like?",
         prompt2: "What's their name?"
     },

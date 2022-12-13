@@ -1,5 +1,6 @@
 @import "./base/settings";
 @import "./base/base";
+@import "./components/kostcoMixins";
 @import "./components/dropdown";
 @import "./components/edges";
 @import "./components/navLink";
@@ -8,3 +9,4 @@
 @import "./components/menuContainer";
 @import "./components/notes";
 @import "./components/kostcoUpdates";
+@import "./components/kostcoDisplay";

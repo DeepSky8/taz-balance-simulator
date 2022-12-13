@@ -1,3 +1,4 @@
+import { defaultKostcoCardState } from "./kostcoCardReducer"
 import { defaultNotePad } from "./noteReducer"
 
 const defaultCharState = {
@@ -18,7 +19,9 @@ const defaultCharState = {
         // genre: '',
     },
     lootPoints: 0,
-    charKostco: [],
+    charKostco: [
+        defaultKostcoCardState
+    ],
     displayChars: true,
     questCount: 0,
 
@@ -227,7 +230,7 @@ const charReducer = (state, action) => {
                 ...state,
                 gerblinRogueOrigin: action.gerblinRogueOrigin
             }
-        case 'SET_ROGUE_TOOL_CATCHPHRASE':
+        case 'SET_ROGUE_CATCHPHRASE':
             return {
                 ...state,
                 rogueToolCatchphrase: action.rogueToolCatchphrase
@@ -304,7 +307,6 @@ const charReducer = (state, action) => {
                 ...state,
                 wizardAssistFameHelps: action.wizardAssistFameHelps
             }
-
         default: return state
     }
 }

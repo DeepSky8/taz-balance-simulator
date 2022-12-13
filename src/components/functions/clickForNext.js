@@ -2,12 +2,15 @@ import {
     startAddStoryBonus,
     startAddWarriorActionBonus,
     startAddWizardActionBonus,
+    startClearKostcoCardsOptions,
+    startClearKostcoSelected,
     startCompleteBoss,
     startCompleteChallenge,
     startMarkTurnComplete,
     startNullReadyList,
     startRESETActionTokens,
     startSaveDiceRoll,
+    //startSaveKostcoToCharacter,
     startToggleRollAnimation,
     startUNspendActionToken,
     startUpdateAssistBonusOne,
@@ -29,6 +32,7 @@ import {
 } from "../elements/CharacterSheet/classes/charInfo";
 import diceRoll from "./diceRoll";
 import { briefingStagesArray, directionArray, gameStageArray } from "../elements/ActiveGame/stageArrays/stageArrays";
+import { startUpdateKostcoOnCharacter } from "../../actions/charActions";
 
 const clickForNext = ({ cloudState, localState }, direction = directionArray[0]) => {
     const activeChar = localState.teamCharArray[localState.activeIndex]
@@ -165,16 +169,57 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
         startUpdateTeamHealth(localState.hostKey, updatedHealth)
     }
 
+    const buySelectedKostco = () => {
+        const prevKostcoArray = localState
+            .teamCharArray[localState.activeIndex]
+            .charKostco
+            .filter((kard) => kard.kID !== '0')
+
+        const newKostcoArray = prevKostcoArray.concat([cloudState.kostco.selected])
+
+        const newLootPoints = parseInt(localState
+            .teamCharArray[localState.activeIndex]
+            .lootPoints) - 3
+
+
+        startUpdateKostcoOnCharacter(
+            cloudState.active.activeUID,
+            cloudState.active.activeCharID,
+            newKostcoArray
+        )
+
+        startUpdateLootPoints(
+            cloudState.active.activeUID,
+            cloudState.active.activeCharID,
+            newLootPoints
+        )
+
+        startClearKostcoCardsOptions(localState.hostKey)
+        startClearKostcoSelected(localState.hostKey)
+    }
+
     const passTheTurn = () => {
 
         // The Bard action token is returned at the end of every player's turn
-        const bardIndex = cloudState.playerList.indexOf(player => (tokenClassesReclaim.includes(player.classCode)))
+        const bardIndex = cloudState
+            .playerList
+            .indexOf(
+                player =>
+                (tokenClassesReclaim
+                    .includes(player.classCode)
+                )
+            )
 
         if (bardIndex >= 0) {
 
             startUNspendActionToken(
                 localState.hostKey,
-                cloudState.hasActionToken.concat(cloudState.playerList[bardIndex]),
+                cloudState
+                    .hasActionToken
+                    .concat(
+                        cloudState
+                            .playerList[bardIndex]
+                    ),
                 []
             )
         }
@@ -361,10 +406,7 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
                         failChallenge()
                     }
                     break;
-                // Pass Turn
-                case turnStagesArray[17]:
-                    passTheTurn()
-                    break;
+
 
                 // Add assist
                 case turnStagesArray[6]:
@@ -372,6 +414,31 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
                     processAssist()
                     break;
 
+                // DESCRIBETWO
+                case turnStagesArray[14]:
+                    // evaluate whether active player can afford a Kostco Kard
+                    // populate kostco.options
+                    // This is currently handled by a useEffect
+                    // on ActiveGame
+                    break;
+                // KOSTCO_BUY
+                case turnStagesArray[15]:
+                    buySelectedKostco()
+                    break;
+                // KOSTCO_GIVE
+                // case turnStagesArray[16]:
+                //     break;
+                // KOSTCO_DISCARD
+                case turnStagesArray[17]:
+                // ACTIONTWO
+                case turnStagesArray[18]:
+                    startClearKostcoCardsOptions(localState.hostKey)
+                    startClearKostcoSelected(localState.hostKey)
+                    break;
+                // Pass Turn
+                case turnStagesArray[19]:
+                    passTheTurn()
+                    break;
                 default:
                     break;
             }
@@ -741,14 +808,47 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
             )
         }
 
-        // KOSTCO
-        const setKOSTCO = () => {
+        // KOSTCO_SELECT
+        const setKOSTCO_BUY = () => {
             return (
-                // If the current stage is DESCRIBETWO
-                // then stage KOSTCO is available
-                (turnStagesArray[14] === (cloudState.currentTurn.turnStage))
+                // If the current stage is DESCRIBETWO 
+                // then stage KOSTCO_BUY is available
+                (turnStagesArray[14] === cloudState.currentTurn.turnStage)
                 &&
                 (activeChar.lootPoints >= 3)
+            )
+        }
+
+        // KOSTCO_GIVE
+        const setKOSTCO_GIVE = () => {
+            return (
+                // If the current stage is KOSTCO_BUY
+                // then stage KOSTCO_GIVE is available
+                (turnStagesArray[15] === cloudState.currentTurn.turnStage)
+            )
+        }
+
+        // KOSTCO_DISCARD
+        const setKOSTCO_DISCARD = () => {
+            return (
+                // If the current stage is KOSTCO_GIVE
+                // and any player has more than two kards
+                // then stage KOSTCO_DISCARD is available
+                (turnStagesArray[16] === (cloudState.currentTurn.turnStage))
+                &&
+                (
+                    (
+                        localState
+                            .teamCharArray
+                            .filter(char =>
+                                char.charKostco.length > 2)
+                            .length > 0
+                    )
+                    ||
+                    (
+                        cloudState.kostco.options.length > 0
+                    )
+                )
             )
         }
 
@@ -756,9 +856,10 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
         const setACTIONTWO = () => {
 
             return (
-                // If the current stage is either DESCRIBETWO or KOSTCO
+                // If the current stage is DESCRIBETWO or a KOSTCO stage,
                 // then stage ACTIONTWO can be accessed
-                (turnStagesArray.slice(14, 16).includes(cloudState.currentTurn.turnStage))
+                (turnStagesArray.slice(14, 18).includes(cloudState.currentTurn.turnStage))
+                //([turnStagesArray[14], turnStagesArray[15],].includes(cloudState.currentTurn.turnStage))
                 &&
                 // If the character is in the list of characters with an ActionTwo token ability
                 (tokenClassesActionTwo.includes(activeChar.classCode))
@@ -770,10 +871,12 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
 
         // PASS
         const setPASS = () => {
-            // If current turn is DESCRIBETWO, KOSTCO, or ACTIONTWO
+            // If current turn is DESCRIBETWO, a KOSTCO stage, or ACTIONTWO
             // then stage PASS can be accessed
-            return (turnStagesArray.slice(14, 17).includes(cloudState.currentTurn.turnStage))
+            return (turnStagesArray.slice(14, 19).includes(cloudState.currentTurn.turnStage))
         }
+
+
 
 
         if (activePlayerChecker()) {
@@ -793,7 +896,9 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
                 setPOST_ASSIST_SCENE(),
                 setEVALUATETWO(),
                 setDESCRIBETWO(),
-                setKOSTCO(),
+                setKOSTCO_BUY(),
+                setKOSTCO_GIVE(),
+                setKOSTCO_DISCARD(),
                 setACTIONTWO(),
                 setPASS(),
                 true

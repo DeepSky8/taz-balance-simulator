@@ -126,6 +126,23 @@ export const startUpdateCharNote = (uid, charID, charNote) => {
         })
 }
 
+export const startUpdateKostcoOnCharacter = (uid, charID, kostcoObjectArray) => {
+    const updates = {}
+    updates['characters/' + uid + '/' + charID + '/charKostco'] = kostcoObjectArray
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not update Kostco Object Array: ', error)
+        })
+}
+
+export const startNullKostcoOnCharacter = (uid, charID) => {
+    const updates = {}
+    updates['characters/' + uid + '/' + charID + '/charKostco'] = null
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not remove Kostco Object from character: ', error)
+        })
+}
 
 // Bard actions
 export const setHumanBardBand = (humanBardBand) => ({
@@ -197,9 +214,9 @@ export const setGerblinRogueOrigin = (gerblinRogueOrigin) => ({
     gerblinRogueOrigin
 })
 
-export const setRogueCatchphrase = (rogueCatchphrase) => ({
+export const setRogueCatchphrase = (rogueToolCatchphrase) => ({
     type: 'SET_ROGUE_CATCHPHRASE',
-    rogueCatchphrase
+    rogueToolCatchphrase
 })
 
 // Warrior Actions

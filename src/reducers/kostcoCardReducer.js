@@ -1,5 +1,3 @@
-import { FOCUSABLE_SELECTOR } from "@testing-library/user-event/dist/utils"
-
 const defaultKostcoCardState = {
   // elements beginning with 'k' are reserved
   // for text-searchable strings

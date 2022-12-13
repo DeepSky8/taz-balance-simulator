@@ -1,4 +1,5 @@
 import { defaultCardState } from "./cardReducer"
+import { defaultKostcoCardState } from "./kostcoCardReducer"
 
 const defaultCloudState = {
     static: {
@@ -80,6 +81,17 @@ const defaultCloudState = {
     readyList: [
         // uid
     ],
+    kostco: {
+        discarded: [
+            // kID
+        ],
+        options: [
+            // kID
+        ],
+        selected: {
+            ...defaultKostcoCardState
+        }
+    },
     surprises: [],
     strength: {
         actionWarrior: 0,
@@ -334,6 +346,36 @@ const cloudReducer = (state, action) => {
                 missionNoteArray: [
                     ...action.missionNoteArray
                 ]
+            }
+        case 'UPDATE_KOSTCO_OPTIONS':
+            return {
+                ...defaultCloudState,
+                ...state,
+                kostco: {
+                    discarded: state.kostco.discarded,
+                    options: action.optionKostcoArray,
+                    selected: state.kostco.selected,
+                }
+            }
+        case 'UPDATE_KOSTCO_DISCARDS':
+            return {
+                ...defaultCloudState,
+                ...state,
+                kostco: {
+                    discarded: action.discardKostcoArray,
+                    options: state.kostco.options,
+                    selected: state.kostco.selected,
+                }
+            }
+        case 'UPDATE_KOSTCO_SELECTED':
+            return {
+                ...defaultCloudState,
+                ...state,
+                kostco: {
+                    discarded: state.kostco.discarded,
+                    options: state.kostco.options,
+                    selected: action.kostcoSelected
+                }
             }
         default:
             return state

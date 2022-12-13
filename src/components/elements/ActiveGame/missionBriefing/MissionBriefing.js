@@ -5,16 +5,16 @@ import flavorTransformer from "../../../functions/flavorTransformer";
 import { locationObjectsArray } from "../../Challenges/mission-elements/m-location";
 import { relicObjectsArray } from "../../Challenges/mission-elements/m-relic";
 import { villainObjectsArray } from "../../Challenges/mission-elements/m-villain";
-import { briefingStagesArray, gameStageArray } from "../stageArrays/stageArrays";
+import { briefingStagesArray } from "../stageArrays/stageArrays";
 import DeckBriefing from "./DeckBriefing";
 
 const MissionBriefing = ({ cloudState }) => {
     const villain = (challengeTransformer(villainObjectsArray, cloudState.static.codeVillain))
     const relic = (challengeTransformer(relicObjectsArray, cloudState.static.codeRelic))
     const location = (challengeTransformer(locationObjectsArray, cloudState.static.codeLocation))
-    const villainIntro = "Today you're up against a dangerous foe:"
-    const relicIntro = `It is vital that your team secure ${relic.challengeName}:`
-    const locationIntro = `Don't let appearances fool you; ${location.challengeName} is extremly dangerous:`
+    const villainIntro = "Today we're up against a dangerous foe:"
+    const relicIntro = `It is vital that our team secure ${relic.challengeName}:`
+    const locationIntro = `Don't let appearances fool you, ${location.challengeName} is extremly dangerous:`
     const { villainFlavor, relicFlavor, locationFlavor } = flavorTransformer(villain, relic, location)
 
     const updatePromptOne = (updateText) => {

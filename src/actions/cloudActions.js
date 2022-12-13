@@ -135,6 +135,21 @@ export const updateMissionNoteArray = (missionNoteArray) => ({
     missionNoteArray
 })
 
+export const updateKostcoOptions = (optionKostcoArray) => ({
+    type: 'UPDATE_KOSTCO_OPTIONS',
+    optionKostcoArray
+})
+
+export const updateKostcoDiscards = (discardKostcoArray) => ({
+    type: 'UPDATE_KOSTCO_DISCARDS',
+    discardKostcoArray
+})
+
+export const updateKostcoSelected = (kostcoSelected) => ({
+    type: 'UPDATE_KOSTCO_SELECTED',
+    kostcoSelected
+})
+
 // Cloud Actions
 
 export const startGetKey = (uid) => {
@@ -656,9 +671,9 @@ export const startToggleRollAnimation = (hostKey, toggle) => {
         })
 }
 
-export const startUpdateLootPoints = (activePlayer, activeCharacter, newLootTotal) => {
+export const startUpdateLootPoints = (uid, charID, newLootTotal) => {
     const updates = {}
-    updates['characters/' + activePlayer + '/' + activeCharacter + '/lootPoints'] = newLootTotal
+    updates['characters/' + uid + '/' + charID + '/lootPoints'] = newLootTotal
     update(ref(db), updates)
         .catch((error) => {
             console.log('Did not update Loot Points: ', error)
@@ -712,11 +727,55 @@ export const startUpdateChanceRoll = (hostKey, type, chanceRoll) => {
 }
 
 export const startUpdateMissionNoteArray = (hostKey, missionNoteArray) => {
-    console.log('missionNoteArray', missionNoteArray)
     const updates = {}
     updates['savedGames/' + hostKey + '/missionNoteArray'] = missionNoteArray
     update(ref(db), updates)
         .catch((error) => {
             console.log('Did not update Mission Note Array: ', error)
+        })
+}
+
+export const startUpdateKostcoCardsOptions = (hostKey, kostcoOptionsIDsArray) => {
+    const updates = {}
+    updates['savedGames/' + hostKey + '/kostco/options'] = kostcoOptionsIDsArray
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not update options Kostco Array: ', error)
+        })
+}
+
+export const startClearKostcoCardsOptions = (hostKey) => {
+    const updates = {}
+    updates['savedGames/' + hostKey + '/kostco/options'] = null
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not update options Kostco Array: ', error)
+        })
+}
+
+export const startUpdateKostcoCardsDiscarded = (hostKey, discardedKostcoArray) => {
+    const updates = {}
+    updates['savedGames/' + hostKey + '/kostco/discarded'] = discardedKostcoArray
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not update discarded Kostco Array: ', error)
+        })
+}
+
+export const startUpdateKostcoSelected = (hostKey, selectedKostco) => {
+    const updates = {}
+    updates['savedGames/' + hostKey + '/kostco/selected'] = selectedKostco
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not update selected Kostco kard: ', error)
+        })
+}
+
+export const startClearKostcoSelected = (hostKey) => {
+    const updates = {}
+    updates['savedGames/' + hostKey + '/kostco/selected'] = null
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not clear selected Kostco kard: ', error)
         })
 }

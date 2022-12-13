@@ -1,6 +1,7 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { off, onValue, ref } from "firebase/database";
+import { get, off, onValue, ref } from "firebase/database";
+import { auth, db } from "../../../firebase/firebase";
 import {
     startSetActivePlayer,
     startUpdateActiveLocation,
@@ -24,8 +25,12 @@ import {
     clearStrength,
     startSetCharacterStrength,
     updateMissionNoteArray,
+    updateKostcoOptions,
+    updateKostcoDiscards,
+    startUpdateKostcoCardsOptions,
+    updateKostcoSelected,
+    startClearKostcoCardsOptions,
 } from "../../../actions/cloudActions";
-import { auth, db } from "../../../firebase/firebase";
 import { defaultCloudState, cloudReducer } from "../../../reducers/cloudReducer";
 import incrementStage from "../../functions/incrementStage";
 import incrementTurn from "../../functions/incrementTurn";
@@ -33,10 +38,10 @@ import challengeDeck from "../../functions/challengeDeck";
 import ActiveGameRouter from "../../../routers/ActiveGameRouter";
 import {
     clearCurrentChallenge,
+    clearKostcoOptions,
     updateCurrentChallenge,
     updateLocalCharacterID,
     updateHostKey,
-    updateLocalCharacter,
     updateCurrentChallengeKey,
     updateUncompletedChallengesVillain,
     updateCompletedChallengesVillain,
@@ -49,16 +54,20 @@ import {
     updateActiveCharacterID,
     updateActiveIndex,
     updateLocalIndex,
+    addKostcoOption,
 } from "../../../actions/localActions";
 import { defaultLocalState, localStateReducer } from "../../../reducers/localReducer";
 import { stats } from "../CharacterSheet/classes/charInfo";
 import { briefingStagesArray, gameStageArray } from "./stageArrays/stageArrays";
+import turnStagesArray from "./turnStep/turnStepArrays/turnStagesArray";
+import { shuffle } from "../../functions/deckRandomizers";
 
 const ActiveGame = () => {
     let navigate = useNavigate()
 
     const [cloudState, dispatchCloudState] = useReducer(cloudReducer, defaultCloudState)
     const [localState, dispatchLocalState] = useReducer(localStateReducer, defaultLocalState)
+    const [allKostcoIDs, setAllKostcoIDs] = useState([])
 
     // State guards
     useEffect(() => {
@@ -274,6 +283,40 @@ const ActiveGame = () => {
                 dispatchCloudState(updateMissionNoteArray(tempMissionNoteArray))
             })
 
+        // Ongoing kostco option listener
+        onValue(ref(db, 'savedGames/' + localState.hostKey + '/kostco/options'),
+            (snapshot) => {
+                const tempKostcoOptions = [];
+                if (snapshot.exists()) {
+                    snapshot.forEach((kardID) => {
+                        tempKostcoOptions.push(kardID.val())
+                    })
+                }
+                dispatchCloudState(updateKostcoOptions(tempKostcoOptions))
+            })
+
+        // Ongoing kostco discard listener
+        onValue(ref(db, 'savedGames/' + localState.hostKey + '/kostco/discarded'),
+            (snapshot) => {
+                const tempKostcoDiscard = [];
+                if (snapshot.exists()) {
+                    snapshot.forEach((kardID) => {
+                        tempKostcoDiscard.push(kardID.val())
+                    })
+                }
+                dispatchCloudState(updateKostcoDiscards(tempKostcoDiscard))
+            })
+
+        // Ongoing kostco selected listener
+        onValue(ref(db, 'savedGames/' + localState.hostKey + '/kostco/selected'),
+            (snapshot) => {
+
+                if (snapshot.exists()) {
+                    dispatchCloudState(updateKostcoSelected(snapshot.val()))
+                }
+
+            })
+
         return () => {
             off(ref(db, 'savedGames/' + localState.hostKey + '/static'))
             off(ref(db, 'savedGames/' + localState.hostKey + '/active'))
@@ -286,20 +329,23 @@ const ActiveGame = () => {
             off(ref(db, 'savedGames/' + localState.hostKey + '/activeAssistTokens'))
             off(ref(db, 'savedGames/' + localState.hostKey + '/strength'))
             off(ref(db, 'savedGames/' + localState.hostKey + '/missionNoteArray'))
+            off(ref(db, 'savedGames/' + localState.hostKey + '/kostco/options'))
+            off(ref(db, 'savedGames/' + localState.hostKey + '/kostco/discarded'))
+            off(ref(db, 'savedGames/' + localState.hostKey + '/kostco/selected'))
         }
 
     }, [localState.hostKey])
 
     // Ongoing character listeners
     useEffect(() => {
-        if (localState.localCharacterID !== '') {
-            onValue(ref(db, 'characters/' + auth.currentUser.uid + '/' + localState.localCharacterID),
-                (snapshot) => {
-                    if (snapshot.exists()) {
-                        dispatchLocalState(updateLocalCharacter(snapshot.val()))
-                    }
-                })
-        }
+        // if (localState.localCharacterID !== '') {
+        //     onValue(ref(db, 'characters/' + auth.currentUser.uid + '/' + localState.localCharacterID),
+        //         (snapshot) => {
+        //             if (snapshot.exists()) {
+        //                 dispatchLocalState(updateLocalCharacter(snapshot.val()))
+        //             }
+        //         })
+        // }
 
         if (cloudState.playerList.length > 0) {
             cloudState.playerList.forEach((player) => {
@@ -317,9 +363,9 @@ const ActiveGame = () => {
 
 
         return () => {
-            if (localState.localCharacterID !== '') {
-                off(ref(db, 'characters/' + auth.currentUser.uid + '/' + localState.localCharacterID))
-            }
+            // if (localState.localCharacterID !== '') {
+            //     off(ref(db, 'characters/' + auth.currentUser.uid + '/' + localState.localCharacterID))
+            // }
             if (cloudState.playerList.length > 0) {
                 cloudState.playerList.forEach((player) => {
                     off(ref(db, 'characters/' + player.uid + '/' + player.currentCharacterID))
@@ -732,6 +778,111 @@ const ActiveGame = () => {
         }
 
     }, [localState.hostKey, cloudState.static])
+
+    // --
+
+
+    // Single update Kostco listener
+    // Run by game host only
+    useEffect(() => {
+        if (auth.currentUser.uid === cloudState.static.host) {
+            onValue(ref(db, 'kostco'),
+                (snapshot) => {
+                    const tempKostcoIDs = [];
+                    if (snapshot.exists()) {
+                        snapshot.forEach((kard) => {
+                            tempKostcoIDs.push(kard.val().kID)
+                        })
+                    }
+                    setAllKostcoIDs(tempKostcoIDs)
+                }, {
+                onlyOnce: true
+            })
+        }
+        return () => {
+            off(ref(db, 'kostco'))
+        }
+
+    }, [cloudState.static.host])
+
+    // When it's DESCRIBETWO stage
+    // the game host collates all the current Kostco kards
+    // and stores two new card IDs in the cloud
+    // from the list of unused Kostco kards 
+    useEffect(() => {
+        const currentKostcoIDs = []
+        if (
+            auth.currentUser.uid === cloudState.static.host
+            &&
+            cloudState.currentTurn.turnStage === turnStagesArray[14]
+        ) {
+            const tempKostco = []
+
+            localState
+                .teamCharArray
+                .forEach(
+                    char => tempKostco.push(...char.charKostco)
+                )
+
+            if (tempKostco.length > 0) {
+                currentKostcoIDs.push(tempKostco.concat())
+            }
+
+            const unusedKostcoIDs = shuffle(
+                allKostcoIDs
+                    .filter(
+                        (kard) =>
+                            !currentKostcoIDs.includes(kard.kID)
+                    )
+            )
+            startUpdateKostcoCardsOptions(localState.hostKey, unusedKostcoIDs.slice(0, 2))
+        }
+
+        if (
+            auth.currentUser.uid === cloudState.static.host
+            &&
+            cloudState.currentTurn.turnStage === turnStagesArray[16]
+        ) {
+
+            // startUpdateKostcoCardsOptions(localState.hostKey, ['0'])
+            startClearKostcoCardsOptions(localState.hostKey)
+            dispatchLocalState(clearKostcoOptions())
+        }
+    }, [cloudState.currentTurn.turnStage, allKostcoIDs])
+
+    // When the option list of kostco kard IDs stored in the cloud changes
+    // get the corresponding kard information and store it 
+    // on localState
+    useEffect(() => {
+        dispatchLocalState(clearKostcoOptions())
+        if (cloudState.kostco.options.length > 0) {
+
+            cloudState.kostco.options.forEach(kID => {
+                get(ref(db, 'kostco/' + kID))
+                    .then((snapshot) => {
+                        if (snapshot.exists()) {
+                            dispatchLocalState(addKostcoOption(snapshot.val()))
+                        }
+                    })
+                    .catch((error) => {
+                        console.log('error', error)
+                    })
+
+            })
+        }
+        //  else {
+        //     dispatchLocalState(clearKostcoOptions())
+
+        // }
+
+        // return () => { 
+        //     off(ref(db, 'savedGames/' + localState.hostKey + '/kostco/selected'))
+        // }
+
+    }, [cloudState.kostco.options])
+
+    // --
+
 
 
 

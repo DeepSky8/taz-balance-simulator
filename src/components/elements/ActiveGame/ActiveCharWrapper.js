@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 
 const ActiveCharWrapper = ({ gameStage, localState }) => {
-    const localChar = localState.teamCharArray[localState.localIndex]
-    const activeChar = localState.teamCharArray[localState.activeIndex]
+    let localChar = localState.teamCharArray[localState.localIndex]
+    let activeChar = localState.teamCharArray[localState.activeIndex]
     const currentActiveChar = 'Active Character: '
-    const myCharacter = `Playing as ${localChar.charName} || `
+    let myCharacter = `Playing as ${localChar.charName} || `
 
     const [actionBarText, setActionBarText] = useState(currentActiveChar)
     const missionBriefBy = "Today's briefing conducted by "
@@ -23,6 +23,9 @@ const ActiveCharWrapper = ({ gameStage, localState }) => {
             // case 'BACKSTORY':
             //     setActionBarText(createBackstory)
             //     break;
+            case 'TRANSPORT':
+                setActionBarText('')
+                break;
             case 'CHALLENGES':
                 setActionBarText(myCharacter + currentActiveChar + activeChar.charName)
                 break;

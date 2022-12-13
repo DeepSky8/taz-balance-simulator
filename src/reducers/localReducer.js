@@ -1,5 +1,6 @@
 import { defaultCardState } from "./cardReducer"
 import { defaultCharState } from "./charReducer"
+import { defaultKostcoCardState } from "./kostcoCardReducer";
 
 const defaultLocalState = {
     // The hostKey reducer concats two strings with a separating /, which serves as a drop-in
@@ -119,6 +120,11 @@ const defaultLocalState = {
     uncompletedChallengeArrayRelic: [],
     completedChallengeArrayLocation: [],
     uncompletedChallengeArrayLocation: [],
+    kostcoOptions: [
+        {
+            ...defaultKostcoCardState
+        }
+    ],
 }
 
 const localStateReducer = (state, action) => {
@@ -253,24 +259,33 @@ const localStateReducer = (state, action) => {
             const charIndex = state.teamCharArray.findIndex(
                 storedCharObject => storedCharObject.charID === action.charObject.charID
             )
+            const updatedChar = {
+                ...defaultCharState,
+                ...action.charObject
+            }
+
             // const updatedTeamCharArray = [];
             if (charIndex === -1) {
                 updatedTeamCharArray.push(...state.teamCharArray);
-                updatedTeamCharArray.push(action.charObject);
+                updatedTeamCharArray.push(updatedChar);
             } else if (charIndex === (state.teamCharArray.length - 1)) {
                 (updatedTeamCharArray
                     .push(...state.teamCharArray.slice(0, charIndex)));
-                updatedTeamCharArray.push(action.charObject);
+                updatedTeamCharArray.push(updatedChar);
             } else {
                 (updatedTeamCharArray
                     .push(...state.teamCharArray.slice(0, charIndex)));
-                updatedTeamCharArray.push(action.charObject);
+                updatedTeamCharArray.push(updatedChar);
                 updatedTeamCharArray.push(...state.teamCharArray.slice(charIndex + 1));
             }
+
+            const filteredArray = updatedTeamCharArray.filter(
+                charObject => charObject.charID !== 'Loading...')
+
             return {
-                ...defaultLocalState,
+                // defaultLocalState
                 ...state,
-                teamCharArray: updatedTeamCharArray,
+                teamCharArray: filteredArray,
             }
         case 'REMOVE_TEAM_CHAR':
             const charIDIndex = state.teamCharArray.findIndex(
@@ -283,6 +298,27 @@ const localStateReducer = (state, action) => {
                 ...defaultLocalState,
                 ...state,
                 teamCharArray: updatedTeamCharArray,
+            }
+        case 'ADD_KOSTCO_OPTION':
+            const updatedKostcoOptions = state.kostcoOptions
+                .concat(action.kostcoOption)
+                .filter(kard =>
+                    kard.kID !== '0'
+                )
+            const updatedKostcoSet = [...new Set(updatedKostcoOptions)]
+
+            return {
+                ...defaultLocalState,
+                ...state,
+                kostcoOptions: updatedKostcoSet
+            }
+        case 'CLEAR_KOSTCO_OPTIONS':
+            return {
+                ...defaultLocalState,
+                ...state,
+                kostcoOptions: [
+                    { ...defaultKostcoCardState }
+                ]
             }
         default:
             return {

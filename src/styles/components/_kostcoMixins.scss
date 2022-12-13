@@ -1,0 +1,73 @@
+@mixin kostcoContainer {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+@mixin kostcoRowWrapping {
+    // flex-direction: row;
+    // flex-wrap: wrap;
+    flex-flow: row wrap;
+}
+
+@mixin kostcoColWrapping {
+    flex-flow: column wrap;
+}
+
+@mixin kostcoBlue {
+    background-color: #91d9ed;
+}
+
+@mixin kostcoGreen {
+    background-color: #91edbc;
+}
+
+@mixin kostcoMargin{
+    margin: .5rem;
+}
+
+@mixin italicCenter {
+    font-style: italic;
+    text-align: center;
+}
+
+@mixin kGridTitle {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 2;
+}
+
+@mixin kGridOngoingTitle {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 3;
+}
+
+@mixin kGridOngoingEffect {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 2;
+    grid-row-end: 3;
+}
+
+@mixin kGridOneshotTitle {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 3;
+    grid-row-end: 4;
+}
+
+@mixin kGridOneshotEffect {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 3;
+    grid-row-end: 4;
+}
+
+@mixin kGridFlavor {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 4;
+    grid-row-end: 5;
+}

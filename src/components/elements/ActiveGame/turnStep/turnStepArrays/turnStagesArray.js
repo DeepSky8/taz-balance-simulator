@@ -35,12 +35,18 @@ const turnStagesArray = [
   'DESCRIBETWO',
 
   // 15
-  'KOSTCO',
+  'KOSTCO_BUY',
   // 16
-  'ACTIONTWO',
+  'KOSTCO_GIVE',
   // 17
+  'KOSTCO_DISCARD',
+
+  // 16 NEW 18
+  'ACTIONTWO',
+  // 17 NEW 19
   'PASS',
-  // 18
+
+  // 20
   'default',
 ]
 

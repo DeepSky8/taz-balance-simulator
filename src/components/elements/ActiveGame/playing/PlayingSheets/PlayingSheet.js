@@ -12,6 +12,7 @@ import { charTitles } from "../../../CharacterSheet/classes/charInfo";
 import AssistDisplay from "./AttributeDisplay/AssistDisplay/AssistDisplay";
 import ToolDisplay from "./AttributeDisplay/ToolDisplay/ToolDisplay";
 import NotesFrameFull from "./Notes/NotesFrameFull";
+import KostcoOwnedFrame from "../../kostco/KostcoOwnedFrame";
 
 
 
@@ -29,13 +30,14 @@ const PlayingSheet = ({ cloudState, localState }) => {
   const [charState, dispatchCharState] = useReducer(charReducer, defaultCharState)
   const [hasToken, setHasToken] = useState(false)
 
-
   // set local character state
   useEffect(() => {
     dispatchCharState(setNoCurrentChar())
     if (charIndex >= 0) {
       dispatchCharState(setCharState(localState.teamCharArray[charIndex]))
+
     }
+
   }, [localState.teamCharArray[charIndex], charIndex, pageData.charID])
 
   // set token status
@@ -48,7 +50,7 @@ const PlayingSheet = ({ cloudState, localState }) => {
   }, [cloudState.hasActionToken])
 
 
-  
+
   return (
     <span>
       <span>
@@ -65,6 +67,9 @@ const PlayingSheet = ({ cloudState, localState }) => {
         <p>
           {hasToken ? tokenAvailable : tokenSpent}
         </p>
+        <p>
+          Loot Points: {charState.lootPoints}
+        </p>
       </span>
 
       <SpecialAbility charState={charState} />
@@ -73,15 +78,19 @@ const PlayingSheet = ({ cloudState, localState }) => {
       <ToolDisplay charState={charState} />
       <AssistDisplay charState={charState} />
 
+      <KostcoOwnedFrame
+        cloudState={cloudState}
+        localState={localState}
+        charState={charState}
+      />
+
       <NotesFrameFull
         cloudState={cloudState}
         localState={localState}
         charState={charState}
         pageData={pageData}
-        
+
       />
-
-
     </span>
   )
 }

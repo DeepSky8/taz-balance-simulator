@@ -33,6 +33,7 @@ const TurnStep = ({ cloudState, localState }) => {
         cloudState.backstory.briefingStage,
         cloudState.currentTurn.turnStage,
         cloudState.currentTurn.selectedChallenge,
+        cloudState.kostco.selected,
         activeAssistPlayer
     ])
 

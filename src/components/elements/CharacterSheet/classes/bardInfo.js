@@ -1,6 +1,6 @@
 export const bardRaceStingerLines = [
     // Human
-    "You're a brooding musician. What's the name of your band?",
+    "I'm a brooding musician. What's the name of my band?",
     // Elf
     "I sing the ancient songs of the fey. For money.",
     // Dwarf

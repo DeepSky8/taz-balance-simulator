@@ -97,3 +97,12 @@ export const removeTeamArrayCharObject = (charID) => ({
     type: 'REMOVE_TEAM_CHAR',
     charID
 })
+
+export const addKostcoOption = (kostcoOption) => ({
+    type: 'ADD_KOSTCO_OPTION',
+    kostcoOption
+})
+
+export const clearKostcoOptions = () => ({
+    type: 'CLEAR_KOSTCO_OPTIONS'
+})

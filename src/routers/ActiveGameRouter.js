@@ -24,6 +24,8 @@ import incrementTurn from "../components/functions/incrementTurn";
 import CharNav from "../components/elements/ActiveGame/playing/CharacterOverview/CharNav";
 import PlayingSheet from "../components/elements/ActiveGame/playing/PlayingSheets/PlayingSheet";
 import NotFoundPage from "../components/Authentication/NotFoundPage";
+import Gameboard from "../components/elements/ActiveGame/playing/Gameboard";
+import KostcoPool from "../components/elements/ActiveGame/kostco/KostcoPool";
 
 const ActiveGameRouter = ({
     cloudState,
@@ -107,6 +109,8 @@ const ActiveGameRouter = ({
                             <Outlet />
 
                         </Playing>
+
+
                     }
                 >
                     <Route
@@ -115,25 +119,10 @@ const ActiveGameRouter = ({
                         errorElement={<NotFoundPage />}
 
                         element={
-                            <span>
-                                <TeamHealth
-                                    teamHealth={cloudState.active.teamHealth}
-                                />
-                                <ActionTokens
-                                    cloudState={cloudState}
-                                    localState={localState}
-                                />
-                                {cloudState.currentTurn.showRoll &&
-                                    <RollDiceAnimation />
-                                }
-                                <ChallengeFrame
-                                    cloudState={cloudState}
-                                    localState={localState}
-                                />
-                                <StrengthFrame
-                                    cloudState={cloudState}
-                                />
-                            </span>
+                            <Gameboard
+                                cloudState={cloudState}
+                                localState={localState}
+                            />
                         }
                     />
                     <Route
@@ -155,10 +144,9 @@ const ActiveGameRouter = ({
                             />
                         }
                     />
-
-
-
                 </Route>
+
+
                 <Route
                     path="summary"
                     element={
@@ -168,6 +156,12 @@ const ActiveGameRouter = ({
                     }
                 />
             </Routes>
+
+            <KostcoPool
+                cloudState={cloudState}
+                localState={localState}
+            />
+
             <TESTFEATURES
                 resetStages={resetStages}
                 gameStage={cloudState.active.gameStage}

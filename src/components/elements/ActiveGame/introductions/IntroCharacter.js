@@ -1,5 +1,4 @@
 import React from "react";
-import { defaultCharState } from "../../../../reducers/charReducer";
 import {
     assistTitles,
     charClassTitles,
@@ -10,16 +9,7 @@ import {
 
 
 const IntroCharacter = ({ localState }) => {
-    // let activeChar = {
-    //     ...defaultCharState
-    // }
-    // if (localState.teamCharArray && zlocalState.activeIndex) {
-    //     activeChar = localState.teamCharArray[localState.activeIndex]
-    // }
-
-
-
-    const activeChar = localState.teamCharArray[localState.activeIndex]
+    let activeChar = localState.teamCharArray[localState.activeIndex]
 
     return (
         <div>

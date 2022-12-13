@@ -1,26 +1,3 @@
-@mixin kostcoContainer {
-  display: flex;
-  margin-bottom: 10px;
-}
-
-@mixin kostcoRowWrapping {
-  // flex-direction: row;
-  // flex-wrap: wrap;
-  flex-flow: row wrap;
-}
-
-@mixin kostcoColWrapping {
-  flex-flow: column wrap;
-}
-
-@mixin kostcoBlue {
-  background-color: #91d9ed;
-}
-
-@mixin kostcoGreen {
-  background-color: #91edbc;
-}
-
 .kostcoFlexContainer {
   @include kostcoContainer;
   @include kostcoRowWrapping;
