@@ -2,8 +2,7 @@ import React from "react";
 import KostcoCard from "./KostcoCard";
 import kostcoPairs from "./kostcoPairs";
 
-const KostcoDisplay = ({ canSelect, clickToSelect, kostcoArray, location, verb }) => {
-
+const KostcoDisplay = ({ canSelect, clickToSelect, kostcoArray, location, verb, selected }) => {
     return (
         <div>
             {
@@ -18,6 +17,7 @@ const KostcoDisplay = ({ canSelect, clickToSelect, kostcoArray, location, verb }
                             canSelect={canSelect}
                             clickToSelect={clickToSelect}
                             verb={verb}
+                            selectedKard={selected}
                         />
                         {
                             canSelect
@@ -27,6 +27,7 @@ const KostcoDisplay = ({ canSelect, clickToSelect, kostcoArray, location, verb }
                                 canSelect={canSelect}
                                 clickToSelect={clickToSelect}
                                 verb={verb}
+                                selectedKard={selected}
                             />
                         }
 
@@ -51,6 +52,7 @@ const KostcoDisplay = ({ canSelect, clickToSelect, kostcoArray, location, verb }
                                     canSelect={canSelect}
                                     clickToSelect={clickToSelect}
                                     verb={verb}
+                                    selectedKard={selected}
                                 />
                             )
                         })}

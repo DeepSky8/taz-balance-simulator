@@ -5,10 +5,10 @@ import ActionToken from "./ActionToken";
 import assistStages from "../../turnStep/turnStepArrays/assistStages";
 import tokenStages from "../../turnStep/turnStepArrays/tokenStages";
 import challengeItemStages from "../../turnStep/turnStepArrays/challengeItemStages";
-import turnStagesArray from "../../turnStep/turnStepArrays/turnStagesArray";
 import actionStages from "../../turnStep/turnStepArrays/actionStages";
 import { tokenClassesActionOne, tokenClassesActionTwo } from "../../../CharacterSheet/classes/charInfo";
 import { defaultCharState } from "../../../../../reducers/charReducer";
+import turnStage from "../../turnStep/turnStepArrays/turnStage";
 
 const ActionTokens = ({ cloudState, localState }) => {
     const [isAssistToken, setIsAssistToken] = useState(false)
@@ -42,7 +42,7 @@ const ActionTokens = ({ cloudState, localState }) => {
                 const challengeRequiresToken = () => {
                     return (
                         // If the turnStage is CHALLENGE
-                        (turnStagesArray[1] === cloudState.currentTurn.turnStage)
+                        (turnStage.pickChallenge === cloudState.currentTurn.turnStage)
                         &&
                         // AND the challenge requires a token to engage
                         (localState.currentChallenge.requiresToken)
@@ -82,13 +82,13 @@ const ActionTokens = ({ cloudState, localState }) => {
                         // and the active player class code is in the list of 
                         // classes that can perform an action at that time.
                         (
-                            (turnStagesArray[7] === cloudState.currentTurn.turnStage)
+                            (turnStage.actionTokenOne === cloudState.currentTurn.turnStage)
                             &&
                             (tokenClassesActionOne.includes(activeChar.classCode))
                         )
                         ||
                         (
-                            (turnStagesArray[16] === cloudState.currentTurn.turnStage)
+                            (turnStage.actionTokenTwo === cloudState.currentTurn.turnStage)
                             &&
                             (tokenClassesActionTwo.includes(activeChar.classCode))
                         )
@@ -198,7 +198,7 @@ const ActionTokens = ({ cloudState, localState }) => {
                 unspendThisToken.concat(cloudState.hasActionToken),
                 newSpentActionTokensArray
             )
-            if (cloudState.currentTurn.turnStage === turnStagesArray[1]) {
+            if (turnStage.pickChallenge === cloudState.currentTurn.turnStage) {
                 startUnpickTokenChallenge(localState.hostKey)
             }
             if (isAssistToken) {

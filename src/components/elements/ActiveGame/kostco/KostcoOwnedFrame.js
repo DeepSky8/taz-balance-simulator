@@ -2,7 +2,8 @@ import React from "react";
 import { startNullKostcoOnCharacter, startUpdateKostcoOnCharacter } from "../../../../actions/charActions";
 import { startUpdateKostcoCardsOptions } from "../../../../actions/cloudActions";
 import { auth } from "../../../../firebase/firebase";
-import turnStagesArray from "../turnStep/turnStepArrays/turnStagesArray";
+import { defaultKostcoCardState } from "../../../../reducers/kostcoCardReducer";
+import turnStage from "../turnStep/turnStepArrays/turnStage";
 import KostcoDisplay from "./KostcoDisplay";
 import kostcoPairs from "./kostcoPairs";
 
@@ -12,7 +13,7 @@ const KostcoOwnedFrame = ({ cloudState, localState, charState }) => {
     const canSelect = (
         (cloudState
             .currentTurn
-            .turnStage === turnStagesArray[16])
+            .turnStage === turnStage.kostcoGive)
         &&
         (localState.localCharacterID === charState.charID)
     )
@@ -20,7 +21,7 @@ const KostcoOwnedFrame = ({ cloudState, localState, charState }) => {
 
     const clickToSelect = (selectedKard) => {
         if (
-            cloudState.currentTurn.turnStage === turnStagesArray[16]
+            cloudState.currentTurn.turnStage === turnStage.kostcoGive
         ) {
 
             const updatedKostcoOptions = localState
@@ -73,6 +74,7 @@ const KostcoOwnedFrame = ({ cloudState, localState, charState }) => {
                             canSelect={canSelect}
                             clickToSelect={clickToSelect}
                             kostcoArray={tempKostcoArray}
+                            selected={defaultKostcoCardState}
                         />
                     </div>
                 )

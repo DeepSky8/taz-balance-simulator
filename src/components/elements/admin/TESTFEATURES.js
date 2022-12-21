@@ -1,10 +1,12 @@
 import React from "react"
 import { startUpdateBriefingStage, startUpdateGameStage, startUpdateTurnStage } from "../../../actions/cloudActions"
 import { briefingStagesArray, gameStageArray } from "../ActiveGame/stageArrays/stageArrays"
-import turnStagesArray from "../ActiveGame/turnStep/turnStepArrays/turnStagesArray"
+import turnStage from "../ActiveGame/turnStep/turnStepArrays/turnStage"
 
 
 const TESTFEATURES = ({ currentStage, gameStage, briefingStage, hostKey, resetStages, stepStage, resetTurnStage, resetActionTokens }) => {
+    const turnStageEntries = Object.entries(turnStage)
+    console.log('turnStageArrayEntries', turnStageEntries)
 
     return (
         <div>
@@ -63,13 +65,13 @@ const TESTFEATURES = ({ currentStage, gameStage, briefingStage, hostKey, resetSt
                     value={currentStage}
                     onChange={(e) => { startUpdateTurnStage(hostKey, e.target.value) }}
                 >
-                    {turnStagesArray.map((stage) => {
+                    {turnStageEntries.map(([key, value]) => {
                         return (
                             <option
-                                key={stage}
-                                value={stage}
+                                key={key}
+                                value={value}
                             >
-                                {stage}
+                                {value}
                             </option>
                         )
                     })}
@@ -80,3 +82,6 @@ const TESTFEATURES = ({ currentStage, gameStage, briefingStage, hostKey, resetSt
 }
 
 export default TESTFEATURES
+
+// need to update the stage arrays to use the objects, and then create object entries here and other places the stage arrays would normally be used
+// also need to delete stage incrementor functions

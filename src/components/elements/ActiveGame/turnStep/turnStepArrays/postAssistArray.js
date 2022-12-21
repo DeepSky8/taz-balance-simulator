@@ -1,14 +1,13 @@
-import turnStagesArray from "./turnStagesArray"
-
+import kostcoStages from "./kostcoStages"
+import turnStage from "./turnStage"
 
 const postAssistArray = [
-  ...turnStagesArray.slice(12),
-  // 'POSTASSIST',
-  // 'POST_ASSIST_SCENE',
-  // 'EVALUATETWO',
-  // 'DESCRIBETWO',
-  // 'KOSTCO',
-  // 'PASS'
+  turnStage.postrollAssist,
+  turnStage.postrollAssistScene,
+  turnStage.evaluateTwo,
+  turnStage.describeSceneTwo,
+  ...kostcoStages,
+  turnStage.passTurn
 ]
 
 export default postAssistArray

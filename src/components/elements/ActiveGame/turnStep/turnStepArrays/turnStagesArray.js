@@ -1,38 +1,36 @@
-
-
 const turnStagesArray = [
   // 0
-  'DESCRIBEONE',
+  'DESCRIBE_SCENE_ONE',
   // 1
-  'CHALLENGE',
+  'PICK_CHALLENGE',
   // 2
-  'ITEMS',
+  'PREROLL_ITEMS',
   // 3
-  'STORY',
+  'STORY_BONUS',
   // 4
-  'PREASSIST',
+  'PREROLL_ASSIST',
 
   // 5
-  'SCENE',
+  'CHALLENGE_SCENE',
   // 6
-  'PRE_ASSIST_SCENE',
+  'PREROLL_ASSIST_SCENE',
   // 7
-  'ACTIONONE',
+  'ACTION_TOKEN_ONE',
   // 8
-  'ROLLONE',
+  'ROLL_ONE',
   // 9
-  'ROLLTWO',
+  'ROLL_TWO',
 
   // 10
-  'EVALUATEONE',
+  'EVALUATE_ONE',
   // 11
-  'POSTASSIST',
+  'POSTROLL_ASSIST',
   // 12
-  'POST_ASSIST_SCENE',
+  'POSTROLL_ASSIST_SCENE',
   // 13
-  'EVALUATETWO',
+  'EVALUATE_TWO',
   // 14
-  'DESCRIBETWO',
+  'DESCRIBE_SCENE_TWO',
 
   // 15
   'KOSTCO_BUY',
@@ -41,13 +39,13 @@ const turnStagesArray = [
   // 17
   'KOSTCO_DISCARD',
 
-  // 16 NEW 18
-  'ACTIONTWO',
-  // 17 NEW 19
-  'PASS',
+  // 18
+  'ACTION_TOKEN_TWO',
+  // 19
+  'PASS_TURN',
 
   // 20
   'default',
 ]
 
-export default turnStagesArray
+// export default turnStagesArray

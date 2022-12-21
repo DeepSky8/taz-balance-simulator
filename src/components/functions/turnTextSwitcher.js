@@ -1,3 +1,5 @@
+import turnStage from "../elements/ActiveGame/turnStep/turnStepArrays/turnStage"
+
 // gameStage text
 const introChar = 'Introduce '
 const clickToPassTurn = ' (click to pass turn)'
@@ -13,7 +15,7 @@ const transportBrief = 'Please keep your arms and legs inside the cannon at all 
 // turnStage text
 const engageChallenge = "Select a challenge";
 const challengeSelected = " is engaging "
-const useItems = 'Do you want to use an item?';
+const useItems = 'You may use an item (click when finished)';
 const tellStory = 'Complete the story prompt for additional strength';
 const askAssist = 'You may request assistance from your team';
 const describeScene = `Based on the three active Challenges, what's happening right now?`
@@ -59,9 +61,9 @@ const turnTextSwitcher = (cloudState, localState, activeAssistPlayer) => {
             return transportBrief;
         case 'CHALLENGES':
             switch (cloudState.currentTurn.turnStage) {
-                case 'DESCRIBEONE':
+                case turnStage.describeSceneOne:
                     return describeScene
-                case 'CHALLENGE':
+                case turnStage.pickChallenge:
                     const selector = cloudState.currentTurn.selectedChallenge
                     if (selector === '') {
                         return engageChallenge;
@@ -70,21 +72,17 @@ const turnTextSwitcher = (cloudState, localState, activeAssistPlayer) => {
                         return activeChar.charName + challengeSelected + cardName;
                     }
                     break;
-                case 'ITEMS':
+                case turnStage.prerollItems:
                     return useItems;
-
-                case 'STORY':
+                case turnStage.storyBonus:
                     return tellStory;
-                case 'PREASSIST':
+                case turnStage.prerollAssist:
                     return askAssist;
-                case 'SCENE':
+                case turnStage.challengeScene:
                     return setScene1 + activeChar.charName + setScene2;
-                case 'PRE_ASSIST_SCENE':
+                case turnStage.prerollAssistScene:
                     return activeAssistPlayer + assistScene;
-                case 'ADD_ASSIST':
-                    return activeAssistPlayer + assistScene;
-
-                case 'ACTIONONE':
+                case turnStage.actionTokenOne:
                     const tokenAction = () => {
                         if (activeChar.classCode === 3) {
                             return actionOneWarrior
@@ -95,9 +93,9 @@ const turnTextSwitcher = (cloudState, localState, activeAssistPlayer) => {
 
                     return spendActionToken + tokenAction()
 
-                case 'ROLLONE':
+                case turnStage.rollOne:
                     return rollDice
-                case 'ROLLTWO':
+                case turnStage.rollTwo:
                     if (localState.currentChallenge.advantage ||
                         localState.currentChallenge.disadvantage) {
                         const disAdvan = localState.currentChallenge.advantage ? 'advantage!' : 'disadvantage.'
@@ -106,35 +104,35 @@ const turnTextSwitcher = (cloudState, localState, activeAssistPlayer) => {
                     break;
                 case 'ROLLING':
                     return rollingDice
-                case 'EVALUATEONE':
+                case turnStage.evaluateOne:
                     return clickProceed
-                case 'POSTASSIST':
+                case turnStage.postrollAssist:
                     return askAssist;
-                case 'POST_ASSIST_SCENE':
+                case turnStage.postrollAssistScene:
                     return activeAssistPlayer + assistScene;
-                case 'EVALUATETWO':
+                case turnStage.evaluateTwo:
                     return clickProceed
-                case 'DESCRIBETWO':
+                case turnStage.describeSceneTwo:
                     if (cloudState.strength.total >= cloudState.currentTurn.difficulty) {
                         return describeSuccess
                     } else {
                         return describeFailure
                     }
-                case 'ACTIONTWO':
+                case turnStage.actionTokenTwo:
                     return spendActionToken + actionTwoPriest
-                case 'KOSTCO_BUY':
+                case turnStage.kostcoBuy:
                     if (cloudState.kostco.selected.kID === '0') {
                         return kostcoRogue
                     } else {
                         return kostco + cloudState.kostco.selected.kTitle
                     }
-                case 'KOSTCO_GIVE':
+                case turnStage.kostcoGive:
                     return kostcoGive
-                case 'KOSTCO_DISCARD':
+                case turnStage.kostcoDiscard:
                     return kostcoDiscard
-                case 'PASS':
+                case turnStage.passTurn:
                     return passTheTurn + activeChar.charName;
-                case 'default':
+                case turnStage.default:
                     return 'uh oh, broked again'
             }
             break;

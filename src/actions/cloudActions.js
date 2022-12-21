@@ -150,6 +150,11 @@ export const updateKostcoSelected = (kostcoSelected) => ({
     kostcoSelected
 })
 
+export const updateKostcoActive = (kostcoActive) => ({
+    type: 'UPDATE_KOSTCO_ACTIVE',
+    kostcoActive
+})
+
 // Cloud Actions
 
 export const startGetKey = (uid) => {
@@ -779,3 +784,26 @@ export const startClearKostcoSelected = (hostKey) => {
             console.log('Did not clear selected Kostco kard: ', error)
         })
 }
+
+export const startUpdateKostcoItemStrength = (hostKey, kStrengthReducer) => {
+    const updates = {}
+    updates['savedGames/' + hostKey + '/strength/kostcoMagic'] = kStrengthReducer.kostcoMagic
+    updates['savedGames/' + hostKey + '/strength/kostcoMonster'] = kStrengthReducer.kostcoMonster
+    updates['savedGames/' + hostKey + '/strength/kostcoSpooky'] = kStrengthReducer.kostcoSpooky
+    updates['savedGames/' + hostKey + '/strength/kostcoTrap'] = kStrengthReducer.kostcoTrap
+    updates['savedGames/' + hostKey + '/strength/kostcoUndefined'] = kStrengthReducer.kostcoUndefined
+    updates['savedGames/' + hostKey + '/kostco/active'] = kStrengthReducer.kostcoObjects
+    update(ref(db), updates)
+        .catch((error) => {
+            console.log('Did not update Kostco Strength: ', error)
+        })
+}
+
+// kostcoMagic: 0,
+// kostcoMonster: 0,
+// kostcoSpooky: 0,
+// kostcoTrap: 0,
+// kostcoUndefined: 0,
+// kostcoObjects: [
+//     kostcoDefaultStrength
+// ]

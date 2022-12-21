@@ -1,10 +1,8 @@
-import turnStagesArray from "./turnStagesArray"
+import turnStage from "./turnStage"
 
 const assistStages = [
-  turnStagesArray[4],
-  turnStagesArray[11]
-  // 'PREASSIST',
-  // 'POSTASSIST'
+  turnStage.prerollAssist,
+  turnStage.postrollAssist,
 ]
 
 export default assistStages

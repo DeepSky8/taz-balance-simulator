@@ -11,21 +11,17 @@ import IntroCharacter from "../components/elements/ActiveGame/introductions/Intr
 import IntroDescription from "../components/elements/ActiveGame/introductions/IntroDescription";
 import BriefingComplete from "../components/elements/ActiveGame/missionBriefing/BriefingComplete";
 import MissionBriefing from "../components/elements/ActiveGame/missionBriefing/MissionBriefing";
-import ActionTokens from "../components/elements/ActiveGame/playing/actionTokens/ActionTokens";
-import ChallengeFrame from "../components/elements/ActiveGame/playing/challenges/ChallengeFrame";
 import Playing from "../components/elements/ActiveGame/playing/Playing";
-import RollDiceAnimation from "../components/elements/ActiveGame/playing/rollDice/RollDiceAnimation";
-import StrengthFrame from "../components/elements/ActiveGame/playing/StrengthFrame";
-import TeamHealth from "../components/elements/ActiveGame/playing/TeamHealth";
 import TurnStep from "../components/elements/ActiveGame/turnStep/TurnStep";
 import TESTFEATURES from "../components/elements/admin/TESTFEATURES";
 import incrementStage from "../components/functions/incrementStage";
-import incrementTurn from "../components/functions/incrementTurn";
 import CharNav from "../components/elements/ActiveGame/playing/CharacterOverview/CharNav";
 import PlayingSheet from "../components/elements/ActiveGame/playing/PlayingSheets/PlayingSheet";
 import NotFoundPage from "../components/Authentication/NotFoundPage";
 import Gameboard from "../components/elements/ActiveGame/playing/Gameboard";
 import KostcoPool from "../components/elements/ActiveGame/kostco/KostcoPool";
+import turnStage from "../components/elements/ActiveGame/turnStep/turnStepArrays/turnStage";
+import { gameStage } from "../components/elements/ActiveGame/stageObjects/stageObjects";
 
 const ActiveGameRouter = ({
     cloudState,
@@ -34,7 +30,7 @@ const ActiveGameRouter = ({
 
     // Testing tools
     const resetStages = () => {
-        startUpdateGameStage(localState.hostKey, 'INTRO')
+        startUpdateGameStage(localState.hostKey, gameStage.intro)
     }
 
     const stepStage = () => {
@@ -42,7 +38,7 @@ const ActiveGameRouter = ({
     }
 
     const resetTurnStage = () => {
-        startUpdateTurnStage(localState.hostKey, incrementTurn('default'))
+        startUpdateTurnStage(localState.hostKey, turnStage.describeSceneOne)
         startResetTurnElements(localState.hostKey)
 
     }

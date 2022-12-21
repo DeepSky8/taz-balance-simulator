@@ -1,29 +1,38 @@
 import React, { useEffect } from "react";
 import { auth } from "../../../../firebase/firebase";
-import turnStagesArray from "../turnStep/turnStepArrays/turnStagesArray";
 import kostcoPairs from "./kostcoPairs";
 import KostcoDisplay from "./KostcoDisplay";
 import { startUpdateKostcoSelected } from "../../../../actions/cloudActions";
 import { classRogue } from "../../CharacterSheet/classes/charInfo";
+import turnStage from "../turnStep/turnStepArrays/turnStage";
 
 const KostcoStoreFrame = ({ cloudState, localState }) => {
     const { location, verb, tag, title } = kostcoPairs.store
-    // let isRogue = localState.teamCharArray[localState.activeIndex].classCode === classRogue
 
     useEffect(() => {
         if (
             (localState.kostcoOptions.length > 0)
             &&
-            (cloudState.currentTurn.turnStage === turnStagesArray[15])
+            (
+                [
+                    turnStage.describeSceneTwo,
+                    turnStage.kostcoBuy
+                ]
+                    .includes(cloudState.currentTurn.turnStage)
+            )
             &&
-            (!localState.teamCharArray[localState.activeIndex].classCode === classRogue)
+            (localState.teamCharArray[localState.activeIndex].classCode !== classRogue)
 
         ) {
             startUpdateKostcoSelected(localState.hostKey, localState.kostcoOptions[0])
+
         }
-    }, [localState.kostcoOptions])
-
-
+    },
+        [
+            // cloudState.currentTurn.turnStage,
+            localState.kostcoOptions
+        ]
+    )
 
     const clickToSelect = (selectedKard) => {
 
@@ -33,7 +42,7 @@ const KostcoStoreFrame = ({ cloudState, localState }) => {
             // and store the kard object in the cloud as the selected object.
             (auth.currentUser.uid === cloudState.active.activeUID)
             &&
-            (cloudState.currentTurn.turnStage === turnStagesArray[15])
+            (turnStage.kostcoBuy === cloudState.currentTurn.turnStage)
             &&
             (localState.teamCharArray[localState.activeIndex].classCode === classRogue)
         ) {
@@ -45,7 +54,7 @@ const KostcoStoreFrame = ({ cloudState, localState }) => {
         <div>
             {
                 (
-                    cloudState.currentTurn.turnStage === turnStagesArray[15]
+                    turnStage.kostcoBuy === cloudState.currentTurn.turnStage
                     &&
                     localState
                         .kostcoOptions
@@ -67,6 +76,7 @@ const KostcoStoreFrame = ({ cloudState, localState }) => {
                                     .kostcoOptions
                                 // .filter(kard => kard.kID !== '0')
                             }
+                            selected={cloudState.kostco.selected}
                         />
                     </div>
                 )

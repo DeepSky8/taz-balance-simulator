@@ -1,15 +1,19 @@
-import turnStagesArray from "./turnStagesArray"
-
+import turnStage from "./turnStage"
 
 const challengeItemStages = [
-  ...turnStagesArray.slice(1, 3),
-  turnStagesArray[7],
-  turnStagesArray[16]
-
-  // 'CHALLENGE',
-  // 'ITEMS',
-  // 'ACTIONONE',
-  // 'ACTIONTWO'
+  turnStage.pickChallenge,
+  turnStage.prerollItems,
+  turnStage.actionTokenOne,
+  turnStage.actionTokenTwo
 ]
 
 export default challengeItemStages
+
+// When can one-shot items be used?
+// own turn
+// other turn
+// combat
+// - preroll
+// - postroll
+// turn end
+// Any step

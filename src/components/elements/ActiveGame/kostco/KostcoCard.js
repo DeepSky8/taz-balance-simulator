@@ -1,9 +1,18 @@
 import React from "react";
 import { defaultKostcoCardState } from "../../../../reducers/kostcoCardReducer";
 
-const KostcoCard = ({ kard = defaultKostcoCardState, canSelect, clickToSelect, verb }) => {
+const KostcoCard = ({
+    kard = defaultKostcoCardState,
+    canSelect,
+    clickToSelect,
+    verb,
+    selectedKard = defaultKostcoCardState
+}) => {
     const noText = '-none-'
-    const buttonText = `Click to ${verb} ${kard.kTitle}`
+    const clickToSelectText = `Click to ${verb} ${kard.kTitle}`
+    const kardSelected = selectedKard.kID === kard.kID
+    const kardSelectedText = `${selectedKard.kTitle} selected`
+
 
     return (
         <div className="kKardBorder">
@@ -16,7 +25,7 @@ const KostcoCard = ({ kard = defaultKostcoCardState, canSelect, clickToSelect, v
                         className="kTitle"
                         onClick={() => { clickToSelect(kard) }}
                     >
-                        {buttonText}
+                        {kardSelected ? kardSelectedText : clickToSelectText}
                     </button>
                 }
 

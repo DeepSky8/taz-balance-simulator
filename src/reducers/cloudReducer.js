@@ -1,5 +1,24 @@
+import kostcoDefaultStrength from "../components/elements/ActiveGame/kostco/kostcoDefaultStrength"
 import { defaultCardState } from "./cardReducer"
 import { defaultKostcoCardState } from "./kostcoCardReducer"
+
+const defaultStrength = {
+    actionWarrior: 0,
+    actionWizard: 0,
+    assistOne: 0,
+    assistTwo: 0,
+    character: 0,
+    kostcoMagic: 0,
+    kostcoMonster: 0,
+    kostcoSpooky: 0,
+    kostcoTrap: 0,
+    kostcoUndefined: 0,
+    ongoingItem: 0,
+    rollResult: 0,
+    singleUseItem: 0,
+    story: 0,
+    total: 0,
+}
 
 const defaultCloudState = {
     static: {
@@ -90,20 +109,14 @@ const defaultCloudState = {
         ],
         selected: {
             ...defaultKostcoCardState
-        }
+        },
+        active: [
+            kostcoDefaultStrength
+        ]
     },
     surprises: [],
     strength: {
-        actionWarrior: 0,
-        actionWizard: 0,
-        assistOne: 0,
-        assistTwo: 0,
-        character: 0,
-        ongoingItem: 0,
-        rollResult: 0,
-        singleUseItem: 0,
-        story: 0,
-        total: 0
+        ...defaultStrength
     },
     hasActionToken: [
         //{
@@ -171,6 +184,7 @@ const cloudReducer = (state, action) => {
             }
         case 'UPDATE_CHALLENGES_OBJECT':
             return {
+                ...defaultCloudState,
                 ...state,
                 static: {
                     ...state.static,
@@ -179,6 +193,7 @@ const cloudReducer = (state, action) => {
             }
         case 'CLEAR_CHALLENGES_OBJECT':
             return {
+                ...defaultCloudState,
                 ...state,
                 static: {
                     ...state.static,
@@ -190,6 +205,7 @@ const cloudReducer = (state, action) => {
             }
         case 'UPDATE_GAME_HOST':
             return {
+                ...defaultCloudState,
                 ...state,
                 static: {
                     ...state.static,
@@ -198,16 +214,19 @@ const cloudReducer = (state, action) => {
             }
         case 'UPDATE_PLAYER_LIST':
             return {
+                ...defaultCloudState,
                 ...state,
                 playerList: action.playerList
             }
         case 'CLEAR_PLAYER_LIST':
             return {
+                ...defaultCloudState,
                 ...state,
                 playerList: []
             }
         case 'UPDATE_PROGRESS':
             return {
+                ...defaultCloudState,
                 ...state,
                 active: {
                     ...state.active,
@@ -216,26 +235,31 @@ const cloudReducer = (state, action) => {
             }
         case 'UPDATE_CLASS_LIST':
             return {
+                ...defaultCloudState,
                 ...state,
                 classList: action.classList
             }
         case 'CLEAR_CLASS_LIST':
             return {
+                ...defaultCloudState,
                 ...state,
                 classList: []
             }
         case 'UPDATE_READY_LIST':
             return {
+                ...defaultCloudState,
                 ...state,
                 readyList: action.readyList
             }
         case 'CLEAR_READY_LIST':
             return {
+                ...defaultCloudState,
                 ...state,
                 readyList: []
             }
         case 'UPDATE_READY_STATUS':
             return {
+                ...defaultCloudState,
                 ...state,
                 active: {
                     ...state.active,
@@ -244,6 +268,7 @@ const cloudReducer = (state, action) => {
             }
         case 'SET_GAME_KEY':
             return {
+                ...defaultCloudState,
                 ...state,
                 static: {
                     ...state.static,
@@ -252,6 +277,7 @@ const cloudReducer = (state, action) => {
             }
         case 'CLEAR_ACTIVE_PLAYER':
             return {
+                ...defaultCloudState,
                 ...state,
                 active: {
                     ...state.active,
@@ -261,6 +287,7 @@ const cloudReducer = (state, action) => {
             }
         case 'UPDATE_GAME_STAGE':
             return {
+                ...defaultCloudState,
                 ...state,
                 active: {
                     ...state.active,
@@ -269,6 +296,7 @@ const cloudReducer = (state, action) => {
             }
         case 'UPDATE_TEAM_HEALTH':
             return {
+                ...defaultCloudState,
                 ...state,
                 active: {
                     ...state.active,
@@ -323,6 +351,7 @@ const cloudReducer = (state, action) => {
                 ...defaultCloudState,
                 ...state,
                 strength: {
+                    ...state.strength,
                     ...action.strength
                 }
             }
@@ -331,12 +360,7 @@ const cloudReducer = (state, action) => {
                 ...defaultCloudState,
                 ...state,
                 strength: {
-                    character: 0,
-                    story: 0,
-                    assist: 0,
-                    singleUseItem: 0,
-                    ongoingItem: 0,
-                    total: 0
+                    ...defaultStrength
                 }
             }
         case 'UPDATE_MISSION_NOTE_ARRAY':
@@ -352,9 +376,11 @@ const cloudReducer = (state, action) => {
                 ...defaultCloudState,
                 ...state,
                 kostco: {
-                    discarded: state.kostco.discarded,
+                    ...state.kostco,
+                    // discarded: state.kostco.discarded,
                     options: action.optionKostcoArray,
-                    selected: state.kostco.selected,
+                    // selected: state.kostco.selected,
+                    // active: state.kostco.active,
                 }
             }
         case 'UPDATE_KOSTCO_DISCARDS':
@@ -362,9 +388,11 @@ const cloudReducer = (state, action) => {
                 ...defaultCloudState,
                 ...state,
                 kostco: {
+                    ...state.kostco,
                     discarded: action.discardKostcoArray,
-                    options: state.kostco.options,
-                    selected: state.kostco.selected,
+                    // options: state.kostco.options,
+                    // selected: state.kostco.selected,
+                    // active: state.kostco.active,
                 }
             }
         case 'UPDATE_KOSTCO_SELECTED':
@@ -372,9 +400,23 @@ const cloudReducer = (state, action) => {
                 ...defaultCloudState,
                 ...state,
                 kostco: {
-                    discarded: state.kostco.discarded,
-                    options: state.kostco.options,
-                    selected: action.kostcoSelected
+                    ...state.kostco,
+                    // discarded: state.kostco.discarded,
+                    // options: state.kostco.options,
+                    selected: action.kostcoSelected,
+                    // active: state.kostco.active,
+                }
+            }
+        case 'UPDATE_KOSTCO_ACTIVE':
+            return {
+                ...defaultCloudState,
+                ...state,
+                kostco: {
+                    ...state.kostco,
+                    // discarded: state.kostco.discarded,
+                    // options: state.kostco.options,
+                    // selected: state.kostco.selected,
+                    active: action.kostcoActive,
                 }
             }
         default:

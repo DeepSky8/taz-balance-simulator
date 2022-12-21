@@ -30,10 +30,11 @@ import {
     startUpdateKostcoCardsOptions,
     updateKostcoSelected,
     startClearKostcoCardsOptions,
+    updateKostcoActive,
+    startUpdateKostcoItemStrength,
 } from "../../../actions/cloudActions";
 import { defaultCloudState, cloudReducer } from "../../../reducers/cloudReducer";
 import incrementStage from "../../functions/incrementStage";
-import incrementTurn from "../../functions/incrementTurn";
 import challengeDeck from "../../functions/challengeDeck";
 import ActiveGameRouter from "../../../routers/ActiveGameRouter";
 import {
@@ -59,14 +60,26 @@ import {
 import { defaultLocalState, localStateReducer } from "../../../reducers/localReducer";
 import { stats } from "../CharacterSheet/classes/charInfo";
 import { briefingStagesArray, gameStageArray } from "./stageArrays/stageArrays";
-import turnStagesArray from "./turnStep/turnStepArrays/turnStagesArray";
 import { shuffle } from "../../functions/deckRandomizers";
+import { defaultKostcoStrengthBonuses, kostcoStrengthBonusesReducer } from "../../../reducers/kostcoStrengthBonusesReducer";
+import {
+    // addKostcoMagicStrength, 
+    // addKostcoMonsterStrength, 
+    // addKostcoSpookyStrength, 
+    // addKostcoTrapStrength, 
+    // addKostcoUndefinedStrength, 
+    clearKostcoStrengthBonuses, extractKostcoBonuses
+} from "../../../actions/kostcoStrengthBonusActions";
+import challengeTypes from "../Challenges/mission-elements/challengeTypes";
+import turnStage from "./turnStep/turnStepArrays/turnStage";
+import { briefingStage, gameStage } from "./stageObjects/stageObjects";
 
 const ActiveGame = () => {
     let navigate = useNavigate()
 
     const [cloudState, dispatchCloudState] = useReducer(cloudReducer, defaultCloudState)
     const [localState, dispatchLocalState] = useReducer(localStateReducer, defaultLocalState)
+    const [kostcoStrength, dispatchKostcoStrength] = useReducer(kostcoStrengthBonusesReducer, defaultKostcoStrengthBonuses)
     const [allKostcoIDs, setAllKostcoIDs] = useState([])
 
     // State guards
@@ -74,29 +87,27 @@ const ActiveGame = () => {
         // If the current user is the game host
         if (auth.currentUser.uid === cloudState.static.host) {
 
-            // If no gameStage exists, set it to the default
+            // If no gameStage exists, set it to INTRO
             if (cloudState.active.gameStage === undefined) {
                 startUpdateGameStage(
-                    cloudState.static.host,
-                    cloudState.static.key,
-                    incrementStage('default')
+                    localState.hostKey,
+                    gameStage.intro
                 )
             }
 
-            // If no backstory state exists, set it to the first one
+            // If no backstory state exists, set it to Villain
             if (cloudState.backstory.briefingStage === undefined) {
                 startUpdateBriefingStage(
                     localState.hostKey,
-                    briefingStagesArray[0]
+                    briefingStage.villain
                 )
             }
 
-            // If no turnStage exists, set it to the default
+            // If no turnStage exists, set it to DESCRIBE_SCENE_ONE
             if (cloudState.currentTurn.turnStage === undefined) {
                 startUpdateTurnStage(
-                    cloudState.static.host,
-                    cloudState.static.key,
-                    incrementTurn('default')
+                    localState.hostKey,
+                    turnStage.describeSceneOne
                 )
             }
 
@@ -317,6 +328,16 @@ const ActiveGame = () => {
 
             })
 
+        // Ongoing kostco selected listener
+        onValue(ref(db, 'savedGames/' + localState.hostKey + '/kostco/active'),
+            (snapshot) => {
+
+                if (snapshot.exists()) {
+                    dispatchCloudState(updateKostcoActive(snapshot.val()))
+                }
+
+            })
+
         return () => {
             off(ref(db, 'savedGames/' + localState.hostKey + '/static'))
             off(ref(db, 'savedGames/' + localState.hostKey + '/active'))
@@ -332,6 +353,7 @@ const ActiveGame = () => {
             off(ref(db, 'savedGames/' + localState.hostKey + '/kostco/options'))
             off(ref(db, 'savedGames/' + localState.hostKey + '/kostco/discarded'))
             off(ref(db, 'savedGames/' + localState.hostKey + '/kostco/selected'))
+            off(ref(db, 'savedGames/' + localState.hostKey + '/kostco/active'))
         }
 
     }, [localState.hostKey])
@@ -430,6 +452,62 @@ const ActiveGame = () => {
         ]
     )
 
+    // Calculate kostco bonuses for each of the 
+    useEffect(() => {
+
+        if (
+            auth.currentUser.uid === cloudState.active.activeUID
+            &&
+            cloudState.active.gameStage === gameStageArray[3]
+        ) {
+            // First clear any previously-calculated kostco bonuses
+            dispatchKostcoStrength(clearKostcoStrengthBonuses())
+
+            // Gather active Kostco items 
+            const kostcoItems = localState
+                .teamCharArray[localState.activeIndex]
+                .charKostco
+                .filter(kard => kard.kID !== '0')
+
+            // If kostco items for active character exist
+            if (kostcoItems.length > 0) {
+                // For all Kostco items providing an ongoing strength bonus
+                (kostcoItems.filter(kard => kard.g.strength === true))
+                    .forEach(kard => {
+
+                        dispatchKostcoStrength(extractKostcoBonuses(kard))
+
+                        // // If the kard provides a bonus to a specific challenge type, 
+                        // // update that strength bonus on the specific challenge type
+                        // // and create an object entry for reference
+                        // if (kard.g.magic) { dispatchKostcoStrength(addKostcoMagicStrength(kard)) }
+                        // if (kard.g.monster) { dispatchKostcoStrength(addKostcoMonsterStrength(kard)) }
+                        // if (kard.g.spooky) { dispatchKostcoStrength(addKostcoSpookyStrength(kard)) }
+                        // if (kard.g.trap) { dispatchKostcoStrength(addKostcoTrapStrength(kard)) }
+                        // // If the kard provides a general strength bonus
+                        // // update the general kostco strength bonus
+                        // // and create an object entry for reference
+                        // if (
+                        //     !kard.g.magic &&
+                        //     !kard.g.monster &&
+                        //     !kard.g.spooky &&
+                        //     !kard.g.trap
+                        // ) {
+                        //     dispatchKostcoStrength(addKostcoUndefinedStrength(kard))
+                        // }
+
+                    })
+                startUpdateKostcoItemStrength(localState.hostKey, kostcoStrength)
+            }
+        }
+
+    }, [
+        localState.activeIndex,
+        localState
+            .teamCharArray[localState.activeIndex]
+            .charKostco
+    ])
+
 
     const calcDisAdvantage = (advantage, disadvantage, rollOne, rollTwo) => {
         let rollResult = 0
@@ -454,16 +532,17 @@ const ActiveGame = () => {
 
             // Does the current challenge have any specific challenge types?
             const currentChallengeTypes = [];
-            if (localState.currentChallenge.monster) { currentChallengeTypes.push('Monster') }
-            if (localState.currentChallenge.spooky) { currentChallengeTypes.push('Spooky') }
-            if (localState.currentChallenge.magic) { currentChallengeTypes.push('Magic') }
-            if (localState.currentChallenge.trap) { currentChallengeTypes.push('Trap') }
-            if (cloudState.currentTurn.selectedChallenge === 'relic') { currentChallengeTypes.push('Relic') }
+            if (localState.currentChallenge.monster) { currentChallengeTypes.push(challengeTypes.monster) }
+            if (localState.currentChallenge.spooky) { currentChallengeTypes.push(challengeTypes.spooky) }
+            if (localState.currentChallenge.magic) { currentChallengeTypes.push(challengeTypes.magic) }
+            if (localState.currentChallenge.trap) { currentChallengeTypes.push(challengeTypes.trap) }
+            if (cloudState.currentTurn.selectedChallenge === 'relic') { currentChallengeTypes.push(challengeTypes.relic) }
 
             // Get the strength info from the active character
             const baseStrength = stats[localState.teamCharArray[localState.activeIndex].classCode].strength;
             const specialStrength = stats[localState.teamCharArray[localState.activeIndex].classCode].specialStrength;
             const specialTarget = stats[localState.teamCharArray[localState.activeIndex].classCode].specialTarget
+
 
             // If the active character is extra strong against the current challenge
             // use their special strength instead of base strength
@@ -474,8 +553,59 @@ const ActiveGame = () => {
 
             // Destructure current assistive strength elements
             // and total them up
-            const { actionWarrior, actionWizard, assistOne, assistTwo, ongoingItem, singleUseItem, story } = cloudState.strength
-            const totalAddStrength = actionWarrior + actionWizard + assistOne + assistTwo + ongoingItem + singleUseItem + story
+            const {
+                actionWarrior,
+                actionWizard,
+                assistOne,
+                assistTwo,
+                kostcoMagic,
+                kostcoMonster,
+                kostcoSpooky,
+                kostcoTrap,
+                kostcoUndefined,
+                ongoingItem,
+                singleUseItem,
+                story
+            } = cloudState.strength;
+
+            const totalAddStrength =
+                actionWarrior +
+                actionWizard +
+                assistOne +
+                assistTwo +
+                kostcoUndefined +
+                ongoingItem +
+                singleUseItem +
+                story;
+
+            const tempKostcoBonusArray = []
+            currentChallengeTypes.forEach(type => {
+
+                if (kostcoMagic > 0 && type === challengeTypes.magic) {
+                    tempKostcoBonusArray.push(kostcoMagic)
+                }
+                if (kostcoMonster > 0 && type === challengeTypes.monster) {
+                    tempKostcoBonusArray.push(kostcoMonster)
+                }
+                if (kostcoSpooky > 0 && type === challengeTypes.spooky) {
+                    tempKostcoBonusArray.push(kostcoSpooky)
+                }
+                if (kostcoTrap > 0 && type === challengeTypes.trap) {
+                    tempKostcoBonusArray.push(kostcoTrap)
+                }
+
+            })
+
+            const kostcoTypeBonus = tempKostcoBonusArray.length > 1
+                ?
+                (tempKostcoBonusArray.sort((a, b) => a - b))[0]
+                :
+                tempKostcoBonusArray.length > 0
+                    ?
+                    tempKostcoBonusArray[0]
+                    :
+                    0
+
 
             // Destructure the roll data, as well as whether the current challenge requires
             // advantage/disadvantage
@@ -487,7 +617,7 @@ const ActiveGame = () => {
             const rollResult = calcDisAdvantage(advantage, disadvantage, rollOne, rollTwo)
 
             // Total everything together and send it to the cloud
-            const totalUpdatedStrength = characterStrength + totalAddStrength + rollResult
+            const totalUpdatedStrength = characterStrength + totalAddStrength + rollResult + kostcoTypeBonus
 
 
             if (localState.hostKey) {
@@ -503,7 +633,7 @@ const ActiveGame = () => {
             // localState.activeCharacterID,
             cloudState.strength,
             cloudState.currentTurn.rollOne,
-            cloudState.currentTurn.rollTwo
+            cloudState.currentTurn.rollTwo,
         ])
 
     // If the cloud-stored text indicating which challenge has been selected changes
@@ -814,7 +944,7 @@ const ActiveGame = () => {
         if (
             auth.currentUser.uid === cloudState.static.host
             &&
-            cloudState.currentTurn.turnStage === turnStagesArray[14]
+            cloudState.currentTurn.turnStage === turnStage.describeSceneTwo
         ) {
             const tempKostco = []
 
@@ -841,7 +971,7 @@ const ActiveGame = () => {
         if (
             auth.currentUser.uid === cloudState.static.host
             &&
-            cloudState.currentTurn.turnStage === turnStagesArray[16]
+            cloudState.currentTurn.turnStage === turnStage.kostcoGive
         ) {
 
             // startUpdateKostcoCardsOptions(localState.hostKey, ['0'])

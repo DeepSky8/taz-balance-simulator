@@ -1,8 +1,8 @@
-import turnStagesArray from "./turnStagesArray"
+import turnStage from "./turnStage"
 
 const actionStages = [
-  turnStagesArray[7],
-  turnStagesArray[16]
+  turnStage.actionTokenOne,
+  turnStage.actionTokenTwo
 ]
 
 export default actionStages

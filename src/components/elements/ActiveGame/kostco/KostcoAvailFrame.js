@@ -2,11 +2,18 @@ import React from "react";
 import { auth } from "../../../../firebase/firebase";
 import kostcoPairs from "./kostcoPairs";
 import KostcoDisplay from "./KostcoDisplay";
-import { startNullKostcoOnCharacter, startUpdateKostcoOnCharacter } from "../../../../actions/charActions";
+import {
+    startNullKostcoOnCharacter,
+    startUpdateKostcoOnCharacter
+} from "../../../../actions/charActions";
 import { useState } from "react";
 import { defaultKostcoCardState } from "../../../../reducers/kostcoCardReducer";
 import { useEffect } from "react";
-import { startClearKostcoCardsOptions, startClearKostcoSelected, startUpdateKostcoCardsOptions } from "../../../../actions/cloudActions";
+import {
+    startClearKostcoCardsOptions,
+    startClearKostcoSelected,
+    startUpdateKostcoCardsOptions
+} from "../../../../actions/cloudActions";
 
 
 const KostcoAvailFrame = ({ localState }) => {
@@ -79,6 +86,7 @@ const KostcoAvailFrame = ({ localState }) => {
                         kostcoArray={
                             kostcoAvail
                         }
+                        selected={defaultKostcoCardState}
                     />
                 </div>)
 

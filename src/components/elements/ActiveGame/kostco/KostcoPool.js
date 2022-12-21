@@ -1,5 +1,5 @@
 import React from "react";
-import turnStagesArray from "../turnStep/turnStepArrays/turnStagesArray";
+import turnStage from "../turnStep/turnStepArrays/turnStage";
 import KostcoAvailFrame from "./KostcoAvailFrame";
 import KostcoStoreFrame from "./KostcoStoreFrame";
 
@@ -8,7 +8,7 @@ const KostcoPool = ({ cloudState, localState }) => {
     return (
         <div>
             {
-                (cloudState.currentTurn.turnStage === turnStagesArray[15])
+                (cloudState.currentTurn.turnStage === turnStage.kostcoBuy)
                 &&
                 <KostcoStoreFrame
                     cloudState={cloudState}
@@ -17,7 +17,7 @@ const KostcoPool = ({ cloudState, localState }) => {
             }
 
             {
-                (cloudState.currentTurn.turnStage === turnStagesArray[16])
+                (cloudState.currentTurn.turnStage === turnStage.kostcoGive)
                 &&
                 <KostcoAvailFrame
                     localState={localState}

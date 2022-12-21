@@ -8,7 +8,7 @@ import {
 } from "../../../../../actions/charActions";
 import SpecialAbility from "../../../CharacterSheet/AttributePickerElements/SpecialAbility";
 import ClassDisplay from "./AttributeDisplay/ClassDisplay/ClassDisplay";
-import { charTitles } from "../../../CharacterSheet/classes/charInfo";
+import { charClassTitles, charTitles } from "../../../CharacterSheet/classes/charInfo";
 import AssistDisplay from "./AttributeDisplay/AssistDisplay/AssistDisplay";
 import ToolDisplay from "./AttributeDisplay/ToolDisplay/ToolDisplay";
 import NotesFrameFull from "./Notes/NotesFrameFull";
@@ -17,6 +17,7 @@ import KostcoOwnedFrame from "../../kostco/KostcoOwnedFrame";
 
 
 const PlayingSheet = ({ cloudState, localState }) => {
+  const spacer = ' '
   let location = useLocation()
   const pageData = {
     charName: location.pathname.split("/")[3],
@@ -54,7 +55,7 @@ const PlayingSheet = ({ cloudState, localState }) => {
   return (
     <span>
       <span>
-        <h2>{charState.charName}{charTitles[charState.questCount]}</h2>
+        <h2>{charClassTitles[charState.classCode]}{spacer}{charState.charName}{charTitles[charState.questCount]}</h2>
         <p>
           {
             localState.activeCharacterID === pageData.charID

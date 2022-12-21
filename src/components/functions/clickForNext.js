@@ -23,7 +23,6 @@ import {
     startUpdateTurnStage
 } from "../../actions/cloudActions"
 import { auth } from "../../firebase/firebase";
-import turnStagesArray from "../elements/ActiveGame/turnStep/turnStepArrays/turnStagesArray";
 import {
     stats,
     tokenClassesActionOne,
@@ -33,6 +32,8 @@ import {
 import diceRoll from "./diceRoll";
 import { briefingStagesArray, directionArray, gameStageArray } from "../elements/ActiveGame/stageArrays/stageArrays";
 import { startUpdateKostcoOnCharacter } from "../../actions/charActions";
+import turnStage from "../elements/ActiveGame/turnStep/turnStepArrays/turnStage";
+import { gameStage } from "../elements/ActiveGame/stageObjects/stageObjects";
 
 const clickForNext = ({ cloudState, localState }, direction = directionArray[0]) => {
     const activeChar = localState.teamCharArray[localState.activeIndex]
@@ -59,7 +60,14 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
     const addAssistBonus = () => {
 
         const stage = (
-            (turnStagesArray.slice(11, 13).includes(cloudState.currentTurn.turnStage))
+            (
+                [
+                    turnStage.postrollAssist,
+                    turnStage.postrollAssistScene,
+                    turnStage.evaluateTwo
+                ]
+                    .includes(cloudState.currentTurn.turnStage)
+            )
                 ?
                 'postAssist'
                 :
@@ -351,12 +359,11 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
 
         if (activePlayerChecker()) {
             switch (cloudState.currentTurn.turnStage) {
-                case turnStagesArray[3]:
+                case turnStage.storyBonus:
                     addStoryStrength()
                     break;
 
-                // ActionOne
-                case turnStagesArray[7]:
+                case turnStage.actionTokenOne:
                     if (
                         (cloudState.activeActionTokens.filter(
                             tokens => tokens.uid === cloudState.active.activeUID
@@ -370,14 +377,13 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
                         }
                     }
                     break;
-                // Roll Dice
-                case turnStagesArray[8]:
-                case turnStagesArray[9]:
+
+                case turnStage.rollOne:
+                case turnStage.rollTwo:
                     rollDice()
                     break;
 
-                // Evaluate stages
-                case turnStagesArray[10]:
+                case turnStage.evaluateOne:
                     if (
                         // If Strength beats Difficulty
                         cloudState.strength.total >=
@@ -398,7 +404,8 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
                         failChallenge()
                     }
                     break;
-                case turnStagesArray[13]:
+
+                case turnStage.evaluateTwo:
                     if (cloudState.strength.total >= cloudState.currentTurn.difficulty) {
                         completeChallenge()
                         updateLoot()
@@ -407,36 +414,28 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
                     }
                     break;
 
-
-                // Add assist
-                case turnStagesArray[6]:
-                case turnStagesArray[12]:
+                case turnStage.prerollAssistScene:
+                case turnStage.postrollAssistScene:
                     processAssist()
                     break;
-
-                // DESCRIBETWO
-                case turnStagesArray[14]:
+                case turnStage.describeSceneTwo:
                     // evaluate whether active player can afford a Kostco Kard
                     // populate kostco.options
                     // This is currently handled by a useEffect
                     // on ActiveGame
                     break;
-                // KOSTCO_BUY
-                case turnStagesArray[15]:
+                case turnStage.kostcoBuy:
                     buySelectedKostco()
                     break;
                 // KOSTCO_GIVE
-                // case turnStagesArray[16]:
+                // case turnStage.kostcoGive:
                 //     break;
-                // KOSTCO_DISCARD
-                case turnStagesArray[17]:
-                // ACTIONTWO
-                case turnStagesArray[18]:
+                case turnStage.kostcoDiscard:
+                case turnStage.actionTokenTwo:
                     startClearKostcoCardsOptions(localState.hostKey)
                     startClearKostcoSelected(localState.hostKey)
                     break;
-                // Pass Turn
-                case turnStagesArray[19]:
+                case turnStage.passTurn:
                     passTheTurn()
                     break;
                 default:
@@ -451,8 +450,8 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
             return (
                 (
                     (
-                        // If turn stage is CHALLENGE
-                        turnStagesArray.slice(1, 2).includes(cloudState.currentTurn.stage)
+                        // If picking challenge
+                        turnStage.pickChallenge === cloudState.currentTurn.stage
                     )
                     &&
                     (
@@ -482,398 +481,618 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
                 )
                 ||
                 (
-                    // OR if turn stage is NOT CHALLENGE
-                    !turnStagesArray.slice(1, 2).includes(cloudState.currentTurn.stage)
+                    // OR if NOT picking CHALLENGE
+                    turnStage.pickChallenge !== cloudState.currentTurn.stage
                 )
             )
         }
 
-        // DESCRIBEONE
-        const setDESCRIBEONE = () => {
+        const setDESCRIBE_SCENE_ONE = () => {
             return (
-                // If turn stage is PASS or 'default'
-                ([turnStagesArray[17], turnStagesArray[19]].includes(cloudState.currentTurn.turnStage))
-                ||
-                // or if step stage is TRANSPORT
-                (gameStageArray[2] === (cloudState.active.gameStage))
+                (
+                    // If turn stage is PASS or 'default'
+                    ([turnStage.passTurn, turnStage.default].includes(cloudState.currentTurn.turnStage))
+                    ||
+                    // or if step stage is TRANSPORT
+                    (gameStage.transport === cloudState.active.gameStage)
+                )
+                    ?
+                    turnStage.describeSceneOne
+                    :
+                    false
             )
         }
 
-        // CHALLENGE
-        const setCHALLENGE = () => {
+        const setPICK_CHALLENGE = () => {
             return (
-                // If turn stage is DESCRIBEONE
-                // then stage CHALLENGE becomes available
-                turnStagesArray[0] === (cloudState.currentTurn.turnStage)
-            )
-        }
-
-        // ITEMS
-        const setITEMS = () => {
-            return (
-                (passesActionTokenChecker())
-                &&
+                // If turn stage is DESCRIBE_SCENE_ONE or PICK_CHALLENGE
+                // then stage PICK_CHALLENGE becomes available
+                // Must have selected a challenge deck before moving to next stage
                 (
                     (
-                        // If turn stage is CHALLENGE
-                        turnStagesArray[1] === (cloudState.currentTurn.turnStage)
+                        [
+                            turnStage.describeSceneOne,
+                            turnStage.pickChallenge
+                        ]
+                            .includes(cloudState.currentTurn.turnStage)
                     )
+                    &&
+                    (
+                        cloudState.currentTurn.selectedChallenge === ''
+                    )
+                )
+                    ?
+                    turnStage.pickChallenge
+                    :
+                    false
+            )
+        }
+
+        const setPREROLL_ITEMS = () => {
+
+            return (
+                (
+                    (passesActionTokenChecker())
                     &&
                     (
                         (
-                            // and the active character has any items
-                            // this will likely need to be updated
-                            // (text at the very least)
-                            // once items have been implemented
-                            // to indicate whether there are active
-                            // item options, or just reviewing the bonuses from 
-                            // current items
-                            activeChar.charKostco
-                            &&
-                            activeChar.charKostco.length > 0
+                            // If turn stage is PICK_CHALLENGE
+                            turnStage.pickChallenge === cloudState.currentTurn.turnStage
+                        )
+                        &&
+                        (
+                            (
+                                // and the active character has any items
+                                // that target self and 
+                                // that can be used any time 
+                                // or before rolling
+                                activeChar.charKostco.length > 0
+                                &&
+                                (
+                                    activeChar
+                                        .charKostco
+                                        .filter(kard => kard.t.targetSelf)
+                                        .filter(kard => (kard.t.anyTime || kard.t.combatPreroll))
+                                        .length > 0
+                                )
+                            )
                         )
                     )
                 )
+                    ?
+                    turnStage.prerollItems
+                    :
+                    false
             )
         }
 
-        // STORY
-        const setSTORY = () => {
-            // This method relies on fall-through
-            // from the ITEMS stage
+        const setSTORY_BONUS = () => {
+
             return (
-                (passesActionTokenChecker())
-                &&
                 (
-                    (
-                        // If turn stage is CHALLENGE or ITEMS
-                        turnStagesArray.slice(1, 3).includes(cloudState.currentTurn.turnStage)
-                    )
+                    (passesActionTokenChecker())
                     &&
                     (
-                        // and the current challenge has a story bonus
-                        localState.currentChallenge.storyBonus > 0
+                        (
+                            // If turn stage is PICK_CHALLENGE or PREROLL_ITEMS
+                            [
+                                turnStage.pickChallenge,
+                                turnStage.prerollItems
+                            ]
+                                .includes(cloudState.currentTurn.turnStage)
+                        )
+                        &&
+                        (
+                            // and the current challenge has a story bonus
+                            localState.currentChallenge.storyBonus > 0
+                        )
+                        &&
+                        (
+                            // and a challenge has been selected
+                            cloudState.currentTurn.selectedChallenge !== ''
+                        )
                     )
                 )
+                    ?
+                    turnStage.storyBonus
+                    :
+                    false
             )
         }
 
-        // PREASSIST
-        const setPREASSIST = () => {
+        const setPREROLL_ASSIST = () => {
             // This method relies heavily on fall-through logic
             // It captures all challenges that allow assist
-            // and aren't explicitly directly elsewhere
+            // and aren't explicitly captured elsewhere
             return (
-                (passesActionTokenChecker())
-                &&
                 (
-                    (
-                        // If turn stage is CHALLENGE or ITEMS or STORY
-                        turnStagesArray.slice(1, 4).includes(cloudState.currentTurn.turnStage)
-                    )
+                    (passesActionTokenChecker())
                     &&
                     (
-                        // and if the current challenge DOES allow assists
-                        !localState.currentChallenge.noAssist
-                    )
-                )
-            )
-        }
-
-        // SCENE
-        const setSCENE = () => {
-            return (
-                (passesActionTokenChecker())
-                &&
-                // If turn stage is PREASSIST
-                // then SCENE becomes available
-                (
-                    (turnStagesArray[4] === (cloudState.currentTurn.turnStage))
-                    ||
-                    (
-                        // If turn stage is CHALLENGE or STORY
-                        ([turnStagesArray[1], turnStagesArray[3]].includes(cloudState.currentTurn.turnStage))
-                        &&
-                        // and if the challenge does not allow assistance
-                        // move to the Scene stage
-                        (localState.currentChallenge.noAssist)
-                    )
-                )
-            )
-        }
-
-        // PRE_ASSIST_SCENE
-        const setPRE_ASSIST_SCENE = () => {
-            return (
-                // Accessible from SCENE AND PRE_ASSIST_SCENE
-                ([turnStagesArray[5], turnStagesArray[6]].includes(cloudState.currentTurn.turnStage))
-                &&
-                (cloudState.activeAssistTokens.length > 0)
-            )
-        }
-
-        // ACTIONONE
-        const setACTIONONE = () => {
-            return (
-                // If current stage is SCENE, PRE_ASSIST_SCENE
-                (turnStagesArray.slice(5, 7).includes(cloudState.currentTurn.turnStage))
-                &&
-                (
-                    // If all of the assist tokens have been processed
-
-                    (cloudState.activeAssistTokens.length === 0)
-                    &&
-                    // AND if the character class has a special Action Token ability
-                    // that could be used before the roll
-                    (tokenClassesActionOne.includes(parseInt(activeChar.classCode)))
-                    &&
-                    // AND if the active character hasn't yet used their action token
-                    (
-                        (cloudState.hasActionToken.filter(tokens => tokens.uid === cloudState.active.activeUID).length > 0)
-                    )
-                )
-            )
-        }
-
-        // ROLLONE
-        const setROLLONE = () => {
-            return (
-                // SCENE, PRE_ASSIST_SCENE, ACTIONONE
-                (turnStagesArray.slice(5, 8).includes(cloudState.currentTurn.turnStage))
-                &&
-                (
-                    (cloudState.activeAssistTokens.length === 0)
-                )
-                &&
-                (
-                    !localState.currentChallenge.noRoll
-                )
-            )
-        }
-
-        // ROLLTWO
-        const setROLLTWO = () => {
-            return (
-                // If turn stage is ROLLONE
-                (turnStagesArray[8] === cloudState.currentTurn.turnStage)
-                &&
-                (
-                    // If the currently selected challenge 
-                    // is marked with advantage or disadvantage
-                    // then stage ROLLTWO becomes available
-                    localState.currentChallenge.advantage
-                    ||
-                    localState.currentChallenge.disadvantage
-                )
-                &&
-                (
-                    !localState.currentChallenge.noRoll
-                )
-                &&
-                (
-                    cloudState.currentTurn.rollTwo === null
-                )
-            )
-        }
-
-        // EVALUATEONE
-        const setEVALUATEONE = () => {
-            return (
-                (
-                    // If turn stage is ROLLONE or ROLLTWO
-                    (turnStagesArray.slice(8, 10).includes(cloudState.currentTurn.turnStage))
-                    &&
-                    !(
-                        // and if the currently selected challenge 
-                        // is NOT marked with advantage or disadvantage
-                        localState.currentChallenge.advantage
-                        ||
-                        localState.currentChallenge.disadvantage
-                    )
-                )
-                ||
-                (
-                    // If turn stage is ROLLTWO
-                    (turnStagesArray[9] === cloudState.currentTurn.turnStage)
-                    &&
-                    (
-                        // and if the currently selected challenge 
-                        // IS marked with advantage or disadvantage
-                        localState.currentChallenge.advantage
-                        ||
-                        localState.currentChallenge.disadvantage
-                    )
-                )
-                ||
-                (
-                    // If turn stage is SCENE
-                    (turnStagesArray[5] === (cloudState.currentTurn.turnStage))
-                    &&
-                    // and the current challenge does not allow rolling
-                    (localState.currentChallenge.noRoll)
-                )
-            )
-        }
-
-        // POSTASSIST
-        const setPOSTASSIST = () => {
-            return (
-                // If current stage is EVALUATEONE
-                (turnStagesArray[10] === (cloudState.currentTurn.turnStage))
-                &&
-                (
-                    // Do action tokens for non active players still exist?
-                    (cloudState.hasActionToken.filter(tokens => tokens.uid !== cloudState.active.activeUID).length > 0)
-                    &&
-                    (
-                        (   // Can this challenge receive assistance,
-                            // but has not yet had assistance applied
-                            (!localState.currentChallenge.noAssist)
-                            &&
-                            (cloudState.strength.assistOne === 0)
-                        )
-                        || // OR
                         (
-                            // Is this a doubleAssist challenge,
-                            // and has not yet had a second assist applied
-                            (localState.currentChallenge.doubleAssist)
-                            &&
-                            (cloudState.strength.assistTwo === 0)
+                            // If turn stage is PICK_CHALLENGE or PREROLL_ITEMS or STORY_BONUS
+                            [
+                                turnStage.pickChallenge,
+                                turnStage.prerollItems,
+                                turnStage.storyBonus
+                            ]
+                                .includes(cloudState.currentTurn.turnStage)
                         )
-
+                        &&
+                        (
+                            // and if the current challenge DOES allow assists
+                            !localState.currentChallenge.noAssist
+                        )
+                        &&
+                        (
+                            // and if a challenge HAS been selected
+                            cloudState.currentTurn.selectedChallenge !== ''
+                        )
                     )
                 )
-                &&
-                (
-                    cloudState.strength.total < cloudState.currentTurn.difficulty
-                )
+                    ?
+                    turnStage.prerollAssist
+                    :
+                    false
             )
         }
 
-        // POST_ASSIST_SCENE
-        const setPOST_ASSIST_SCENE = () => {
+        const setCHALLENGE_SCENE = () => {
             return (
-                // Available from POSTASSIST and POST_ASSIST_SCENE
-                ([turnStagesArray[11], turnStagesArray[12]].includes(cloudState.currentTurn.turnStage))
-                &&
-                (cloudState.activeAssistTokens.length > 0)
+                (
+                    (passesActionTokenChecker())
+                    &&
+                    // If turn stage is PREROLL_ASSIST
+                    // then CHALLENGE_SCENE becomes available
+                    (
+                        (turnStage.prerollAssist === cloudState.currentTurn.turnStage)
+                        ||
+                        (
+                            // If turn stage is PICK_CHALLENGE or STORY_BONUS
+                            (
+                                [
+                                    turnStage.pickChallenge,
+                                    turnStage.storyBonus
+                                ]
+                                    .includes(cloudState.currentTurn.turnStage))
+                            &&
+                            // and if the challenge does not allow assistance
+                            // move to the CHALLENGE_SCENE stage
+                            (localState.currentChallenge.noAssist)
+                        )
+                    )
+                )
+                    ?
+                    turnStage.challengeScene
+                    :
+                    false
             )
         }
 
-        // EVALUATETWO
-        const setEVALUATETWO = () => {
+        const setPREROLL_ASSIST_SCENE = () => {
+            return (
+                (
+                    // Accessible from CHALLENGE_SCENE AND PREROLL_ASSIST_SCENE
+                    (
+                        [
+                            turnStage.challengeScene,
+                            turnStage.prerollAssistScene
+                        ]
+                            .includes(cloudState.currentTurn.turnStage))
+                    &&
+                    // repeat this stage until all assisting players
+                    // have expended their active assist token 
+                    // (by telling how they will assist)
+                    (cloudState.activeAssistTokens.length > 0)
+                )
+                    ?
+                    turnStage.prerollAssistScene
+                    :
+                    false
+            )
+        }
+
+        const setACTION_TOKEN_ONE = () => {
+            return (
+                (
+                    // If current stage is CHALLENGE_SCENE, PREROLL_ASSIST_SCENE
+                    (
+                        [
+                            turnStage.challengeScene,
+                            turnStage.prerollAssistScene
+                        ]
+                            .includes(cloudState.currentTurn.turnStage))
+                    &&
+                    (
+                        // If all of the assist tokens have been processed
+                        (cloudState.activeAssistTokens.length === 0)
+                        &&
+                        // AND if the character class has a special Action Token ability
+                        // that could be used before the roll
+                        (tokenClassesActionOne.includes(parseInt(activeChar.classCode)))
+                        &&
+                        // AND if the active character hasn't yet used their action token
+                        (
+                            (cloudState
+                                .hasActionToken
+                                .filter(
+                                    tokens => tokens.uid === cloudState.active.activeUID
+                                )
+                                .length > 0
+                            )
+                        )
+                    )
+                )
+                    ?
+                    turnStage.actionTokenOne
+                    :
+                    false
+            )
+        }
+
+        const setROLL_ONE = () => {
+            return (
+                (
+                    (
+                        // CHALLENGE_SCENE, PREROLL_ASSIST_SCENE, ACTION_TOKEN_ONE
+                        [
+                            turnStage.challengeScene,
+                            turnStage.prerollAssistScene,
+                            turnStage.actionTokenOne
+                        ]
+                            .includes(cloudState.currentTurn.turnStage))
+                    &&
+                    (
+                        // If no further active assist tokens remain
+                        cloudState.activeAssistTokens.length === 0
+                    )
+                    &&
+                    (
+                        // If the current challenge allows rolling
+                        !localState.currentChallenge.noRoll
+                    )
+                )
+                    ?
+                    turnStage.rollOne
+                    :
+                    false
+            )
+
+        }
+
+        const setROLL_TWO = () => {
+            return (
+                (
+                    // If turn stage is ROLL_ONE
+                    (turnStage.rollOne === cloudState.currentTurn.turnStage)
+                    &&
+                    (
+                        // If the currently selected challenge 
+                        // is marked with advantage or disadvantage
+                        // then stage ROLLTWO becomes available
+                        localState.currentChallenge.advantage
+                        ||
+                        localState.currentChallenge.disadvantage
+                    )
+                    &&
+                    (
+                        // If the current challenge allows rolling
+                        !localState.currentChallenge.noRoll
+                    )
+                    &&
+                    (
+                        // If a second roll has not yet been produced
+                        cloudState.currentTurn.rollTwo === null
+                    )
+                )
+                    ?
+                    turnStage.rollTwo
+                    :
+                    false
+            )
+        }
+
+        const setEVALUATE_ONE = () => {
+            return (
+                (
+                    (
+                        // If turn stage is ROLL_ONE or ROLL_TWO
+                        (
+                            [
+                                turnStage.rollOne,
+                                turnStage.rollTwo
+                            ]
+                                .includes(cloudState.currentTurn.turnStage))
+                        &&
+                        !(
+                            // and if the currently selected challenge 
+                            // is NOT marked with advantage or disadvantage
+                            localState.currentChallenge.advantage
+                            ||
+                            localState.currentChallenge.disadvantage
+                        )
+                    )
+                    ||
+                    (
+                        // OR If turn stage is ROLL_TWO
+                        (
+                            turnStage.rollTwo === cloudState.currentTurn.turnStage
+                        )
+                        &&
+                        (
+                            // and if the currently selected challenge 
+                            // IS marked with advantage or disadvantage
+                            localState.currentChallenge.advantage
+                            ||
+                            localState.currentChallenge.disadvantage
+                        )
+                    )
+                    ||
+                    (
+                        // OR if turn stage is CHALLENGE_SCENE
+                        (turnStage.challengeScene === cloudState.currentTurn.turnStage)
+                        &&
+                        // and the current challenge does not allow rolling
+                        (localState.currentChallenge.noRoll)
+                    )
+                )
+                    ?
+                    turnStage.evaluateOne
+                    :
+                    false
+            )
+        }
+
+        const setPOSTROLL_ASSIST = () => {
+            return (
+                (
+                    // If current stage is EVALUATE_ONE
+                    (turnStage.evaluateOne === cloudState.currentTurn.turnStage)
+                    &&
+                    (
+                        // Do action tokens for non active players still exist?
+                        (
+                            cloudState
+                                .hasActionToken
+                                .filter(
+                                    tokens => tokens.uid !== cloudState.active.activeUID
+                                )
+                                .length > 0
+                        )
+                        &&
+                        (
+                            (   // Can this challenge receive assistance,
+                                // but has not yet had assistance applied
+                                (!localState.currentChallenge.noAssist)
+                                &&
+                                (cloudState.strength.assistOne === 0)
+                            )
+                            || // OR
+                            (
+                                // Is this a doubleAssist challenge,
+                                // and has not yet had a second assist applied
+                                (localState.currentChallenge.doubleAssist)
+                                &&
+                                (cloudState.strength.assistTwo === 0)
+                            )
+
+                        )
+                    )
+                    &&
+                    (
+                        // Is the strength total not yet 
+                        // high enough to defeat the challenge?
+                        cloudState.strength.total < cloudState.currentTurn.difficulty
+                    )
+                )
+                    ?
+                    turnStage.postrollAssist
+                    :
+                    false
+            )
+        }
+
+        const setPOSTROLL_ASSIST_SCENE = () => {
+            return (
+                (
+                    // Available from POSTROLL_ASSIST and POSTROLL_ASSIST_SCENE
+                    (
+                        [
+                            turnStage.postrollAssist,
+                            turnStage.postrollAssistScene
+                        ]
+                            .includes(cloudState.currentTurn.turnStage)
+                    )
+                    &&
+                    (cloudState.activeAssistTokens.length > 0)
+                )
+                    ?
+                    turnStage.postrollAssistScene
+                    :
+                    false
+            )
+        }
+
+        const setEVALUATE_TWO = () => {
             // After all players assisting after the roll have described how they help
             // move to the second evaluation stage
             return (
-                // If the current stage is POST_ASSIST_SCENE
-                // then stage EVALUATETWO becomes available
-                (turnStagesArray[12] === (cloudState.currentTurn.turnStage))
-                &&
-                // There must be no activeAssistTokens left in the list
-                (cloudState.activeAssistTokens.length === 0)
+                (
+                    // If the current stage is POSTROLL_ASSIST_SCENE
+                    // then stage EVALUATE_TWO becomes available
+                    (turnStage.postrollAssistScene === cloudState.currentTurn.turnStage)
+                    &&
+                    // There must be no activeAssistTokens left in the list
+                    (cloudState.activeAssistTokens.length === 0)
+                )
+                    ?
+                    turnStage.evaluateTwo
+                    :
+                    false
             )
         }
 
-        // DESCRIBETWO
-        const setDESCRIBETWO = () => {
+        const setDESCRIBE_SCENE_TWO = () => {
             return (
                 (
-                    // If the current stage is EVALUATEONE or EVALUATETWO
-                    // then stage DESCRIBETWO becomes available
-                    [turnStagesArray[10], turnStagesArray[13]].includes(cloudState.currentTurn.turnStage)
-                )
-                &&
-                (// Evaluating roll results (via being applied to strength), if it's a critical failure
-                    (cloudState.strength.total < 0)
-                    ||
-                    // If total strength is greater than or equal to the difficulty of the challenge
-                    (cloudState.strength.total >= cloudState.currentTurn.difficulty)
-                    ||
                     (
-                        // If total strength is less than the difficulty
-                        (cloudState.strength.total < cloudState.currentTurn.difficulty)
-                        &&
-                        // If there are no further assists to apply
-                        // (either because the challenge is a noAssist or if no teammates have
-                        // available action tokens)
+                        // If the current stage is EVALUATE_ONE or EVALUATE_TWO
+                        // then stage DESCRIBE_SCENE_TWO becomes available
+                        [
+                            turnStage.evaluateOne,
+                            turnStage.evaluateTwo
+                        ]
+                            .includes(cloudState.currentTurn.turnStage)
+                    )
+                    &&
+                    // Evaluating roll results (via being applied to strength)
+                    (
+                        // If roll is a critical failure
+                        (cloudState.strength.total < 0)
+                        ||
+                        // If total strength is greater than or equal to the difficulty of the challenge
+                        (cloudState.strength.total >= cloudState.currentTurn.difficulty)
+                        ||
                         (
-                            (localState.currentChallenge.noAssist)
-                            ||
-                            (cloudState.hasActionToken.filter(
-                                tokens => tokens.uid !== cloudState.active.activeUID
-                            ).length === 0
+                            // If total strength is less than the difficulty
+                            (cloudState.strength.total < cloudState.currentTurn.difficulty)
+                            &&
+                            // If there are no further assists to apply
+                            // (either because the challenge is a noAssist or 
+                            // if no teammates have available action tokens)
+                            (
+                                (localState.currentChallenge.noAssist)
+                                ||
+                                (cloudState.hasActionToken.filter(
+                                    tokens => tokens.uid !== cloudState.active.activeUID
+                                ).length === 0
+                                )
                             )
                         )
-                    ))
-            )
-        }
-
-        // KOSTCO_SELECT
-        const setKOSTCO_BUY = () => {
-            return (
-                // If the current stage is DESCRIBETWO 
-                // then stage KOSTCO_BUY is available
-                (turnStagesArray[14] === cloudState.currentTurn.turnStage)
-                &&
-                (activeChar.lootPoints >= 3)
-            )
-        }
-
-        // KOSTCO_GIVE
-        const setKOSTCO_GIVE = () => {
-            return (
-                // If the current stage is KOSTCO_BUY
-                // then stage KOSTCO_GIVE is available
-                (turnStagesArray[15] === cloudState.currentTurn.turnStage)
-            )
-        }
-
-        // KOSTCO_DISCARD
-        const setKOSTCO_DISCARD = () => {
-            return (
-                // If the current stage is KOSTCO_GIVE
-                // and any player has more than two kards
-                // then stage KOSTCO_DISCARD is available
-                (turnStagesArray[16] === (cloudState.currentTurn.turnStage))
-                &&
-                (
-                    (
-                        localState
-                            .teamCharArray
-                            .filter(char =>
-                                char.charKostco.length > 2)
-                            .length > 0
-                    )
-                    ||
-                    (
-                        cloudState.kostco.options.length > 0
                     )
                 )
+                    ?
+                    turnStage.describeSceneTwo
+                    :
+                    false
             )
         }
 
-        // ACTIONTWO
-        const setACTIONTWO = () => {
+        const setKOSTCO_BUY = () => {
+            return (
+                (
+                    // If the current stage is DESCRIBE_SCENE_TWO 
+                    // then stage KOSTCO_BUY is available
+                    (turnStage.describeSceneTwo === cloudState.currentTurn.turnStage)
+                    &&
+                    (activeChar.lootPoints >= 3)
+                )
+                    ?
+                    turnStage.kostcoBuy
+                    :
+                    false
+            )
+        }
+
+        const setKOSTCO_GIVE = () => {
+            return (
+                (
+                    // If the current stage is KOSTCO_BUY
+                    // then stage KOSTCO_GIVE is available
+                    (turnStage.kostcoBuy === cloudState.currentTurn.turnStage)
+                )
+                    ?
+                    turnStage.kostcoGive
+                    :
+                    false
+            )
+        }
+
+        const setKOSTCO_DISCARD = () => {
+            return (
+                (
+                    // If the current stage is KOSTCO_GIVE
+                    // and any player has more than two kards
+                    // then stage KOSTCO_DISCARD is available
+                    (turnStage.kostcoGive === cloudState.currentTurn.turnStage)
+                    &&
+                    (
+                        (
+                            localState
+                                .teamCharArray
+                                .filter(char =>
+                                    char.charKostco.length > 2)
+                                .length > 0
+                        )
+                        ||
+                        (
+                            cloudState.kostco.options.length > 0
+                        )
+                    )
+                )
+                    ?
+                    turnStage.kostcoDiscard
+                    :
+                    false
+            )
+        }
+
+        const setACTION_TOKEN_TWO = () => {
 
             return (
-                // If the current stage is DESCRIBETWO or a KOSTCO stage,
-                // then stage ACTIONTWO can be accessed
-                (turnStagesArray.slice(14, 18).includes(cloudState.currentTurn.turnStage))
-                //([turnStagesArray[14], turnStagesArray[15],].includes(cloudState.currentTurn.turnStage))
-                &&
-                // If the character is in the list of characters with an ActionTwo token ability
-                (tokenClassesActionTwo.includes(activeChar.classCode))
-                &&
-                // And if the character action token is available
-                (cloudState.activeActionTokens.filter(token => token.uid === cloudState.active.activeUID).length > 0)
+                (
+                    // If the current stage is DESCRIBE_SCENE_TWO or a KOSTCO stage,
+                    // then stage ACTION_TOKEN_TWO can be accessed
+                    (
+                        [
+                            turnStage.describeSceneTwo,
+                            turnStage.kostcoBuy,
+                            turnStage.kostcoGive,
+                            turnStage.kostcoDiscard
+                        ]
+                            .includes(cloudState.currentTurn.turnStage)
+                    )
+                    &&
+                    // If the character is in the list of characters with an ActionTwo token ability
+                    (tokenClassesActionTwo.includes(activeChar.classCode))
+                    &&
+                    // And if the character action token is available
+                    (
+                        cloudState
+                            .activeActionTokens
+                            .filter(
+                                token => token.uid === cloudState.active.activeUID
+                            )
+                            .length > 0
+
+                    )
+                )
+                    ?
+                    turnStage.actionTokenTwo
+                    :
+                    false
             )
         }
 
-        // PASS
-        const setPASS = () => {
-            // If current turn is DESCRIBETWO, a KOSTCO stage, or ACTIONTWO
-            // then stage PASS can be accessed
-            return (turnStagesArray.slice(14, 19).includes(cloudState.currentTurn.turnStage))
+        const setPASS_TURN = () => {
+            // If current turn is DESCRIBE_SCENE_TWO, a KOSTCO stage, or ACTION_TOKEN_TWO
+            // then stage PASS_TURN can be accessed
+            return (
+                (
+                    [
+                        turnStage.describeSceneTwo,
+                        turnStage.kostcoBuy,
+                        turnStage.kostcoGive,
+                        turnStage.kostcoDiscard,
+                        turnStage.actionTokenTwo
+                    ]
+                        .includes(cloudState.currentTurn.turnStage)
+                )
+                    ?
+                    turnStage.passTurn
+                    :
+                    false
+            )
         }
 
 
@@ -881,30 +1100,30 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
 
         if (activePlayerChecker()) {
             const trueArray = [
-                setDESCRIBEONE(),
-                setCHALLENGE(),
-                setITEMS(),
-                setSTORY(),
-                setPREASSIST(),
-                setSCENE(),
-                setPRE_ASSIST_SCENE(),
-                setACTIONONE(),
-                setROLLONE(),
-                setROLLTWO(),
-                setEVALUATEONE(),
-                setPOSTASSIST(),
-                setPOST_ASSIST_SCENE(),
-                setEVALUATETWO(),
-                setDESCRIBETWO(),
+                setDESCRIBE_SCENE_ONE(),
+                setPICK_CHALLENGE(),
+                setPREROLL_ITEMS(),
+                setSTORY_BONUS(),
+                setPREROLL_ASSIST(),
+                setCHALLENGE_SCENE(),
+                setPREROLL_ASSIST_SCENE(),
+                setACTION_TOKEN_ONE(),
+                setROLL_ONE(),
+                setROLL_TWO(),
+                setEVALUATE_ONE(),
+                setPOSTROLL_ASSIST(),
+                setPOSTROLL_ASSIST_SCENE(),
+                setEVALUATE_TWO(),
+                setDESCRIBE_SCENE_TWO(),
                 setKOSTCO_BUY(),
                 setKOSTCO_GIVE(),
                 setKOSTCO_DISCARD(),
-                setACTIONTWO(),
-                setPASS(),
-                true
+                setACTION_TOKEN_TWO(),
+                setPASS_TURN(),
+                'default'
             ]
-            const returnIndex = trueArray.findIndex(returnValue => returnValue === true)
-            return (returnIndex >= turnStagesArray.length ? 'default' : turnStagesArray[returnIndex])
+            const returnIndex = trueArray.findIndex(returnValue => returnValue !== false)
+            return (trueArray[returnIndex])
         }
     }
 
