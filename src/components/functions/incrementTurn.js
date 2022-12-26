@@ -5,7 +5,7 @@ const incrementTurn = (stage) => {
     return ((nextStageIndex >= turnStagesArray.length) ? turnStagesArray[0] : turnStagesArray[nextStageIndex])
 }
 
-export default incrementTurn
+// export default incrementTurn
 
 
 // switch (stage) {

@@ -1,12 +1,20 @@
 import React from "react"
-import { startUpdateBriefingStage, startUpdateGameStage, startUpdateTurnStage } from "../../../actions/cloudActions"
-import { briefingStagesArray, gameStageArray } from "../ActiveGame/stageArrays/stageArrays"
+import {
+    startUpdateBriefingStage,
+    startUpdateGameStage,
+    startUpdateTurnStage
+} from "../../../actions/cloudActions"
 import turnStage from "../ActiveGame/turnStep/turnStepArrays/turnStage"
+import {
+    gameStage as gameStageObject,
+    briefingStage as briefingStageObject
+} from "../ActiveGame/stageObjects/stageObjects"
 
 
 const TESTFEATURES = ({ currentStage, gameStage, briefingStage, hostKey, resetStages, stepStage, resetTurnStage, resetActionTokens }) => {
     const turnStageEntries = Object.entries(turnStage)
-    console.log('turnStageArrayEntries', turnStageEntries)
+    const gameStageEntries = Object.entries(gameStageObject)
+    const briefingStageEntries = Object.entries(briefingStageObject)
 
     return (
         <div>
@@ -29,13 +37,13 @@ const TESTFEATURES = ({ currentStage, gameStage, briefingStage, hostKey, resetSt
                     value={gameStage}
                     onChange={(e) => { startUpdateGameStage(hostKey, e.target.value) }}
                 >
-                    {gameStageArray.map((stage) => {
+                    {gameStageEntries.map(([key, value]) => {
                         return (
                             <option
-                                key={stage}
-                                value={stage}
+                                key={key}
+                                value={value}
                             >
-                                {stage}
+                                {value}
                             </option>
                         )
                     })}
@@ -47,13 +55,13 @@ const TESTFEATURES = ({ currentStage, gameStage, briefingStage, hostKey, resetSt
                     value={briefingStage}
                     onChange={(e) => { startUpdateBriefingStage(hostKey, e.target.value) }}
                 >
-                    {briefingStagesArray.map((stage) => {
+                    {briefingStageEntries.map(([key, value]) => {
                         return (
                             <option
-                                key={stage}
-                                value={stage}
+                                key={key}
+                                value={value}
                             >
-                                {stage}
+                                {value}
                             </option>
                         )
                     })}
@@ -82,6 +90,3 @@ const TESTFEATURES = ({ currentStage, gameStage, briefingStage, hostKey, resetSt
 }
 
 export default TESTFEATURES
-
-// need to update the stage arrays to use the objects, and then create object entries here and other places the stage arrays would normally be used
-// also need to delete stage incrementor functions
