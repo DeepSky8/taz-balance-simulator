@@ -34,7 +34,6 @@ import {
     startUpdateKostcoItemStrength,
 } from "../../../actions/cloudActions";
 import { defaultCloudState, cloudReducer } from "../../../reducers/cloudReducer";
-import incrementStage from "../../functions/incrementStage";
 import challengeDeck from "../../functions/challengeDeck";
 import ActiveGameRouter from "../../../routers/ActiveGameRouter";
 import {
@@ -59,7 +58,6 @@ import {
 } from "../../../actions/localActions";
 import { defaultLocalState, localStateReducer } from "../../../reducers/localReducer";
 import { stats } from "../CharacterSheet/classes/charInfo";
-import { briefingStagesArray, gameStageArray } from "./stageArrays/stageArrays";
 import { shuffle } from "../../functions/deckRandomizers";
 import { defaultKostcoStrengthBonuses, kostcoStrengthBonusesReducer } from "../../../reducers/kostcoStrengthBonusesReducer";
 import {
@@ -452,13 +450,13 @@ const ActiveGame = () => {
         ]
     )
 
-    // Calculate kostco bonuses for each of the 
+    // Calculate kostco bonuses for each of the owned kards
     useEffect(() => {
 
         if (
             auth.currentUser.uid === cloudState.active.activeUID
             &&
-            cloudState.active.gameStage === gameStageArray[3]
+            cloudState.active.gameStage === gameStage.challenges
         ) {
             // First clear any previously-calculated kostco bonuses
             dispatchKostcoStrength(clearKostcoStrengthBonuses())
@@ -527,7 +525,7 @@ const ActiveGame = () => {
         if (
             auth.currentUser.uid === cloudState.active.activeUID
             &&
-            cloudState.active.gameStage === gameStageArray[3]
+            cloudState.active.gameStage === gameStage.challenges
         ) {
 
             // Does the current challenge have any specific challenge types?
@@ -673,30 +671,34 @@ const ActiveGame = () => {
     // based on game stages completed
     useEffect(() => {
         switch (cloudState.active.gameStage) {
-            case 'INTRO':
+            case gameStage.intro:
                 navigate('introductions')
                 break;
-            case 'BRIEF':
+            case gameStage.briefing:
                 navigate('missionBriefing')
                 break;
-            case 'TRANSPORT':
+            case gameStage.transport:
                 navigate('transport')
                 setTimeout(() => {
                     startUpdateGameStage(
                         localState.hostKey,
-                        incrementStage(cloudState.active.gameStage)
+                        gameStage.challenges
                     )
                 }, 8000)
                 break;
-            case 'CHALLENGES':
+            case gameStage.challenges:
                 navigate('playing/Gameboard')
                 break;
-            case 'END':
-                navigate('summary')
+            case gameStage.victory:
                 break;
-            case 'gameSetup':
+            case gameStage.failure:
+                break;
+            case gameStage.end:
                 navigate('/gameSetup')
                 break;
+            // case 'gameSetup':
+            //     navigate('/gameSetup')
+            //     break;
             default:
                 break;
         }

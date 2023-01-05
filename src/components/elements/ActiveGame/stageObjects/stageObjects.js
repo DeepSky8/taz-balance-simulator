@@ -17,6 +17,8 @@ const gameStage = {
     briefing: 'BRIEFING',
     transport: 'TRANSPORT',
     challenges: 'CHALLENGES',
+    victory: 'VICTORY',
+    failure: 'FAILURE',
     end: 'END',
     default: 'default'
 }

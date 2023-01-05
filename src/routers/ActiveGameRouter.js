@@ -14,7 +14,6 @@ import MissionBriefing from "../components/elements/ActiveGame/missionBriefing/M
 import Playing from "../components/elements/ActiveGame/playing/Playing";
 import TurnStep from "../components/elements/ActiveGame/turnStep/TurnStep";
 import TESTFEATURES from "../components/elements/admin/TESTFEATURES";
-import incrementStage from "../components/functions/incrementStage";
 import CharNav from "../components/elements/ActiveGame/playing/CharacterOverview/CharNav";
 import PlayingSheet from "../components/elements/ActiveGame/playing/PlayingSheets/PlayingSheet";
 import NotFoundPage from "../components/Authentication/NotFoundPage";
@@ -31,10 +30,6 @@ const ActiveGameRouter = ({
     // Testing tools
     const resetStages = () => {
         startUpdateGameStage(localState.hostKey, gameStage.intro)
-    }
-
-    const stepStage = () => {
-        startUpdateGameStage(localState.hostKey, incrementStage(cloudState.active.gameStage))
     }
 
     const resetTurnStage = () => {
@@ -161,7 +156,6 @@ const ActiveGameRouter = ({
             <TESTFEATURES
                 resetStages={resetStages}
                 gameStage={cloudState.active.gameStage}
-                stepStage={stepStage}
                 resetTurnStage={resetTurnStage}
                 resetActionTokens={resetActionTokens}
                 hostKey={localState.hostKey}

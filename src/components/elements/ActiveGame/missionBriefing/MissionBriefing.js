@@ -5,7 +5,7 @@ import flavorTransformer from "../../../functions/flavorTransformer";
 import { locationObjectsArray } from "../../Challenges/mission-elements/m-location";
 import { relicObjectsArray } from "../../Challenges/mission-elements/m-relic";
 import { villainObjectsArray } from "../../Challenges/mission-elements/m-villain";
-import { briefingStagesArray } from "../stageArrays/stageArrays";
+import { briefingStage } from "../stageObjects/stageObjects";
 import DeckBriefing from "./DeckBriefing";
 
 const MissionBriefing = ({ cloudState }) => {
@@ -36,11 +36,10 @@ const MissionBriefing = ({ cloudState }) => {
         )
     }
 
-
     return (
         <div>
             <h3>Mission Briefing</h3>
-            {cloudState.backstory.briefingStage === briefingStagesArray[0] &&
+            {cloudState.backstory.briefingStage === briefingStage.villain &&
                 <DeckBriefing
                     intro={villainIntro}
                     flavor={villainFlavor}
@@ -52,7 +51,7 @@ const MissionBriefing = ({ cloudState }) => {
                     u2={(update) => { updatePromptTwo(update) }}
                 />
             }
-            {cloudState.backstory.briefingStage === briefingStagesArray[1] &&
+            {cloudState.backstory.briefingStage === briefingStage.relic &&
                 <DeckBriefing
                     intro={relicIntro}
                     flavor={relicFlavor}
@@ -64,7 +63,7 @@ const MissionBriefing = ({ cloudState }) => {
                     u2={(update) => { updatePromptTwo(update) }}
                 />
             }
-            {cloudState.backstory.briefingStage === briefingStagesArray[2] &&
+            {cloudState.backstory.briefingStage === briefingStage.location &&
                 <DeckBriefing
                     intro={locationIntro}
                     flavor={locationFlavor}
@@ -77,7 +76,7 @@ const MissionBriefing = ({ cloudState }) => {
                 />
             }
 
-            {cloudState.backstory.briefingStage === briefingStagesArray[4] &&
+            {cloudState.backstory.briefingStage === briefingStage.display &&
                 <span>
                     <DeckBriefing
                         intro={villainIntro}

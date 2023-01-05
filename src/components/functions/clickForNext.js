@@ -30,12 +30,11 @@ import {
     tokenClassesReclaim
 } from "../elements/CharacterSheet/classes/charInfo";
 import diceRoll from "./diceRoll";
-import { briefingStagesArray, directionArray, gameStageArray } from "../elements/ActiveGame/stageArrays/stageArrays";
 import { startUpdateKostcoOnCharacter } from "../../actions/charActions";
 import turnStage from "../elements/ActiveGame/turnStep/turnStepArrays/turnStage";
-import { gameStage } from "../elements/ActiveGame/stageObjects/stageObjects";
+import { briefingStage, gameStage } from "../elements/ActiveGame/stageObjects/stageObjects";
 
-const clickForNext = ({ cloudState, localState }, direction = directionArray[0]) => {
+const clickForNext = ({ cloudState, localState }, direction = direction.forward) => {
     const activeChar = localState.teamCharArray[localState.activeIndex]
 
     // const reloadPage = () => {
@@ -271,8 +270,8 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
     const briefingStageActions = (newStage) => {
         switch (newStage) {
             case 'TRANSPORT':
-                startUpdateGameStage(localState.hostKey, gameStageArray[2])
-                startUpdateBriefingStage(localState.hostKey, briefingStagesArray[4])
+                startUpdateGameStage(localState.hostKey, gameStage.transport)
+                startUpdateBriefingStage(localState.hostKey, briefingStage.display)
                 break;
             default:
                 break;
@@ -283,59 +282,97 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
 
         const setVILLAIN = () => {
             return (
-                // If current briefingStage is RELIC
-                (briefingStagesArray[1] === cloudState.backstory.briefingStage)
-                &&
-                (direction === directionArray[1])
+                (
+                    (cloudState.backstory.briefingStage === briefingStage.relic)
+                    &&
+                    (direction === direction.backward)
+                )
+                    ?
+                    briefingStage.villain
+                    :
+                    false
             )
         }
 
         const setRELIC = () => {
             return (
                 (
-                    // If current briefingStage is VILLAIN
-                    (briefingStagesArray[0] === cloudState.backstory.briefingStage)
-                    &&
-                    // and direction is FORWARD
-                    (directionArray[0] === direction)
+                    (
+                        (cloudState.backstory.briefingStage === briefingStage.villain)
+                        &&
+                        (direction === direction.forward)
+                    )
+                    ||
+                    (
+                        (cloudState.backstory.briefingStage === briefingStage.location)
+                        &&
+                        (direction === direction.backward)
+                    )
                 )
-                ||
-                (
-                    // If current briefingStage is LOCATION
-                    (briefingStagesArray[2] === cloudState.backstory.briefingStage)
-                    &&
-                    // and direction is BACKWARD
-                    (directionArray[1] === direction)
-                )
+                    ?
+                    briefingStage.relic
+                    :
+                    false
             )
         }
 
         const setLOCATION = () => {
             return (
-                // If current briefingStage is RELIC
-                (briefingStagesArray[1] === cloudState.backstory.briefingStage)
-                &&
-                // and direction is FORWARD
-                (direction === directionArray[0])
+                (
+                    (cloudState.backstory.briefingStage === briefingStage.relic)
+                    &&
+                    (direction === direction.forward)
+                )
+                    ?
+                    briefingStage.location
+                    :
+                    false
             )
         }
 
         const setTRANSPORT = () => {
             return (
-                // If current briefingStage is LOCATION
-                (briefingStagesArray[2] === cloudState.backstory.briefingStage)
-                &&
-                (direction === directionArray[0])
+                (
+                    (cloudState.backstory.briefingStage === briefingStage.location)
+                    &&
+                    (direction === direction.forward)
+                )
+                    ?
+                    briefingStage.transport
+                    :
+                    false
             )
         }
 
         const setDISPLAY = () => {
             return (
-                // If current briefingStage is TRANSPORT or DISPLAY
-                (briefingStagesArray.slice(3) === cloudState.backstory.briefingStage)
-                &&
-                // If current gameStage is TRANSPORT or CHALLENGES
-                (gameStageArray.slice(2, 4) === cloudState.active.gameStage)
+                (
+                    (
+                        [
+                            briefingStage.transport,
+                            briefingStage.display
+                        ]
+                            .includes
+                            (
+                                cloudState.backstory.briefingStage
+                            )
+                    )
+                    &&
+                    (
+                        [
+                            gameStage.transport,
+                            gameStage.challenges
+                        ]
+                            .includes
+                            (
+                                cloudState.active.gameStage
+                            )
+                    )
+                )
+                    ?
+                    briefingStage.display
+                    :
+                    false
             )
         }
 
@@ -347,8 +384,12 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
                 setTRANSPORT(),
                 setDISPLAY()
             ]
-            const returnIndex = trueArray.findIndex(returnValue => returnValue === true)
-            return (returnIndex >= briefingStagesArray.length ? briefingStagesArray[4] : briefingStagesArray[returnIndex])
+            const returnIndex = trueArray
+                .findIndex
+                (
+                    returnValue => returnValue !== false
+                )
+            return (trueArray[returnIndex])
         }
 
     }
@@ -1132,12 +1173,12 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
     const gameStageActions = () => {
         if (activePlayerChecker()) {
             switch (cloudState.active.gameStage) {
-                case 'INTRO':
-                case 'BRIEF':
+                case gameStage.intro:
+                case gameStage.briefing:
                     passTheTurn()
                     break;
-                case 'TRANSPORT':
-                case 'CHALLENGES':
+                case gameStage.transport:
+                case gameStage.challenges:
                     // startNullReadyList(localState.hostKey)
                     // startRESETActionTokens(localState.hostKey, cloudState.playerList)
                     break;
@@ -1152,64 +1193,132 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
 
         const setINTRO = () => {
             return (
-                // If the game is in INTRO stage
-                (gameStageArray[0] === cloudState.active.gameStage)
-                &&
-                (cloudState.playerList.length > (cloudState.readyList.length + 1))
+                (
+                    (cloudState.active.gameStage === gameStage.intro)
+                    &&
+                    (cloudState.playerList.length > (cloudState.readyList.length + 1))
+                )
+                    ?
+                    gameStage.intro
+                    :
+                    false
             )
         }
 
         const setBRIEF = () => {
             return (
-                // If current gameStage is INTRO
-                (gameStageArray[0] === cloudState.active.gameStage)
-                &&
-                // If all but one players have indicated they are ready
-                // (as this is clicked by the last player to indicate they too are ready to move on)
-                (cloudState.playerList.length <= (cloudState.readyList.length + 1))
+                (
+                    (cloudState.active.gameStage === gameStage.intro)
+                    &&
+                    // If all but one players have indicated they are ready
+                    // (as this is clicked by the last player to indicate they too are ready to move on)
+                    (cloudState.playerList.length <= (cloudState.readyList.length + 1))
 
+                )
+                    ?
+                    gameStage.briefing
+                    :
+                    false
             )
         }
 
         const setTRANSPORT = () => {
             return (
-                // If current gameStage is BRIEF
-                (gameStageArray[1] === cloudState.active.gameStage)
-                &&
-                // If current briefingStage is LOCATION
-                (briefingStagesArray[2] === cloudState.backstory.briefingStage)
+                (
+                    (cloudState.active.gameStage === gameStage.briefing)
+                    &&
+                    (cloudState.backstory.briefingStage === briefingStage.location)
+                )
+                    ?
+                    gameStage.transport
+                    :
+                    false
             )
         }
 
         // const setCHALLENGES = () => { 
         //     return (
-        //         // If current gameStage is TRANSPORT
-        //         (gameStageArray[2] === cloudState.active.gameStage)
+        //         (cloudState.active.gameStage === gameStage.challenges)
+        //         &&
+        //         ()
 
         //     )
         // }
 
-        const setEND = () => {
+        const setVICTORY = () => {
 
             return (
-                // If current gameStage is CHALLENGES
-                (gameStageArray[3] === cloudState.active.gameStage)
-                &&
                 (
+                    (cloudState.active.gameStage === gameStage.challenges)
+                    &&
                     (
-                        // If relic deck is complete
-                        (cloudState.active.progressRelic > 10)
-                        &&
                         (
-                            // If Villin or Location deck is complete
-                            cloudState.active.progressVillain > 10
-                            ||
-                            cloudState.active.progressLocation > 10
+                            // If relic deck is complete
+                            (cloudState.active.progressRelic > 10)
+                            &&
+                            (
+                                // If Villin or Location deck is complete
+                                cloudState.active.progressVillain > 10
+                                ||
+                                cloudState.active.progressLocation > 10
+                            )
                         )
+                        ||
+                        (cloudState.active.teamHealth <= 0)
                     )
-                    ||
-                    (cloudState.active.teamHealth <= 0)
                 )
+                    ?
+                    gameStage.victory
+                    :
+                    false
+            )
+        }
+
+        const setFAILURE = () => {
+
+            return (
+                (
+                    (cloudState.active.gameStage === gameStage.challenges)
+                    &&
+                    (
+                        (
+                            // If relic deck is NOT complete
+                            (cloudState.active.progressRelic < 10)
+                            // &&
+                            // (
+                            //     // If Villin or Location deck is complete
+                            //     cloudState.active.progressVillain > 10
+                            //     ||
+                            //     cloudState.active.progressLocation > 10
+                            // )
+                        )
+                        &&
+                        (cloudState.active.teamHealth <= 0)
+                    )
+                )
+                    ?
+                    gameStage.failure
+                    :
+                    false
+            )
+        }
+
+        const setEND = () => {
+            return (
+                (
+                    [
+                        gameStage.victory,
+                        gameStage.failure
+                    ]
+                        .includes
+                        (
+                            cloudState.active.gameStage
+                        )
+                )
+                    ?
+                    gameStage.end
+                    :
+                    false
             )
         }
 
@@ -1218,12 +1327,18 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
                 setINTRO(),
                 setBRIEF(),
                 setTRANSPORT(),
-                false,
+                false,  // setCHALLENGES(),
+                setVICTORY(),
+                setFAILURE(),
                 setEND(),
-                true
+                gameStage.default
             ]
-            const returnIndex = trueArray.findIndex(returnValue => returnValue === true)
-            return (returnIndex >= gameStageArray.length ? 'default' : gameStageArray[returnIndex])
+            const returnIndex = trueArray
+                .findIndex
+                (
+                    returnValue => returnValue !== false
+                )
+            return (trueArray[returnIndex])
         }
 
     }
@@ -1239,23 +1354,26 @@ const clickForNext = ({ cloudState, localState }, direction = directionArray[0])
         const newBriefingStage = briefingStageSelection(direction)
 
         switch (cloudState.active.gameStage) {
-            case 'INTRO':
+            case gameStage.intro:
                 startUpdateGameStage(localState.hostKey, newGameStage)
                 gameStageActions()
                 break;
-            case 'BRIEF':
+            case gameStage.briefing:
                 startUpdateBriefingStage(localState.hostKey, newBriefingStage)
                 briefingStageActions(newBriefingStage)
                 break;
-            case 'TRANSPORT':
-                break;
-            case 'CHALLENGES':
+            // case gameStage.transport:
+            //     break;
+            case gameStage.challenges:
                 turnStageActions()
                 const newTurnStage = turnStageSelection()
                 startUpdateTurnStage(localState.hostKey, newTurnStage)
+                if ([gameStage.victory, gameStage.failure].includes(newGameStage)) {
+                    startUpdateGameStage(localState.hostKey, newGameStage)
+                }
                 break;
-            case 'END':
-                gameStageActions()
+            case gameStage.victory:
+            case gameStage.failure:
                 startUpdateGameStage(localState.hostKey, newGameStage)
                 break;
             default:

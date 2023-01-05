@@ -11,7 +11,7 @@ import {
 } from "../ActiveGame/stageObjects/stageObjects"
 
 
-const TESTFEATURES = ({ currentStage, gameStage, briefingStage, hostKey, resetStages, stepStage, resetTurnStage, resetActionTokens }) => {
+const TESTFEATURES = ({ currentStage, gameStage, briefingStage, hostKey, resetStages, resetTurnStage, resetActionTokens }) => {
     const turnStageEntries = Object.entries(turnStage)
     const gameStageEntries = Object.entries(gameStageObject)
     const briefingStageEntries = Object.entries(briefingStageObject)
@@ -23,9 +23,6 @@ const TESTFEATURES = ({ currentStage, gameStage, briefingStage, hostKey, resetSt
                 <button
                     onClick={() => { resetStages() }}
                 >-Reset Stages-</button>
-                <button
-                    onClick={() => { stepStage() }}
-                >-Step Stage-</button>
                 <button
                     onClick={() => { resetTurnStage() }}
                 >-Reset Turn-</button>

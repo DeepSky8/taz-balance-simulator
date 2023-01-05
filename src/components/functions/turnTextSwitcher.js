@@ -1,3 +1,4 @@
+import { briefingStage, gameStage } from "../elements/ActiveGame/stageObjects/stageObjects"
 import turnStage from "../elements/ActiveGame/turnStep/turnStepArrays/turnStage"
 
 // gameStage text
@@ -44,22 +45,22 @@ const turnTextSwitcher = (cloudState, localState, activeAssistPlayer) => {
     let activeChar = localState.teamCharArray[localState.activeIndex]
 
     switch (cloudState.active.gameStage) {
-        case 'INTRO':
+        case gameStage.intro:
             return introChar + activeChar.charName + clickToPassTurn;
-        case 'BRIEF':
+        case gameStage.briefing:
             switch (cloudState.backstory.briefingStage) {
-                case 'VILLAIN':
+                case briefingStage.villain:
                     return villainBrief + clickForNext;
-                case 'RELIC':
+                case briefingStage.relic:
                     return relicBrief + clickForNext;
-                case 'LOCATION':
+                case briefingStage.location:
                     return locationBrief + clickForNext;
                 default:
                     return missionBriefing;
             }
-        case 'TRANSPORT':
+        case gameStage.transport:
             return transportBrief;
-        case 'CHALLENGES':
+        case gameStage.challenges:
             switch (cloudState.currentTurn.turnStage) {
                 case turnStage.describeSceneOne:
                     return describeScene
@@ -102,7 +103,7 @@ const turnTextSwitcher = (cloudState, localState, activeAssistPlayer) => {
                         return rollAgain + disAdvan
                     }
                     break;
-                case 'ROLLING':
+                case turnStage.rolling:
                     return rollingDice
                 case turnStage.evaluateOne:
                     return clickProceed
@@ -136,6 +137,10 @@ const turnTextSwitcher = (cloudState, localState, activeAssistPlayer) => {
                     return 'uh oh, broked again'
             }
             break;
+        case gameStage.victory:
+            return 'victory page'
+        case gameStage.failure:
+            return 'failure page'
         case 'END':
             return thanksPlaying;
         default:

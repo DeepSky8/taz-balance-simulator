@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { auth } from "../../../../firebase/firebase";
 import clickForNext from "../../../functions/clickForNext";
 import turnTextSwitcher from "../../../functions/turnTextSwitcher";
-import { briefingStagesArray, directionArray, gameStageArray } from "../stageArrays/stageArrays";
+import { briefingStage, direction, gameStage } from "../stageObjects/stageObjects";
 // import NextDeck from './NextDeck';
 // import PrevDeck from './PrevDeck';
 
@@ -39,13 +39,13 @@ const TurnStep = ({ cloudState, localState }) => {
 
     return (
         <div>
-            {cloudState.active.gameStage === gameStageArray[1] &&
+            {cloudState.active.gameStage === gameStage.briefing &&
                 cloudState.static.host === auth.currentUser.uid &&
                 <button
                     onClick={() => {
-                        clickForNext({ cloudState, localState }, directionArray[1])
+                        clickForNext({ cloudState, localState }, direction.backward)
                     }}
-                    disabled={cloudState.backstory.briefingStage === briefingStagesArray[0]}
+                    disabled={cloudState.backstory.briefingStage === briefingStage.villain}
                 >
                     Previous
                 </button>
@@ -56,7 +56,7 @@ const TurnStep = ({ cloudState, localState }) => {
                     clickForNext({ cloudState, localState })
                 }}
                 disabled={
-                    cloudState.active.gameStage === gameStageArray[1]
+                    cloudState.active.gameStage === gameStage.briefing
                     &&
                     cloudState.static.host !== auth.currentUser.uid
                 }

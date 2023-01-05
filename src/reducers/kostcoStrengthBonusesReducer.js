@@ -25,100 +25,100 @@ const kostcoStrengthBonusesReducer = (state, action) => {
             return {
                 ...defaultKostcoStrengthBonuses
             }
-        case 'ADD_MAGIC_STRENGTH':
-            const magicStrength = parseInt(action.kard.g.strengthValue)
-            return {
-                ...defaultKostcoStrengthBonuses,
-                ...state,
-                kostcoMagic: state.kostcoMagic + magicStrength,
-                kostcoObjects: state
-                    .kostcoObjects
-                    .filter(obj => obj.kID !== '0')
-                    .concat(
-                        {
-                            ...kostcoDefaultStrengthObject,
-                            kID: action.kard.kID,
-                            kTitle: action.kard.kTitle,
-                            gMagic: magicStrength
-                        }
-                    )
-            }
+        // case 'ADD_MAGIC_STRENGTH':
+        //     const magicStrength = parseInt(action.kard.g.strengthValue)
+        //     return {
+        //         ...defaultKostcoStrengthBonuses,
+        //         ...state,
+        //         kostcoMagic: state.kostcoMagic + magicStrength,
+        //         kostcoObjects: state
+        //             .kostcoObjects
+        //             .filter(obj => obj.kID !== '0')
+        //             .concat(
+        //                 {
+        //                     ...kostcoDefaultStrengthObject,
+        //                     kID: action.kard.kID,
+        //                     kTitle: action.kard.kTitle,
+        //                     gMagic: magicStrength
+        //                 }
+        //             )
+        //     }
 
-        case 'ADD_MONSTER_STRENGTH':
-            const monsterStrength = parseInt(action.kard.g.strengthValue)
-            return {
-                ...defaultKostcoStrengthBonuses,
-                ...state,
-                kostcoMonster: state.kostcoMonster + monsterStrength,
-                kostcoObjects: state
-                    .kostcoObjects
-                    .filter(obj => obj.kID !== '0')
-                    .concat(
-                        {
-                            ...kostcoDefaultStrengthObject,
-                            kID: action.kard.kID,
-                            kTitle: action.kard.kTitle,
-                            gMonster: monsterStrength
-                        }
-                    )
-            }
+        // case 'ADD_MONSTER_STRENGTH':
+        //     const monsterStrength = parseInt(action.kard.g.strengthValue)
+        //     return {
+        //         ...defaultKostcoStrengthBonuses,
+        //         ...state,
+        //         kostcoMonster: state.kostcoMonster + monsterStrength,
+        //         kostcoObjects: state
+        //             .kostcoObjects
+        //             .filter(obj => obj.kID !== '0')
+        //             .concat(
+        //                 {
+        //                     ...kostcoDefaultStrengthObject,
+        //                     kID: action.kard.kID,
+        //                     kTitle: action.kard.kTitle,
+        //                     gMonster: monsterStrength
+        //                 }
+        //             )
+        //     }
 
-        case 'ADD_SPOOKY_STRENGTH':
-            const spookyStrength = parseInt(action.kard.g.strengthValue)
-            return {
-                ...defaultKostcoStrengthBonuses,
-                ...state,
-                kostcoSpooky: state.kostcoSpooky + spookyStrength,
-                kostcoObjects: state
-                    .kostcoObjects
-                    .filter(obj => obj.kID !== '0')
-                    .concat(
-                        {
-                            ...kostcoDefaultStrengthObject,
-                            kID: action.kard.kID,
-                            kTitle: action.kard.kTitle,
-                            gSpooky: spookyStrength
-                        }
-                    )
-            }
+        // case 'ADD_SPOOKY_STRENGTH':
+        //     const spookyStrength = parseInt(action.kard.g.strengthValue)
+        //     return {
+        //         ...defaultKostcoStrengthBonuses,
+        //         ...state,
+        //         kostcoSpooky: state.kostcoSpooky + spookyStrength,
+        //         kostcoObjects: state
+        //             .kostcoObjects
+        //             .filter(obj => obj.kID !== '0')
+        //             .concat(
+        //                 {
+        //                     ...kostcoDefaultStrengthObject,
+        //                     kID: action.kard.kID,
+        //                     kTitle: action.kard.kTitle,
+        //                     gSpooky: spookyStrength
+        //                 }
+        //             )
+        //     }
 
-        case 'ADD_TRAP_STRENGTH':
-            const trapStrength = parseInt(action.kard.g.strengthValue)
-            return {
-                ...defaultKostcoStrengthBonuses,
-                ...state,
-                kostcoTrap: state.kostcoTrap + trapStrength,
-                kostcoObjects: state
-                    .kostcoObjects
-                    .filter(obj => obj.kID !== '0')
-                    .concat(
-                        {
-                            ...kostcoDefaultStrengthObject,
-                            kID: action.kard.kID,
-                            kTitle: action.kard.kTitle,
-                            gTrap: trapStrength
-                        }
-                    )
-            }
+        // case 'ADD_TRAP_STRENGTH':
+        //     const trapStrength = parseInt(action.kard.g.strengthValue)
+        //     return {
+        //         ...defaultKostcoStrengthBonuses,
+        //         ...state,
+        //         kostcoTrap: state.kostcoTrap + trapStrength,
+        //         kostcoObjects: state
+        //             .kostcoObjects
+        //             .filter(obj => obj.kID !== '0')
+        //             .concat(
+        //                 {
+        //                     ...kostcoDefaultStrengthObject,
+        //                     kID: action.kard.kID,
+        //                     kTitle: action.kard.kTitle,
+        //                     gTrap: trapStrength
+        //                 }
+        //             )
+        //     }
 
-        case 'ADD_UNDEFINED_STRENGTH':
-            const undefinedStrength = parseInt(action.kard.g.strengthValue)
-            return {
-                ...defaultKostcoStrengthBonuses,
-                ...state,
-                kostcoUndefined: state.kostcoUndefined + undefinedStrength,
-                kostcoObjects: state
-                    .kostcoObjects
-                    .filter(obj => obj.kID !== '0')
-                    .concat(
-                        {
-                            ...kostcoDefaultStrengthObject,
-                            kID: action.kard.kID,
-                            kTitle: action.kard.kTitle,
-                            gUndefined: undefinedStrength
-                        }
-                    )
-            }
+        // case 'ADD_UNDEFINED_STRENGTH':
+        //     const undefinedStrength = parseInt(action.kard.g.strengthValue)
+        //     return {
+        //         ...defaultKostcoStrengthBonuses,
+        //         ...state,
+        //         kostcoUndefined: state.kostcoUndefined + undefinedStrength,
+        //         kostcoObjects: state
+        //             .kostcoObjects
+        //             .filter(obj => obj.kID !== '0')
+        //             .concat(
+        //                 {
+        //                     ...kostcoDefaultStrengthObject,
+        //                     kID: action.kard.kID,
+        //                     kTitle: action.kard.kTitle,
+        //                     gUndefined: undefinedStrength
+        //                 }
+        //             )
+        //     }
         case 'EXTRACT_KOSTCO_BONUSES':
             const gMagic = action.kard.g.magic ? parseInt(action.kard.g.strengthValue) : 0
             const gMonster = action.kard.g.monster ? parseInt(action.kard.g.strengthValue) : 0
