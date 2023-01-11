@@ -298,9 +298,19 @@ export const updateCounterEffect = (counterEffect) => ({
     counterEffect
 })
 
-export const defeatZeroCounters = (defeatZeroCounters) => ({
-    type: 'DEFEAT_ZERO_COUNTERS',
-    defeatZeroCounters
+export const counterInDeCrease = (counterInDeCrease) => ({
+    type: 'COUNTER_INDE_CREASE',
+    counterInDeCrease
+})
+
+export const counterTarget = (counterTarget) => ({
+    type: 'COUNTER_TARGET',
+    counterTarget
+})
+
+export const defeatRemovesCounters = (defeatRemovesCounters) => ({
+    type: 'DEFEAT_REMOVES_COUNTERS',
+    defeatRemovesCounters
 })
 
 export const failingAddsCounters = (failingAddsCounters) => ({
@@ -316,6 +326,11 @@ export const failingRemovesCounters = (failingRemovesCounters) => ({
 export const updateFailCounterNumber = (failCounterNumber) => ({
     type: 'FAIL_COUNTER_NUMBER',
     failCounterNumber
+})
+
+export const updateDefeatCounterNumber = (defeatCounterNumber) => ({
+    type: 'DEFEAT_COUNTER_NUMBER',
+    defeatCounterNumber
 })
 
 export const updateModifyEffect = (modifyEffect) => ({
@@ -393,9 +408,9 @@ export const updateReduceKostCoCost = (reduceKostCoCost) => ({
     reduceKostCoCost
 })
 
-export const updateSpendLootForEffect = (spendLootforEffect) => ({
+export const updateSpendLootForEffect = (spendLootForEffect) => ({
     type: 'SPEND_LOOT_FOR_EFFECT',
-    spendLootforEffect
+    spendLootForEffect
 })
 
 export const updateLoseLootPoints = (loseLootPoints) => ({

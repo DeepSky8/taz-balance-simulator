@@ -1,5 +1,8 @@
 import React, { useEffect, useReducer, useState } from "react";
 import {
+    counterInDeCrease,
+    counterTarget,
+    defeatRemovesCounters,
     defeatZeroCounters,
     failingAddsCounters,
     failingRemovesCounters,
@@ -17,6 +20,7 @@ import {
     updateCounterEffect,
     updateCounters,
     updateCrew,
+    updateDefeatCounterNumber,
     updateDifficulty,
     updateDisadvantage,
     updateDiscardKostCoDefeat,
@@ -1195,13 +1199,13 @@ const EditCard = ({ deckCard, updateCardCloud, currentCardNumber, removeCard, ca
                         {cardState.counterEffect &&
                             <span>
                                 <span>
-                                    <label htmlFor="defeatZeroCounters">  Defeating removes a counter: </label>
+                                    <label htmlFor="defeatRemovesCounters">  Defeating removes a counter: </label>
                                     <select
-                                        name="defeatZeroCounters"
-                                        id="defeatZeroCounters"
-                                        value={cardState.defeatZeroCounters}
+                                        name="defeatRemovesCounters"
+                                        id="defeatRemovesCounters"
+                                        value={cardState.defeatRemovesCounters}
                                         onChange={(e) => {
-                                            dispatchCardState(defeatZeroCounters(e.target.value))
+                                            dispatchCardState(defeatRemovesCounters(e.target.value))
                                         }}
                                         onBlur={() => { saveChange() }}
 
@@ -1222,6 +1226,35 @@ const EditCard = ({ deckCard, updateCardCloud, currentCardNumber, removeCard, ca
                                         }}
                                         onBlur={() => { saveChange() }}
                                     />
+
+                                    <label htmlFor="counterInDeCrease">  Counters </label>
+                                    <select
+                                        name="counterInDeCrease"
+                                        id="counterInDeCrease"
+                                        value={cardState.counterInDeCrease}
+                                        onChange={(e) => {
+                                            dispatchCardState(counterInDeCrease(e.target.value))
+                                        }}
+                                        onBlur={() => { saveChange() }}
+                                    >
+                                        <option value={'do'}>do</option>
+                                        <option value={'increase'}>increase</option>
+                                        <option value={'decrease'}>decrease</option>
+                                    </select>
+
+                                    <select
+                                        name="counterTarget"
+                                        id="counterTarget"
+                                        value={cardState.counterTarget}
+                                        onChange={(e) => {
+                                            dispatchCardState(counterTarget(e.target.value))
+                                        }}
+                                        onBlur={() => { saveChange() }}
+                                    >
+                                        <option value={'nothing'}>nothing</option>
+                                        <option value={'damage'}>damage</option>
+                                        <option value={'difficulty'}>difficulty</option>
+                                    </select>
 
                                 </span>
                                 <div>
@@ -1260,6 +1293,22 @@ const EditCard = ({ deckCard, updateCardCloud, currentCardNumber, removeCard, ca
                                             dispatchCardState(updateFailCounterNumber(e.target.value))
                                         }}
                                         onBlur={() => { saveChange() }}
+                                    />
+                                </div>
+
+                                <div>
+                                    <label htmlFor="defeatCounterNumber">  To defeat, counters equal: </label>
+                                    <input
+                                        id="defeatCounterNumber"
+                                        name="defeatCounterNumber"
+                                        type='number'
+                                        style={{ width: 3 + 'em' }}
+                                        value={cardState.defeatCounterNumber}
+                                        onChange={(e) => {
+                                            dispatchCardState(updateDefeatCounterNumber(e.target.value))
+                                        }}
+                                        onBlur={() => { saveChange() }}
+
                                     />
                                 </div>
                             </span>

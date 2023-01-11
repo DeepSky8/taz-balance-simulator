@@ -18,6 +18,8 @@ const villainObjectsArray = [
         promptFlavor2: '',
         prompt1: `What is the Lich's name?`,
         prompt2: `What does it look like?`,
+        specialEffect: "",
+        challengeDescription: "",
     },
     {
         challengeName: 'The Cult',
@@ -27,6 +29,8 @@ const villainObjectsArray = [
         promptFlavor2: '',
         prompt1: 'What is the name of the Cult?',
         prompt2: "What's their sinister goal?",
+        specialEffect: "",
+        challengeDescription: "Several Cult challenges flip themselves or other challenges.",
     },
     {
         challengeName: 'The Dark Lord',
@@ -36,6 +40,8 @@ const villainObjectsArray = [
         promptFlavor2: ', and if they claim it before we do, the world is doomed!',
         prompt1: 'What is the name of the Dark Lord?',
         prompt2: 'What is their connection to the Relic?',
+        specialEffect: "",
+        challengeDescription: "Several Dark Lord challenges return Gerblin challenges to the challenge deck.",
     },
     {
         challengeName: 'The Dragon',
@@ -45,6 +51,8 @@ const villainObjectsArray = [
         promptFlavor2: '',
         prompt1: "What is the Dragon's name?",
         prompt2: 'What does it look like?',
+        specialEffect: "Every time you fail to defeat a Dragon challenge (other than the Final challenge), discard the card after you take damage.",
+        challengeDescription: "",
     },
     {
         challengeName: 'The Band of Rogues',
@@ -52,8 +60,10 @@ const villainObjectsArray = [
         challengeFlavor: 'Why settle for one villain when you can have ten? A host of enemies stand between us and our goal.',
         promptFlavor1: 'Why settle for one villain when you can have ten? A host of enemies stand between us and ',
         promptFlavor2: '.',
-        prompt1: 'Are these villains working together, or are they independent?',
-        prompt2: 'Do they have a cool team name?'
+        prompt1: 'Are these villains working together, or are they operating independently?',
+        prompt2: 'Do they have a cool team name?',
+        specialEffect: "",
+        challengeDescription: "",
     },
     {
         challengeName: 'The Crew',
@@ -62,7 +72,9 @@ const villainObjectsArray = [
         promptFlavor1: 'The Crew are a bunch of bullies with matching outfits and a shared love of battlewagons and inappropriate calendars.',
         promptFlavor2: '.',
         prompt1: "What's the distinctive theme of the Crew?",
-        prompt2: 'What do they call themselves?'
+        prompt2: 'What do they call themselves?',
+        specialEffect: "When you defeat a Crew challenge, you may immediately take another turn.",
+        challengeDescription: "Several Crew challenges require that you face them twice.",
     },
     {
         challengeName: 'The Giant',
@@ -71,7 +83,9 @@ const villainObjectsArray = [
         promptFlavor1: "The Giant is a big problem ... because they're a giant, get it? To find ",
         promptFlavor2: ", we must make our way through the Giant's home, which is filled with enormous threats!",
         prompt1: "What does the Giant look like?",
-        prompt2: "What's their name?"
+        prompt2: "What's their name?",
+        specialEffect: "When facing a Giant challenge, each character that assists you grants an additional +1 strength.",
+        challengeDescription: "",
     },
     {
         challengeName: 'Villain Test',
@@ -81,40 +95,52 @@ const villainObjectsArray = [
         promptFlavor2: 'Test Deck Only',
         prompt1: 'Test Deck Only',
         prompt2: 'Test Deck Only',
+        specialEffect: "",
+        challengeDescription: "",
     }
 ]
 
 const uniqueVillains = [
-// Band of Rogues
+    // Band of Rogues
 
-// When you defeat this challenge, return it to the deck. 
-// (three cards later, take Finale into account)
-'-N96iFu7Onl7Vexblr7R',
+    // When you defeat this challenge, return it to the deck. 
+    // (three cards later, take Finale into account)
+    '-N96iFu7Onl7Vexblr7R',
 
-// If you fail to defeat this challenge, it will show up elsewhere.
-// (card says top of the challenge deck to the left)
-'-N96jp2fy4SEKdWBDY-3',
+    // If you fail to defeat this challenge, 
+    // it will show up on the deck to the left)
+    '-N96jp2fy4SEKdWBDY-3',
 
-// Each player asks the player to their left a question; 
-// you get +1 strength for each correct answer!
-'-N96k3ixG_0q9YeEVdx_',
+    // Each player asks the player to their left a question; 
+    // you get +1 strength for each correct answer!
+    '-N96k3ixG_0q9YeEVdx_',
 
-// Legion's Difficulty is increased by 2 
-// for each additional Spooky challenge in play.
-'-N96kJ5fZhwkSxYnxDEv',
+    // Legion's Difficulty is increased by 2 
+    // for each additional Spooky challenge in play.
+    '-N96kJ5fZhwkSxYnxDEv',
 
-// If you fail to defeat this challenge, 
-// return another challenge to play.
-'-N96mASuKgqoyie_emui',
+    // If you fail to defeat this challenge, 
+    // return another challenge to play.
+    '-N96mASuKgqoyie_emui',
 
-// When you defeat this challenge, you lose 3 health (to a minimum of 1)
-'-N96mfmE7qSnZNAZtdZU',
+    // When you defeat this challenge, you lose 3 health (to a minimum of 1)
+    '-N96mfmE7qSnZNAZtdZU',
 
-// This challenge starts with two difficulty reduction counters. 
-// Defeat it to remove a difficulty reduction counter. 
-// This challenge remains in play until you defeat it 
-// without any difficulty reduction counters remaining.
-'-N96nGVXYaaNzR4YfqSw',
+
+    // The Crew
+
+    // When you defeat any challenge, you may immediately take another turn
+    // (essentially provides Crew bonus to all other challenges)
+    '-NBNzBtM5XCo09xjXBlE',
+
+    // Discard any active Surprise when this Challenge is revealed. 
+    '-NBNy7A9IBw2VWIIb6O-',
+
+
+
+
+
+
 
 
 ]

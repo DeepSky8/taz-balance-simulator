@@ -31,7 +31,7 @@ import {
 } from "../elements/CharacterSheet/classes/charInfo";
 import diceRoll from "./diceRoll";
 import { startUpdateKostcoOnCharacter } from "../../actions/charActions";
-import turnStage from "../elements/ActiveGame/turnStep/turnStepArrays/turnStage";
+import turnStage from "../elements/ActiveGame/turnStep/turnStepItems/turnStage";
 import { briefingStage, gameStage } from "../elements/ActiveGame/stageObjects/stageObjects";
 
 const clickForNext = ({ cloudState, localState }, direction = direction.forward) => {

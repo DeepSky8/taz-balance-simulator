@@ -3,7 +3,7 @@ import { startNullKostcoOnCharacter, startUpdateKostcoOnCharacter } from "../../
 import { startUpdateKostcoCardsOptions } from "../../../../actions/cloudActions";
 import { auth } from "../../../../firebase/firebase";
 import { defaultKostcoCardState } from "../../../../reducers/kostcoCardReducer";
-import turnStage from "../turnStep/turnStepArrays/turnStage";
+import turnStage from "../turnStep/turnStepItems/turnStage";
 import KostcoDisplay from "./KostcoDisplay";
 import kostcoPairs from "./kostcoPairs";
 

@@ -1,3 +1,5 @@
+import { counterTarget } from "../actions/cardActions"
+
 const defaultCardState = {
     // deck creation flags
     cardNumber: 0,
@@ -31,13 +33,14 @@ const defaultCardState = {
     italicText: '',
     effectText: '',
 
+    completed: false,
+
     // card effect elements
     hasEffect: false,
-    completed: false,
+
     requiresReroll: false,
     advantage: false,
     disadvantage: false,
-
     discardSurprise: false,
     requiresToken: false,
 
@@ -89,11 +92,14 @@ const defaultCardState = {
 
     counterEffect: false,
     counters: 0,
-    defeatZeroCounters: false,
+    counterInDeCrease: 'do',
+    counterTarget: 'nothing',
+    defeatRemovesCounters: false,
     failingAddsCounters: false,
     failingRemovesCounters: false,
     failCounterNumber: 0,
     failedAttempts: 0,
+    defeatCounterNumber: 0,
 }
 
 const cardReducer = (state, action) => {
@@ -473,33 +479,47 @@ const cardReducer = (state, action) => {
                 ...state,
                 counterEffect: action.counterEffect === 'true' ? true : false,
                 counters: action.counterEffect === 'true' ? state.counters : 0,
-                defeatZeroCounters: action.counterEffect === 'true' ? state.defeatZeroCounters : false,
+                defeatRemovesCounters: action.counterEffect === 'true' ? state.defeatRemovesCounters : false,
                 failingAddsCounters: action.counterEffect === 'true' ? state.failingAddsCounters : false,
                 failCounterNumber: action.counterEffect === 'true' ? state.failCounterNumber : 0,
+                counterInDeCrease: action.counterEffect === 'true' ? state.counterInDeCrease : 'do',
+                defeatCounterNumber: action.counterEffect === 'true' ? state.defeatCounterNumber : 0,
             }
         case 'UPDATE_COUNTERS':
             return {
                 ...state,
                 counters: action.counters
             }
-        case 'DEFEAT_ZERO_COUNTERS':
+        case 'COUNTER_INDE_CREASE':
             return {
                 ...state,
-                defeatZeroCounters: action.defeatZeroCounters === 'true' ? true : false,
-                failingAddsCounters: action.defeatZeroCounters === 'true' ? false : state.failingAddsCounters
+                counterInDeCrease: action.counterInDeCrease,
+                counterTarget: action.counterInDeCrease === 'do' ? 'nothing' : state.counterTarget
+            }
+        case 'COUNTER_TARGET':
+            return {
+                ...state,
+                counterTarget: action.counterTarget,
+                counterInDeCrease: action.counterTarget === 'nothing' ? 'do' : state.counterInDeCrease,
+            }
+        case 'DEFEAT_REMOVES_COUNTERS':
+            return {
+                ...state,
+                defeatRemovesCounters: action.defeatRemovesCounters === 'true' ? true : false,
+                failingAddsCounters: action.defeatRemovesCounters === 'true' ? false : state.failingAddsCounters
             }
         case 'FAILING_ADDS_COUNTERS':
             return {
                 ...state,
                 failingAddsCounters: action.failingAddsCounters === 'true' ? true : false,
-                defeatZeroCounters: action.failingAddsCounters === 'true' ? false : state.defeatZeroCounters,
+                defeatRemovesCounters: action.failingAddsCounters === 'true' ? false : state.defeatRemovesCounters,
                 failingRemovesCounters: action.failingAddsCounters === 'true' ? false : state.failingRemovesCounters,
             }
         case 'FAILING_REMOVES_COUNTERS':
             return {
                 ...state,
                 failingRemovesCounters: action.failingRemovesCounters === 'true' ? true : false,
-                defeatZeroCounters: action.failingRemovesCounters === 'true' ? false : state.defeatZeroCounters,
+                defeatRemovesCounters: action.failingRemovesCounters === 'true' ? false : state.defeatRemovesCounters,
                 failingAddsCounters: action.failingRemovesCounters === 'true' ? false : state.failingAddsCounters,
 
             }
@@ -507,6 +527,11 @@ const cardReducer = (state, action) => {
             return {
                 ...state,
                 failCounterNumber: action.failCounterNumber
+            }
+        case 'DEFEAT_COUNTER_NUMBER':
+            return {
+                ...state,
+                defeatCounterNumber: action.defeatCounterNumber,
             }
         case 'MODIFY_EFFECT':
             return {

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { stats } from "../../../CharacterSheet/classes/charInfo";
-import postAssistArray from "../../turnStep/turnStepArrays/postAssistArray";
-import assistStages from "../../turnStep/turnStepArrays/assistStages";
-import challengeItemStages from "../../turnStep/turnStepArrays/challengeItemStages";
+import postAssistArray from "../../turnStep/turnStepItems/postAssistArray";
+import assistStages from "../../turnStep/turnStepItems/assistStages";
+import challengeItemStages from "../../turnStep/turnStepItems/challengeItemStages";
 // import tokenStages from "../../turnStep/turnStepArrays/tokenStages";
 
 

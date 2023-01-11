@@ -18,6 +18,8 @@ const relicObjectsArray = [
         promptFlavor2: ` can use the Ring to conjure illusions and nightmares, forcing us to face our inner fears. It probably has a cool name, like "The Mind's Eye`,
         prompt1: `What is the name of the Ring?`,
         prompt2: `Shiny? Dull and battered?`,
+        specialEffect: "All Ring challenges provide a Story Bonus for describing the challenge, expanding on the nature of the threat.",
+        challengeDescription: "Your character will face ALL of their greatest fears and memories.",
     },
     {
         challengeName: 'The Idol',
@@ -27,6 +29,8 @@ const relicObjectsArray = [
         promptFlavor2: "",
         prompt1: `Do you know its name?`,
         prompt2: `Where did it come from?`,
+        specialEffect: "",
+        challengeDescription: "Many Idol challenges flip other challenges. (Boss challenges cannot be flipped)",
     },
     {
         challengeName: 'The Hoard',
@@ -36,6 +40,8 @@ const relicObjectsArray = [
         promptFlavor2: '',
         prompt1: `Who gathered this hoard?`,
         prompt2: `What's one thing we hope to find in it?`,
+        specialEffect: "",
+        challengeDescription: "Several effects add a counter to The Hoard, making later Hoard challenges more difficult.",
     },
     {
         challengeName: 'The Staff',
@@ -46,6 +52,8 @@ const relicObjectsArray = [
         promptFlavor3: `'s mere presence is causing The Staff to react wildly, conjuring fire and ice. It probably has a cool name, like "The Staff of Endless Winter."`,
         prompt1: `Do we know its name?`,
         prompt2: `Rough-hewn? Polished and lacquered?`,
+        specialEffect: "",
+        challengeDescription: "",
     },
     {
         challengeName: 'The Sash',
@@ -55,6 +63,8 @@ const relicObjectsArray = [
         promptFlavor2: '',
         prompt1: `What would our party do with the power of the Sash?`,
         prompt2: `Is it made of wool? Silk? Tiny vines?`,
+        specialEffect: "",
+        challengeDescription: "",
     },
     {
         challengeName: 'The Sword',
@@ -64,6 +74,8 @@ const relicObjectsArray = [
         promptFlavor2: '',
         prompt1: `What's the name of the Sword?`,
         prompt2: `What would the Villain do with it?`,
+        specialEffect: "All Sword challenges provide a Story Bonus for describing the challenge and the injury.",
+        challengeDescription: "",
     },
     {},
     {
@@ -74,6 +86,8 @@ const relicObjectsArray = [
         promptFlavor2: 'Test Deck Only',
         prompt1: 'Test Deck Only',
         prompt2: 'Test Deck Only',
+        specialEffect: "",
+        challengeDescription: "",
     }
 ]
 
@@ -84,10 +98,7 @@ const uniqueRelics = [
     // You may spend 2 loot points to flip this challenge
     '-N91WfsRx5j2gXWlvJ6E',
     // Flip this challenge at the end of your turn
-    '-N91X1xR80 - KF5r - geJ4',
-
-    // If you fail to defeat this challenge, you must lose up to 2 loot points
-    '-N91Z3GetD - DX4g_AevR',
+    '-N91X1xR80-KF5r-geJ4',
 
     // When you defeat this challenge, place it 2 cards 
     // further down in the Relic deck and place a counter 
@@ -128,27 +139,18 @@ const uniqueRelics = [
     // put a previous challenge (if it exists) back into play.
     '-N8iXQODhhtMdgneOP1A',
 
-    // The Staff
 
-    // Each time you fail to defeat this challenge, 
-    // decrease its difficulty by 2.
-    '-N8yzpaPA10oW71tVkpA',
 
-    // The Cave
 
-    // If you fail to defeat this challenge, place 2 counters on it. 
-    // It deals damage equal to the number of counters on it to your team.
-    '-N8jpekL-w_2Knscke8L',
+    // The Sword
 
-    // The Tomb
+    // Before rolling, sacrifice up to 6 team health
+    // Gain +1 for each point of health
+    '-NBSnWe7oZ1hSmQB6YlP',
 
-    // When this challenge is revealed, place two counters on it. 
-    // If there are any counters on it when you defeat it, 
-    // remove a counter and the challenge remains.
-    '-N8j3tIWGxFL1qpv1DoL',
-
-    
-
+    // If you fail to defeat this challenge, 
+    // all players lose their action tokens.
+    '-NBSAwh1_kIw_9Qd2Ltb',
 ]
 
 // const relicFlavorArray = [

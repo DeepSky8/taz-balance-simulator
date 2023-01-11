@@ -1,5 +1,5 @@
 import { briefingStage, gameStage } from "../elements/ActiveGame/stageObjects/stageObjects"
-import turnStage from "../elements/ActiveGame/turnStep/turnStepArrays/turnStage"
+import turnStage from "../elements/ActiveGame/turnStep/turnStepItems/turnStage"
 
 // gameStage text
 const introChar = 'Introduce '

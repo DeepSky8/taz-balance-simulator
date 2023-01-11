@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import { startSpendActionToken, startSpendAssistToken, startUnpickTokenChallenge, startUNspendActionToken, startUNspendAssistToken } from "../../../../../actions/cloudActions";
 import { auth } from "../../../../../firebase/firebase";
 import ActionToken from "./ActionToken";
-import assistStages from "../../turnStep/turnStepArrays/assistStages";
-import tokenStages from "../../turnStep/turnStepArrays/tokenStages";
-import challengeItemStages from "../../turnStep/turnStepArrays/challengeItemStages";
-import actionStages from "../../turnStep/turnStepArrays/actionStages";
+import assistStages from "../../turnStep/turnStepItems/assistStages";
+import tokenStages from "../../turnStep/turnStepItems/tokenStages";
+import challengeItemStages from "../../turnStep/turnStepItems/challengeItemStages";
+import actionStages from "../../turnStep/turnStepItems/actionStages";
 import { tokenClassesActionOne, tokenClassesActionTwo } from "../../../CharacterSheet/classes/charInfo";
 import { defaultCharState } from "../../../../../reducers/charReducer";
-import turnStage from "../../turnStep/turnStepArrays/turnStage";
+import turnStage from "../../turnStep/turnStepItems/turnStage";
 
 const ActionTokens = ({ cloudState, localState }) => {
     const [isAssistToken, setIsAssistToken] = useState(false)

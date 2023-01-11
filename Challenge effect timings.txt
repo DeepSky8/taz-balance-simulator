@@ -1,0 +1,7 @@
+Challenge Timings
+
+
+pickChallenge, // What triggers when the challenge is selected?
+prerollItems, // Discard a Kostco item or Surprise to automatically defeat. Flip Effect? 
+evaluateOne, evaluateTwo, // Success and Failure triggers 
+	(this includes effects that increase or decrease difficulty based on challenge types, per newly revealed card)

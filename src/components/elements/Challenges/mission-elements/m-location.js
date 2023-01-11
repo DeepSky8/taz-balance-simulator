@@ -18,6 +18,8 @@ const locationObjectsArray = [
         promptFlavor2: '',
         prompt1: `Do you know the name of this cave?`,
         prompt2: `What does the entrance look like?`,
+        specialEffect: "",
+        challengeDescription: "",
     },
     {
         challengeName: 'The Temple',
@@ -27,6 +29,8 @@ const locationObjectsArray = [
         promptFlavor2: '',
         prompt1: `What's the name of the temple?`,
         prompt2: `How big are we talking here?`,
+        specialEffect: "Every time you fail a Temple challenge (other than the boss), discard it after taking damage.",
+        challengeDescription: "",
     },
     {
         challengeName: 'The Tomb',
@@ -36,6 +40,8 @@ const locationObjectsArray = [
         promptFlavor2: '',
         prompt1: `What is the name of the Tomb?`,
         prompt2: `Do you know who's buried here?`,
+        specialEffect: "",
+        challengeDescription: "Several Tomb challenges must be beaten more than once.",
     },
     {
         challengeName: 'The Train',
@@ -47,6 +53,8 @@ const locationObjectsArray = [
         promptFlavor4: ` to a cargo car on this train, and we have to reclaim it before the train reaches the end of the line.`,
         prompt1: `What is the name of this fantasy train?`,
         prompt2: `Where is it going?`,
+        specialEffect: "Every time you fail any challenge, discard the top Train challenge.",
+        challengeDescription: "You must defeat the Villain AND reclaim the Relic before all the Train challenges are gone!",
     },
     {
         challengeName: 'The Carnival',
@@ -56,6 +64,8 @@ const locationObjectsArray = [
         promptFlavor2: "before losing all our money playing 'Whack-A-Gerblin'?",
         prompt1: `What's an interesting detail about the Carnival?`,
         prompt2: `What is the Carnival called?`,
+        specialEffect: "",
+        challengeDescription: "",
     },
     {
         challengeName: 'The Race',
@@ -65,6 +75,8 @@ const locationObjectsArray = [
         promptFlavor2: ' -- and if the race ends, they escape!',
         prompt1: `What does our battlewagon look like?`,
         prompt2: `Where is the race?`,
+        specialEffect: "Every time you fail any challenge, discard the top Race challenge.",
+        challengeDescription: "You must defeat the Villain AND reclaim the Relic before all the Race challenges are gone!",
     },
     {},
     {
@@ -75,6 +87,8 @@ const locationObjectsArray = [
         promptFlavor2: 'Test Deck Only',
         prompt1: 'Test Deck Only',
         prompt2: 'Test Deck Only',
+        specialEffect: "",
+        challengeDescription: "",
     }
 ]
 
@@ -96,5 +110,6 @@ const locationObjectsArray = [
 // }
 
 // export { locationDecks, locationFlavorArray, locationStoryPrompt1, locationStoryPrompt2, Location }
+
 
 export { locationObjectsArray }

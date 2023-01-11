@@ -4,7 +4,7 @@ import kostcoPairs from "./kostcoPairs";
 import KostcoDisplay from "./KostcoDisplay";
 import { startUpdateKostcoSelected } from "../../../../actions/cloudActions";
 import { classRogue } from "../../CharacterSheet/classes/charInfo";
-import turnStage from "../turnStep/turnStepArrays/turnStage";
+import turnStage from "../turnStep/turnStepItems/turnStage";
 
 const KostcoStoreFrame = ({ cloudState, localState }) => {
     const { location, verb, tag, title } = kostcoPairs.store

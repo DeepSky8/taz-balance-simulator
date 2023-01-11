@@ -69,7 +69,7 @@ import {
     clearKostcoStrengthBonuses, extractKostcoBonuses
 } from "../../../actions/kostcoStrengthBonusActions";
 import challengeTypes from "../Challenges/mission-elements/challengeTypes";
-import turnStage from "./turnStep/turnStepArrays/turnStage";
+import turnStage from "./turnStep/turnStepItems/turnStage";
 import { briefingStage, gameStage } from "./stageObjects/stageObjects";
 
 const ActiveGame = () => {

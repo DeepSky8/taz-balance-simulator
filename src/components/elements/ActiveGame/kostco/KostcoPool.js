@@ -1,5 +1,5 @@
 import React from "react";
-import turnStage from "../turnStep/turnStepArrays/turnStage";
+import turnStage from "../turnStep/turnStepItems/turnStage";
 import KostcoAvailFrame from "./KostcoAvailFrame";
 import KostcoStoreFrame from "./KostcoStoreFrame";
 

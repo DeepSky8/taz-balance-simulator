@@ -19,7 +19,7 @@ import PlayingSheet from "../components/elements/ActiveGame/playing/PlayingSheet
 import NotFoundPage from "../components/Authentication/NotFoundPage";
 import Gameboard from "../components/elements/ActiveGame/playing/Gameboard";
 import KostcoPool from "../components/elements/ActiveGame/kostco/KostcoPool";
-import turnStage from "../components/elements/ActiveGame/turnStep/turnStepArrays/turnStage";
+import turnStage from "../components/elements/ActiveGame/turnStep/turnStepItems/turnStage";
 import { gameStage } from "../components/elements/ActiveGame/stageObjects/stageObjects";
 
 const ActiveGameRouter = ({

@@ -4,7 +4,7 @@ import {
     startUpdateGameStage,
     startUpdateTurnStage
 } from "../../../actions/cloudActions"
-import turnStage from "../ActiveGame/turnStep/turnStepArrays/turnStage"
+import turnStage from "../ActiveGame/turnStep/turnStepItems/turnStage"
 import {
     gameStage as gameStageObject,
     briefingStage as briefingStageObject

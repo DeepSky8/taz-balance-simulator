@@ -19,7 +19,11 @@ const DeckUpdates = () => {
     })
     const [activeDeckCode, setActiveDeckCode] = useState('')
     const [activeDeck, setActiveDeck] = useState([])
+    const [effectDeck, setEffectDeck] = useState([])
+    const [displayDeck, setDisplayDeck] = useState([])
     const [cardKeyIndex, setCardKeyIndex] = useState([])
+    const [newCardDisplay, setNewCardDisplay] = useState(false)
+    const [hasEffectDisplay, setHasEffectDisplay] = useState(false)
 
     const saveNewCard = (cardData) => {
         startNewCard(activeDeckCode, cardData)
@@ -33,6 +37,20 @@ const DeckUpdates = () => {
         startRemoveCard(activeDeckCode, cardData.cardKey)
     }
 
+    const toggleEffectDisplay = () => {
+        if (!hasEffectDisplay) {
+            setDisplayDeck(effectDeck)
+        } else {
+            setDisplayDeck(activeDeck)
+        }
+
+        setHasEffectDisplay(!hasEffectDisplay)
+    }
+
+    const toggleNewCardDisplay = () => {
+        setNewCardDisplay(!newCardDisplay)
+    }
+
     // Listener on the selected deck
     useEffect(() => {
 
@@ -40,10 +58,16 @@ const DeckUpdates = () => {
             onValue(ref(db, `challenges/${activeDeckCode}`),
                 (snapshot) => {
                     const deckArray = [];
+                    const effectArray = [];
                     const cardKeyArray = [];
                     if (snapshot.exists()) {
                         snapshot.forEach((deckSnapshot) => {
+
                             deckArray.push(deckSnapshot.val())
+
+                            if (deckSnapshot.val().hasEffect) {
+                                effectArray.push(deckSnapshot.val())
+                            }
                         })
                     }
                     // After getting the list of cards from the server
@@ -55,6 +79,9 @@ const DeckUpdates = () => {
                     deckArray.forEach((card) => { cardKeyArray.push(card.cardKey) })
 
                     setActiveDeck(deckArray)
+                    setEffectDeck(effectArray)
+                    setDisplayDeck(deckArray)
+                    setHasEffectDisplay(false)
                     setCardKeyIndex(cardKeyArray)
                 })
         }
@@ -74,7 +101,13 @@ const DeckUpdates = () => {
                 defaultValue='--Please select a challenge--'
                 onChange={(e) => { setActiveDeckCode(e.target.value) }}
             >
-                <option disabled>--Please select a challenge--</option>
+                <option
+                    key={'pleaseSelect'}
+                    disabled
+                >
+                    --Please select a challenge--
+                </option>
+
                 <optgroup label="Villains">
                     {villainObjectsArray.map((headerObject) => {
                         return (
@@ -113,15 +146,30 @@ const DeckUpdates = () => {
                 </optgroup>
             </select>
 
-            {(activeDeckCode.length > 0) &&
+            <div>
+                <button
+                    onClick={() => { toggleNewCardDisplay() }}
+                >
+                    Toggle New Card interface
+                </button>
+
+                <button
+                    onClick={() => { toggleEffectDisplay() }}
+                >
+                    Show only cards with effects: {hasEffectDisplay.toString()}
+                </button>
+            </div>
+
+
+            {(activeDeckCode.length > 0 && newCardDisplay) &&
                 <NewCard
                     saveNewCard={saveNewCard}
                     cardNumber={activeDeck.length + 1}
                 />
             }
 
-            {activeDeck.length > 0 &&
-                activeDeck.map((deckCard) => {
+            {displayDeck.length > 0 &&
+                displayDeck.map((deckCard) => {
                     return (
                         <EditCard
                             key={deckCard.cardKey}
